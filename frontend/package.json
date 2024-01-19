@@ -1,8 +1,14 @@
 {
-  "name": "frontend",
+  "name": "minapolis-frontend",
+  "description": "MINAPolis: Strategic City Development game on MINA blockchain",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": {
+    "name": "Satyam Bansal",
+    "email": "satyamsgsits1994@gmail.com",
+    "url": "https://github.com/satyambnsal"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -10,8 +16,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "path": "^0.12.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
@@ -23,6 +31,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31"
   }
 }
