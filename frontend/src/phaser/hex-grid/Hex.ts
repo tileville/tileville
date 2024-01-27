@@ -223,7 +223,7 @@ export class Hex extends Phaser.GameObjects.Image {
     }
   }
 
-  update(time: number, delta: number) {
+  update(_: number, delta: number) {
     if (this.propeller.visible) {
       const speed = this.hasHill && this.counted ? 2.2 : this.counted ? 1 : 0.1;
       this.propeller.setAngle(this.propeller.angle + speed * 0.1 * delta);

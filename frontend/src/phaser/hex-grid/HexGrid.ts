@@ -49,13 +49,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
         if (c + r < size || c + r > size * 3) {
           continue;
         } else {
-          const h = new Hex(
-            scene,
-            getX(r, c) + this.x,
-            getY(r, c) + this.y,
-            r,
-            c
-          );
+          const h = new Hex(scene, getX(r, c) + this.x, getY(r) + this.y, r, c);
           this.add(h);
           this.grid.set(r, c, h);
           this.hexes.push(h);
@@ -304,7 +298,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
       const offsets = (shapes as any)[trihex.shape][i];
       hexes.push(this.grid.get(r + offsets.ro, c + offsets.co));
       this.triPreviews[i].setX(getX(r + offsets.ro, c + offsets.co));
-      this.triPreviews[i].setY(getY(r + offsets.ro, c + offsets.co));
+      this.triPreviews[i].setY(getY(r + offsets.ro));
 
       if (!touching) {
         for (const n of this.neighbors(r + offsets.ro, c + offsets.co)) {
@@ -546,7 +540,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
   }
 }
 
-export function getY(row: number, col: number) {
+export function getY(row: number) {
   return 100 + row * HEX_HEIGHT * 0.75;
 }
 
@@ -554,7 +548,7 @@ export function getX(row: number, col: number) {
   return (col + 0.5 * row) * HEX_WIDTH - 50;
 }
 
-export function getRow(x: number, y: number) {
+export function getRow(_: number, y: number) {
   return Math.floor((y - 100 + 0.4 * HEX_HEIGHT) / (HEX_HEIGHT * 0.75));
 }
 

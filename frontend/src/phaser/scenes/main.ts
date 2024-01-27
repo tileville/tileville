@@ -1,4 +1,3 @@
-import { EVENTS, NETWORK_LAYER_KEY } from '../constants';
 import {
   HexGrid,
   Trihex,
