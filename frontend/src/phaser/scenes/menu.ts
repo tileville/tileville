@@ -3,14 +3,24 @@ import { Button } from '../util';
 import Phaser from 'phaser';
 
 const tutorialTexts = [
+  'MINAPolis is city development Arcade game \nwhere you pay 5 MINA tokens to play the game \nand build your city.',
+  'If your score is above 70\nyou will win a level 1 treasure box',
   'Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!',
   "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every CITY-WALL that you\nconnect to the Center with\nRoads is worth 3 points!",
-  "WATCH TOWERS are worth 1 point if\nthey're not adjacent to any other\nWatch Towers\n\nIf they're also placed on a HILL,\nthey're worth 3 points!",
+  "Wind Mills are worth 1 point if\nthey're not adjacent to any other\nWind Mills\n\nIf they're also placed on a HILL,\nthey're worth 3 points!",
   'Those are PARKS!\n\nEach group of connected Park hexes is\nworth 5 points for every 3 hexes in it',
-  'Yep! To recap:\n- Roads want to connect City-Wall to\nthe Center\n- Watch Towers want to be alone and\non Hills\n- Parks want to be grouped together\nin multiples of 3',
+  'Yep! To recap:\n- Roads want to connect Ports to\nthe Center\n- Wind Mills want to be alone and\non Hills\n- Parks want to be grouped together\nin multiples of 3',
 ];
 
-const tutorialTypes = [[1, 2, 3, 4, 5], [3, 4, 5], [1], [2], [1, 2, 3, 4, 5]];
+const tutorialTypes = [
+  [1, 2, 3, 4, 5],
+  [1, 2, 3, 4, 5],
+  [1, 2, 3, 4, 5],
+  [3, 4, 5],
+  [1],
+  [2],
+  [1, 2, 3, 4, 5],
+];
 
 export class MenuScene extends Phaser.Scene {
   menu: Phaser.GameObjects.Group | null = null;
@@ -34,10 +44,10 @@ export class MenuScene extends Phaser.Scene {
     map_pattern.setAlpha(0.3);
     const title = this.add.bitmapText(50, 150, 'font', 'MinaPolis', 70);
     const tagline = this.add.bitmapText(
-      100,
+      50,
       220,
       'font',
-      'A Strategic City-Development Game on MINA',
+      'On-chain City-Development Arcade Game on MINA blockchain',
       70
     );
     tagline.setScale(0.3);
@@ -188,7 +198,7 @@ export class MenuScene extends Phaser.Scene {
 
   nextTutorialPage() {
     this.tutorialPage += 1;
-    if (this.tutorialPage >= 5) {
+    if (this.tutorialPage >= 7) {
       this.cameras.main.pan(640, 0, 1000, 'Power2');
       this.tutorialGrid.grid.get(0, 6)?.setVisible(false);
       this.tutorialGrid.grid.get(3, 0)?.setVisible(false);
