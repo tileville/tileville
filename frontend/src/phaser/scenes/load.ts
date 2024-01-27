@@ -108,6 +108,7 @@ export class LoadScene extends Phaser.Scene {
     this.load.image('waves', 'img/waves.png');
     this.load.image('waves2', 'img/waves2.png');
     this.load.image('particle', 'img/particle.png');
+    this.load.image('next_arrow', 'img/next_arrow.png');
     this.load.image('a-shape', 'img/a-shape.png');
     this.load.image('c-shape', 'img/c-shape.png');
     this.load.image('slash-shape', 'img/slash-shape.png');

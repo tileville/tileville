@@ -59,8 +59,8 @@ export class MainScene extends Phaser.Scene {
 
     this.pointerDown = false;
 
-    // this.waves = this.add.image(640, 360, "waves");
-    // this.waves2 = this.add.image(640, 360, "waves2");
+    // this.waves = this.add.image(640, 360, 'waves');
+    // this.waves2 = this.add.image(640, 360, 'waves2');
 
     this.grid = new HexGrid(this, 5, 8, 0, 0, this.onNewPoints.bind(this));
     this.trihexDeck = this.createTrihexDeck(25, true);
@@ -130,7 +130,7 @@ export class MainScene extends Phaser.Scene {
       this.bigPreviewTrihex.push(h);
       this.bigPreviewContainer.add(h);
       this.bigPreviewContainer.add(h.edges.getChildren());
-      // this.bigPreviewContainer.add(h.propeller);
+      this.bigPreviewContainer.add(h.propeller);
     }
 
     this.helpPage = this.add.image(640, 360, 'help-page');
@@ -482,7 +482,7 @@ export class MainScene extends Phaser.Scene {
       this.breakdownContainer.add(h);
       this.breakdownHexes.push(h);
       this.breakdownContainer.add(h.edges.getChildren());
-      // this.breakdownContainer.add(h.propeller);
+      this.breakdownContainer.add(h.propeller);
 
       const t = this.add.bitmapText(0, 80, 'font', '0', 40);
       t.setOrigin(0.5);

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { LoadScene, MainScene, MenuScene } from './scenes';
-import clsx from 'clsx';
 
 export const PhaserLayer = () => {
   useEffect(() => {
@@ -22,5 +21,5 @@ export const PhaserLayer = () => {
     };
   }, []);
 
-  return <div id="minapolis-hex" className={clsx('bg-red')} />;
+  return <div id="minapolis-hex" />;
 };

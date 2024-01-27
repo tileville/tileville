@@ -98,7 +98,7 @@ export class Hex extends Phaser.GameObjects.Image {
     this.wEdge.setX(x);
     this.swEdge.setX(x);
     this.seEdge.setX(x);
-    // this.propeller.setX(x);
+    this.propeller.setX(x);
     return this;
   }
 

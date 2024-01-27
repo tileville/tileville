@@ -10,7 +10,7 @@ import { Settings } from './ui/components/Settings';
 function App() {
   // TODO: handle Auro wallet connection
   return (
-    <div className=" bg-[#ded6b6] mb-0">
+    <div className="bg-[#ded6b6] mb-0 w-full">
       <BrowserRouter>
         <NavBar />
         <Routes>

@@ -3,25 +3,12 @@ import { Button } from '../util';
 import Phaser from 'phaser';
 
 const tutorialTexts = [
-  'Place trios of hexes to grow your city\noutward from the Castle\n\n\nTry to get the highest score you can!',
-  "ROAD hexes are worth 1 point each\nif they're connected to the Castle\n\nAdditionally, every CITY-WALL that you\nconnect to the Castle with\nRoads is worth 3 points!",
+  'Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!',
+  "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every CITY-WALL that you\nconnect to the Center with\nRoads is worth 3 points!",
   "WATCH TOWERS are worth 1 point if\nthey're not adjacent to any other\nWatch Towers\n\nIf they're also placed on a HILL,\nthey're worth 3 points!",
   'Those are PARKS!\n\nEach group of connected Park hexes is\nworth 5 points for every 3 hexes in it',
-  'Yep! To recap:\n- Roads want to connect City-Wall to\nthe Castle\n- Watch Towers want to be alone and\non Hills\n- Parks want to be grouped together\nin multiples of 3',
+  'Yep! To recap:\n- Roads want to connect City-Wall to\nthe Center\n- Watch Towers want to be alone and\non Hills\n- Parks want to be grouped together\nin multiples of 3',
 ];
-
-// const gameJourneyTexts = [
-//     {
-//         heading: "Welcome, esteemed city planners and strategists!",
-//         description:
-//             "You have been summoned by the Lord of the Realm to the grand challenge of Castle Hexapolis, the digital realm where your urban planning skills and tactical acumen will be put to the test! This web-based browser game blends the charm of medieval citybuilding with the cerebral challenge of hexagonal tile placement. Prepare to embark on a journey of strategy, foresight, and creativity as you expand your city from a single Castle hex tile to a sprawling, interconnected metropolis.",
-//     },
-//     {
-//         heading: "Game Objective",
-//         description:
-//             "Your mission in Castle Hexapolis is straightforward yet captivating: skilfully expand your city outward from the central Castle tile, utilising a variety of hex tiles to maximize your points. With ROADS, WATCH TOWERS, and PARKS hex tiles at your disposal, every decision can tilt the balance of power in this dynamic cityscape.",
-//     },
-// ];
 
 const tutorialTypes = [[1, 2, 3, 4, 5], [3, 4, 5], [1], [2], [1, 2, 3, 4, 5]];
 
