@@ -24,7 +24,9 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
     "react-use": "^17.4.3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "o1js": "^0.14.2",
+    "o1js-pack": "^0.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
