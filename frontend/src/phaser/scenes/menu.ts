@@ -7,7 +7,7 @@ const tutorialTexts = [
   'MINAPolis is city development Arcade game \nwhere you pay 5 MINA tokens to play the game \nand build your city.',
   'If your score is above 70\nyou will win a level 1 treasure box',
   'Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!',
-  "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every CITY-WALL that you\nconnect to the Center with\nRoads is worth 3 points!",
+  "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every Port that you\nconnect to the Center with\nRoads is worth 3 points!",
   "Wind Mills are worth 1 point if\nthey're not adjacent to any other\nWind Mills\n\nIf they're also placed on a HILL,\nthey're worth 3 points!",
   'Those are PARKS!\n\nEach group of connected Park hexes is\nworth 5 points for every 3 hexes in it',
   'Yep! To recap:\n- Roads want to connect Ports to\nthe Center\n- Wind Mills want to be alone and\non Hills\n- Parks want to be grouped together\nin multiples of 3',
