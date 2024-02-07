@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import ConnectButton from './ConnectButton';
 
 export const NavBar = () => {
   return (
@@ -9,6 +10,7 @@ export const NavBar = () => {
           <NavLink to="/about" label="About" />
           <NavLink to="/leaderboard" label="Leaderboard" />
           <NavLink to="/settings" label="Settings" />
+          <ConnectButton />
         </div>
       </div>
     </nav>
