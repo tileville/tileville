@@ -19,14 +19,23 @@ export type PlayerId = {
 };
 
 export type Score = {
-  player_id: number,
-  game_id: number,
-  score: number
-}
+  player_id: number;
+  game_id: number;
+  score: number;
+};
 
 export type RemainingMoves = {
-  player_id: number,
-  game_id: number,
-  moves: number
-}
+  player_id: number;
+  game_id: number;
+  moves: number;
+};
 
+export type Network = {
+  chainId: number;
+  name: string;
+};
+
+type ChainType = {
+  chainId: number;
+  chainName: string;
+};

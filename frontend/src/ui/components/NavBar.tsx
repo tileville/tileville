@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
+import ConnectButton from './ConnectButton';
 
 export const NavBar = () => {
   return (
-    <nav className="p-4">
+    <nav className="pt-2 mb-6">
       <div className="flex items-center justify-center w-full">
         <div className="flex space-x-8">
           <AnchorNavLink to="/" label="New Game" />
           <NavLink to="/about" label="About" />
           <NavLink to="/leaderboard" label="Leaderboard" />
           <NavLink to="/settings" label="Settings" />
+          <ConnectButton />
         </div>
       </div>
     </nav>
