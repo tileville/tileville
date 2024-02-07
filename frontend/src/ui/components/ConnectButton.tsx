@@ -1,36 +1,9 @@
 import { Button, DropdownMenu, Flex } from '@radix-ui/themes';
 import { CaretDownIcon } from '@radix-ui/react-icons';
-import { useState, useContext, useEffect } from 'react';
-import { SignerContext, ChainContext } from '../../contexts';
-import { Network } from '../../types';
-import toast from 'react-hot-toast';
+import { useNetworkLayer } from '../hooks/useNetworkLayer';
 
 export default function ConnectButton() {
-  const { signer, setSigner } = useContext(SignerContext);
-  const { chain, setChain } = useContext(ChainContext);
-
-  const [showWalletPopup, setShowWalletPopup] = useState(false);
-
-  useEffect(() => {
-    const mina = (window as any).mina;
-    if (mina) {
-      mina.on('chainChanged', (network: Network) => {
-        setChain({ chainId: network.chainId, chainName: network.name });
-      });
-    }
-  }, []);
-
-  const handleConnection = async () => {
-    if (typeof (window as any).mina == 'undefined') {
-      setShowWalletPopup(true);
-    } else {
-      const accounts = await (window as any).mina.requestAccounts();
-      const network = await (window as any).mina.requestNetwork();
-      setSigner(accounts[0]);
-      setChain({ chainId: network.chainId, chainName: network.name });
-    }
-  };
-
+  const { signer, chain, connect } = useNetworkLayer();
   return (
     <>
       <Flex gap="2">
@@ -45,7 +18,7 @@ export default function ConnectButton() {
         <DropdownMenu.Root>
           {signer === null ? (
             <Button
-              onClick={handleConnection}
+              onClick={connect}
               variant="outline"
               size="4"
               radius="none"
@@ -81,7 +54,6 @@ export default function ConnectButton() {
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        {showWalletPopup && toast('Please install Auro wallet')}
       </Flex>
     </>
   );

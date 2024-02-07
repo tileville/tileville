@@ -173,6 +173,11 @@ export class MenuScene extends Phaser.Scene {
   }
 
   async play() {
+    const handleEntryFees = this.game.registry.get('handleEntryFees');
+    const isEntryFeesPaid = this.game.registry.get('is_entry_fee_paid');
+    if (!isEntryFeesPaid) {
+      return handleEntryFees();
+    }
     this.cameras.main.pan(-1280, 0, 500, 'Linear', true);
 
     this.time.addEvent({
