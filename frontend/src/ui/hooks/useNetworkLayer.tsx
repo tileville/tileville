@@ -5,7 +5,7 @@ import {
   ProviderError,
 } from '@aurowallet/mina-provider';
 import toast from 'react-hot-toast';
-import { TREASURY_ADDRESS } from '../../constants';
+import { GAME_ENTRY_FEE_KEY, TREASURY_ADDRESS } from '../../constants';
 import { Network } from '../../types';
 import { useSessionStorage } from 'react-use';
 
@@ -13,11 +13,7 @@ export const useNetworkLayer = () => {
   const { signer, setSigner } = useContext(SignerContext);
   const { chain, setChain } = useContext(ChainContext);
   const [resHash, setResHash] = useState('');
-  const [isEntryFeePaid, setIsEntryFeeFaid] = useSessionStorage(
-    'is_entry_fee_paid',
-    false
-  );
-
+  const [, setIsEntryFeeFaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
   useEffect(() => {
     const mina = (window as any).mina;
     if (mina) {
@@ -61,6 +57,7 @@ export const useNetworkLayer = () => {
     } catch (err) {
       toast('Failed to transfer entry fees😭');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signer]);
 
   return {
@@ -69,6 +66,5 @@ export const useNetworkLayer = () => {
     signer,
     resHash,
     chain,
-    isEntryFeePaid,
   };
 };
