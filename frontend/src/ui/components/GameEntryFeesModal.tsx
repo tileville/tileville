@@ -17,7 +17,13 @@ export const GameEntryFeesModal = ({
         <Dialog.Description size="2" mb="4">
           You need to pay one time entry fees of 2 MINA token to play this game.
           If you don't have tokens, you can get it from{' '}
-          <a href={`${FAUCET_URL}?address=${signer}`}>here</a>
+          <a
+            href={`${FAUCET_URL}?address=${signer}`}
+            target="_blank"
+            className="font-semibold underline text-md"
+          >
+            here
+          </a>
         </Dialog.Description>
         <Dialog.Description size="2" mb="4" className="font-semibold">
           Make sure to click on Play button again after paying the fees!
