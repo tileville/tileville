@@ -1,3 +1,4 @@
+import { GAME_ENTRY_FEE_KEY } from '../../constants';
 import {
   HexGrid,
   Trihex,
@@ -374,6 +375,11 @@ export class MainScene extends Phaser.Scene {
 
   endGame() {
     this.grid!.sinkBlanks();
+    try {
+      window.sessionStorage.removeItem(GAME_ENTRY_FEE_KEY);
+    } catch (err) {
+      console.error('failed to unset game entry fees key');
+    }
 
     this.tweens.add({
       targets: [
