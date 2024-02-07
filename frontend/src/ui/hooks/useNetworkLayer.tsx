@@ -57,6 +57,7 @@ export const useNetworkLayer = () => {
     } catch (err) {
       toast('Failed to transfer entry fees😭');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signer]);
 
   return {
