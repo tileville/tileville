@@ -1,3 +1,4 @@
+import { GAME_ENTRY_FEE_KEY } from '../../constants';
 import { HexGrid } from '../hex-grid';
 import { Button } from '../util';
 import Phaser from 'phaser';
@@ -174,8 +175,10 @@ export class MenuScene extends Phaser.Scene {
 
   async play() {
     const handleEntryFees = this.game.registry.get('handleEntryFees');
-    const isEntryFeesPaid = this.game.registry.get('is_entry_fee_paid');
-    if (!isEntryFeesPaid) {
+    const checkEntryFeesPaid = JSON.parse(
+      window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ''
+    );
+    if (!checkEntryFeesPaid) {
       return handleEntryFees();
     }
     this.cameras.main.pan(-1280, 0, 500, 'Linear', true);
