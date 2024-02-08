@@ -1,15 +1,21 @@
 import { Button } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
 import ConnectButton from './ConnectButton';
-import { GitHubLogoIcon } from '@radix-ui/react-icons';
-import { GITHUB_URL } from '../../constants';
+import { GitHubLogoIcon, VideoIcon } from '@radix-ui/react-icons';
+import { GITHUB_URL, GAME_TUTORIAL_VIDEO_URL } from '../../constants';
 
 export const NavBar = () => {
   return (
     <nav className="pt-2 mb-6">
       <div className="flex items-center justify-center w-full">
-        <div className="flex space-x-8">
-          <Button variant="outline" size="4" color="jade" highContrast>
+        <div className="flex space-x-6">
+          <Button
+            variant="outline"
+            size="3"
+            color="jade"
+            highContrast
+            radius="none"
+          >
             <a
               href={GITHUB_URL}
               target="_blank"
@@ -17,6 +23,22 @@ export const NavBar = () => {
             >
               Github
               <GitHubLogoIcon />
+            </a>
+          </Button>
+          <Button
+            variant="outline"
+            size="3"
+            color="jade"
+            highContrast
+            radius="none"
+          >
+            <a
+              href={GAME_TUTORIAL_VIDEO_URL}
+              target="_blank"
+              className="flex items-center gap-2"
+            >
+              Tutorial Video
+              <VideoIcon />
             </a>
           </Button>
           <NavLink to="/" label="New Game" />
@@ -32,7 +54,7 @@ export const NavBar = () => {
 
 const NavLink = ({ to, label }: { to: string; label: string }) => {
   return (
-    <Button variant="outline" size="4" radius="none">
+    <Button variant="outline" size="3" radius="none">
       <Link to={to} className="">
         {label}
       </Link>
