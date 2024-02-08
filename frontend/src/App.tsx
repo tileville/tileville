@@ -9,6 +9,7 @@ import { ChainContext, SignerContext } from './contexts';
 import { useCallback, useEffect, useState } from 'react';
 import { ChainType } from './types';
 import { GameEntryFeesModal } from './ui/components/GameEntryFeesModal';
+import { Footer } from './ui/components/Footer';
 
 function App() {
   const [signer, setSigner] = useState('');
@@ -60,6 +61,7 @@ function App() {
               setIsEntryFeesModalOpen(false);
             }}
           />
+          <Footer />
         </div>
       </ChainContext.Provider>
     </SignerContext.Provider>

@@ -8,7 +8,7 @@ export default function ConnectButton() {
     <>
       <Flex gap="2">
         {signer != null ? (
-          <Button variant="outline" size="4" radius="none">
+          <Button variant="outline" size="3" radius="none">
             <Flex direction={'row'} justify={'center'} align={'center'} gap="2">
               <img src="/logos/mina.png" alt="mina logo" className="w-4 h-4" />
               {chain.chainName}
@@ -25,7 +25,7 @@ export default function ConnectButton() {
               <Button
                 onClick={() => {}}
                 variant="outline"
-                size="4"
+                size="3"
                 radius="none"
               >
                 <span>{signer.slice(0, 4) + '...' + signer.slice(-4)}</span>
@@ -33,14 +33,14 @@ export default function ConnectButton() {
               </Button>
             </DropdownMenu.Trigger>
           )}
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>
+          <DropdownMenu.Content className="">
+            <DropdownMenu.Item className="my-10">
               <Button
                 onClick={() => {
                   console.log('disconnect');
                 }}
                 variant="outline"
-                color="blue"
+                size="3"
               >
                 Disconnect
               </Button>
