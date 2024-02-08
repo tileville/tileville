@@ -40,6 +40,7 @@ export const GameEntryFeesModal = ({
                 await transferEntryFee();
                 handleClose();
               }}
+              color="blue"
             >
               Pay Entry Fees
             </Button>

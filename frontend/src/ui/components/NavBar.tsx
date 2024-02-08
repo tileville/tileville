@@ -1,12 +1,25 @@
+import { Button } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
 import ConnectButton from './ConnectButton';
+import { GitHubLogoIcon } from '@radix-ui/react-icons';
+import { GITHUB_URL } from '../../constants';
 
 export const NavBar = () => {
   return (
     <nav className="pt-2 mb-6">
       <div className="flex items-center justify-center w-full">
         <div className="flex space-x-8">
-          <AnchorNavLink to="/" label="New Game" />
+          <Button variant="outline" size="4" color="jade" highContrast>
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              className="flex items-center gap-2"
+            >
+              Github
+              <GitHubLogoIcon />
+            </a>
+          </Button>
+          <NavLink to="/" label="New Game" />
           <NavLink to="/about" label="About" />
           <NavLink to="/leaderboard" label="Leaderboard" />
           <NavLink to="/settings" label="Settings" />
@@ -19,22 +32,20 @@ export const NavBar = () => {
 
 const NavLink = ({ to, label }: { to: string; label: string }) => {
   return (
-    <Link
-      to={to}
-      className="text-[#303030] hover:text-black transition duration-300 text-2xl font-semibold active:text-white leading-8 px-4 py-2 border border-black"
-    >
-      {label}
-    </Link>
+    <Button variant="outline" size="4" radius="none">
+      <Link to={to} className="">
+        {label}
+      </Link>
+    </Button>
   );
 };
 
-const AnchorNavLink = ({ to, label }: { to: string; label: string }) => {
+export const AnchorNavLink = ({ to, label }: { to: string; label: string }) => {
   return (
-    <a
-      href={to}
-      className="text-[#303030] hover:text-black transition duration-300 text-2xl font-semibold active:text-white leading-8 px-4 py-2 border border-black"
-    >
-      {label}
-    </a>
+    <Button variant="outline" size="4" radius="none">
+      <a href={to} target="_blank">
+        {label}
+      </a>
+    </Button>
   );
 };

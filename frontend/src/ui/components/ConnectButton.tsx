@@ -17,13 +17,7 @@ export default function ConnectButton() {
         ) : null}
         <DropdownMenu.Root>
           {signer === null ? (
-            <Button
-              onClick={connect}
-              variant="outline"
-              size="4"
-              radius="none"
-              color="blue"
-            >
+            <Button onClick={connect} variant="outline" size="4" radius="none">
               <span>Connect</span>
             </Button>
           ) : (
@@ -33,7 +27,6 @@ export default function ConnectButton() {
                 variant="outline"
                 size="4"
                 radius="none"
-                color="blue"
               >
                 <span>{signer.slice(0, 4) + '...' + signer.slice(-4)}</span>
                 <CaretDownIcon className="w-8 h-8" />
