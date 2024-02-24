@@ -1,8 +1,12 @@
 import { Button } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
 import ConnectButton from './ConnectButton';
-import { GitHubLogoIcon, VideoIcon } from '@radix-ui/react-icons';
-import { GITHUB_URL, GAME_TUTORIAL_VIDEO_URL } from '../../constants';
+import { GitHubLogoIcon, VideoIcon, BookmarkIcon } from '@radix-ui/react-icons';
+import {
+  GITHUB_URL,
+  GAME_TUTORIAL_VIDEO_URL,
+  ZKIGNITE_PROPOSAL,
+} from '../../constants';
 
 export const NavBar = () => {
   return (
@@ -23,6 +27,22 @@ export const NavBar = () => {
             >
               Github
               <GitHubLogoIcon />
+            </a>
+          </Button>{' '}
+          <Button
+            variant="outline"
+            size="3"
+            color="jade"
+            highContrast
+            radius="none"
+          >
+            <a
+              href={ZKIGNITE_PROPOSAL}
+              target="_blank"
+              className="flex items-center gap-2"
+            >
+              ZK Ignite Proposal
+              <BookmarkIcon />
             </a>
           </Button>
           <Button
