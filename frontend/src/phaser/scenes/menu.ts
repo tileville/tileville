@@ -63,6 +63,39 @@ export class MenuScene extends Phaser.Scene {
     );
     this.menu.add(playButton);
 
+    const demoButtonText = this.add.text(200, 460, 'Play free(demo mode)', {
+      fontSize: '32px',
+      color: '#000',
+      padding: { x: 20, y: 10 },
+      fontStyle: 'italic',
+    });
+
+    // Make the text interactive
+    demoButtonText.setInteractive({
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    });
+
+    demoButtonText.on('pointerdown', () => {
+      console.log('clicked');
+      this.cameras.main.pan(-1280, 0, 500, 'Linear', true);
+      this.time.addEvent({
+        delay: 500,
+        callback: this.transition,
+        callbackScope: this,
+      });
+    });
+
+    demoButtonText.on('pointerover', () => {
+      demoButtonText.setStyle({ fill: '#111' });
+      demoButtonText.setScale(1.03);
+    });
+
+    demoButtonText.on('pointerout', () => {
+      demoButtonText.setStyle({ fill: '#000' });
+      demoButtonText.setScale(1);
+    });
+
     const howToPlayButton = new Button(
       this,
       300,
