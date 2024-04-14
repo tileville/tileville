@@ -12,10 +12,10 @@ export default {
   },
   config: {
     Balances: {
-      totalSupply: UInt64.from(10_000),
+      totalSupply: UInt64.from(10_000_1000),
     },
     CustomBalances: {
-      totalSupply: UInt64.from(10_000),
+      totalSupply: UInt64.from(10_000_1000),
     },
   },
 };
