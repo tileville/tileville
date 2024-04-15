@@ -1,6 +1,6 @@
-import { Button, Dialog, Flex } from '@radix-ui/themes';
-import { useNetworkLayer } from '../hooks/useNetworkLayer';
-import { FAUCET_URL } from '../../constants';
+import { Button, Dialog, Flex } from "@radix-ui/themes";
+import { useNetworkLayer } from "@/hooks/useNetworkLayer";
+import { FAUCET_URL } from "@/constants";
 
 export const GameEntryFeesModal = ({
   open,
@@ -16,7 +16,7 @@ export const GameEntryFeesModal = ({
         <Dialog.Title>Pay Entry Fees</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           You need to pay one time entry fees of 2 MINA token to play this game.
-          If you don't have tokens, you can get it from{' '}
+          If you don't have tokens, you can get it from{" "}
           <a
             href={`${FAUCET_URL}?address=${signer}`}
             target="_blank"

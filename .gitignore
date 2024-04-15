@@ -14,3 +14,4 @@ keys
 private.md
 .turbo
 dist/
+.next

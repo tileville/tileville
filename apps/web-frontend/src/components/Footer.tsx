@@ -1,4 +1,5 @@
-import { FEEDBACK_FORM_URL } from '../../constants';
+import { FEEDBACK_FORM_URL } from "@/constants";
+
 export const Footer = () => {
   return (
     <footer className="fixed bottom-2 right-2">

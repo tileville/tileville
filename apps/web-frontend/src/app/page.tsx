@@ -1,22 +1,25 @@
-import { PhaserLayer } from './phaser/phaserLayer';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { NavBar } from './ui/components/NavBar';
-import { AboutGame } from './ui/components/About';
-import { Leaderboard } from './ui/components/Leaderboard';
-import { Settings } from './ui/components/Settings';
-import { Toaster } from 'react-hot-toast';
-import { ChainContext, SignerContext } from './contexts';
-import { useCallback, useEffect, useState } from 'react';
-import { ChainType } from './types';
-import { GameEntryFeesModal } from './ui/components/GameEntryFeesModal';
-import { Footer } from './ui/components/Footer';
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { PhaserLayer } from "@/phaser/phaserLayer";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { NavBar } from "@/components/NavBar";
+import { AboutGame } from "@/components/About";
+import { Leaderboard } from "@/components/Leaderboard";
+import { Settings } from "@/components/Settings";
+import { Toaster } from "react-hot-toast";
+import { ChainContext, SignerContext } from "@/contexts";
+
+import { ChainType } from "@/types";
+import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
+import { Footer } from "@/components/Footer";
 
 function App() {
-  const [signer, setSigner] = useState('');
+  const [signer, setSigner] = useState("");
   const [isEntryFeesModalOpen, setIsEntryFeesModalOpen] = useState(false);
   const [chain, setChain] = useState<ChainType>({
     chainId: 0,
-    chainName: '',
+    chainName: "",
   });
 
   const cachedInit = useCallback(async function () {

@@ -1,5 +1,5 @@
-import { createContext } from 'react';
-import { ChainType } from '../types';
+import { createContext } from "react";
+import { ChainType } from "@/types";
 
 type ChainContextType = {
   chain: ChainType;
@@ -11,8 +11,8 @@ type SignerContextType = {
 };
 
 export const SignerContext = createContext<SignerContextType>(
-  {} as SignerContextType
+  {} as SignerContextType,
 );
 export const ChainContext = createContext<ChainContextType>(
-  {} as ChainContextType
+  {} as ChainContextType,
 );

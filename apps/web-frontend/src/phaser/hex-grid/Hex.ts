@@ -26,9 +26,9 @@ export class Hex extends Phaser.GameObjects.Image {
     x: number,
     y: number,
     row: number,
-    col: number
+    col: number,
   ) {
-    super(scene, x, y, 'empty');
+    super(scene, x, y, "empty");
 
     this.setScale(0.5);
     scene.add.existing(this);
@@ -40,12 +40,12 @@ export class Hex extends Phaser.GameObjects.Image {
     this.counted = false;
     this.upgraded = false;
 
-    this.eEdge = scene.add.image(x, y, 'edge-e');
-    this.neEdge = scene.add.image(x, y, 'edge-ne');
-    this.nwEdge = scene.add.image(x, y, 'edge-nw');
-    this.wEdge = scene.add.image(x, y, 'edge-w');
-    this.swEdge = scene.add.image(x, y, 'edge-sw');
-    this.seEdge = scene.add.image(x, y, 'edge-se');
+    this.eEdge = scene.add.image(x, y, "edge-e");
+    this.neEdge = scene.add.image(x, y, "edge-ne");
+    this.nwEdge = scene.add.image(x, y, "edge-nw");
+    this.wEdge = scene.add.image(x, y, "edge-w");
+    this.swEdge = scene.add.image(x, y, "edge-sw");
+    this.seEdge = scene.add.image(x, y, "edge-se");
     this.edges = scene.add.group([
       this.eEdge,
       this.neEdge,
@@ -64,12 +64,12 @@ export class Hex extends Phaser.GameObjects.Image {
     this.swEdge.setScale(0.5);
     this.seEdge.setScale(0.5);
 
-    this.propeller = scene.add.image(x, y, 'propeller');
+    this.propeller = scene.add.image(x, y, "propeller");
     this.propeller.setScale(0.5);
     this.propeller.setVisible(false);
     this.propeller.setDepth(2);
 
-    this.puffer = scene.add.particles(0, 0, 'particle', {
+    this.puffer = scene.add.particles(0, 0, "particle", {
       lifespan: 1000,
       speed: { min: 3, max: 20 },
       angle: { min: 0, max: 360 },
@@ -78,7 +78,7 @@ export class Hex extends Phaser.GameObjects.Image {
       emitting: false,
       alpha: { start: 1, end: 0 },
       emitZone: {
-        type: 'random',
+        type: "random",
         source: new Phaser.Geom.Rectangle(-25, -25, 50, 50),
         quantity: 20,
       },
@@ -130,14 +130,14 @@ export class Hex extends Phaser.GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ['empty', 'windmill', 'grass', 'street', 'center', 'port-bw'][hexType]
+      ["empty", "windmill", "grass", "street", "center", "port-bw"][hexType],
     );
     this.hexType = hexType;
     if (hexType === 1) {
       this.propeller.setVisible(true);
       if (this.hasHill) {
         this.propeller.setY(this.y - 70 * this.scale);
-        this.setTexture('windmill-hill');
+        this.setTexture("windmill-hill");
       } else {
         this.propeller.setY(this.y - 30 * this.scale);
       }
@@ -167,58 +167,58 @@ export class Hex extends Phaser.GameObjects.Image {
 
   setHill(hasHill: boolean) {
     this.hasHill = hasHill;
-    if (hasHill) this.setTexture('empty-hill');
+    if (hasHill) this.setTexture("empty-hill");
   }
 
   upgrade() {
     this.upgraded = true;
     if (this.hexType === 2) {
-      this.setTexture('tree');
+      this.setTexture("tree");
     } else if (this.hexType === 3) {
-      this.setTexture('house');
+      this.setTexture("house");
     } else if (this.hexType === 5) {
-      this.setTexture('port');
+      this.setTexture("port");
     }
   }
 
   setSketchy(isSketchy: boolean) {
     if (isSketchy) {
       if (this.hexType === 0) {
-        this.setTexture('empty');
+        this.setTexture("empty");
       } else if (this.hexType === 1) {
-        if (this.hasHill) this.setTexture('windmill-hill-bw');
-        else this.setTexture('windmill-bw');
+        if (this.hasHill) this.setTexture("windmill-hill-bw");
+        else this.setTexture("windmill-bw");
         this.propeller.setVisible(false);
       } else if (this.hexType === 2) {
-        if (this.upgraded) this.setTexture('tree-bw');
-        else this.setTexture('grass-bw');
+        if (this.upgraded) this.setTexture("tree-bw");
+        else this.setTexture("grass-bw");
       } else if (this.hexType === 3) {
-        if (this.upgraded) this.setTexture('house-bw');
-        else this.setTexture('street-bw');
+        if (this.upgraded) this.setTexture("house-bw");
+        else this.setTexture("street-bw");
       } else if (this.hexType === 4) {
-        this.setTexture('center-bw');
+        this.setTexture("center-bw");
       } else if (this.hexType === 5) {
-        this.setTexture('port-bw');
+        this.setTexture("port-bw");
       }
     } else {
       this.setAlpha(1);
       if (this.hexType === 0) {
-        this.setTexture('empty');
+        this.setTexture("empty");
       } else if (this.hexType === 1) {
-        if (this.hasHill) this.setTexture('windmill-hill');
-        else this.setTexture('windmill');
+        if (this.hasHill) this.setTexture("windmill-hill");
+        else this.setTexture("windmill");
         this.propeller.setVisible(true);
       } else if (this.hexType === 2) {
-        if (this.upgraded) this.setTexture('tree');
-        else this.setTexture('grass');
+        if (this.upgraded) this.setTexture("tree");
+        else this.setTexture("grass");
       } else if (this.hexType === 3) {
-        if (this.upgraded) this.setTexture('house');
-        else this.setTexture('street');
+        if (this.upgraded) this.setTexture("house");
+        else this.setTexture("street");
       } else if (this.hexType === 4) {
-        this.setTexture('center');
+        this.setTexture("center");
       } else if (this.hexType === 5) {
-        if (this.upgraded) this.setTexture('port');
-        else this.setTexture('port-bw');
+        if (this.upgraded) this.setTexture("port");
+        else this.setTexture("port-bw");
       }
     }
   }

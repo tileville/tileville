@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
 
 export const usePromiseValue = <T,>(promise: Promise<T> | null) => {
   const promiseRef = useRef<typeof promise>(promise);

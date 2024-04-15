@@ -1,4 +1,4 @@
-import { GAME_ENTRY_FEE_KEY } from '../../constants';
+import { GAME_ENTRY_FEE_KEY } from "../../constants";
 import {
   HexGrid,
   Trihex,
@@ -6,9 +6,9 @@ import {
   Hex,
   HEX_HEIGHT,
   HEX_WIDTH,
-} from '../hex-grid';
-import { Button, pick, shuffle } from '../util';
-import Phaser from 'phaser';
+} from "../hex-grid";
+import { Button, pick, shuffle } from "../util";
+import Phaser from "phaser";
 
 export class MainScene extends Phaser.Scene {
   grid: HexGrid | null = null;
@@ -46,12 +46,12 @@ export class MainScene extends Phaser.Scene {
   breakdownTexts: Phaser.GameObjects.BitmapText[] = [];
 
   constructor() {
-    super('main');
+    super("main");
   }
 
   async create() {
     this.add.rectangle(640, 360, 1280, 720);
-    const bgImage = this.add.image(640, 360, 'map_pattern');
+    const bgImage = this.add.image(640, 360, "map_pattern");
     bgImage.setScale(0.2);
     bgImage.setAlpha(0.1);
     this.score = 0;
@@ -65,15 +65,15 @@ export class MainScene extends Phaser.Scene {
     this.grid = new HexGrid(this, 5, 8, 0, 0, this.onNewPoints.bind(this));
     this.trihexDeck = this.createTrihexDeck(25, true);
 
-    this.scoreText = this.add.bitmapText(150, 30, 'font', '0 points', 60);
+    this.scoreText = this.add.bitmapText(150, 30, "font", "0 points", 60);
     this.scoreText.setDepth(4);
 
     this.rotateLeftButton = new Button(
       this,
       125,
       180,
-      'rotate',
-      this.rotateLeft.bind(this)
+      "rotate",
+      this.rotateLeft.bind(this),
     );
     this.rotateLeftButton.setDepth(3.5);
     this.rotateLeftButton.setFlipX(true);
@@ -81,8 +81,8 @@ export class MainScene extends Phaser.Scene {
       this,
       375,
       180,
-      'rotate',
-      this.rotateRight.bind(this)
+      "rotate",
+      this.rotateRight.bind(this),
     );
     this.rotateRightButton.setDepth(3.5);
 
@@ -90,8 +90,8 @@ export class MainScene extends Phaser.Scene {
       this,
       410,
       640,
-      'question',
-      this.openHelp.bind(this)
+      "question",
+      this.openHelp.bind(this),
     );
     this.openHelpButton.setDepth(3.5);
 
@@ -99,8 +99,8 @@ export class MainScene extends Phaser.Scene {
       this,
       1210,
       640,
-      'x',
-      this.closeHelp.bind(this)
+      "x",
+      this.closeHelp.bind(this),
     );
     this.closeHelpButton.setDepth(5.1);
     this.closeHelpButton.setVisible(false);
@@ -108,14 +108,14 @@ export class MainScene extends Phaser.Scene {
     this.deckCounterText = this.add.bitmapText(
       240,
       620,
-      'font',
+      "font",
       String(this.trihexDeck.length),
-      60
+      60,
     );
     this.deckCounterText.setOrigin(0.5, 0.45);
     this.deckCounterText.setDepth(3.6);
 
-    this.deckCounterImage = this.add.image(240, 620, 'a-shape');
+    this.deckCounterImage = this.add.image(240, 620, "a-shape");
     this.deckCounterImage.setDepth(3.5);
     this.deckCounterImage.setAlpha(0.5);
 
@@ -133,14 +133,14 @@ export class MainScene extends Phaser.Scene {
       this.bigPreviewContainer.add(h.propeller);
     }
 
-    this.helpPage = this.add.image(640, 360, 'help-page');
+    this.helpPage = this.add.image(640, 360, "help-page");
     this.helpPage.setScale(0.4);
     this.helpPage.setDepth(5);
     this.helpPage.setVisible(false);
 
     this.pickNextTrihex();
 
-    this.foreground = this.add.image(1600, 360, 'page');
+    this.foreground = this.add.image(1600, 360, "page");
     this.foreground.setDepth(3);
 
     this.tweens.add({
@@ -185,16 +185,16 @@ export class MainScene extends Phaser.Scene {
     this.input.keyboard?.on(
       Phaser.Input.Keyboard.Events.ANY_KEY_DOWN,
       this.onKeyDown,
-      this
+      this,
     );
 
-    this.input.on('wheel', this.onMouseWheel, this);
+    this.input.on("wheel", this.onMouseWheel, this);
   }
 
   onNewPoints(points: number, hexType: number) {
     this.score += points;
     this.scoreBreakdown[hexType] += points;
-    this.scoreText?.setText(String(this.score) + ' points');
+    this.scoreText?.setText(String(this.score) + " points");
   }
 
   async onPlaceTile() {
@@ -229,7 +229,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       this.previewX,
       this.previewY,
-      this.nextTrihex as Trihex
+      this.nextTrihex as Trihex,
     );
     this.updateBigTrihex();
   }
@@ -239,7 +239,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       this.previewX,
       this.previewY,
-      this.nextTrihex as Trihex
+      this.nextTrihex as Trihex,
     );
     this.updateBigTrihex();
   }
@@ -253,12 +253,12 @@ export class MainScene extends Phaser.Scene {
       // @ts-ignore
       const col = shapes[this.nextTrihex.shape][i].co;
 
-      if (this.nextTrihex?.shape === 'a') {
+      if (this.nextTrihex?.shape === "a") {
         this.bigPreviewTrihex[i].setX(HEX_WIDTH * 1.5 * (col + 0.5 * row));
         this.bigPreviewTrihex[i].setY(HEX_HEIGHT * 1.125 * row);
-      } else if (this.nextTrihex?.shape === 'v') {
+      } else if (this.nextTrihex?.shape === "v") {
         this.bigPreviewTrihex[i].setX(
-          HEX_WIDTH * 1.5 * (col - 0.5 + 0.5 * row)
+          HEX_WIDTH * 1.5 * (col - 0.5 + 0.5 * row),
         );
         this.bigPreviewTrihex[i].setY(HEX_HEIGHT * 1.125 * row);
       } else {
@@ -277,14 +277,14 @@ export class MainScene extends Phaser.Scene {
     for (let i = 0; i < size; i++) {
       if (allShapes) {
         if (i < size / 3) {
-          deck.push(new Trihex(0, 0, 0, pick(['a', 'v'])));
+          deck.push(new Trihex(0, 0, 0, pick(["a", "v"])));
         } else if (i < size / 1.5) {
-          deck.push(new Trihex(0, 0, 0, pick(['/', '-', '\\'])));
+          deck.push(new Trihex(0, 0, 0, pick(["/", "-", "\\"])));
         } else {
-          deck.push(new Trihex(0, 0, 0, pick(['c', 'r', 'n', 'd', 'j', 'l'])));
+          deck.push(new Trihex(0, 0, 0, pick(["c", "r", "n", "d", "j", "l"])));
         }
       } else {
-        deck.push(new Trihex(0, 0, 0, 'a'));
+        deck.push(new Trihex(0, 0, 0, "a"));
       }
     }
     deck = shuffle(deck);
@@ -329,28 +329,28 @@ export class MainScene extends Phaser.Scene {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           {
-            a: 'a-shape',
-            v: 'a-shape',
-            '/': 'slash-shape',
-            '-': 'slash-shape',
-            '\\': 'slash-shape',
-            c: 'c-shape',
-            r: 'c-shape',
-            n: 'c-shape',
-            d: 'c-shape',
-            j: 'c-shape',
-            l: 'c-shape',
-          }[this.trihexDeck[this.trihexDeck.length - 1].shape]
+            a: "a-shape",
+            v: "a-shape",
+            "/": "slash-shape",
+            "-": "slash-shape",
+            "\\": "slash-shape",
+            c: "c-shape",
+            r: "c-shape",
+            n: "c-shape",
+            d: "c-shape",
+            j: "c-shape",
+            l: "c-shape",
+          }[this.trihexDeck[this.trihexDeck.length - 1].shape],
         );
       } else {
         this.deckCounterImage?.setVisible(false);
-        this.deckCounterText?.setText('');
+        this.deckCounterText?.setText("");
       }
       this.updateBigTrihex();
 
       this.bigPreviewContainer?.setPosition(
         this.deckCounterImage?.x,
-        this.deckCounterImage?.y
+        this.deckCounterImage?.y,
       );
       this.bigPreviewContainer?.setScale(0.2);
 
@@ -365,7 +365,7 @@ export class MainScene extends Phaser.Scene {
       });
     } else {
       this.bigPreviewContainer?.setVisible(false);
-      this.nextTrihex = new Trihex(0, 0, 0, 'a');
+      this.nextTrihex = new Trihex(0, 0, 0, "a");
     }
   }
 
@@ -378,7 +378,7 @@ export class MainScene extends Phaser.Scene {
     try {
       window.sessionStorage.removeItem(GAME_ENTRY_FEE_KEY);
     } catch (err) {
-      console.error('failed to unset game entry fees key');
+      console.error("failed to unset game entry fees key");
     }
 
     this.tweens.add({
@@ -408,60 +408,60 @@ export class MainScene extends Phaser.Scene {
     let rank, message1, message2;
     if (this.score === 0) {
       // Z rank
-      rank = 'Rank: Z';
-      message1 = 'What!?';
+      rank = "Rank: Z";
+      message1 = "What!?";
       message2 = "(That's honestly impressive!)";
     } else if (this.score < 70) {
       // E rank
-      rank = 'Rank: E';
-      message1 = 'Finished!';
-      message2 = '(Next rank at 70 points)';
+      rank = "Rank: E";
+      message1 = "Finished!";
+      message2 = "(Next rank at 70 points)";
     } else if (this.score < 80) {
       // D rank
-      rank = 'Rank: D';
-      message1 = 'Not bad!';
-      message2 = '(Next rank at 80 points)';
+      rank = "Rank: D";
+      message1 = "Not bad!";
+      message2 = "(Next rank at 80 points)";
     } else if (this.score < 90) {
       // C rank
-      rank = 'Rank: C';
-      message1 = 'Good job!';
-      message2 = '(Next rank at 90 points)';
+      rank = "Rank: C";
+      message1 = "Good job!";
+      message2 = "(Next rank at 90 points)";
     } else if (this.score < 100) {
       // B rank
-      rank = 'Rank: B';
-      message1 = 'Well done!';
-      message2 = '(Next rank at 100 points)';
+      rank = "Rank: B";
+      message1 = "Well done!";
+      message2 = "(Next rank at 100 points)";
     } else if (this.score < 110) {
       // A rank
-      rank = 'Rank: A';
-      message1 = 'Excellent!';
-      message2 = '(Next rank at 110 points)';
+      rank = "Rank: A";
+      message1 = "Excellent!";
+      message2 = "(Next rank at 110 points)";
     } else if (this.score < 120) {
       // A+ rank
-      rank = 'Rank: A+';
-      message1 = 'Amazing!';
-      message2 = '(Next rank at 120 points)';
+      rank = "Rank: A+";
+      message1 = "Amazing!";
+      message2 = "(Next rank at 120 points)";
     } else if (this.score < 125) {
       // S rank
-      rank = 'Rank: S';
-      message1 = 'Incredible!!';
-      message2 = '(This is the highest rank!)';
+      rank = "Rank: S";
+      message1 = "Incredible!!";
+      message2 = "(This is the highest rank!)";
     } else {
       // S rank (perfect)
-      rank = 'Rank: S';
-      message1 = 'A perfect score!!';
-      message2 = '(This is the highest rank!)';
+      rank = "Rank: S";
+      message1 = "A perfect score!!";
+      message2 = "(This is the highest rank!)";
     }
 
-    this.gameOverText = this.add.bitmapText(1500, 70, 'font', message1, 60);
+    this.gameOverText = this.add.bitmapText(1500, 70, "font", message1, 60);
     this.gameOverText.setOrigin(0.5);
     this.gameOverText.setDepth(4);
 
-    this.rankText = this.add.bitmapText(1500, 460, 'font', rank, 60);
+    this.rankText = this.add.bitmapText(1500, 460, "font", rank, 60);
     this.rankText.setOrigin(0.5);
     this.rankText.setDepth(4);
 
-    this.nextRankText = this.add.bitmapText(1500, 520, 'font', message2, 40);
+    this.nextRankText = this.add.bitmapText(1500, 520, "font", message2, 40);
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
@@ -469,8 +469,8 @@ export class MainScene extends Phaser.Scene {
       this,
       1400,
       630,
-      'play-again-button',
-      this.playAgain.bind(this)
+      "play-again-button",
+      this.playAgain.bind(this),
     );
     this.playAgainButton.setDepth(4);
 
@@ -489,7 +489,7 @@ export class MainScene extends Phaser.Scene {
       this.breakdownContainer.add(h.edges.getChildren());
       this.breakdownContainer.add(h.propeller);
 
-      const t = this.add.bitmapText(0, 80, 'font', '0', 40);
+      const t = this.add.bitmapText(0, 80, "font", "0", 40);
       t.setOrigin(0.5);
       this.breakdownTexts.push(t);
       this.breakdownContainer.add(t);
@@ -500,7 +500,7 @@ export class MainScene extends Phaser.Scene {
     this.breakdownHexes[0].setX(-125);
     this.breakdownTexts[0].setX(-125);
     this.breakdownTexts[0].setText(
-      String(this.scoreBreakdown[3] + this.scoreBreakdown[5])
+      String(this.scoreBreakdown[3] + this.scoreBreakdown[5]),
     );
 
     this.breakdownHexes[1].setType(2);
@@ -582,7 +582,7 @@ export class MainScene extends Phaser.Scene {
         this.previewX,
         this.previewY,
         this.nextTrihex as Trihex,
-        this.onPlaceTile.bind(this)
+        this.onPlaceTile.bind(this),
       )
     ) {
       this.pickNextTrihex();
@@ -611,7 +611,7 @@ export class MainScene extends Phaser.Scene {
       this.grid?.updateTriPreview(
         event.worldX,
         event.worldY,
-        this.nextTrihex as Trihex
+        this.nextTrihex as Trihex,
       );
     }
     this.pointerDown = true;
@@ -623,7 +623,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       event.worldX,
       event.worldY,
-      this.nextTrihex as Trihex
+      this.nextTrihex as Trihex,
     );
   }
 
