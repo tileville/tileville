@@ -23,13 +23,14 @@
     "dev": "npm-watch build-and-start"
   },
   "peerDependencies": {
-    "@proto-kit/api": "*",
-    "@proto-kit/cli": "*",
-    "@proto-kit/common": "*",
-    "@proto-kit/module": "*",
-    "@proto-kit/protocol": "*",
-    "@proto-kit/sdk": "*",
-    "@proto-kit/sequencer": "*",
+    "@proto-kit/api": "^0.1.1-develop.651",
+    "@proto-kit/cli": "^0.1.1-develop.651",
+    "@proto-kit/common": "^0.1.1-develop.651",
+    "@proto-kit/library": "0.1.1-develop.651",
+    "@proto-kit/module": "^0.1.1-develop.651",
+    "@proto-kit/protocol": "^0.1.1-develop.651",
+    "@proto-kit/sdk": "^0.1.1-develop.651",
+    "@proto-kit/sequencer": "^0.1.1-develop.651",
     "o1js": "0.13.1",
     "tsyringe": "^4.7.0"
   },
