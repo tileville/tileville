@@ -22,7 +22,6 @@
     "@aurowallet/mina-provider": "1.0.1",
     "@supabase/supabase-js": "^2.39.0",
     "clsx": "^2.1.0",
-    "jotai": "^2.6.2",
     "path": "^0.12.7",
     "phaser": "^3.80.1",
     "next": "14.1.4",
@@ -34,7 +33,10 @@
     "tailwindcss-animate": "^1.0.7",
     "tailwind-merge": "^2.0.0",
     "o1js": "^0.14.2",
-    "o1js-pack": "^0.5.0"
+    "o1js-pack": "^0.5.0",
+    "chain": "workspace:*",
+    "immer": "^10.0.3",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@types/eslint": "^8.37.0",
@@ -53,5 +55,12 @@
     "prettier-plugin-tailwindcss": "^0.2.8",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
+  },
+  "peerDependencies": {
+    "@proto-kit/module": "^0.1.1-develop.651",
+    "@proto-kit/sdk": "^0.1.1-develop.651",
+    "@proto-kit/sequencer": "^0.1.1-develop.651",
+    "o1js": "0.13.1",
+    "tsyringe": "^4.7.0"
   }
 }
