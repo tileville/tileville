@@ -91,6 +91,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.3.3)
+      truncate-middle:
+        specifier: ^1.0.6
+        version: 1.0.6
       tsyringe:
         specifier: ^4.7.0
         version: 4.8.0
@@ -113,6 +116,9 @@ importers:
       '@types/react-dom':
         specifier: 18.2.7
         version: 18.2.7
+      '@types/truncate-middle':
+        specifier: ^1.0.4
+        version: 1.0.4
       '@typescript-eslint/eslint-plugin':
         specifier: 6.0.0
         version: 6.0.0(@typescript-eslint/parser@6.0.0)(eslint@8.46.0)(typescript@5.2.2)
@@ -3115,6 +3121,10 @@ packages:
 
   /@types/stack-utils@2.0.3:
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
+    dev: true
+
+  /@types/truncate-middle@1.0.4:
+    resolution: {integrity: sha512-WfcGVioLOcG6GVDcfeAkmXnXLmz3T0LoxvoGBA4j+3sDES1qnr7aQS2pLN6dMHCchebp9obaQ8xw1HzsWKK85g==}
     dev: true
 
   /@types/uuid@8.3.4:
@@ -9028,6 +9038,10 @@ packages:
 
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+    dev: false
+
+  /truncate-middle@1.0.6:
+    resolution: {integrity: sha512-oJLDTdHAk27V+JUUu1vKYezKehx/tECV0vnJ1e8JV/rvre5oLoFMaCLP53ZwiPsw4ZIJzyLoZr/TKQABnaNF6A==}
     dev: false
 
   /ts-api-utils@1.0.3(typescript@4.9.4):
