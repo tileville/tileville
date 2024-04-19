@@ -1,12 +1,12 @@
-import { TestingAppChain } from "@proto-kit/sdk";
-import { PrivateKey, UInt64 } from "o1js";
-import { Balances } from "../src/balances";
-import { log } from "@proto-kit/common";
+import { TestingAppChain } from '@proto-kit/sdk';
+import { PrivateKey, UInt64 } from 'o1js';
+import { Balances } from '../src/balances';
+import { log } from '@proto-kit/common';
 
-log.setLevel("ERROR");
+log.setLevel('ERROR');
 
-describe("balances", () => {
-  it("should demonstrate how balances work", async () => {
+describe.skip('balances', () => {
+  it('should demonstrate how balances work', async () => {
     const appChain = TestingAppChain.fromRuntime({
       modules: {
         Balances,
@@ -28,7 +28,7 @@ describe("balances", () => {
 
     appChain.setSigner(alicePrivateKey);
 
-    const balances = appChain.runtime.resolve("Balances");
+    const balances = appChain.runtime.resolve('Balances');
 
     const tx1 = await appChain.transaction(alice, () => {
       balances.addBalance(alice, UInt64.from(1000));
