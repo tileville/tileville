@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { SEQUENCER_GRAPHQL_URL } from "@/constants";
 
 export interface ComputedTransactionJSON {
-  argsField: string[];
+  argsFields: string[];
   argsJSON: string[];
   methodId: string;
   nonce: string;
@@ -18,7 +18,7 @@ export interface ComputedTransactionJSON {
 export type Transaction = {
   status: boolean;
   statusMessage?: string;
-  tx: ComputedBlockJSON;
+  tx: ComputedTransactionJSON;
 };
 
 export interface ComputedBlockJSON {
@@ -106,5 +106,3 @@ export const useChainStore = create<ChainState, [["zustand/immer", never]]>(
     },
   }))
 );
-
-
