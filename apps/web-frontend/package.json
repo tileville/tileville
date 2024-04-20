@@ -24,7 +24,7 @@
     "clsx": "^2.1.0",
     "immer": "^10.0.3",
     "next": "14.1.4",
-    "o1js": "^0.14.2",
+    "o1js": "link:../../packages/chain/node_modules/o1js",
     "o1js-pack": "^0.5.0",
     "path": "^0.12.7",
     "phaser": "^3.80.1",
