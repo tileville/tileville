@@ -8,8 +8,10 @@ export const usePollBlockHeight = () => {
   const chain = useChainStore();
 
   useEffect(() => {
-    chain.loadBlock();
-  }, [tick]);
+    chain.loadBlock().catch((err) => {
+      console.error("Failed to load block", err);
+    });
+  }, [tick, chain]);
 
   useEffect(() => {
     const intervalId = setInterval(
