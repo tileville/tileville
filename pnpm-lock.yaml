@@ -22,6 +22,9 @@ importers:
       '@aurowallet/mina-provider':
         specifier: 1.0.1
         version: 1.0.1
+      '@proto-kit/library':
+        specifier: 0.1.1-develop.651
+        version: 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@packages+chain+node_modules+o1js)(tsyringe@4.8.0)
       '@proto-kit/module':
         specifier: ^0.1.1-develop.651
         version: 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@packages+chain+node_modules+o1js)(tsyringe@4.8.0)
