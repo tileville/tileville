@@ -1,16 +1,5 @@
-import {
-  UInt64,
-  Balances as BaseBalances,
-  TokenId,
-  Balance,
-} from '@proto-kit/library';
-import {
-  RuntimeModule,
-  runtimeModule,
-  state,
-  runtimeMethod,
-} from '@proto-kit/module';
-import { State, StateMap, assert } from '@proto-kit/protocol';
+import { Balances as BaseBalances, TokenId, Balance } from '@proto-kit/library';
+import { runtimeModule, runtimeMethod } from '@proto-kit/module';
 import { PublicKey } from 'o1js';
 
 interface BalancesConfig {}
