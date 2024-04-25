@@ -1,6 +1,6 @@
 export const INITIAL_SCORE = 99999;
 export const SCORE_PER_TICKS = 1;
-export const MAX_BRICKS = 10;
+export const MAX_TILES = 11;
 export const NEAREST_BRICKS_NUM = 2;
 
 export const BRICK_HALF_WIDTH = 25;

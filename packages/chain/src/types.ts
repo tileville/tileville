@@ -62,3 +62,35 @@ export class LeaderboardScore extends Struct({
   score: UInt64,
   player: PublicKey,
 }) {}
+
+export enum TileType {
+  Empty,
+  WindMill,
+  Tree,
+  Road,
+  Castle,
+  CityGate,
+}
+
+export class Position extends Struct({
+  x: Int64,
+  y: Int64,
+}) {
+  static from(_x: number, _y: number): Position {
+    return new Position({
+      x: Int64.from(_x),
+      y: Int64.from(_y),
+    });
+  }
+
+  equals(p: Position): Bool {
+    return this.x.equals(p.x).and(this.y.equals(p.y));
+  }
+}
+
+export class Tile extends Struct({
+  pos: Position,
+  type: TileType,
+  isHill: Bool,
+  isEmpty: Bool,
+}) {}
