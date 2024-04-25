@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { TestingAppChain } from '@proto-kit/sdk';
 import { PrivateKey } from 'o1js';
 import { Mintery, errors } from '../src/mintery';
