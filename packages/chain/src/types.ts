@@ -8,7 +8,7 @@ import {
   CircuitString,
   Field,
 } from 'o1js';
-import { CHUNK_LENGTH, GAME_LENGTH, MAX_BRICKS } from './constants';
+import { CHUNK_LENGTH, GAME_LENGTH, TRIHEX_DECK_SIZE } from './constants';
 
 export class GameRecordKey extends Struct({
   competitionId: UInt64,
@@ -64,12 +64,12 @@ export class LeaderboardScore extends Struct({
 }) {}
 
 export enum TileType {
-  Empty,
-  WindMill,
-  Tree,
-  Road,
-  Castle,
-  CityGate,
+  Empty = 1,
+  WindMill = 2,
+  Tree = 3,
+  Road = 4,
+  Castle = 5,
+  CityGate = 6,
 }
 
 export class Position extends Struct({
@@ -90,7 +90,28 @@ export class Position extends Struct({
 
 export class Tile extends Struct({
   pos: Position,
-  type: TileType,
   isHill: Bool,
   isEmpty: Bool,
 }) {}
+
+export class TriHex extends Struct({
+  hexes: Provable.Array(UInt64, 3),
+  shape: CircuitString,
+}) {
+  static empty(): TriHex {
+    return new TriHex({
+      hexes: [UInt64.from(0), UInt64.from(0), UInt64.from(0)],
+      shape: CircuitString.fromString('v'),
+    });
+  }
+}
+
+export class TriHexDeck extends Struct({
+  trihexes: Provable.Array(TriHex, TRIHEX_DECK_SIZE),
+}) {
+  static empty(): TriHexDeck {
+    return new TriHexDeck({
+      trihexes: [...new Array(TRIHEX_DECK_SIZE)].map(() => TriHex.empty()),
+    });
+  }
+}
