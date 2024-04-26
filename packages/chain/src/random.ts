@@ -27,18 +27,17 @@ export class RandomGenerator extends Struct({
     return Int64.from(this.curValue.rangeCheckHelper(64)).mod(maxValue);
   }
 
-  // Get 4 number
-  getNumbers(maxValues: number[]): [Int64, Int64, Int64, Int64] {
+  // Get 3 number
+  getNumbers(maxValues: number[]): [Int64, Int64, Int64] {
     this.source = Poseidon.hash([this.source]);
     this.curValue = this.source;
-    const result: [Int64, Int64, Int64, Int64] = [
-      Int64.from(0),
+    const result: [Int64, Int64, Int64] = [
       Int64.from(0),
       Int64.from(0),
       Int64.from(0),
     ];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
       result[i] = Int64.fromField(this.curValue.rangeCheckHelper(64)).mod(
         maxValues[i]
       );
