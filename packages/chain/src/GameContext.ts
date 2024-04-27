@@ -1,5 +1,5 @@
-import { UInt64 } from '@proto-kit/library';
-import { CircuitString, Field, Provable } from 'o1js';
+import {} from '@proto-kit/library';
+import { CircuitString, Field, Provable, UInt64 } from 'o1js';
 import { RandomGenerator } from './random';
 import { TriHexDeck } from './types';
 import { TRIHEX_DECK_SIZE } from './constants';
@@ -33,17 +33,32 @@ export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
       ),
       deck.trihexes[i].shape
     );
+
+    deck.trihexes[i].hexes[0] = Provable.if(
+      UInt64.from(i).greaterThanOrEqual(UInt64.from(TRIHEX_DECK_SIZE / 2)),
+      UInt64.from(1),
+      UInt64.from(3)
+    );
+    deck.trihexes[i].hexes[1] = Provable.if(
+      UInt64.from(i).greaterThanOrEqual(UInt64.from(TRIHEX_DECK_SIZE / 2)),
+      UInt64.from(2),
+      UInt64.from(3)
+    );
+    deck.trihexes[i].hexes[2] = Provable.if(
+      UInt64.from(i).greaterThanOrEqual(UInt64.from(TRIHEX_DECK_SIZE / 2)),
+      UInt64.from(2),
+      UInt64.from(3)
+    );
   }
 
   return deck;
 }
-
 
 /**
  * let b = UInt64.from(10)
  * let c = UInt64.from(20)
  * let d = UInt64.from(30)
  * let e = UInt64.from(40)
- * 
+ *
  * let a = Provable.if(b.greaterThanOrEqual(25), 1, Provable.if(b.greaterThanOrEqual(15), 2, 3))
  */
