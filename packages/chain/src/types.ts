@@ -1,6 +1,5 @@
 import {
   PublicKey,
-  UInt64,
   Struct,
   Provable,
   Int64,
@@ -8,7 +7,13 @@ import {
   CircuitString,
   Field,
 } from 'o1js';
-import { CHUNK_LENGTH, GAME_LENGTH, TRIHEX_DECK_SIZE } from './constants';
+import { UInt64 } from '@proto-kit/library';
+import {
+  MAP_COL_SIZE,
+  MAP_ROW_SIZE,
+  MAP_SIZE,
+  TRIHEX_DECK_SIZE,
+} from './constants';
 
 export class GameRecordKey extends Struct({
   competitionId: UInt64,
@@ -28,7 +33,6 @@ export class Competition extends Struct({
 }) {
   static from(
     name: string,
-    // description: string,
     seed: number,
     prereg: boolean,
     preregStartTime: number,
@@ -40,7 +44,6 @@ export class Competition extends Struct({
   ): Competition {
     return new Competition({
       name: CircuitString.fromString(name),
-      // description: CircuitString.fromString(description),
       seed: Field.from(seed),
       prereg: new Bool(prereg),
       preregStartTime: UInt64.from(preregStartTime),
@@ -73,13 +76,13 @@ export enum TileType {
 }
 
 export class Position extends Struct({
-  x: Int64,
-  y: Int64,
+  x: UInt64,
+  y: UInt64,
 }) {
   static from(_x: number, _y: number): Position {
     return new Position({
-      x: Int64.from(_x),
-      y: Int64.from(_y),
+      x: UInt64.from(_x),
+      y: UInt64.from(_y),
     });
   }
 
@@ -92,7 +95,30 @@ export class Tile extends Struct({
   pos: Position,
   isHill: Bool,
   isEmpty: Bool,
+  tileType: UInt64,
 }) {}
+
+export class EmptyMap extends Struct({
+  tiles: Provable.Array(Tile, MAP_SIZE),
+}) {
+  static empty(): EmptyMap {
+    let tiles = [...new Array(MAP_ROW_SIZE * MAP_COL_SIZE)];
+    for (let i = 0; i < MAP_ROW_SIZE; i++) {
+      for (let j = 0; j < MAP_COL_SIZE; j++) {
+        tiles[i] = new Tile({
+          pos: new Position({
+            x: UInt64.from(i),
+            y: UInt64.from(j),
+          }),
+          isHill: Bool(false),
+          isEmpty: Bool(true),
+          tileType: UInt64.from(0),
+        });
+      }
+    }
+    return new EmptyMap({ tiles });
+  }
+}
 
 export class TriHex extends Struct({
   hexes: Provable.Array(UInt64, 3),

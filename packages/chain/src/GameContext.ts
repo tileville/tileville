@@ -1,5 +1,5 @@
 import {} from '@proto-kit/library';
-import { CircuitString, Field, Provable, UInt64 } from 'o1js';
+import { CircuitString, Field, Provable, UInt64, Struct, Bool } from 'o1js';
 import { RandomGenerator } from './random';
 import { TriHexDeck } from './types';
 import { TRIHEX_DECK_SIZE } from './constants';
@@ -8,12 +8,21 @@ const shapeSet1 = ['c', 'r', 'n', 'd', 'j', 'k'];
 const shapeSet2 = ['/', '-', '\\'];
 const shapeSet3 = ['a', 'v'];
 
+
+export class GameContext extends Struct({
+  deck: TriHexDeck,
+  trihexLeft: UInt64,
+  score: UInt64,
+  winnable: Bool,
+  alreadyWon: Bool,
+
+})
+
 export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
   const generator = RandomGenerator.from(seed);
   const deck = TriHexDeck.empty();
 
   for (let i = 0; i < TRIHEX_DECK_SIZE; i++) {
-    let trihex = deck.trihexes[i];
     deck.trihexes[i].shape = Provable.if(
       UInt64.from(i).greaterThanOrEqual(UInt64.from(TRIHEX_DECK_SIZE / 3)),
       CircuitString.fromString(
@@ -54,11 +63,4 @@ export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
   return deck;
 }
 
-/**
- * let b = UInt64.from(10)
- * let c = UInt64.from(20)
- * let d = UInt64.from(30)
- * let e = UInt64.from(40)
- *
- * let a = Provable.if(b.greaterThanOrEqual(25), 1, Provable.if(b.greaterThanOrEqual(15), 2, 3))
- */
+export function loadGameContext()
