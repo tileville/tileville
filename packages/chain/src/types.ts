@@ -2,18 +2,15 @@ import {
   PublicKey,
   Struct,
   Provable,
-  Int64,
   Bool,
   CircuitString,
   Field,
+  UInt64,
 } from 'o1js';
-import { UInt64 } from '@proto-kit/library';
-import {
-  MAP_COL_SIZE,
-  MAP_ROW_SIZE,
-  MAP_SIZE,
-  TRIHEX_DECK_SIZE,
-} from './constants';
+import { UInt64 as UInt64Proto } from '@proto-kit/library';
+import { MAP_COL_SIZE, MAP_ROW_SIZE, TRIHEX_DECK_SIZE } from './constants';
+
+const MAP_SIZE = MAP_COL_SIZE * MAP_ROW_SIZE;
 
 export class GameRecordKey extends Struct({
   competitionId: UInt64,
@@ -135,6 +132,7 @@ export class TriHex extends Struct({
 export class TriHexDeck extends Struct({
   trihexes: Provable.Array(TriHex, TRIHEX_DECK_SIZE),
 }) {
+  deck: any;
   static empty(): TriHexDeck {
     return new TriHexDeck({
       trihexes: [...new Array(TRIHEX_DECK_SIZE)].map(() => TriHex.empty()),
