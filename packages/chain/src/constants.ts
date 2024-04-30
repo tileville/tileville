@@ -1,7 +1,7 @@
 export const MAX_TILES = 11;
 export const TRIHEX_DECK_SIZE = 25;
-export const MAP_ROW_SIZE = 11;
-export const MAP_COL_SIZE = 11;
+export const GRID_SIZE = 5;
+
 
 export const shapes = {
   a: [

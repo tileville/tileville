@@ -1,8 +1,16 @@
-import { CircuitString, Field, Provable, Struct, Bool, UInt64 } from 'o1js';
+import {
+  CircuitString,
+  Field,
+  Provable,
+  Struct,
+  Bool,
+  UInt64,
+  Int64,
+} from 'o1js';
 import { UInt64 as UInt64Proto } from '@proto-kit/library';
 import { RandomGenerator } from './random';
-import { TriHexDeck } from './types';
-import { TRIHEX_DECK_SIZE } from './constants';
+import { TileMap, TriHexDeck } from './types';
+import { GRID_SIZE, TRIHEX_DECK_SIZE } from './constants';
 
 const shapeSet1 = ['c', 'r', 'n', 'd', 'j', 'k'];
 const shapeSet2 = ['/', '-', '\\'];
@@ -66,4 +74,38 @@ export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
     );
   }
   return deck;
+}
+
+export function generateTileMapBySeed(seed: Field): TileMap {
+  const tilemap = TileMap.empty();
+  const generator = RandomGenerator.from(seed);
+  const tiles = tilemap.tiles;
+  let hillsPlaced = 0;
+  for (let r = 0; r < 2 * GRID_SIZE + 1; r++) {
+    for (let c = 0; c < 2 * GRID_SIZE + 1; c++) {
+      if (c + r < GRID_SIZE || c + r > GRID_SIZE * 3) {
+        tiles[r][c].isEmpty = Bool(false);
+      }
+      if (r === 0 && c === GRID_SIZE) {
+        tiles[r][c].tileType = UInt64.from(6);
+      }
+      if (r === GRID_SIZE && c === 0) {
+        tiles[r][c].tileType = UInt64.from(6);
+      }
+      if (r === GRID_SIZE && c === GRID_SIZE * 2) {
+        tiles[r][c].tileType = UInt64.from(6);
+      }
+      if (r === GRID_SIZE * 2 && c === 0) {
+        tiles[r][c].tileType = UInt64.from(6);
+      }
+      if (r === GRID_SIZE * 2 && c === GRID_SIZE) {
+        tiles[r][c].tileType = UInt64.from(6);
+      }
+      if (r === GRID_SIZE && c === GRID_SIZE) {
+        tiles[r][c].tileType = UInt64.from(5);
+      }
+    }
+  }
+
+  return tilemap;
 }

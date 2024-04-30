@@ -8,9 +8,9 @@ import {
   UInt64,
 } from 'o1js';
 import { UInt64 as UInt64Proto } from '@proto-kit/library';
-import { MAP_COL_SIZE, MAP_ROW_SIZE, TRIHEX_DECK_SIZE } from './constants';
+import { TRIHEX_DECK_SIZE, GRID_SIZE } from './constants';
 
-const MAP_SIZE = MAP_COL_SIZE * MAP_ROW_SIZE;
+const MAP_SIZE = (2 * GRID_SIZE + 1) ** 2;
 
 export class GameRecordKey extends Struct({
   competitionId: UInt64,
@@ -83,6 +83,13 @@ export class Position extends Struct({
     });
   }
 
+  static zero(): Position {
+    return new Position({
+      x: UInt64.from(0),
+      y: UInt64.from(0),
+    });
+  }
+
   equals(p: Position): Bool {
     return this.x.equals(p.x).and(this.y.equals(p.y));
   }
@@ -93,27 +100,31 @@ export class Tile extends Struct({
   isHill: Bool,
   isEmpty: Bool,
   tileType: UInt64,
-}) {}
-
-export class EmptyMap extends Struct({
-  tiles: Provable.Array(Tile, MAP_SIZE),
+  counted: Bool,
 }) {
-  static empty(): EmptyMap {
-    let tiles = [...new Array(MAP_ROW_SIZE * MAP_COL_SIZE)];
-    for (let i = 0; i < MAP_ROW_SIZE; i++) {
-      for (let j = 0; j < MAP_COL_SIZE; j++) {
-        tiles[i] = new Tile({
-          pos: new Position({
-            x: UInt64.from(i),
-            y: UInt64.from(j),
-          }),
-          isHill: Bool(false),
-          isEmpty: Bool(true),
-          tileType: UInt64.from(0),
-        });
-      }
-    }
-    return new EmptyMap({ tiles });
+  static empty(): Tile {
+    return new Tile({
+      pos: Position.zero(),
+      isHill: Bool(false),
+      isEmpty: Bool(true),
+      tileType: UInt64.one,
+      counted: Bool(false),
+    });
+  }
+}
+
+export class TileMap extends Struct({
+  tiles: Provable.Array(
+    Provable.Array(Tile, 2 * GRID_SIZE + 1),
+    2 * GRID_SIZE + 1
+  ),
+}) {
+  static empty(): TileMap {
+    let tiles = [...Array(2 * GRID_SIZE + 1).keys()].map((i) => {
+      let row = new Array(2 * GRID_SIZE + 1).fill(Tile.empty());
+      return row;
+    });
+    return new TileMap({ tiles });
   }
 }
 
