@@ -9,7 +9,7 @@ import {
 } from 'o1js';
 import { UInt64 as UInt64Proto } from '@proto-kit/library';
 import { RandomGenerator } from './random';
-import { TileMap, TriHexDeck } from './types';
+import { GameInput, TileMap, TriHexDeck } from './types';
 import { GRID_SIZE, TRIHEX_DECK_SIZE } from './constants';
 
 const shapeSet1 = ['c', 'r', 'n', 'd', 'j', 'k'];
@@ -17,12 +17,19 @@ const shapeSet2 = ['/', '-', '\\'];
 const shapeSet3 = ['a', 'v'];
 
 export class GameContext extends Struct({
-  deck: TriHexDeck,
-  trihexLeft: UInt64,
+  trihexDeck: TriHexDeck,
+  totalLeft: UInt64,
+  tilemap: TileMap,
   score: UInt64,
   winnable: Bool,
   alreadyWon: Bool,
-}) {}
+  debug: Bool,
+}) {
+
+  processMove(input: GameInput): void {
+  }
+  
+}
 
 export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
   const generator = RandomGenerator.from(seed);
@@ -108,4 +115,23 @@ export function generateTileMapBySeed(seed: Field): TileMap {
   }
 
   return tilemap;
+}
+
+export function loadGameContext(
+  trihexDeck: TriHexDeck,
+  tilemap: TileMap,
+  debug: Bool
+) {
+  const score = UInt64.zero;
+  const totalLeft = UInt64.from(TRIHEX_DECK_SIZE);
+
+  return new GameContext({
+    trihexDeck,
+    tilemap,
+    score,
+    winnable: new Bool(true),
+    alreadyWon: new Bool(false),
+    totalLeft,
+    debug,
+  });
 }

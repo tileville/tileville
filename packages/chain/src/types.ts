@@ -150,3 +150,8 @@ export class TriHexDeck extends Struct({
     });
   }
 }
+
+export class GameInput extends Struct({
+  pos: Position,
+  trihex: TriHex,
+}) {}

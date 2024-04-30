@@ -1,5 +1,5 @@
-import { TriHexDeck } from "./types";
+import { TriHexDeck } from './types';
 
-export const defaultLevel = (): TriHexDeck => {
-  
-}
+// export const defaultLevel = (): TriHexDeck => {
+
+// }

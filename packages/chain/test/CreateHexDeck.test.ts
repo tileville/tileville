@@ -1,4 +1,4 @@
-import { Field } from 'o1js';
+const { Field } = require('o1js');
 import {
   createTrihexDeckBySeed,
   generateTileMapBySeed,
