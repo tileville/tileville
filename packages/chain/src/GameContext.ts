@@ -1,12 +1,5 @@
-import {
-  CircuitString,
-  Field,
-  Provable,
-  Struct,
-  Bool,
-  UInt64,
-  Int64,
-} from 'o1js';
+import { CircuitString, Field, Provable, Struct, Bool, UInt64 } from 'o1js';
+import { UInt64 as UInt64Proto } from '@proto-kit/library';
 import { RandomGenerator } from './random';
 import { TriHexDeck } from './types';
 import { TRIHEX_DECK_SIZE } from './constants';
@@ -26,6 +19,14 @@ export class GameContext extends Struct({
 export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
   const generator = RandomGenerator.from(seed);
   const deck = TriHexDeck.empty();
+
+  // let a = Provable.if(
+  //   Bool(true),
+  //   UInt64Proto,
+  //   UInt64Proto.from(1),
+  //   UInt64Proto.from(2)
+  // );
+  // console.log(a);
 
   for (let i = 0; i < TRIHEX_DECK_SIZE; i++) {
     deck.trihexes[i].shape = Provable.if(

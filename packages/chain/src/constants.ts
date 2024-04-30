@@ -74,3 +74,7 @@ export const rotations = {
   j: ['c', 'r', 'n', 'd', 'j', 'l'],
   l: ['c', 'r', 'n', 'd', 'j', 'l'],
 };
+
+import { Field } from 'o1js';
+
+export const MINAPOLIS_TOKEN_ID = Field.from(314);
