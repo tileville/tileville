@@ -25,10 +25,11 @@ export class GameContext extends Struct({
   alreadyWon: Bool,
   debug: Bool,
 }) {
-
   processMove(input: GameInput): void {
+    //TODO: Write logic to calculate updated score
+    this.score = Provable.if(this.alreadyWon, this.score, this.score.add(1));
+    this.totalLeft = this.totalLeft.sub(1);
   }
-  
 }
 
 export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
