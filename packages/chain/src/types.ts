@@ -8,7 +8,7 @@ import {
   UInt64,
 } from 'o1js';
 import { UInt64 as UInt64Proto } from '@proto-kit/library';
-import { TRIHEX_DECK_SIZE, GRID_SIZE } from './constants';
+import { TRIHEX_DECK_SIZE, GRID_SIZE, ShapePatternsId } from './constants';
 
 const MAP_SIZE = (2 * GRID_SIZE + 1) ** 2;
 
@@ -159,14 +159,18 @@ export class TileMap extends Struct({
 
 export class TriHex extends Struct({
   hexes: Provable.Array(UInt64, 3),
-  shape: CircuitString,
+  shape: UInt64,
 }) {
   static empty(): TriHex {
     return new TriHex({
       hexes: [UInt64.from(0), UInt64.from(0), UInt64.from(0)],
-      shape: CircuitString.fromString('v'),
+      shape: ShapePatternsId['v'],
     });
   }
+
+  rotateRight(): void {}
+
+  rotateLeft(): void {}
 }
 
 export class TriHexDeck extends Struct({

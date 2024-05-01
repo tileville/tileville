@@ -10,11 +10,22 @@ import {
 import { UInt64 as UInt64Proto } from '@proto-kit/library';
 import { RandomGenerator } from './random';
 import { GameInput, TileMap, TriHexDeck } from './types';
-import { GRID_SIZE, TRIHEX_DECK_SIZE } from './constants';
+import { GRID_SIZE, ShapePatternsId, TRIHEX_DECK_SIZE } from './constants';
 
-const shapeSet1 = ['c', 'r', 'n', 'd', 'j', 'k'];
-const shapeSet2 = ['/', '-', '\\'];
-const shapeSet3 = ['a', 'v'];
+const shapeSet1 = [
+  ShapePatternsId['c'],
+  ShapePatternsId['r'],
+  ShapePatternsId['n'],
+  ShapePatternsId['d'],
+  ShapePatternsId['j'],
+  ShapePatternsId['l'],
+];
+const shapeSet2 = [
+  ShapePatternsId['/'],
+  ShapePatternsId['-'],
+  ShapePatternsId['\\'],
+];
+const shapeSet3 = [ShapePatternsId['a'], ShapePatternsId['v']];
 
 export class GameContext extends Struct({
   trihexDeck: TriHexDeck,
@@ -65,21 +76,16 @@ export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
   for (let i = 0; i < TRIHEX_DECK_SIZE; i++) {
     deck.trihexes[i].shape = Provable.if(
       Field(i).greaterThanOrEqual(Field(Math.floor(TRIHEX_DECK_SIZE / 3))),
-      CircuitString.fromString(
-        shapeSet2[Number(generator.getNumber(shapeSet2.length))]
-      ),
-      CircuitString.fromString(
-        shapeSet3[Number(generator.getNumber(shapeSet3.length))]
-      )
+      shapeSet2[Number(generator.getNumber(shapeSet2.length))],
+
+      shapeSet3[Number(generator.getNumber(shapeSet3.length))]
     );
 
     deck.trihexes[i].shape = Provable.if(
       Field(i).greaterThanOrEqual(
         Field(Math.floor((TRIHEX_DECK_SIZE * 2) / 3))
       ),
-      CircuitString.fromString(
-        shapeSet1[Number(generator.getNumber(shapeSet1.length))]
-      ),
+      shapeSet1[Number(generator.getNumber(shapeSet1.length))],
       deck.trihexes[i].shape
     );
 
