@@ -30,6 +30,24 @@ export class GameContext extends Struct({
     this.score = Provable.if(this.alreadyWon, this.score, this.score.add(1));
     this.totalLeft = this.totalLeft.sub(1);
   }
+
+  equals(other: GameContext): Bool {
+    const scoreEquals = this.score.equals(other.score);
+    const totalLeftEquals = this.totalLeft.equals(other.totalLeft);
+    const winnableEquals = this.winnable.equals(other.winnable);
+    const tilemapEquals = this.tilemap.equals(other.tilemap);
+    const alreadyWonEquals = this.alreadyWon.equals(other.alreadyWon);
+    const debugEquals = this.debug.equals(other.debug);
+
+    //TODO: Write equals for trihex deck
+
+    return scoreEquals
+      .and(totalLeftEquals)
+      .and(winnableEquals)
+      .and(tilemapEquals)
+      .and(alreadyWonEquals)
+      .and(debugEquals);
+  }
 }
 
 export function createTrihexDeckBySeed(seed: Field): TriHexDeck {

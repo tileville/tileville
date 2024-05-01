@@ -111,6 +111,19 @@ export class Tile extends Struct({
       counted: Bool(false),
     });
   }
+  equals(other: Tile): Bool {
+    const isPosEqual = this.pos.equals(other.pos);
+    const isHillEqual = this.isHill.equals(other.isHill);
+    const isEmptyEqual = this.isEmpty.equals(other.isEmpty);
+    const isTileTypeEqual = this.tileType.equals(other.tileType);
+    const isCountedEqual = this.counted.equals(other.counted);
+
+    return isPosEqual
+      .and(isHillEqual)
+      .and(isEmptyEqual)
+      .and(isTileTypeEqual)
+      .and(isCountedEqual);
+  }
 }
 
 export class TileMap extends Struct({
@@ -125,6 +138,22 @@ export class TileMap extends Struct({
       return row;
     });
     return new TileMap({ tiles });
+  }
+
+  equals(other: TileMap): Bool {
+    let result = Bool(true);
+    for (let r = 0; r < 2 * GRID_SIZE + 1; r++) {
+      for (let c = 0; c < 2 * GRID_SIZE + 1; c++) {
+        const tile = this.tiles[r][c];
+        const otherTile = other.tiles[r][c];
+        result = Provable.if(
+          tile.equals(otherTile),
+          result.and(Bool(true)),
+          Bool(false)
+        );
+      }
+    }
+    return result;
   }
 }
 
