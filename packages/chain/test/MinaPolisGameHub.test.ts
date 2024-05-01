@@ -3,12 +3,17 @@ import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
 import { Pickles } from 'o1js/dist/node/snarky';
 import {
   GameElementsGenerationProof,
+  GameProcessProof,
+  GameRecordProof,
   MinapolisGameHub,
   checkGameElementsGeneration,
+  checkGameRecord,
+  initGameProcess,
+  processMove,
 } from '../src/MinapolisGameHub';
-import { Field, PrivateKey } from 'o1js';
+import { Field, PrivateKey, UInt64 } from 'o1js';
 import { getDefaultCompetitions } from '../src/levels';
-import { GameInput, Position, TriHex } from '../src/types';
+import { GameInput, GameRecordKey, Position, TriHex } from '../src/types';
 
 export async function mockProof<O, P>(
   publicOutput: O,
@@ -65,6 +70,7 @@ describe('minapolis game hub', () => {
   });
 
   test('create competition', async () => {
+    const playerMoveCount = 5;
     const defaultCompetitions = getDefaultCompetitions();
 
     for (const competition of defaultCompetitions) {
@@ -75,10 +81,14 @@ describe('minapolis game hub', () => {
       await tx.send();
       await appChain.produceBlock();
 
-      const playerMove = new GameInput({
-        pos: Position.zero(),
-        trihex: TriHex.empty(),
-      });
+      const playerInputs = [];
+      for (let i = 0; i < playerMoveCount; i++) {
+        const playerInput = new GameInput({
+          pos: Position.zero(),
+          trihex: TriHex.empty(),
+        });
+        playerInputs.push(playerInput);
+      }
 
       const currentCompetition = defaultCompetitions[0];
 
@@ -90,6 +100,52 @@ describe('minapolis game hub', () => {
         gameContext,
         GameElementsGenerationProof
       );
+
+      let currentGameState = initGameProcess(gameContext);
+      let currentGameStateProof = await mockProof(
+        currentGameState,
+        GameProcessProof
+      );
+
+      // TODO: run this for multiple player moves
+      for(let i =0; i < playerMoveCount; i++) {
+        currentGameState = processMove(currentGameStateProof, playerInputs[i]);
+      currentGameStateProof = await mockProof(
+        currentGameState,
+        GameProcessProof
+      );
+      }
+
+      const checkGameRecordOut = checkGameRecord(
+        gameElementGenerationProof,
+        currentGameStateProof
+      );
+      const gameRecordProof = await mockProof(
+        checkGameRecordOut,
+        GameRecordProof
+      );
+
+      // Finally send the transaction to appchain 😁
+      const tx1 = await appChain.transaction(satyam, () => {
+        gameHub.addGameResult(UInt64.zero, gameRecordProof);
+      });
+
+      await tx1.sign();
+      await tx1.send();
+      await appChain.produceBlock();
+      const lastSeed =
+        (await appChain.query.runtime.MinapolisGameHub.lastSeed.get()) ??
+        UInt64.zero;
+      const gameRecordKey: GameRecordKey = new GameRecordKey({
+        competitionId: lastSeed,
+        player: satyam,
+      });
+      console.log('game record key', gameRecordKey);
+      const userScore =
+        await appChain.query.runtime.MinapolisGameHub.gameRecords.get(
+          gameRecordKey
+        );
+      console.log('player score', userScore?.toBigInt());
     }
   });
 });

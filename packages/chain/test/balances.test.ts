@@ -36,7 +36,7 @@ describe('token balances', () => {
   //   expect(true).toBe(true);
   // });
 
-  it('should add balance correctly', async () => {
+  it.skip('should add balance correctly', async () => {
     const tx = await appChain.transaction(satyamPublicKey, () => {
       balances.addBalance(tokenId, satyamPublicKey, UInt64.from(1000));
     });

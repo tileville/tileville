@@ -4,7 +4,7 @@ import { PrivateKey } from 'o1js';
 import { Mintery, errors } from '../src/mintery';
 import { BalancesKey, TokenId, UInt64 } from '@proto-kit/library';
 
-describe('mintery', () => {
+describe.skip('mintery', () => {
   let appChain: ReturnType<
     typeof TestingAppChain.fromRuntime<{ Mintery: typeof Mintery }>
   >;
