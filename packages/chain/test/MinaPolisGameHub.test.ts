@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { TestingAppChain } from '@proto-kit/sdk';
 import { dummyBase64Proof } from 'o1js/dist/node/lib/proof_system';
 import { Pickles } from 'o1js/dist/node/snarky';
@@ -14,6 +15,7 @@ import {
 import { Field, PrivateKey, UInt64 } from 'o1js';
 import { getDefaultCompetitions } from '../src/levels';
 import { GameInput, GameRecordKey, Position, TriHex } from '../src/types';
+import { ShapePatternsId } from '../src/constants';
 
 export async function mockProof<O, P>(
   publicOutput: O,
@@ -108,12 +110,12 @@ describe('minapolis game hub', () => {
       );
 
       // TODO: run this for multiple player moves
-      for(let i =0; i < playerMoveCount; i++) {
+      for (let i = 0; i < playerMoveCount; i++) {
         currentGameState = processMove(currentGameStateProof, playerInputs[i]);
-      currentGameStateProof = await mockProof(
-        currentGameState,
-        GameProcessProof
-      );
+        currentGameStateProof = await mockProof(
+          currentGameState,
+          GameProcessProof
+        );
       }
 
       const checkGameRecordOut = checkGameRecord(
@@ -147,5 +149,27 @@ describe('minapolis game hub', () => {
         );
       console.log('player score', userScore?.toBigInt());
     }
+  });
+
+  describe.only('Trihex deck', () => {
+    test('should rotate right with v shape', () => {
+      const trihex = new TriHex({
+        shape: ShapePatternsId['a'],
+        hexes: [UInt64.zero, UInt64.zero, UInt64.zero],
+      });
+
+      trihex.rotateRight();
+      expect(trihex.shape.toBigInt()).toEqual(ShapePatternsId['v'].toBigInt());
+    });
+
+    test('should rotate right with a shape', async () => {
+      const trihex = new TriHex({
+        shape: ShapePatternsId['v'],
+        hexes: [UInt64.zero, UInt64.zero, UInt64.zero],
+      });
+
+      trihex.rotateRight();
+      expect(trihex.shape.toBigInt()).toEqual(ShapePatternsId['a'].toBigInt());
+    });
   });
 });

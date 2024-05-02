@@ -7,7 +7,6 @@ import {
   Field,
   UInt64,
 } from 'o1js';
-import { UInt64 as UInt64Proto } from '@proto-kit/library';
 import { TRIHEX_DECK_SIZE, GRID_SIZE, ShapePatternsId } from './constants';
 
 const MAP_SIZE = (2 * GRID_SIZE + 1) ** 2;
@@ -131,13 +130,14 @@ export class TileMap extends Struct({
     Provable.Array(Tile, 2 * GRID_SIZE + 1),
     2 * GRID_SIZE + 1
   ),
+  size: UInt64,
 }) {
   static empty(): TileMap {
     let tiles = [...Array(2 * GRID_SIZE + 1).keys()].map((i) => {
       let row = new Array(2 * GRID_SIZE + 1).fill(Tile.empty());
       return row;
     });
-    return new TileMap({ tiles });
+    return new TileMap({ tiles, size: UInt64.from(GRID_SIZE) });
   }
 
   equals(other: TileMap): Bool {
@@ -168,7 +168,54 @@ export class TriHex extends Struct({
     });
   }
 
-  rotateRight(): void {}
+  rotateRight(): void {
+    const shapeIsA = this.shape.equals(ShapePatternsId['a']);
+    const shapeIsV = this.shape.equals(ShapePatternsId['v']);
+    this.shape = Provable.switch([shapeIsA, shapeIsV], UInt64, [
+      ShapePatternsId['v'],
+      ShapePatternsId['a'],
+    ]);
+
+    // this.shape = Provable.if(
+    //   this.shape.equals(ShapePatternsId['v']),
+    //   ShapePatternsId['a'],
+    //   this.shape
+    // );
+    // let temp = this.hexes[1];
+    // this.hexes[1] = Provable.if(
+    //   this.shape.equals(ShapePatternsId['v']),
+    //   this.hexes[2],
+    //   this.hexes[1]
+    // );
+    // this.hexes[2] = Provable.if(
+    //   this.shape.equals(ShapePatternsId['v']),
+    //   temp,
+    //   this.hexes[2]
+    // );
+
+    // this.shape = Provable.if(
+    //   this.shape.equals(ShapePatternsId['a']),
+    //   ShapePatternsId['v'],
+    //   this.shape
+    // );
+    // temp = this.hexes[0];
+    // this.hexes[0] = Provable.if(
+    //   this.shape.equals(ShapePatternsId['a']),
+    //   this.hexes[1],
+    //   this.hexes[0]
+    // );
+    // this.hexes[1] = Provable.if(
+    //   this.shape.equals(ShapePatternsId['a']),
+    //   temp,
+    //   this.hexes[1]
+    // );
+
+    // this.shape = Provable.if(
+    //   this.shape.equals(ShapePatternsId['\\']),
+    //   ShapePatternsId['/'],
+    //   this.shape
+    // );
+  }
 
   rotateLeft(): void {}
 }

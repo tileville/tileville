@@ -3,7 +3,12 @@ export const TRIHEX_DECK_SIZE = 25;
 export const GRID_SIZE = 5;
 import { Field, UInt64 } from 'o1js';
 
-export const shapes = {
+export const allShapes: {
+  [key: string]: {
+    ro: number;
+    co: number;
+  }[];
+} = {
   a: [
     { ro: 0, co: 0 },
     { ro: 1, co: -1 },
@@ -61,7 +66,9 @@ export const shapes = {
   ],
 };
 
-export const rotations = {
+export const allRotations: {
+  [ket: string]: string[];
+} = {
   a: ['a', 'v'],
   v: ['a', 'v'],
   '\\': ['\\', '-', '/'],
@@ -88,5 +95,14 @@ export const ShapePatternsId = {
   j: UInt64.from(20),
   l: UInt64.from(21),
 };
+
+export const ShapePatternsSymbol = Object.entries(ShapePatternsId).reduce(
+  (acc: any, [key, value]) => {
+    const val = value.toString();
+    acc[val] = key;
+    return acc;
+  },
+  {}
+);
 
 export const MINAPOLIS_TOKEN_ID = Field.from(314);

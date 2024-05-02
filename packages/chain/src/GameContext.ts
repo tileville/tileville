@@ -10,7 +10,14 @@ import {
 import { UInt64 as UInt64Proto } from '@proto-kit/library';
 import { RandomGenerator } from './random';
 import { GameInput, TileMap, TriHexDeck } from './types';
-import { GRID_SIZE, ShapePatternsId, TRIHEX_DECK_SIZE } from './constants';
+import {
+  GRID_SIZE,
+  ShapePatternsId,
+  ShapePatternsSymbol,
+  TRIHEX_DECK_SIZE,
+  allRotations,
+  allShapes,
+} from './constants';
 
 const shapeSet1 = [
   ShapePatternsId['c'],
@@ -58,6 +65,39 @@ export class GameContext extends Struct({
       .and(tilemapEquals)
       .and(alreadyWonEquals)
       .and(debugEquals);
+  }
+
+  canPlaceShape(shape: UInt64): Bool {
+    const shapeSymbol = ShapePatternsSymbol[shape.toString()];
+    const rotations = allRotations[shapeSymbol];
+    let canPlaceShape = Bool(false);
+    for (let r = 0; r < 2 * GRID_SIZE + 1; r++) {
+      for (let c = 0; c < 2 * GRID_SIZE + 1; c++) {
+        for (
+          let rotationIdx = 0;
+          rotationIdx < rotations.length;
+          rotationIdx++
+        ) {
+          const rotation = rotations[rotationIdx];
+          const offsets = allShapes[rotation];
+          let canPlaceForThisRotation = Bool(true);
+          for (let offsetIdx = 0; offsetIdx < offsets.length; offsetIdx++) {
+            const offset = offsets[offsetIdx];
+            const tile = this.tilemap.tiles[r][c];
+            const r1 = Number(tile.pos.x) + offset.ro;
+            const c1 = Number(tile.pos.y) + offset.co;
+
+            canPlaceForThisRotation = Provable.if(
+              this.tilemap.tiles[r1][c1].tileType.equals(UInt64.one).not(),
+              Bool(false),
+              canPlaceForThisRotation
+            );
+          }
+          canPlaceShape = canPlaceShape.or(canPlaceForThisRotation);
+        }
+      }
+    }
+    return canPlaceShape;
   }
 }
 
@@ -138,7 +178,6 @@ export function generateTileMapBySeed(seed: Field): TileMap {
       }
     }
   }
-
   return tilemap;
 }
 
