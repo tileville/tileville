@@ -1,36 +1,17 @@
-import {
-  RuntimeModule,
-  runtimeModule,
-  state,
-  runtimeMethod,
-} from "@proto-kit/module";
-import { State, StateMap, assert } from "@proto-kit/protocol";
-import { Field, Provable, PublicKey, Struct, UInt64 } from "o1js";
+import { Balances as BaseBalances, TokenId, Balance } from '@proto-kit/library';
+import { runtimeModule, runtimeMethod } from '@proto-kit/module';
+import { PublicKey } from 'o1js';
 
-interface BalancesConfig {
-  totalSupply: UInt64;
-}
+interface BalancesConfig {}
 
 @runtimeModule()
-export class Balances extends RuntimeModule<BalancesConfig> {
-  @state() public balances = StateMap.from<PublicKey, UInt64>(
-    PublicKey,
-    UInt64
-  );
-
-  @state() public circulatingSupply = State.from<UInt64>(UInt64);
-
+export class Balances extends BaseBalances<BalancesConfig> {
   @runtimeMethod()
-  public addBalance(address: PublicKey, amount: UInt64): void {
-    const circulatingSupply = this.circulatingSupply.get();
-    const newCirculatingSupply = circulatingSupply.value.add(amount);
-    assert(
-      newCirculatingSupply.lessThanOrEqual(this.config.totalSupply),
-      "Circulating supply would be higher than total supply"
-    );
-    this.circulatingSupply.set(newCirculatingSupply);
-    const currentBalance = this.balances.get(address);
-    const newBalance = currentBalance.value.add(amount);
-    this.balances.set(address, newBalance);
+  public addBalance(
+    tokenId: TokenId,
+    address: PublicKey,
+    amount: Balance
+  ): void {
+    this.mint(tokenId, address, amount);
   }
 }

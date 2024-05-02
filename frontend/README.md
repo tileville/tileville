@@ -1,1 +1,0 @@
-# MINAPolis Frontend

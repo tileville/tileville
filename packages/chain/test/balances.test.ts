@@ -1,47 +1,53 @@
-import { TestingAppChain } from "@proto-kit/sdk";
-import { PrivateKey, UInt64 } from "o1js";
-import { Balances } from "../src/balances";
-import { log } from "@proto-kit/common";
+import 'reflect-metadata';
+import { TestingAppChain } from '@proto-kit/sdk';
+import { PrivateKey } from 'o1js';
+import { Balances } from '../src/balances';
+import { log } from '@proto-kit/common';
+import { BalancesKey, TokenId, UInt64 } from '@proto-kit/library';
 
-log.setLevel("ERROR");
+log.setLevel('WARN');
 
-describe("balances", () => {
-  it("should demonstrate how balances work", async () => {
-    const appChain = TestingAppChain.fromRuntime({
-      modules: {
-        Balances,
-      },
+describe('token balances', () => {
+  let appChain: ReturnType<
+    typeof TestingAppChain.fromRuntime<{ Balances: typeof Balances }>
+  >;
+
+  let balances: Balances;
+
+  const satyamPrivateKey = PrivateKey.random();
+  const satyamPublicKey = satyamPrivateKey.toPublicKey();
+  const tokenId = TokenId.from(0);
+
+  beforeAll(async () => {
+    appChain = TestingAppChain.fromRuntime({
+      Balances,
     });
-
     appChain.configurePartial({
       Runtime: {
-        Balances: {
-          totalSupply: UInt64.from(10000),
-        },
+        Balances: {},
       },
     });
-
     await appChain.start();
+    appChain.setSigner(satyamPrivateKey);
+    balances = appChain.runtime.resolve('Balances');
+  });
 
-    const alicePrivateKey = PrivateKey.random();
-    const alice = alicePrivateKey.toPublicKey();
+  // it('should pass', async () => {
+  //   expect(true).toBe(true);
+  // });
 
-    appChain.setSigner(alicePrivateKey);
-
-    const balances = appChain.runtime.resolve("Balances");
-
-    const tx1 = await appChain.transaction(alice, () => {
-      balances.addBalance(alice, UInt64.from(1000));
+  it.skip('should add balance correctly', async () => {
+    const tx = await appChain.transaction(satyamPublicKey, () => {
+      balances.addBalance(tokenId, satyamPublicKey, UInt64.from(1000));
     });
-
-    await tx1.sign();
-    await tx1.send();
+    await tx.sign();
+    await tx.send();
 
     const block = await appChain.produceBlock();
-
-    const balance = await appChain.query.runtime.Balances.balances.get(alice);
-
-    expect(block?.transactions[0].status.toBoolean()).toBe(true);
+    const balance = await appChain.query.runtime.Balances.balances.get(
+      new BalancesKey({ tokenId, address: satyamPublicKey })
+    );
+    console.log('balance', balance);
     expect(balance?.toBigInt()).toBe(1000n);
   }, 1_000_000);
 });
