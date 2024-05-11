@@ -1,4 +1,4 @@
-export const AboutGame = () => {
+export const AboutPage = () => {
   return (
     <div className="mx-auto h-screen p-10">
       MINAPolis is a on-chain strategic city development Arcade game where you
@@ -11,4 +11,4 @@ export const AboutGame = () => {
   );
 };
 
-
+export default AboutPage;

@@ -1,5 +1,5 @@
 import { Button } from "@radix-ui/themes";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import ConnectButton from "./ConnectButton";
 import { GitHubLogoIcon, VideoIcon, BookmarkIcon } from "@radix-ui/react-icons";
 import {
@@ -10,8 +10,8 @@ import {
 
 export const NavBar = () => {
   return (
-    <nav className="pt-2 mb-6">
-      <div className="flex items-center justify-center w-full">
+    <nav className="mb-6 pt-2">
+      <div className="flex w-full items-center justify-center">
         <div className="flex space-x-6">
           <Button
             variant="outline"
@@ -61,10 +61,8 @@ export const NavBar = () => {
               <VideoIcon />
             </a>
           </Button>
-          <NavLink to="/" label="New Game" />
-          <NavLink to="/about" label="About" />
-          <NavLink to="/leaderboard" label="Leaderboard" />
-          <NavLink to="/settings" label="Settings" />
+          <Link href="/">New Game</Link>
+          <Link href="/about">About</Link>
           <ConnectButton />
         </div>
       </div>

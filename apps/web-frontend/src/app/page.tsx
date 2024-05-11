@@ -2,11 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { PhaserLayer } from "@/phaser/phaserLayer";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavBar } from "@/components/NavBar";
-import { AboutGame } from "@/components/About";
-import { Leaderboard } from "@/components/Leaderboard";
-import { Settings } from "@/components/Settings";
 import { Toaster } from "react-hot-toast";
 import { ChainContext, SignerContext } from "@/contexts";
 
@@ -32,31 +28,21 @@ function App() {
   }, []);
 
   useEffect(() => {
-    cachedInit();
+    cachedInit()
+      .then((res) => {})
+      .catch(() => {});
   }, []);
 
   return (
     <SignerContext.Provider value={{ signer, setSigner }}>
       <ChainContext.Provider value={{ chain, setChain }}>
-        <div className="bg-[#ded6b6] mb-0 w-full">
-          <BrowserRouter>
-            <NavBar />
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <PhaserLayer
-                    handleEntryFees={() => {
-                      setIsEntryFeesModalOpen(true);
-                    }}
-                  />
-                }
-              ></Route>
-              <Route path="about" element={<AboutGame />} />
-              <Route path="leaderboard" element={<Leaderboard />} />
-              <Route path="settings" element={<Settings />} />
-            </Routes>
-          </BrowserRouter>
+        <div className="mb-0 w-full bg-[#ded6b6]">
+          <NavBar />
+          <PhaserLayer
+            handleEntryFees={() => {
+              setIsEntryFeesModalOpen(true);
+            }}
+          />
           <Toaster />
           <GameEntryFeesModal
             open={isEntryFeesModalOpen}
@@ -69,6 +55,7 @@ function App() {
       </ChainContext.Provider>
     </SignerContext.Provider>
   );
+
 }
 
 export default App;
