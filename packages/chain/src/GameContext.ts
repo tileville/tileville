@@ -9,7 +9,14 @@ import {
 } from 'o1js';
 import { UInt64 as UInt64Proto } from '@proto-kit/library';
 import { RandomGenerator } from './random';
-import { GameInput, TileMap, TriHexDeck } from './types';
+import {
+  GameInput,
+  Position,
+  Tile,
+  TileMap,
+  TriHex,
+  TriHexDeck,
+} from './types';
 import {
   GRID_SIZE,
   ShapePatternsId,
@@ -98,6 +105,70 @@ export class GameContext extends Struct({
       }
     }
     return canPlaceShape;
+  }
+
+  placeTrihex(pos: Position, trihex: TriHex): Bool {
+    let touching = Bool(false);
+    const offsets = allShapes[ShapePatternsSymbol[Number(trihex.shape)]];
+
+    const r = Number(pos.x);
+    const c = Number(pos.y);
+
+    const hexTiles: Tile[] = [];
+    for (let offsetIdx = 0; offsetIdx < 3; offsetIdx++) {
+      const offset = offsets[offsetIdx];
+      hexTiles.push(this.tilemap.tiles[r + offset.ro][c + offset.co]);
+      const neighborTiles = this.neighbors(r + offset.ro, c + offset.co);
+
+      // Check if trihex tiles are touching to already placed tiles, if yes, we can place this trihex
+      for (let i = 0; i < neighborTiles.length; i++) {
+        const neighborTile = neighborTiles[i];
+        touching = Provable.if(
+          Bool(!!neighborTile),
+          Provable.if(
+            neighborTile.tileType.greaterThan(UInt64.one),
+            Bool(true),
+            touching
+          ),
+          touching
+        );
+      }
+    }
+
+    const isPlaceable = touching
+      .and(Bool(!!hexTiles[0]))
+      .and(Bool(!!hexTiles[1]))
+      .and(Bool(!!hexTiles[2]))
+      .and(hexTiles[0].tileType.equals(UInt64.one))
+      .and(hexTiles[1].tileType.equals(UInt64.one))
+      .and(hexTiles[2].tileType.equals(UInt64.one));
+
+    for (let i = 0; i < 3; i++) {
+      hexTiles[i].tileType = Provable.if(
+        isPlaceable,
+        trihex.hexes[i],
+        hexTiles[i].tileType
+      );
+
+
+    }
+
+    return isPlaceable;
+  }
+
+  getPointsFor(tile: Tile): UInt64 {
+
+  }
+
+  neighbors(row: number, col: number): Tile[] {
+    return [
+      this.tilemap.tiles[row][col + 1],
+      this.tilemap.tiles[row - 1][col + 1],
+      this.tilemap.tiles[row - 1][col],
+      this.tilemap.tiles[row][col - 1],
+      this.tilemap.tiles[row + 1][col - 1],
+      this.tilemap.tiles[row + 1][col],
+    ];
   }
 }
 
