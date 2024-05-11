@@ -172,4 +172,8 @@ describe('minapolis game hub', () => {
       expect(trihex.shape.toBigInt()).toEqual(ShapePatternsId['a'].toBigInt());
     });
   });
+
+  describe('Can place Trihex', () => {
+    
+  })
 });

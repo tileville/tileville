@@ -149,8 +149,15 @@ export class GameContext extends Struct({
         trihex.hexes[i],
         hexTiles[i].tileType
       );
+
+
     }
+
     return isPlaceable;
+  }
+
+  getPointsFor(tile: Tile): UInt64 {
+
   }
 
   neighbors(row: number, col: number): Tile[] {
