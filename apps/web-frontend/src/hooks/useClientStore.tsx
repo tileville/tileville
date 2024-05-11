@@ -1,4 +1,4 @@
-import { client } from "chain";
+import { client } from "minapolis-chain";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 

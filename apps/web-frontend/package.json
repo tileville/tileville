@@ -1,7 +1,7 @@
 {
   "name": "minapolis-frontend",
   "description": "MINAPolis: Strategic City Development game on MINA blockchain",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "author": {
     "name": "Satyam Bansal",
@@ -20,11 +20,11 @@
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/themes": "^2.0.0-rc.3",
     "@supabase/supabase-js": "^2.39.0",
-    "chain": "workspace:*",
+    "minapolis-chain": "0.0.1",
     "clsx": "^2.1.0",
     "immer": "^10.0.3",
     "next": "14.1.4",
-    "o1js": "link:../../packages/chain/node_modules/o1js",
+    "o1js": "0.13.1",
     "o1js-pack": "^0.5.0",
     "path": "^0.12.7",
     "phaser": "^3.80.1",

@@ -1,8 +1,13 @@
 {
-  "name": "chain",
-  "version": "1.0.0",
+  "name": "minapolis-chain",
+  "version": "0.0.1",
   "type": "module",
   "main": "dist/index.js",
+  "private": false,
+  "author": {
+    "name": "Satyam Bansal",
+    "email": "satyamsgsits1994@gmail.com"
+  },
   "watch": {
     "build-and-start": {
       "patterns": [
