@@ -4,15 +4,6 @@ export type Tile = {
   tile_type: TileType;
 };
 
-enum TileType {
-  Empty,
-  WindMill,
-  Park,
-  Street,
-  Center,
-  Port,
-}
-
 export type PlayerId = {
   player_address: string;
   player_id: number;

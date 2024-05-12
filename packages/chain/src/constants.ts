@@ -105,4 +105,13 @@ export const ShapePatternsSymbol = Object.entries(ShapePatternsId).reduce(
   {}
 );
 
+export const TileType = {
+  Empty: UInt64.from(1),
+  WindMill: UInt64.from(2),
+  Tree: UInt64.from(3),
+  Road: UInt64.from(4),
+  Castle: UInt64.from(5),
+  CityGate: UInt64.from(6),
+}
+
 export const MINAPOLIS_TOKEN_ID = Field.from(314);

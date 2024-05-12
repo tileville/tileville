@@ -62,14 +62,14 @@ export class LeaderboardScore extends Struct({
   player: PublicKey,
 }) {}
 
-export enum TileType {
-  Empty = 1,
-  WindMill = 2,
-  Tree = 3,
-  Road = 4,
-  Castle = 5,
-  CityGate = 6,
-}
+// export enum TileType {
+//   Empty = 1,
+//   WindMill = 2,
+//   Tree = 3,
+//   Road = 4,
+//   Castle = 5,
+//   CityGate = 6,
+// }
 
 export class Position extends Struct({
   x: UInt64,

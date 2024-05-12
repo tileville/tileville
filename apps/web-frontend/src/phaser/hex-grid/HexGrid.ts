@@ -27,7 +27,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
     hills: number,
     x?: number,
     y?: number,
-    onNewPoints?: (score: number, hexType: number) => void,
+    onNewPoints?: (score: number, hexType: number) => void
   ) {
     super(scene);
 
@@ -187,7 +187,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
       ?.setFrame(
         (this.grid.has(1, this.size - 1) ? 4 : 0) +
           (this.grid.has(1, this.size) ? 2 : 0) +
-          (this.grid.has(0, this.size + 1) ? 1 : 0),
+          (this.grid.has(0, this.size + 1) ? 1 : 0)
       );
 
     this.grid
@@ -195,7 +195,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
       ?.setFrame(
         (this.grid.has(this.size + 1, 0) ? 4 : 0) +
           (this.grid.has(this.size, 1) ? 2 : 0) +
-          (this.grid.has(this.size - 1, 1) ? 1 : 0),
+          (this.grid.has(this.size - 1, 1) ? 1 : 0)
       );
 
     this.grid
@@ -203,7 +203,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
       ?.setFrame(
         (this.grid.has(0, this.size * 2 - 1) ? 4 : 0) +
           (this.grid.has(1, this.size * 2 - 1) ? 2 : 0) +
-          (this.grid.has(1, this.size * 2) ? 1 : 0),
+          (this.grid.has(1, this.size * 2) ? 1 : 0)
       );
 
     this.grid
@@ -211,7 +211,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
       ?.setFrame(
         (this.grid.has(this.size - 1, this.size * 2) ? 4 : 0) +
           (this.grid.has(this.size, this.size * 2 - 1) ? 2 : 0) +
-          (this.grid.has(this.size + 1, this.size * 2 - 1) ? 1 : 0),
+          (this.grid.has(this.size + 1, this.size * 2 - 1) ? 1 : 0)
       );
 
     this.grid
@@ -219,7 +219,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
       ?.setFrame(
         (this.grid.has(this.size * 2, 1) ? 4 : 0) +
           (this.grid.has(this.size * 2 - 1, 1) ? 2 : 0) +
-          (this.grid.has(this.size * 2 - 1, 0) ? 1 : 0),
+          (this.grid.has(this.size * 2 - 1, 0) ? 1 : 0)
       );
 
     this.grid
@@ -227,7 +227,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
       ?.setFrame(
         (this.grid.has(this.size * 2 - 1, this.size + 1) ? 4 : 0) +
           (this.grid.has(this.size * 2 - 1, this.size) ? 2 : 0) +
-          (this.grid.has(this.size * 2, this.size - 1) ? 1 : 0),
+          (this.grid.has(this.size * 2, this.size - 1) ? 1 : 0)
       );
 
     this.updateEdges();
@@ -327,13 +327,13 @@ export class HexGrid extends Phaser.GameObjects.Group {
     ) {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
-          ["white", "windmill-bw", "grass-bw", "street-bw"][trihex.hexes[i]],
+          ["white", "windmill-bw", "grass-bw", "street-bw"][trihex.hexes[i]]
         );
       }
     } else {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
-          ["white", "windmill-red", "grass-red", "street-red"][trihex.hexes[i]],
+          ["white", "windmill-red", "grass-red", "street-red"][trihex.hexes[i]]
         );
       }
     }
@@ -343,7 +343,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
     x: number,
     y: number,
     trihex: Trihex,
-    onPlaceTile?: (tiles: Tile[]) => void,
+    onPlaceTile?: (tiles: Tile[]) => void
   ): boolean {
     if (trihex.shape === "a") {
       y -= HEX_HEIGHT / 2;
@@ -356,6 +356,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
     const c = getCol(x, y);
 
     const hexes: Hex[] = [];
+    console.log({ r, c, trihex });
     let touching = false;
     for (let i = 0; i < 3; i++) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -449,14 +450,14 @@ export class HexGrid extends Phaser.GameObjects.Group {
           if (h.counted) {
             h.counted = false;
             this.scoreQueue.enq(
-              new ScorePopper(this.scene, [h], h.hasHill ? -3 : -1),
+              new ScorePopper(this.scene, [h], h.hasHill ? -3 : -1)
             );
           }
         }
       }
       if (isolated) {
         this.scoreQueue.enq(
-          new ScorePopper(this.scene, [hex], hex.hasHill ? 3 : 1),
+          new ScorePopper(this.scene, [hex], hex.hasHill ? 3 : 1)
         );
         hex.counted = true;
       }
@@ -490,7 +491,7 @@ export class HexGrid extends Phaser.GameObjects.Group {
         for (const h of group) {
           if (!h.counted) {
             this.scoreQueue.enq(
-              new ScorePopper(this.scene, [h], h.hexType === 5 ? 3 : 1),
+              new ScorePopper(this.scene, [h], h.hexType === 5 ? 3 : 1)
             );
             h.counted = true;
           }
@@ -554,6 +555,6 @@ export function getRow(_: number, y: number) {
 
 export function getCol(x: number, y: number) {
   return Math.floor(
-    (x + 50 + 0.5 * HEX_WIDTH) / HEX_WIDTH - 0.5 * getRow(x, y),
+    (x + 50 + 0.5 * HEX_WIDTH) / HEX_WIDTH - 0.5 * getRow(x, y)
   );
 }
