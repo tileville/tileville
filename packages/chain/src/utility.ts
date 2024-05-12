@@ -27,3 +27,34 @@ export const inRange = (
   const leftVal = x.sub(left);
   return rightVal.isPositive().and(leftVal.isPositive());
 };
+
+
+export class Queue<Type> {
+  data: Map<number, Type>;
+  head: number;
+  tail: number;
+
+  constructor() {
+    this.data = new Map<number, Type>();
+    this.head = 0;
+    this.tail = 0;
+  }
+
+  enq(item: Type) {
+    this.data.set(this.tail, item);
+    this.tail++;
+  }
+
+  deq(): Type | undefined {
+    if (this.data.has(this.head)) {
+      const item = this.data.get(this.head);
+      this.data.delete(this.head);
+      this.head++;
+      return item;
+    }
+  }
+
+  size(): number {
+    return this.tail - this.head;
+  }
+}
