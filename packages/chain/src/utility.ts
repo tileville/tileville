@@ -43,6 +43,7 @@ export class Queue<Type> {
   enq(item: Type) {
     this.data.set(this.tail, item);
     this.tail++;
+    return 1;
   }
 
   deq(): Type | undefined {

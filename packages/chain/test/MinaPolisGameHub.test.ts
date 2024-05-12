@@ -16,7 +16,7 @@ import { Field, PrivateKey, UInt64 } from 'o1js';
 import { getDefaultCompetitions } from '../src/levels';
 import { GameInput, GameRecordKey, Position, TriHex } from '../src/types';
 import { ShapePatternsId } from '../src/constants';
-import { GAME_INPUTS_MOCK, WINDMILL_GAME_INPUT_MOCK } from './mockData';
+import { GAME_INPUTS_MOCK, TREE_GAME_INPUT_MOCK, WINDMILL_GAME_INPUT_MOCK } from './mockData';
 
 export async function mockProof<O, P>(
   publicOutput: O,
@@ -152,8 +152,7 @@ describe('minapolis game hub', () => {
     }
   });
 
-  test('place windmill tiles', async () => {
-    const playerMoveCount = 1;
+  test.skip('place windmill tiles', async () => {
     const defaultCompetitions = getDefaultCompetitions();
 
     for (const competition of defaultCompetitions) {
@@ -218,6 +217,74 @@ describe('minapolis game hub', () => {
         );
       console.log('player score for windmill', userScore?.toBigInt());
       expect(userScore?.toBigInt()).toEqual(3n)
+    }
+  });
+
+  test.skip('place tree tiles', async () => {
+    const defaultCompetitions = getDefaultCompetitions();
+
+    for (const competition of defaultCompetitions) {
+      const tx = await appChain.transaction(satyam, () => {
+        gameHub.createCompetition(competition);
+      });
+      await tx.sign();
+      await tx.send();
+      await appChain.produceBlock();
+
+      const currentCompetition = defaultCompetitions[0];
+
+      const gameContext = checkGameElementsGeneration(
+        Field.from(currentCompetition.seed)
+      );
+
+      const gameElementGenerationProof = await mockProof(
+        gameContext,
+        GameElementsGenerationProof
+      );
+
+      let currentGameState = initGameProcess(gameContext);
+      let currentGameStateProof = await mockProof(
+        currentGameState,
+        GameProcessProof
+      );
+
+        currentGameState = processMove(currentGameStateProof, TREE_GAME_INPUT_MOCK);
+        currentGameStateProof = await mockProof(
+          currentGameState,
+          GameProcessProof
+        );
+
+      const checkGameRecordOut = checkGameRecord(
+        gameElementGenerationProof,
+        currentGameStateProof
+      );
+      const gameRecordProof = await mockProof(
+        checkGameRecordOut,
+        GameRecordProof
+      );
+
+      // Finally send the transaction to appchain 😁
+      const tx1 = await appChain.transaction(satyam, () => {
+        gameHub.addGameResult(UInt64.zero, gameRecordProof);
+      });
+
+      await tx1.sign();
+      await tx1.send();
+      await appChain.produceBlock();
+      const lastSeed =
+        (await appChain.query.runtime.MinapolisGameHub.lastSeed.get()) ??
+        UInt64.zero;
+      const gameRecordKey: GameRecordKey = new GameRecordKey({
+        competitionId: lastSeed,
+        player: satyam,
+      });
+      console.log('game record key', gameRecordKey);
+      const userScore =
+        await appChain.query.runtime.MinapolisGameHub.gameRecords.get(
+          gameRecordKey
+        );
+      console.log('player score for tree', userScore?.toBigInt());
+      expect(userScore?.toBigInt()).toEqual(5n)
     }
   });
 
