@@ -1,5 +1,7 @@
+
+
 {
-  "extends": "tsconfig/chain.json",
+  "extends": "./tsconfig/chain.json",
   "compilerOptions": {
     "outDir": "./dist",
     "strictNullChecks": true,
