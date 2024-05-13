@@ -246,3 +246,6 @@ export class GameInput extends Struct({
   pos: Position,
   trihex: TriHex,
 }) {}
+
+
+// export class MyList extends MerkleList.create(Tile) {}

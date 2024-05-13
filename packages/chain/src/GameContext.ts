@@ -42,6 +42,8 @@ const shapeSet2 = [
 
 const shapeSet3 = [ShapePatternsId['a'], ShapePatternsId['v']];
 
+
+
 export class GameContext extends Struct({
   trihexDeck: TriHexDeck,
   totalLeft: UInt64,
@@ -175,8 +177,8 @@ export class GameContext extends Struct({
     let isTileTypeRoad = Bool(tile.tileType.equals(TileType.Road))
 
     console.log("is tile type tree", isTileTypeTree.toString())
-    let points = Provable.if(isCounted, Int64.zero, Provable.if(isTileTypeWindMill, this.getPointsForWindmillTile(tile), Provable.if(isTileTypeTree, this.getPointsForTree(tile),Int64.zero)))
-      // let points = Provable.if(isCounted, Int64.zero, Provable.if(isTileTypeWindMill, this.getPointsForWindmillTile(tile), Int64.zero))
+    // let points = Provable.if(isCounted, Int64.zero, Provable.if(isTileTypeWindMill, this.getPointsForWindmillTile(tile), Provable.if(isTileTypeTree, this.getPointsForTree(tile),Int64.zero)))
+      let points = Provable.if(isCounted, Int64.zero, Provable.if(isTileTypeWindMill, this.getPointsForWindmillTile(tile), Int64.zero))
     return points;
   }
 
@@ -291,7 +293,6 @@ export class GameContext extends Struct({
       const neighbors = this.neighbors(Number(tile.pos.x), Number(tile.pos.y));
       console.log("tile neigbors", neighbors.length)
       for (const n of neighbors) {
-let n = neighbors[0]
       let condition = 
         (
           (n.tileType.equals(tile.tileType)

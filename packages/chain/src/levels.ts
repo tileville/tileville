@@ -1,5 +1,5 @@
 import { Bool, CircuitString, Field, UInt64 } from 'o1js';
-import { Competition, TriHexDeck } from './types';
+import { Competition } from './types';
 
 // export const defaultLevel = (): TriHexDeck => {
 
