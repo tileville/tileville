@@ -23,25 +23,11 @@ import {
   TileType,
   allRotations,
   allShapes,
+  shapeSet1,
+  shapeSet2,
+  shapeSet3
 } from './constants';
 import { Queue } from './utility';
-
-const shapeSet1 = [
-  ShapePatternsId['c'],
-  ShapePatternsId['r'],
-  ShapePatternsId['n'],
-  ShapePatternsId['d'],
-  ShapePatternsId['j'],
-  ShapePatternsId['l'],
-];
-const shapeSet2 = [
-  ShapePatternsId['/'],
-  ShapePatternsId['-'],
-  ShapePatternsId['\\'],
-];
-
-const shapeSet3 = [ShapePatternsId['a'], ShapePatternsId['v']];
-
 
 
 export class GameContext extends Struct({
@@ -56,6 +42,7 @@ export class GameContext extends Struct({
   processMove(input: GameInput): void {
     //TODO: Write logic to calculate updated score
     let moveScore = this.placeTrihex(input.pos, input.trihex);
+    // let moveScore = Int64.from(1);
     this.score = Provable.if(this.alreadyWon, this.score, this.score.add(moveScore.magnitude));
     // this.score = Provable.if(this.alreadyWon, this.score, UInt64.from(1));
     this.totalLeft = this.totalLeft.sub(1);

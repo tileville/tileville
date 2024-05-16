@@ -7,7 +7,7 @@ import { BalancesKey, TokenId, UInt64 } from '@proto-kit/library';
 
 log.setLevel('WARN');
 
-describe('token balances', () => {
+describe.skip('Token balances', () => {
   let appChain: ReturnType<
     typeof TestingAppChain.fromRuntime<{ Balances: typeof Balances }>
   >;
@@ -32,22 +32,17 @@ describe('token balances', () => {
     balances = appChain.runtime.resolve('Balances');
   });
 
-  // it('should pass', async () => {
-  //   expect(true).toBe(true);
-  // });
-
-  it.skip('should add balance correctly', async () => {
-    const tx = await appChain.transaction(satyamPublicKey, () => {
+  test('Should add balance correctly', async () => {
+    const tx = await appChain.transaction(satyamPublicKey, async () => {
       balances.addBalance(tokenId, satyamPublicKey, UInt64.from(1000));
     });
     await tx.sign();
     await tx.send();
 
-    const block = await appChain.produceBlock();
+    await appChain.produceBlock();
     const balance = await appChain.query.runtime.Balances.balances.get(
       new BalancesKey({ tokenId, address: satyamPublicKey })
     );
-    console.log('balance', balance);
     expect(balance?.toBigInt()).toBe(1000n);
   }, 1_000_000);
 });

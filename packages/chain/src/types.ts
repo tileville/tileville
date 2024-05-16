@@ -8,6 +8,8 @@ import {
   UInt64,
 } from 'o1js';
 import { TRIHEX_DECK_SIZE, GRID_SIZE, ShapePatternsId, TileType } from './constants';
+import { UInt64 as ProtoUInt64 } from '@proto-kit/library';
+
 
 const MAP_SIZE = (2 * GRID_SIZE + 1) ** 2;
 
@@ -20,12 +22,12 @@ export class Competition extends Struct({
   name: CircuitString,
   seed: Field,
   prereg: Bool,
-  preregStartTime: UInt64,
-  preregEndTime: UInt64,
-  competitionStartTime: UInt64,
-  competitionEndTime: UInt64,
-  funds: UInt64,
-  participationFee: UInt64,
+  preregStartTime: ProtoUInt64,
+  preregEndTime: ProtoUInt64,
+  competitionStartTime: ProtoUInt64,
+  competitionEndTime: ProtoUInt64,
+  funds: ProtoUInt64,
+  participationFee: ProtoUInt64,
 }) {
   static from(
     name: string,
@@ -42,12 +44,12 @@ export class Competition extends Struct({
       name: CircuitString.fromString(name),
       seed: Field.from(seed),
       prereg: new Bool(prereg),
-      preregStartTime: UInt64.from(preregStartTime),
-      preregEndTime: UInt64.from(preregEndTime),
-      competitionStartTime: UInt64.from(competitionStartTime),
-      competitionEndTime: UInt64.from(competitionEndTime),
-      funds: UInt64.from(funds).mul(10 ** 9),
-      participationFee: UInt64.from(participationFee).mul(10 ** 9),
+      preregStartTime: ProtoUInt64.from(preregStartTime),
+      preregEndTime: ProtoUInt64.from(preregEndTime),
+      competitionStartTime: ProtoUInt64.from(competitionStartTime),
+      competitionEndTime: ProtoUInt64.from(competitionEndTime),
+      funds: ProtoUInt64.from(funds).mul(10 ** 9),
+      participationFee: ProtoUInt64.from(participationFee).mul(10 ** 9),
     });
   }
 }
