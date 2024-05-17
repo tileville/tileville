@@ -1,6 +1,5 @@
 import { UInt64 } from 'o1js';
 import { Balances } from './balances';
-import { runtimeModule } from '@proto-kit/module';
 import { ModulesConfig } from '@proto-kit/common';
 import {MinapolisGameHub} from './MinapolisGameHub'
 

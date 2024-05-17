@@ -14,3 +14,9 @@ npm install
 npm run test:watch
 ```
 
+
+# References
+
+https://github.com/yunus433/o1js-math/blob/main/src/o1js-math.ts
+https://github.com/45930/o1js-pack
+https://o1-labs.github.io/proof-systems/
