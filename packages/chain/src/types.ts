@@ -6,6 +6,7 @@ import {
   CircuitString,
   Field,
   UInt64,
+  MerkleList
 } from 'o1js';
 import { TRIHEX_DECK_SIZE, GRID_SIZE, ShapePatternsId, TileType } from './constants';
 import { UInt64 as ProtoUInt64 } from '@proto-kit/library';
@@ -250,4 +251,4 @@ export class GameInput extends Struct({
 }) {}
 
 
-// export class MyList extends MerkleList.create(Tile) {}
+export class MyList extends MerkleList.create(Tile) {}

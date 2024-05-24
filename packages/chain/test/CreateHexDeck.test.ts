@@ -5,7 +5,7 @@ import {
 } from '../src/GameContext';
 import { GRID_SIZE } from '../src/constants';
 
-describe.skip('Generate ', () => {
+describe('Generate ', () => {
   test('Trihex deck with seed', async () => {
     const deck = createTrihexDeckBySeed(Field(5));
     expect(deck.trihexes.length).toEqual(25)

@@ -7,9 +7,13 @@ export * from './client.config.js';
 export * from './chain.config.js'
 
 export * from './MinapolisGameHub.js';
+export * from './GameContext.js'
 
 export * from './constants.js';
 export * from './runtime.js'
+export * from './balances.js'
+export * from './GameHub.js'
+export * from './types.js'
 
 
 export { ClientAppChain, ProtokitLibrary, UInt64 as ProtoUInt64 };
