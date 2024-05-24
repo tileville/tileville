@@ -3,7 +3,6 @@ import { Client, useClientStore } from "./useClientStore";
 import { immer } from "zustand/middleware/immer";
 import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
 import { PublicKey } from "o1js";
-import { useCallback, useEffect } from "react";
 import { useChainStore } from "./useChainStore";
 import { useWalletStore } from "./useWalletStore";
 import { TokenId, UInt64 } from "@proto-kit/library";

@@ -49,7 +49,7 @@ export class MenuScene extends Phaser.Scene {
       220,
       "font",
       "On-chain City-Development Arcade Game on MINA blockchain",
-      70,
+      70
     );
     tagline.setScale(0.3);
     this.menu.add(title);
@@ -59,7 +59,7 @@ export class MenuScene extends Phaser.Scene {
       300,
       400,
       "play-button",
-      this.play.bind(this),
+      this.play.bind(this)
     );
     this.menu.add(playButton);
 
@@ -101,7 +101,7 @@ export class MenuScene extends Phaser.Scene {
       300,
       550,
       "how-to-play-button",
-      this.howToPlay.bind(this),
+      this.howToPlay.bind(this)
     );
     this.menu.add(howToPlayButton);
 
@@ -125,14 +125,14 @@ export class MenuScene extends Phaser.Scene {
       200,
       "font",
       tutorialTexts[0],
-      40,
+      40
     );
     this.tutorialButton = new Button(
       this,
       1265,
       550,
       "next_arrow",
-      this.nextTutorialPage.bind(this),
+      this.nextTutorialPage.bind(this)
     );
     this.tutorialButton.setOrigin(0, 0.5);
 
@@ -209,7 +209,7 @@ export class MenuScene extends Phaser.Scene {
   async play() {
     const handleEntryFees = this.game.registry.get("handleEntryFees");
     const checkEntryFeesPaid = JSON.parse(
-      window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || "",
+      window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""
     );
     if (!checkEntryFeesPaid) {
       return handleEntryFees();
@@ -250,7 +250,7 @@ export class MenuScene extends Phaser.Scene {
       this.tutorialText!.setText(tutorialTexts[this.tutorialPage]);
       for (const hex of this.tutorialGrid.hexes) {
         hex.setSketchy(
-          tutorialTypes[this.tutorialPage].indexOf(hex.hexType) === -1,
+          tutorialTypes[this.tutorialPage].indexOf(hex.hexType) === -1
         );
       }
     }

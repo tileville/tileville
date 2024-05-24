@@ -1,7 +1,7 @@
 export const MAX_TILES = 11;
 export const TRIHEX_DECK_SIZE = 25;
 export const GRID_SIZE = 5;
-import { Field, UInt64 } from 'o1js';
+import {  TokenId, UInt64 } from 'o1js';
 
 export const allShapes: {
   [key: string]: {
@@ -96,6 +96,24 @@ export const ShapePatternsId = {
   l: UInt64.from(21),
 };
 
+export const shapeSet1 = [
+  ShapePatternsId['c'],
+  ShapePatternsId['r'],
+  ShapePatternsId['n'],
+  ShapePatternsId['d'],
+  ShapePatternsId['j'],
+  ShapePatternsId['l'],
+];
+
+export const shapeSet2 = [
+  ShapePatternsId['/'],
+  ShapePatternsId['-'],
+  ShapePatternsId['\\'],
+];
+
+export const shapeSet3 = [ShapePatternsId['a'], ShapePatternsId['v']];
+
+
 export const ShapePatternsSymbol = Object.entries(ShapePatternsId).reduce(
   (acc: any, [key, value]) => {
     const val = value.toString();
@@ -114,4 +132,5 @@ export const TileType = {
   CityGate: UInt64.from(6),
 }
 
-export const MINAPOLIS_TOKEN_ID = Field.from(314);
+export const ZNAKE_TOKEN_ID = TokenId.fromValue(777n);
+

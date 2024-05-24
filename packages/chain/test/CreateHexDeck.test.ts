@@ -5,15 +5,12 @@ import {
 } from '../src/GameContext';
 import { GRID_SIZE } from '../src/constants';
 
-describe.skip('Create Hex Deck', () => {
-  test('by seed', async () => {
+describe('Generate ', () => {
+  test('Trihex deck with seed', async () => {
     const deck = createTrihexDeckBySeed(Field(5));
     expect(deck.trihexes.length).toEqual(25)
   });
-});
-
-describe.skip('Generate Tilemap', () => {
-  test('with center and city wall', async () => {
+  test('Tilemap with seed', async () => {
     const tilemap = generateTileMapBySeed(Field(5));
     expect(tilemap.size).toEqual(UInt64.from(GRID_SIZE))
   });

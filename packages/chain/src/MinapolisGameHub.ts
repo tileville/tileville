@@ -1,4 +1,4 @@
-import { Bool, Experimental, Field, SelfProof, Struct, UInt64 } from 'o1js';
+import { Bool, ZkProgram, Field, SelfProof, Struct, UInt64 } from 'o1js';
 import {
   GameContext,
   createTrihexDeckBySeed,
@@ -18,15 +18,16 @@ export class GameProcessPublicOutput extends Struct({
   currentState: GameContext,
 }) {}
 
-export function checkGameElementsGeneration(seed: Field): GameContext {
+export async function  checkGameElementsGeneration(seed: Field): Promise<GameContext> {
   const trihexDeck = createTrihexDeckBySeed(seed);
   const tilemap = generateTileMapBySeed(seed);
   return loadGameContext(trihexDeck, tilemap, Bool(false));
 }
 
-export const GameElementsGeneration = Experimental.ZkProgram({
+export const GameElementsGeneration = ZkProgram({
   publicInput: Field,
   publicOutput: GameContext,
+  name: 'GameElementsGeneration',
   methods: {
     checkGameElementsGeneration: {
       privateInputs: [TriHexDeck, TileMap],
@@ -35,21 +36,21 @@ export const GameElementsGeneration = Experimental.ZkProgram({
   },
 });
 
-export class GameElementsGenerationProof extends Experimental.ZkProgram.Proof(
+export class GameElementsGenerationProof extends ZkProgram.Proof(
   GameElementsGeneration
 ) {}
 
-export function initGameProcess(initial: GameContext): GameProcessPublicOutput {
+export async function initGameProcess(initial: GameContext): Promise<GameProcessPublicOutput> {
   return new GameProcessPublicOutput({
     initialState: initial,
     currentState: initial,
   });
 }
 
-export function processMove(
+export async function processMove(
   prevProof: SelfProof<void, GameProcessPublicOutput>,
   input: GameInput
-): GameProcessPublicOutput {
+): Promise<GameProcessPublicOutput> {
   prevProof.verify();
 
   const gameContext = prevProof.publicOutput.currentState;
@@ -61,8 +62,9 @@ export function processMove(
   });
 }
 
-export const GameProcess = Experimental.ZkProgram({
+export const GameProcess = ZkProgram({
   publicOutput: GameProcessPublicOutput,
+  name: 'GameProcess',
   methods: {
     init: {
       privateInputs: [GameContext],
@@ -75,14 +77,14 @@ export const GameProcess = Experimental.ZkProgram({
   },
 });
 
-export class GameProcessProof extends Experimental.ZkProgram.Proof(
+export class GameProcessProof extends ZkProgram.Proof(
   GameProcess
 ) {}
 
-export function checkGameRecord(
+export async function checkGameRecord(
   gameElementGenerationProof: GameElementsGenerationProof,
   gameProcessProof: GameProcessProof
-): GameRecordPublicOutput {
+): Promise<GameRecordPublicOutput> {
   // Verify Trihex deck and tilemap generation
   gameElementGenerationProof.verify();
 
@@ -100,8 +102,9 @@ export function checkGameRecord(
   });
 }
 
-export const GameRecord = Experimental.ZkProgram({
+export const GameRecord = ZkProgram({
   publicOutput: GameRecordPublicOutput,
+  name: 'GameRecord',
   methods: {
     checkGameRecord: {
       privateInputs: [GameElementsGenerationProof, GameProcessProof],
@@ -110,7 +113,7 @@ export const GameRecord = Experimental.ZkProgram({
   },
 });
 
-export class GameRecordProof extends Experimental.ZkProgram.Proof(GameRecord) {}
+export class GameRecordProof extends ZkProgram.Proof(GameRecord) {}
 
 @runtimeModule()
 export class MinapolisGameHub extends GameHub<
@@ -119,10 +122,10 @@ export class MinapolisGameHub extends GameHub<
   GameRecordProof
 > {
   @runtimeMethod()
-  public addGameResult(
+  public async addGameResult(
     competitionId: UInt64,
     gameRecordProof: GameRecordProof
-  ): void {
+  ): Promise<void> {
     super.addGameResult(competitionId, gameRecordProof);
   }
 }

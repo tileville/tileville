@@ -73,7 +73,7 @@ export class MainScene extends Phaser.Scene {
       125,
       180,
       "rotate",
-      this.rotateLeft.bind(this),
+      this.rotateLeft.bind(this)
     );
     this.rotateLeftButton.setDepth(3.5);
     this.rotateLeftButton.setFlipX(true);
@@ -82,7 +82,7 @@ export class MainScene extends Phaser.Scene {
       375,
       180,
       "rotate",
-      this.rotateRight.bind(this),
+      this.rotateRight.bind(this)
     );
     this.rotateRightButton.setDepth(3.5);
 
@@ -91,7 +91,7 @@ export class MainScene extends Phaser.Scene {
       410,
       640,
       "question",
-      this.openHelp.bind(this),
+      this.openHelp.bind(this)
     );
     this.openHelpButton.setDepth(3.5);
 
@@ -100,7 +100,7 @@ export class MainScene extends Phaser.Scene {
       1210,
       640,
       "x",
-      this.closeHelp.bind(this),
+      this.closeHelp.bind(this)
     );
     this.closeHelpButton.setDepth(5.1);
     this.closeHelpButton.setVisible(false);
@@ -110,7 +110,7 @@ export class MainScene extends Phaser.Scene {
       620,
       "font",
       String(this.trihexDeck.length),
-      60,
+      60
     );
     this.deckCounterText.setOrigin(0.5, 0.45);
     this.deckCounterText.setDepth(3.6);
@@ -185,7 +185,7 @@ export class MainScene extends Phaser.Scene {
     this.input.keyboard?.on(
       Phaser.Input.Keyboard.Events.ANY_KEY_DOWN,
       this.onKeyDown,
-      this,
+      this
     );
 
     this.input.on("wheel", this.onMouseWheel, this);
@@ -229,7 +229,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       this.previewX,
       this.previewY,
-      this.nextTrihex as Trihex,
+      this.nextTrihex as Trihex
     );
     this.updateBigTrihex();
   }
@@ -239,7 +239,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       this.previewX,
       this.previewY,
-      this.nextTrihex as Trihex,
+      this.nextTrihex as Trihex
     );
     this.updateBigTrihex();
   }
@@ -258,7 +258,7 @@ export class MainScene extends Phaser.Scene {
         this.bigPreviewTrihex[i].setY(HEX_HEIGHT * 1.125 * row);
       } else if (this.nextTrihex?.shape === "v") {
         this.bigPreviewTrihex[i].setX(
-          HEX_WIDTH * 1.5 * (col - 0.5 + 0.5 * row),
+          HEX_WIDTH * 1.5 * (col - 0.5 + 0.5 * row)
         );
         this.bigPreviewTrihex[i].setY(HEX_HEIGHT * 1.125 * row);
       } else {
@@ -340,7 +340,7 @@ export class MainScene extends Phaser.Scene {
             d: "c-shape",
             j: "c-shape",
             l: "c-shape",
-          }[this.trihexDeck[this.trihexDeck.length - 1].shape],
+          }[this.trihexDeck[this.trihexDeck.length - 1].shape]
         );
       } else {
         this.deckCounterImage?.setVisible(false);
@@ -350,7 +350,7 @@ export class MainScene extends Phaser.Scene {
 
       this.bigPreviewContainer?.setPosition(
         this.deckCounterImage?.x,
-        this.deckCounterImage?.y,
+        this.deckCounterImage?.y
       );
       this.bigPreviewContainer?.setScale(0.2);
 
@@ -470,7 +470,7 @@ export class MainScene extends Phaser.Scene {
       1400,
       630,
       "play-again-button",
-      this.playAgain.bind(this),
+      this.playAgain.bind(this)
     );
     this.playAgainButton.setDepth(4);
 
@@ -500,7 +500,7 @@ export class MainScene extends Phaser.Scene {
     this.breakdownHexes[0].setX(-125);
     this.breakdownTexts[0].setX(-125);
     this.breakdownTexts[0].setText(
-      String(this.scoreBreakdown[3] + this.scoreBreakdown[5]),
+      String(this.scoreBreakdown[3] + this.scoreBreakdown[5])
     );
 
     this.breakdownHexes[1].setType(2);
@@ -582,7 +582,7 @@ export class MainScene extends Phaser.Scene {
         this.previewX,
         this.previewY,
         this.nextTrihex as Trihex,
-        this.onPlaceTile.bind(this),
+        this.onPlaceTile.bind(this)
       )
     ) {
       this.pickNextTrihex();
@@ -611,7 +611,7 @@ export class MainScene extends Phaser.Scene {
       this.grid?.updateTriPreview(
         event.worldX,
         event.worldY,
-        this.nextTrihex as Trihex,
+        this.nextTrihex as Trihex
       );
     }
     this.pointerDown = true;
@@ -623,7 +623,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       event.worldX,
       event.worldY,
-      this.nextTrihex as Trihex,
+      this.nextTrihex as Trihex
     );
   }
 
