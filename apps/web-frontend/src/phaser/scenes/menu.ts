@@ -4,7 +4,7 @@ import { Button } from "../util";
 import Phaser from "phaser";
 
 const tutorialTexts = [
-  "MINAPolis is city development Arcade game \nwhere you pay 2 MINA tokens to play the game \nand build your city.",
+  "Tileville is city development Arcade game \nwhere you pay 2 MINA tokens to play the game \nand build your city.",
   "If your score is above 70\nyou will win a level 1 treasure box",
   "Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!",
   "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every Port that you\nconnect to the Center with\nRoads is worth 3 points!",
@@ -43,7 +43,7 @@ export class MenuScene extends Phaser.Scene {
     const map_pattern = this.add.image(920, 360, "map_pattern");
     map_pattern.setScale(0.05);
     map_pattern.setAlpha(0.3);
-    const title = this.add.bitmapText(50, 150, "font", "MinaPolis", 70);
+    // const title = this.add.bitmapText(50, 150, "font", "Tileville", 70);
     const tagline = this.add.bitmapText(
       50,
       220,
@@ -52,7 +52,7 @@ export class MenuScene extends Phaser.Scene {
       70
     );
     tagline.setScale(0.3);
-    this.menu.add(title);
+    // this.menu.add(title);
 
     const playButton = new Button(
       this,

@@ -28,13 +28,18 @@ export default function ConnectButton() {
                 size="3"
                 radius="none"
               >
-                <span>{signer.slice(0, 4) + "..." + signer.slice(-4)}</span>
+                <span>
+                  {
+                    signer &&
+                  signer.slice(0, 4) + "..." + signer.slice(-4)
+                  }
+                  </span>
                 <CaretDownIcon className="w-8 h-8" />
               </Button>
             </DropdownMenu.Trigger>
           )}
           <DropdownMenu.Content className="">
-            <DropdownMenu.Item className="my-10">
+            <DropdownMenu.Item className="my-10 !bg-transparent">
               <Button
                 onClick={() => {
                   console.log("disconnect");

@@ -24,7 +24,6 @@ export const Modal = ({
   return (
     <div className={"relative flex flex-col items-center justify-center"}>
       <div
-        className={"h-full w-full cursor-pointer"}
         onClick={
           setIsOpen ? () => setIsOpen(true) : () => setIsOpenUncontrolled(true)
         }
@@ -57,7 +56,7 @@ export const Modal = ({
           >
             <div
               className={
-                "border-left-accent bg-bg-dark relative flex flex-col rounded-[5px] border p-4"
+                "border-left-accent bg-bg-dark relative flex flex-col rounded-[5px] border p-4 bg-white/40 shadow-md"
               }
               onClick={(e) => e.stopPropagation()}
             >
@@ -65,7 +64,7 @@ export const Modal = ({
               {isDismissible && (
                 <div
                   className={
-                    "absolute right-0 top-0 z-50 cursor-pointer hover:opacity-80"
+                    "absolute right-4 top-4 z-50 cursor-pointer hover:opacity-80"
                   }
                   onClick={
                     setIsOpen
@@ -79,29 +78,8 @@ export const Modal = ({
                         }
                   }
                 >
-                  <svg
-                    width="53"
-                    height="64"
-                    viewBox="0 0 53 64"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="13.5469"
-                      y="16.7344"
-                      width="40"
-                      height="4"
-                      transform="rotate(45 13.5469 16.7344)"
-                      fill="#D2FF00"
-                    />
-                    <rect
-                      x="41.8438"
-                      y="19.5625"
-                      width="40"
-                      height="4"
-                      transform="rotate(135 41.8438 19.5625)"
-                      fill="#D2FF00"
-                    />
+                  <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                   </svg>
                 </div>
               )}

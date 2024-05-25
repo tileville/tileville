@@ -86,3 +86,11 @@ body {
     --font-weight-medium: 600;
     --font-weight-bold: 800;
   }
+
+  canvas{
+    margin-inline: auto;
+  }
+
+  body{
+    font-family: 'my boli' , sans-serif;
+  }

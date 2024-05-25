@@ -18,7 +18,7 @@ export const minapolisConfig = createZkNoidGameConfig({
   releaseDate: new Date(2023, 11, 1),
   popularity: 60,
   author: "Satyam Bansal",
-  rules: `In Minapolis, your objective is build a city around the center with hexagonal road, tree, and windmill tiles
+  rules: `In TileVille, your objective is build a city around the center with hexagonal road, tree, and windmill tiles
     `,
   runtimeModules: {
     MinapolisGameHub,

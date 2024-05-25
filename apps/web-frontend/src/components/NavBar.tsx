@@ -1,69 +1,96 @@
+"use client";
 import { Button } from "@radix-ui/themes";
 import Link from "next/link";
 import ConnectButton from "./ConnectButton";
-import { GitHubLogoIcon, VideoIcon, BookmarkIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon, VideoIcon, BookmarkIcon , PersonIcon } from "@radix-ui/react-icons";
 import {
   GITHUB_URL,
   GAME_TUTORIAL_VIDEO_URL,
   ZKIGNITE_PROPOSAL,
 } from "@/constants";
+import {usePathname  , useRouter} from 'next/navigation'; 
 
+  
 export const NavBar = () => {
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const logoClickHandler = () => {
+    if(pathname === "/"){
+      window.location.reload()
+    }else{
+      router.push('/');
+    }
+  }
+
   return (
-    <nav className="mb-6 pt-2">
-      <div className="flex w-full items-center justify-center">
-        <div className="flex space-x-6">
-          <Button
-            variant="outline"
-            size="3"
-            color="jade"
-            highContrast
-            radius="none"
-          >
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              className="flex items-center gap-2"
+    <nav className="mb-6 pt-2 px-4">
+      <div className="max-w-[1280px] mx-auto">
+        <div className="flex w-full items-center justify-between">
+          <div>
+            <button className="text-5xl font-black" onClick={logoClickHandler}>TileVille</button>
+            {/* <button className="text-5xl font-black" onClick={() => window.location.reload()}>TileVille</button> */}
+          </div>
+          <div className="flex space-x-6">
+            <Button
+              variant="outline"
+              size="3"
+              color="jade"
+              highContrast
+              radius="none"
             >
-              Github
-              <GitHubLogoIcon />
-            </a>
-          </Button>{" "}
-          <Button
-            variant="outline"
-            size="3"
-            color="jade"
-            highContrast
-            radius="none"
-          >
-            <a
-              href={ZKIGNITE_PROPOSAL}
-              target="_blank"
-              className="flex items-center gap-2"
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                className="flex items-center gap-2"
+              >
+                Github
+                <GitHubLogoIcon />
+              </a>
+            </Button>{" "}
+            <Button
+              variant="outline"
+              size="3"
+              color="jade"
+              highContrast
+              radius="none"
             >
-              ZK Ignite Proposal
-              <BookmarkIcon />
-            </a>
-          </Button>
-          <Button
-            variant="outline"
-            size="3"
-            color="jade"
-            highContrast
-            radius="none"
-          >
-            <a
-              href={GAME_TUTORIAL_VIDEO_URL}
-              target="_blank"
-              className="flex items-center gap-2"
+              <a
+                href={GAME_TUTORIAL_VIDEO_URL}
+                target="_blank"
+                className="flex items-center gap-2"
+              >
+                Tutorial Video
+                <VideoIcon />
+              </a>
+            </Button>
+            
+            <Link href="/about">
+            <Button
+              variant="outline"
+              size="3"
+              color="jade"
+              highContrast
+              radius="none"
             >
-              Tutorial Video
-              <VideoIcon />
-            </a>
-          </Button>
-          <Link href="/">New Game</Link>
-          <Link href="/about">About</Link>
-          <ConnectButton />
+              About
+            </Button>
+            </Link>
+            <Link href="/profile">
+            <Button
+              variant="outline"
+              size="3"
+              color="jade"
+              highContrast
+              radius="none"
+            >
+              Profile
+              <PersonIcon />
+            </Button>
+            </Link>
+            <ConnectButton />
+          </div>
         </div>
       </div>
     </nav>

@@ -1,3 +1,3 @@
 export const MinaPolisPage = () => {
-  return <h1>Minapolis Home Page</h1>;
+  return <h1>Tileville Home Page</h1>;
 };

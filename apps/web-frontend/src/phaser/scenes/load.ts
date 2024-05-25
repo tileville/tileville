@@ -8,7 +8,7 @@ export class LoadScene extends Phaser.Scene {
   preload() {
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
-    progressBox.fillStyle(0x222222, 0.8);
+    progressBox.fillStyle(0x000000, 0.2);
     progressBox.fillRect(240, 270, 320, 50);
 
     const width = this.cameras.main.width;
@@ -19,7 +19,7 @@ export class LoadScene extends Phaser.Scene {
       text: "Loading...",
       style: {
         font: "20px monospace",
-        color: "#ffffff",
+        color: "#000000",
       },
     });
     loadingText.setOrigin(0.5, 0.5);
@@ -30,7 +30,7 @@ export class LoadScene extends Phaser.Scene {
       text: "0%",
       style: {
         font: "18px monospace",
-        color: "#ffffff",
+        color: "#000000",
       },
     });
     percentText.setOrigin(0.5, 0.5);
@@ -41,7 +41,7 @@ export class LoadScene extends Phaser.Scene {
       text: "",
       style: {
         font: "18px monospace",
-        color: "#ffffff",
+        color: "#000000",
       },
     });
     assetText.setOrigin(0.5, 0.5);
