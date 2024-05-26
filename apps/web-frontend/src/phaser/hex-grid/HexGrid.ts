@@ -4,8 +4,9 @@ import { Trihex } from "./TriHex";
 import { Hex } from "./Hex";
 import { ScorePopper } from "./ScorePopper";
 import { Tile } from "../../types";
+import { GameObjects } from "phaser";
 
-export class HexGrid extends Phaser.GameObjects.Group {
+export class HexGrid extends GameObjects.Group {
   grid: Matrix2D<Hex>;
   hexes: Hex[];
   triPreviews: Phaser.GameObjects.Image[];

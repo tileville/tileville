@@ -1,7 +1,7 @@
 import { GAME_ENTRY_FEE_KEY } from "../../constants";
 import { HexGrid } from "../hex-grid";
 import { Button } from "../util";
-import Phaser from "phaser";
+import { Scene } from "phaser";
 
 const tutorialTexts = [
   "Tileville is city development Arcade game \nwhere you pay 2 MINA tokens to play the game \nand build your city.",
@@ -23,7 +23,7 @@ const tutorialTypes = [
   [1, 2, 3, 4, 5],
 ];
 
-export class MenuScene extends Phaser.Scene {
+export class MenuScene extends Scene {
   menu: Phaser.GameObjects.Group | null = null;
   background: Phaser.GameObjects.Image | null = null;
   tutorialGrid: HexGrid = {} as HexGrid;

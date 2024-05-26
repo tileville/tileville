@@ -1,4 +1,5 @@
-export class Hex extends Phaser.GameObjects.Image {
+import { GameObjects } from "phaser";
+export class Hex extends GameObjects.Image {
   row: number;
   col: number;
   hexType: number;
@@ -26,7 +27,7 @@ export class Hex extends Phaser.GameObjects.Image {
     x: number,
     y: number,
     row: number,
-    col: number,
+    col: number
   ) {
     super(scene, x, y, "empty");
 
@@ -130,7 +131,7 @@ export class Hex extends Phaser.GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ["empty", "windmill", "grass", "street", "center", "port-bw"][hexType],
+      ["empty", "windmill", "grass", "street", "center", "port-bw"][hexType]
     );
     this.hexType = hexType;
     if (hexType === 1) {

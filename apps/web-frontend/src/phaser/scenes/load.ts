@@ -1,6 +1,6 @@
-import Phaser from "phaser";
+import { Scene } from "phaser";
 
-export class LoadScene extends Phaser.Scene {
+export class LoadScene extends Scene {
   constructor() {
     super("load");
   }

@@ -8,9 +8,9 @@ import {
   HEX_WIDTH,
 } from "../hex-grid";
 import { Button, pick, shuffle } from "../util";
-import Phaser from "phaser";
+import { Scene } from "phaser";
 
-export class MainScene extends Phaser.Scene {
+export class MainScene extends Scene {
   grid: HexGrid | null = null;
   foreground: Phaser.GameObjects.Image | null = null;
   nextType = 0;
@@ -49,7 +49,7 @@ export class MainScene extends Phaser.Scene {
     super("main");
   }
 
-  async create() {
+  create() {
     this.add.rectangle(640, 360, 1280, 720);
     const bgImage = this.add.image(640, 360, "map_pattern");
     bgImage.setScale(0.2);

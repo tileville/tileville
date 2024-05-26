@@ -1,8 +1,8 @@
-import Phaser from "phaser";
+import { GameObjects } from "phaser";
 import { Hex } from "./Hex";
 import { HEX_HEIGHT } from "./constants";
 
-export class ScorePopper extends Phaser.GameObjects.BitmapText {
+export class ScorePopper extends GameObjects.BitmapText {
   points: number;
   hexes: Hex[];
 
@@ -21,7 +21,7 @@ export class ScorePopper extends Phaser.GameObjects.BitmapText {
       ySum / hexes.length,
       "font",
       points > 0 ? "+" + String(points) : String(points),
-      40,
+      40
     );
     scene.add.existing(this);
     this.points = points;
