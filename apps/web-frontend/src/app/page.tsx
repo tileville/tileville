@@ -36,8 +36,7 @@ function App() {
   return (
     <SignerContext.Provider value={{ signer, setSigner }}>
       <ChainContext.Provider value={{ chain, setChain }}>
-        <div className="mb-0 w-full bg-[#ded6b6]">
-          <NavBar />
+        <div className="mb-0 w-full ">
           <PhaserLayer
             handleEntryFees={() => {
               setIsEntryFeesModalOpen(true);
@@ -50,7 +49,6 @@ function App() {
               setIsEntryFeesModalOpen(false);
             }}
           />
-          <Footer />
         </div>
       </ChainContext.Provider>
     </SignerContext.Provider>

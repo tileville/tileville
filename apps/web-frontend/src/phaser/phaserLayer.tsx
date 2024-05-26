@@ -13,9 +13,6 @@ export const PhaserLayer = ({ handleEntryFees }: PhaserLayerProps) => {
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
       backgroundColor: "0xded6b6",
-      scale: {
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-      },
     };
     const game = new Phaser.Game(config);
     game.registry.set("handleEntryFees", handleEntryFees);
