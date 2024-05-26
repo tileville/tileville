@@ -1,14 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { PhaserLayer } from "@/phaser/phaserLayer";
-import { NavBar } from "@/components/NavBar";
+// import { PhaserLayer } from "@/phaser/phaserLayer";
+// import { NavBar } from "@/components/NavBar";
 import { Toaster } from "react-hot-toast";
 import { ChainContext, SignerContext } from "@/contexts";
 
 import { ChainType } from "@/types";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
-import { Footer } from "@/components/Footer";
+// import { Footer } from "@/components/Footer";
+
+import dynamic from "next/dynamic";
+
+const DynamicPhaserLayerWithNoSSR = dynamic(
+  () => import("@/phaser/phaserLayer"),
+  { ssr: false }
+);
 
 function App() {
   const [signer, setSigner] = useState("");
@@ -37,7 +44,7 @@ function App() {
     <SignerContext.Provider value={{ signer, setSigner }}>
       <ChainContext.Provider value={{ chain, setChain }}>
         <div className="mb-0 w-full ">
-          <PhaserLayer
+          <DynamicPhaserLayerWithNoSSR
             handleEntryFees={() => {
               setIsEntryFeesModalOpen(true);
             }}
@@ -53,7 +60,6 @@ function App() {
       </ChainContext.Provider>
     </SignerContext.Provider>
   );
-
 }
 
 export default App;

@@ -1,3 +1,5 @@
+"use client";
+
 export const AboutPage = () => {
   return (
     <div className="mx-auto h-screen p-10">

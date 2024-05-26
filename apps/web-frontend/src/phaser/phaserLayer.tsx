@@ -4,6 +4,7 @@ import { LoadScene, MainScene, MenuScene } from "./scenes";
 type PhaserLayerProps = {
   handleEntryFees: () => void;
 };
+
 export const PhaserLayer = ({ handleEntryFees }: PhaserLayerProps) => {
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
@@ -24,3 +25,5 @@ export const PhaserLayer = ({ handleEntryFees }: PhaserLayerProps) => {
 
   return <div id="minapolis-hex" />;
 };
+
+export default PhaserLayer;
