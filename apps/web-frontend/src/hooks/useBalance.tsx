@@ -1,11 +1,15 @@
 import { create } from "zustand";
 import { Client, useClientStore } from "./useClientStore";
 import { immer } from "zustand/middleware/immer";
-import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
+import {
+  PendingTransaction,
+  UnsignedTransaction,
+} from "tileville-protokit-sequencer";
 import { PublicKey } from "o1js";
 import { useChainStore } from "./useChainStore";
 import { useWalletStore } from "./useWalletStore";
-import { TokenId, UInt64 } from "@proto-kit/library";
+import { Balance, TokenId, UInt64 } from "tileville-protokit-library";
+import { useEffect } from "react";
 
 export interface BalancesState {
   loading: boolean;
@@ -51,7 +55,11 @@ export const useBalancesStore = create<
       const sender = PublicKey.fromBase58(address);
 
       const tx = await client.transaction(sender, () => {
-        balances.addBalance(TokenId.from(0), sender, UInt64.from(1000));
+        return balances.addBalance(
+          TokenId.from(0),
+          sender,
+          UInt64.from(1000) as any
+        );
       });
 
       await tx.sign();

@@ -1,7 +1,7 @@
 "use client";
 
 import "reflect-metadata";
-import { type ClientAppChain } from "@proto-kit/sdk";
+import { type ClientAppChain } from "tileville-protokit-sdk";
 import { PrivateKey, PublicKey, Struct } from "o1js";
 import { useCallback, useContext, useEffect } from "react";
 import { create } from "zustand";
@@ -14,7 +14,7 @@ import AppChainClientContext from "../contexts/AppChainClientContext";
 import { DefaultRuntimeModules } from "../runtimeModules";
 import { Balances, ProtoUInt64, ZNAKE_TOKEN_ID } from "tileville-chain-dev";
 
-import { BalancesKey, TokenId } from "@proto-kit/library";
+import { BalancesKey, TokenId } from "tileville-protokit-library";
 // import { api } from "@/trpc/react";
 // import { getEnvContext } from "../envContext";
 
@@ -165,9 +165,7 @@ export const useTestBalanceGetter = () => {
     if (!network.address) return;
     if (balancesStore.balances[network.address] >= 100 * 10 ** 9) return;
 
-    const balances = contextAppChainClient.runtime.resolve(
-      "Balances"
-    ) as Balances;
+    const balances = contextAppChainClient.runtime.resolve("Balances");
     const sender = PublicKey.fromBase58(network.address);
 
     console.log(balances);

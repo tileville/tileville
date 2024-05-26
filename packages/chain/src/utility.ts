@@ -28,7 +28,6 @@ export const inRange = (
   return rightVal.isPositive().and(leftVal.isPositive());
 };
 
-
 export class Queue<Type> {
   data: Map<number, Type>;
   head: number;

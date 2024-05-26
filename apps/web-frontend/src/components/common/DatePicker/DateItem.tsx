@@ -119,14 +119,12 @@ export const DateItem = ({
             else {
               setPickedDate(date);
               const formatDate = (item: string | undefined) => {
-                // @ts-ignore
-                if (item.length < 2) return "0" + item;
+                if (item && item.length < 2) return "0" + item;
                 else return item;
               };
-              const formatMonth = (item: number | undefined) => {
-                // @ts-ignore
+              const formatMonth = (item: number) => {
                 item += 1;
-                // @ts-ignore
+                
                 if (item.toString().length < 2) return "0" + item;
                 else return item;
               };

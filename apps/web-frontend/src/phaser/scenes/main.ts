@@ -226,21 +226,13 @@ export class MainScene extends Scene {
 
   rotateRight() {
     this.nextTrihex?.rotateRight();
-    this.grid?.updateTriPreview(
-      this.previewX,
-      this.previewY,
-      this.nextTrihex as Trihex
-    );
+    this.grid?.updateTriPreview(this.previewX, this.previewY, this.nextTrihex!);
     this.updateBigTrihex();
   }
 
   rotateLeft() {
     this.nextTrihex?.rotateLeft();
-    this.grid?.updateTriPreview(
-      this.previewX,
-      this.previewY,
-      this.nextTrihex as Trihex
-    );
+    this.grid?.updateTriPreview(this.previewX, this.previewY, this.nextTrihex!);
     this.updateBigTrihex();
   }
 
@@ -266,7 +258,7 @@ export class MainScene extends Scene {
         this.bigPreviewTrihex[i].setY(HEX_HEIGHT * 1.125 * row);
       }
 
-      this.bigPreviewTrihex[i].setType(this.nextTrihex?.hexes[i] as number);
+      this.bigPreviewTrihex[i].setType(this.nextTrihex?.hexes[i]!);
       if (this.nextTrihex?.hexes[i] === 0)
         this.bigPreviewTrihex[i].setVisible(false);
     }
@@ -545,7 +537,7 @@ export class MainScene extends Scene {
     });
   }
 
-  async playAgain() {
+  playAgain() {
     this.breakdownContainer?.setVisible(false);
     this.gameOverText?.setVisible(false);
     this.nextRankText?.setVisible(false);
@@ -581,7 +573,7 @@ export class MainScene extends Scene {
       this.grid.placeTrihex(
         this.previewX,
         this.previewY,
-        this.nextTrihex as Trihex,
+        this.nextTrihex!,
         this.onPlaceTile.bind(this)
       )
     ) {
@@ -589,7 +581,7 @@ export class MainScene extends Scene {
 
       if (
         this.nextTrihex?.hexes[0] === 0 ||
-        !this.grid.canPlaceShape(this.nextTrihex?.shape as string)
+        !this.grid.canPlaceShape(this.nextTrihex?.shape!)
       ) {
         this.time.addEvent({
           callback: this.waitForFinalScore,
@@ -598,7 +590,7 @@ export class MainScene extends Scene {
         });
         this.grid.deactivate();
       }
-      this.grid.updateTriPreview(-100, -100, this.nextTrihex as Trihex);
+      this.grid.updateTriPreview(-100, -100, this.nextTrihex!);
     }
   }
 
@@ -608,11 +600,7 @@ export class MainScene extends Scene {
     } else {
       this.previewX = event.worldX;
       this.previewY = event.worldY;
-      this.grid?.updateTriPreview(
-        event.worldX,
-        event.worldY,
-        this.nextTrihex as Trihex
-      );
+      this.grid?.updateTriPreview(event.worldX, event.worldY, this.nextTrihex!);
     }
     this.pointerDown = true;
   }
@@ -620,11 +608,7 @@ export class MainScene extends Scene {
   onPointerMove(event: Phaser.Input.Pointer) {
     this.previewX = event.worldX;
     this.previewY = event.worldY;
-    this.grid?.updateTriPreview(
-      event.worldX,
-      event.worldY,
-      this.nextTrihex as Trihex
-    );
+    this.grid?.updateTriPreview(event.worldX, event.worldY, this.nextTrihex!);
   }
 
   onKeyDown(event: KeyboardEvent) {

@@ -1,5 +1,5 @@
 "use client";
-import { type PendingTransaction } from "@proto-kit/sequencer";
+import { type PendingTransaction } from "tileville-protokit-sequencer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 

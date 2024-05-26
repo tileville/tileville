@@ -25,11 +25,11 @@ export interface IScoreable {
 export class GameHub<
   PublicInput,
   PublicOutput extends IScoreable,
-  GameProof extends Proof<PublicInput, PublicOutput>,
+  GameProof extends Proof<PublicInput, PublicOutput>
 > extends RuntimeModule<unknown> {
   @state() public competitionCreator = StateMap.from<UInt64, PublicKey>(
     UInt64,
-    PublicKey,
+    PublicKey
   );
   @state() public competitions = StateMap.from<UInt64, Competition>(
     UInt64,
@@ -115,18 +115,21 @@ export class GameHub<
       this.competitions.get(competitionId).value.prereg;
     const userRegistration = this.registrations.get(gameKey).value;
 
-    assert(registrationNeeded.not().or(userRegistration), 'Should register first');
+    assert(
+      registrationNeeded.not().or(userRegistration),
+      'Should register first'
+    );
 
     this.payCompetitionFee(competitionId, registrationNeeded.not());
     const currentScore = this.gameRecords.get(gameKey).value;
     const newScore = gameRecordProof.publicOutput.score;
-    console.log("new score", newScore)
+    console.log('new score', newScore);
     const betterScore = currentScore.lessThan(newScore);
 
     {
       this.gameRecords.set(
         gameKey,
-        Provable.if(betterScore, newScore, currentScore),
+        Provable.if(betterScore, newScore, currentScore)
       );
 
       let prevValue = new LeaderboardScore({
@@ -144,21 +147,20 @@ export class GameHub<
           new LeaderboardScore({
             score: UInt64.from(0),
             player: PublicKey.empty(),
-          }),
+          })
         );
 
         found = found.or(gameRecord.score.lessThan(prevValue.score));
 
         this.leaderboard.set(
           leaderboardKey,
-          Provable.if(found, LeaderboardScore, prevValue, gameRecord),
+          Provable.if(found, LeaderboardScore, prevValue, gameRecord)
         );
 
         prevValue = Provable.if(found, LeaderboardScore, gameRecord, prevValue);
       }
     }
   }
-
 
   @runtimeMethod()
   public async getReward(competitionId: UInt64): Promise<void> {
@@ -177,7 +179,10 @@ export class GameHub<
       })
     ).value;
 
-    assert(winner.player.equals(this.transaction.sender.value), 'You are not the winner');
+    assert(
+      winner.player.equals(this.transaction.sender.value),
+      'You are not the winner'
+    );
     this.balances.mint(
       ZNAKE_TOKEN_ID,
       this.transaction.sender.value,

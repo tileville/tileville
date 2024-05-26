@@ -1,4 +1,4 @@
-import { client } from "minapolis-chain";
+import { client } from "tileville-chain-dev";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 

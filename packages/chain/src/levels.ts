@@ -1,6 +1,6 @@
 import { Bool, CircuitString, Field, UInt64 } from 'o1js';
 import { Competition } from './types';
-import {UInt64 as ProtoUInt64} from '@proto-kit/library'
+import { UInt64 as ProtoUInt64 } from '@proto-kit/library';
 
 // export const defaultLevel = (): TriHexDeck => {
 

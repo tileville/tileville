@@ -4,8 +4,11 @@ import { useWalletStore } from "./useWalletStore";
 import { toast } from "react-hot-toast";
 import { usePrevious } from "react-use";
 import { useMemo, useCallback, useEffect } from "react";
-import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
-import { MethodIdResolver } from "@proto-kit/module";
+import {
+  PendingTransaction,
+  UnsignedTransaction,
+} from "tileville-protokit-sequencer";
+import { MethodIdResolver } from "tileville-protokit-module";
 import truncateMiddle from "truncate-middle";
 import { Field, UInt64, PublicKey, Signature } from "o1js";
 
@@ -16,6 +19,7 @@ export const useNotifyTransactions = () => {
 
   const previousPendingTransactions = usePrevious(wallet.pendingTransactions);
   const newPendingTransactions = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return wallet.pendingTransactions.filter(
       (pendingTransaction) =>
         !(previousPendingTransactions ?? []).includes(pendingTransaction)

@@ -1,6 +1,6 @@
 "use client";
 
-export const AboutPage = () => {
+export default function AboutPage() {
   return (
     <div className="mx-auto h-screen p-10">
       TileVille is a on-chain strategic city development Arcade game where you
@@ -11,6 +11,6 @@ export const AboutPage = () => {
       etc.
     </div>
   );
-};
+}
 
-export default AboutPage;
+// export default AboutPage;

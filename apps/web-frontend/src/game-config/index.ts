@@ -2,14 +2,14 @@ import { createZkNoidGameConfig } from "@/lib/createConfig";
 import { ZkNoidGameType } from "@/lib/platform/game_types";
 import { MinapolisGameHub } from "tileville-chain-dev";
 import { MinaPolisPage } from "@/components/MinapolisPage";
-import NewArkanoidCompetitionPage from "./components/NewArkanoidCompetitionPage";
-import ArkanoidCompetitionsListPage from "./components/ArkanoidCompetitionsListPage";
+import { TileVilleCompetitionPage } from "@/components/TileVilleCompetitionPage";
+import { TileVilleCompetitionListPage } from "@/components/TileVilleCompetitionListPage";
 import { ZkNoidGameFeature, ZkNoidGameGenre } from "@/lib/platform/game_tags";
 
 export const minapolisConfig = createZkNoidGameConfig({
-  id: "Minapolis",
+  id: "TileVille",
   type: ZkNoidGameType.SinglePlayer,
-  name: "Minapolis game",
+  name: "TileVille game",
   description: "on-chain strategic city building game",
   image: "/image/games/arkanoid.svg",
   genre: ZkNoidGameGenre.Arcade,
@@ -21,9 +21,9 @@ export const minapolisConfig = createZkNoidGameConfig({
   rules: `In TileVille, your objective is build a city around the center with hexagonal road, tree, and windmill tiles
     `,
   runtimeModules: {
-    MinapolisGameHub,
+    MinapolisGameHub: MinapolisGameHub as any,
   },
   page: MinaPolisPage,
-  pageCompetitionsList: ArkanoidCompetitionsListPage,
-  pageNewCompetition: NewArkanoidCompetitionPage,
+  pageCompetitionsList: TileVilleCompetitionListPage,
+  pageNewCompetition: TileVilleCompetitionPage,
 });

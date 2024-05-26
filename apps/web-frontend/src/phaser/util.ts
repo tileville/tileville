@@ -9,6 +9,7 @@ export function copyArray(source: any[], array?: any[]) {
   while (++index < length) {
     array[index] = source[index];
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return array;
 }
 
@@ -27,6 +28,7 @@ export function shuffle(array: any[]) {
     result[rand] = result[index];
     result[index] = value;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return result;
 }
 
@@ -65,7 +67,7 @@ export class Button extends Phaser.GameObjects.Sprite {
   }
 
   onUp() {
-    this.scene.sound.play('click', { volume: 0.9 });
+    this.scene.sound.play("click", { volume: 0.9 });
     this.setScale(1);
     if (this.down) {
       this.onDownCallback();
@@ -73,7 +75,7 @@ export class Button extends Phaser.GameObjects.Sprite {
   }
 
   onDown() {
-    this.scene.sound.play('click', { volume: 0.4 });
+    this.scene.sound.play("click", { volume: 0.4 });
     this.setScale(0.9);
     this.down = true;
   }
@@ -152,5 +154,6 @@ export class Matrix2D<Type> {
 }
 
 export function pick(array: any[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return array[Math.floor(Math.random() * array.length)];
 }

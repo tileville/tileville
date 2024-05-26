@@ -34,7 +34,7 @@ export class MenuScene extends Scene {
     super("menu");
   }
 
-  async create() {
+  create() {
     this.cameras.main.setBounds(-1280, 0, 3840, 720);
     this.menu = this.add.group();
 
@@ -141,7 +141,7 @@ export class MenuScene extends Scene {
     for (let r = 0; r < tutorialGrid.length; r++) {
       for (let c = 0; c < tutorialGrid.length; c++) {
         if (grid.grid.has(r, c)) {
-          grid.grid.get(r, c)!.setType(tutorialGrid[r][c] as number);
+          grid.grid.get(r, c)!.setType(tutorialGrid[r][c]!);
         }
       }
     }
@@ -206,13 +206,14 @@ export class MenuScene extends Scene {
     });
   }
 
-  async play() {
+  play() {
     const handleEntryFees = this.game.registry.get("handleEntryFees");
     const checkEntryFeesPaid = JSON.parse(
       window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""
     );
     if (!checkEntryFeesPaid) {
-      return handleEntryFees();
+      handleEntryFees();
+      return;
     }
     this.cameras.main.pan(-1280, 0, 500, "Linear", true);
 

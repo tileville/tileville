@@ -14,12 +14,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "typeRoots": [
-      "./@types",
-      "./node_modules/@types",
-      "./node_modules/phaser/types"
-    ],
-    "types": ["Phaser"],
+    "typeRoots": ["./@types", "./node_modules/@types"],
     "plugins": [
       {
         "name": "next"

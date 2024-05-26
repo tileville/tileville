@@ -6,11 +6,15 @@ import {
   CircuitString,
   Field,
   UInt64,
-  MerkleList
+  MerkleList,
 } from 'o1js';
-import { TRIHEX_DECK_SIZE, GRID_SIZE, ShapePatternsId, TileType } from './constants';
+import {
+  TRIHEX_DECK_SIZE,
+  GRID_SIZE,
+  ShapePatternsId,
+  TileType,
+} from './constants';
 import { UInt64 as ProtoUInt64 } from '@proto-kit/library';
-
 
 const MAP_SIZE = (2 * GRID_SIZE + 1) ** 2;
 
@@ -136,19 +140,18 @@ export class TileMap extends Struct({
   size: UInt64,
 }) {
   static empty(): TileMap {
-
-    let tiles: Tile[][] = []
-    for(let r = 0; r < 2 * GRID_SIZE +1; r++) {
+    let tiles: Tile[][] = [];
+    for (let r = 0; r < 2 * GRID_SIZE + 1; r++) {
       tiles[r] = [];
-      for(let c = 0; c < 2 * GRID_SIZE + 1; c++) {
-        const tile =  new Tile({
-          pos: new Position({x: UInt64.from(r), y: UInt64.from(c)}),
+      for (let c = 0; c < 2 * GRID_SIZE + 1; c++) {
+        const tile = new Tile({
+          pos: new Position({ x: UInt64.from(r), y: UInt64.from(c) }),
           isEmpty: Bool(true),
           isHill: Bool(false),
           counted: Bool(false),
-          tileType: TileType.Empty
-        })
-        tiles[r].push(tile)
+          tileType: TileType.Empty,
+        });
+        tiles[r].push(tile);
       }
     }
     return new TileMap({ tiles, size: UInt64.from(GRID_SIZE) });
@@ -249,6 +252,5 @@ export class GameInput extends Struct({
   pos: Position,
   trihex: TriHex,
 }) {}
-
 
 export class MyList extends MerkleList.create(Tile) {}

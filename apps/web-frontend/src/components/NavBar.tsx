@@ -2,34 +2,39 @@
 import { Button } from "@radix-ui/themes";
 import Link from "next/link";
 import ConnectButton from "./ConnectButton";
-import { GitHubLogoIcon, VideoIcon, BookmarkIcon , PersonIcon } from "@radix-ui/react-icons";
+import {
+  GitHubLogoIcon,
+  VideoIcon,
+  BookmarkIcon,
+  PersonIcon,
+} from "@radix-ui/react-icons";
 import {
   GITHUB_URL,
   GAME_TUTORIAL_VIDEO_URL,
   ZKIGNITE_PROPOSAL,
 } from "@/constants";
-import {usePathname  , useRouter} from 'next/navigation'; 
+import { usePathname, useRouter } from "next/navigation";
 
-  
 export const NavBar = () => {
-
   const router = useRouter();
   const pathname = usePathname();
 
   const logoClickHandler = () => {
-    if(pathname === "/"){
-      window.location.reload()
-    }else{
-      router.push('/');
+    if (pathname === "/") {
+      window.location.reload();
+    } else {
+      router.push("/");
     }
-  }
+  };
 
   return (
-    <nav className="mb-6 pt-2 px-4">
-      <div className="max-w-[1280px] mx-auto">
+    <nav className="mb-6 px-4 pt-2">
+      <div className="mx-auto max-w-[1280px]">
         <div className="flex w-full items-center justify-between">
           <div>
-            <button className="text-5xl font-black" onClick={logoClickHandler}>TileVille</button>
+            <button className="text-5xl font-black" onClick={logoClickHandler}>
+              TileVille
+            </button>
             {/* <button className="text-5xl font-black" onClick={() => window.location.reload()}>TileVille</button> */}
           </div>
           <div className="flex space-x-6">
@@ -65,29 +70,28 @@ export const NavBar = () => {
                 <VideoIcon />
               </a>
             </Button>
-            
             <Link href="/about">
-            <Button
-              variant="outline"
-              size="3"
-              color="jade"
-              highContrast
-              radius="none"
-            >
-              About
-            </Button>
+              <Button
+                variant="outline"
+                size="3"
+                color="jade"
+                highContrast
+                radius="none"
+              >
+                About
+              </Button>
             </Link>
             <Link href="/profile">
-            <Button
-              variant="outline"
-              size="3"
-              color="jade"
-              highContrast
-              radius="none"
-            >
-              Profile
-              <PersonIcon />
-            </Button>
+              <Button
+                variant="outline"
+                size="3"
+                color="jade"
+                highContrast
+                radius="none"
+              >
+                Profile
+                <PersonIcon />
+              </Button>
             </Link>
             <ConnectButton />
           </div>
@@ -97,15 +101,15 @@ export const NavBar = () => {
   );
 };
 
-const NavLink = ({ to, label }: { to: string; label: string }) => {
-  return (
-    <Button variant="outline" size="3" radius="none">
-      <Link to={to} className="">
-        {label}
-      </Link>
-    </Button>
-  );
-};
+// const NavLink = ({ to, label }: { to: string; label: string }) => {
+//   return (
+//     <Button variant="outline" size="3" radius="none">
+//       <Link href={to} className="">
+//         {label}
+//       </Link>
+//     </Button>
+//   );
+// };
 
 export const AnchorNavLink = ({ to, label }: { to: string; label: string }) => {
   return (

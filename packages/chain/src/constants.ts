@@ -1,7 +1,7 @@
 export const MAX_TILES = 11;
 export const TRIHEX_DECK_SIZE = 25;
 export const GRID_SIZE = 5;
-import {  TokenId, UInt64 } from 'o1js';
+import { TokenId, UInt64 } from 'o1js';
 
 export const allShapes: {
   [key: string]: {
@@ -113,7 +113,6 @@ export const shapeSet2 = [
 
 export const shapeSet3 = [ShapePatternsId['a'], ShapePatternsId['v']];
 
-
 export const ShapePatternsSymbol = Object.entries(ShapePatternsId).reduce(
   (acc: any, [key, value]) => {
     const val = value.toString();
@@ -130,7 +129,6 @@ export const TileType = {
   Road: UInt64.from(4),
   Castle: UInt64.from(5),
   CityGate: UInt64.from(6),
-}
+};
 
 export const ZNAKE_TOKEN_ID = TokenId.fromValue(777n);
-

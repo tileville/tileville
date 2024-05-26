@@ -1,4 +1,4 @@
-import { type RuntimeModulesRecord } from "@proto-kit/module";
+import { type RuntimeModulesRecord } from "tileville-protokit-module";
 import { type ClientAppChain } from "tileville-chain-dev";
 import { createStore } from "zustand";
 import { ZkNoidGameFeature, ZkNoidGameGenre } from "./platform/game_tags";
@@ -60,7 +60,7 @@ export type ZkNoidConfig<
   ]
 > = {
   readonly games: games;
-  getClient(): ClientAppChain<games[number]["runtimeModules"], any, any, any>;
+  getClient(): ClientAppChain<any, any, any, any>;
 };
 
 export type CreateConfigParameters<
@@ -87,12 +87,7 @@ export function createConfig<
       const client = buildClient(modules);
 
       // @todo remove as any
-      return client as any as ClientAppChain<
-        games[number]["runtimeModules"],
-        any,
-        any,
-        any
-      >;
+      return client as any as ClientAppChain<any, any, any, any>;
     },
   };
 }

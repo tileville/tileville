@@ -1,4 +1,4 @@
-import { type RuntimeModulesRecord } from "@proto-kit/module";
+import { type RuntimeModulesRecord } from "tileville-protokit-module";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { GameRecordProof, client } from "tileville-chain-dev";

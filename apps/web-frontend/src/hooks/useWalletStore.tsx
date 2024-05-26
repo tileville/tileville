@@ -1,5 +1,8 @@
-import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
-import { MethodIdResolver } from "@proto-kit/module";
+import {
+  PendingTransaction,
+  UnsignedTransaction,
+} from "tileville-protokit-sequencer";
+import { MethodIdResolver } from "tileville-protokit-module";
 import { useCallback, useEffect, useMemo } from "react";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";

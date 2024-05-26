@@ -1,11 +1,4 @@
-import {
-  Field,
-  Provable,
-  Struct,
-  Bool,
-  UInt64,
-  Int64,
-} from 'o1js';
+import { Field, Provable, Struct, Bool, UInt64, Int64 } from 'o1js';
 import { RandomGenerator } from './random';
 import {
   GameInput,
@@ -25,10 +18,9 @@ import {
   allShapes,
   shapeSet1,
   shapeSet2,
-  shapeSet3
+  shapeSet3,
 } from './constants';
 import { Queue } from './utility';
-
 
 export class GameContext extends Struct({
   trihexDeck: TriHexDeck,
@@ -43,7 +35,11 @@ export class GameContext extends Struct({
     //TODO: Write logic to calculate updated score
     let moveScore = this.placeTrihex(input.pos, input.trihex);
     // let moveScore = Int64.from(1);
-    this.score = Provable.if(this.alreadyWon, this.score, this.score.add(moveScore.magnitude));
+    this.score = Provable.if(
+      this.alreadyWon,
+      this.score,
+      this.score.add(moveScore.magnitude)
+    );
     // this.score = Provable.if(this.alreadyWon, this.score, UInt64.from(1));
     this.totalLeft = this.totalLeft.sub(1);
   }
@@ -100,8 +96,7 @@ export class GameContext extends Struct({
   }
 
   placeTrihex(pos: Position, trihex: TriHex): Int64 {
-
-    console.log("==== place trihex data ====", JSON.stringify({pos, trihex}))
+    console.log('==== place trihex data ====', JSON.stringify({ pos, trihex }));
     let touching = Bool(false);
     const offsets = allShapes[ShapePatternsSymbol[Number(trihex.shape)]];
     const r = Number(pos.x);
@@ -111,7 +106,7 @@ export class GameContext extends Struct({
     const hexTiles: Tile[] = [];
     for (let offsetIdx = 0; offsetIdx < 3; offsetIdx++) {
       const offset = offsets[offsetIdx];
-      const tile = this.tilemap.tiles[r + offset.ro][c + offset.co]
+      const tile = this.tilemap.tiles[r + offset.ro][c + offset.co];
       hexTiles.push(tile);
       const neighborTiles = this.neighbors(r + offset.ro, c + offset.co);
       // Check if trihex tiles are touching to already placed tiles, if yes, we can place this trihex
@@ -120,16 +115,18 @@ export class GameContext extends Struct({
         // console.log("neighborTile", neighborTile)
         touching = Provable.if(
           Bool(!!neighborTile),
-          Provable.if(
-            neighborTile.isEmpty,
-            Bool(true),
-            touching
-          ),
+          Provable.if(neighborTile.isEmpty, Bool(true), touching),
           touching
         );
       }
     }
-    console.log("touching", touching.toString(), hexTiles[0].tileType.toString(), hexTiles[1].tileType.toString(), hexTiles[2].tileType.toString())
+    console.log(
+      'touching',
+      touching.toString(),
+      hexTiles[0].tileType.toString(),
+      hexTiles[1].tileType.toString(),
+      hexTiles[2].tileType.toString()
+    );
 
     const isPlaceable = touching
       .and(Bool(!!hexTiles[0]))
@@ -139,7 +136,7 @@ export class GameContext extends Struct({
       .and(hexTiles[1].tileType.equals(UInt64.one))
       .and(hexTiles[2].tileType.equals(UInt64.one));
 
-    console.log("is placeable", isPlaceable.toString())
+    console.log('is placeable', isPlaceable.toString());
 
     for (let i = 0; i < 3; i++) {
       hexTiles[i].tileType = Provable.if(
@@ -148,9 +145,15 @@ export class GameContext extends Struct({
         hexTiles[i].tileType
       );
 
-      console.log("get points for tile", hexTiles[i].tileType.toString(), hexTiles[i].pos.x.toString(), hexTiles[i].pos.y.toString())
-      trihexScore = trihexScore.add(Provable.if(isPlaceable, this.getPointsFor(hexTiles[i]), Int64.zero));
-
+      console.log(
+        'get points for tile',
+        hexTiles[i].tileType.toString(),
+        hexTiles[i].pos.x.toString(),
+        hexTiles[i].pos.y.toString()
+      );
+      trihexScore = trihexScore.add(
+        Provable.if(isPlaceable, this.getPointsFor(hexTiles[i]), Int64.zero)
+      );
     }
 
     return trihexScore;
@@ -159,82 +162,113 @@ export class GameContext extends Struct({
   getPointsFor(tile: Tile): Int64 {
     // let result = Int64.zero
     let isCounted = Bool(tile.counted);
-    let isTileTypeWindMill = Bool(tile.tileType.equals(TileType.WindMill))
-    let isTileTypeTree = Bool(tile.tileType.equals(TileType.Tree))
-    let isTileTypeRoad = Bool(tile.tileType.equals(TileType.Road))
+    let isTileTypeWindMill = Bool(tile.tileType.equals(TileType.WindMill));
+    let isTileTypeTree = Bool(tile.tileType.equals(TileType.Tree));
+    let isTileTypeRoad = Bool(tile.tileType.equals(TileType.Road));
 
-    console.log("is tile type tree", isTileTypeTree.toString())
+    console.log('is tile type tree', isTileTypeTree.toString());
     // let points = Provable.if(isCounted, Int64.zero, Provable.if(isTileTypeWindMill, this.getPointsForWindmillTile(tile), Provable.if(isTileTypeTree, this.getPointsForTree(tile),Int64.zero)))
-      let points = Provable.if(isCounted, Int64.zero, Provable.if(isTileTypeWindMill, this.getPointsForWindmillTile(tile), Int64.zero))
+    let points = Provable.if(
+      isCounted,
+      Int64.zero,
+      Provable.if(
+        isTileTypeWindMill,
+        this.getPointsForWindmillTile(tile),
+        Int64.zero
+      )
+    );
     return points;
   }
 
-  getPointsForWindmillTile(tile: Tile):Int64 {
+  getPointsForWindmillTile(tile: Tile): Int64 {
     let isolated = Bool(true);
     let neighbors = this.neighbors(Number(tile.pos.x), Number(tile.pos.y));
-    let score = Int64.from(0)
+    let score = Int64.from(0);
 
-    for(const n of neighbors) {
+    for (const n of neighbors) {
       let isTileTypeWindMill = n.tileType.equals(TileType.WindMill);
       let isCounted = Bool(n.counted);
-      n.counted = Provable.if(isCounted, Bool(false), n.counted)
-      isolated = Provable.if(isTileTypeWindMill, Bool(false), isolated)
-      let s = Provable.if(isTileTypeWindMill.and(isCounted), Provable.if(tile.isHill, Int64.from("-3"), Int64.from("-1")), Int64.zero)
-      score.add(s)
+      n.counted = Provable.if(isCounted, Bool(false), n.counted);
+      isolated = Provable.if(isTileTypeWindMill, Bool(false), isolated);
+      let s = Provable.if(
+        isTileTypeWindMill.and(isCounted),
+        Provable.if(tile.isHill, Int64.from('-3'), Int64.from('-1')),
+        Int64.zero
+      );
+      score.add(s);
     }
 
-    let s = Provable.if(isolated, Provable.if(tile.isHill, Int64.from("3"), Int64.from("1")), Int64.zero)
-    tile.counted = Provable.if(isolated, Bool(true), tile.counted)
+    let s = Provable.if(
+      isolated,
+      Provable.if(tile.isHill, Int64.from('3'), Int64.from('1')),
+      Int64.zero
+    );
+    tile.counted = Provable.if(isolated, Bool(true), tile.counted);
     score = score.add(s);
     // console.log("windmill score", score.magnitude.toString())
-    return score
+    return score;
   }
-  
+
   getPointsForTree(tile: Tile): Int64 {
-    console.log("get points for Tree tile", tile.pos.x.toString(), tile.pos.y.toString())
+    console.log(
+      'get points for Tree tile',
+      tile.pos.x.toString(),
+      tile.pos.y.toString()
+    );
     let group = this.getConnected(tile);
     let score = Int64.zero;
     let unAccountedParks = [];
-    console.log("group length", group.length)
-    for(const park of group) {
-      console.log("park in group", park.counted.toString())
-      Provable.if(park.counted.not(), Field(unAccountedParks.push(park)), Field(0))
+    console.log('group length', group.length);
+    for (const park of group) {
+      console.log('park in group', park.counted.toString());
+      Provable.if(
+        park.counted.not(),
+        Field(unAccountedParks.push(park)),
+        Field(0)
+      );
     }
 
-    console.log("unaccounted park length", unAccountedParks.length)
-    while(unAccountedParks.length >=3 ) {
-      const newParks = unAccountedParks.splice(0,3);
-      newParks[0].counted = Bool(true)
-      newParks[1].counted = Bool(true)
-      newParks[2].counted = Bool(true)
-      score = score.add(Int64.from(5))
+    console.log('unaccounted park length', unAccountedParks.length);
+    while (unAccountedParks.length >= 3) {
+      const newParks = unAccountedParks.splice(0, 3);
+      newParks[0].counted = Bool(true);
+      newParks[1].counted = Bool(true);
+      newParks[2].counted = Bool(true);
+      score = score.add(Int64.from(5));
     }
-    console.log("tree score", score.toString())
+    console.log('tree score', score.toString());
     return score;
   }
-  getPointsForRoad(tile: Tile):Int64 {
+  getPointsForRoad(tile: Tile): Int64 {
     let isolated = Bool(true);
     let neighbors = this.neighbors(Number(tile.pos.x), Number(tile.pos.y));
-    let score = Int64.from(0)
+    let score = Int64.from(0);
 
-    for(const n of neighbors) {
+    for (const n of neighbors) {
       let isTileTypeWindMill = n.tileType.equals(TileType.WindMill);
       let isCounted = Bool(n.counted);
-      n.counted = Provable.if(isCounted, Bool(false), n.counted)
-      isolated = Provable.if(isTileTypeWindMill, Bool(false), isolated)
-      let s = Provable.if(isTileTypeWindMill.and(isCounted), Provable.if(tile.isHill, Int64.from("-3"), Int64.from("-1")), Int64.zero)
-      score.add(s)
+      n.counted = Provable.if(isCounted, Bool(false), n.counted);
+      isolated = Provable.if(isTileTypeWindMill, Bool(false), isolated);
+      let s = Provable.if(
+        isTileTypeWindMill.and(isCounted),
+        Provable.if(tile.isHill, Int64.from('-3'), Int64.from('-1')),
+        Int64.zero
+      );
+      score.add(s);
     }
 
-    let s = Provable.if(isolated, Provable.if(tile.isHill, Int64.from("3"), Int64.from("1")), Int64.zero)
-    tile.counted = Provable.if(isolated, Bool(true), tile.counted)
+    let s = Provable.if(
+      isolated,
+      Provable.if(tile.isHill, Int64.from('3'), Int64.from('1')),
+      Int64.zero
+    );
+    tile.counted = Provable.if(isolated, Bool(true), tile.counted);
     score = score.add(s);
     // console.log("windmill score", score.magnitude.toString())
-    return score
+    return score;
   }
 
   neighbors(row: number, col: number): Tile[] {
-
     // let isRightBound = this.isInBoundry(row, col + 1)
     // let isTopRightBound = this.isInBoundry(row-1, col-1);
     // let isTopBound = this.isInBoundry(row-1, col+1);
@@ -250,7 +284,7 @@ export class GameContext extends Struct({
     // Provable.if(isLeftBound, Field(tiles.push(this.tilemap.tiles[row]?.[col-1])), Field(0))
     // Provable.if(isBottomLeftBound, Field(tiles.push(this.tilemap.tiles[row+1]?.[col-1])), Field(0))
     // Provable.if(isBottomBound, Field(tiles.push(this.tilemap.tiles[row+1]?.[col])), Field(0))
-      
+
     // tiles = tiles.filter(tile => tile !== undefined)
     // console.log("neighbour tiles length", tiles.length)
     // return tiles
@@ -262,7 +296,7 @@ export class GameContext extends Struct({
       this.tilemap.tiles[row]?.[col - 1],
       this.tilemap.tiles[row + 1]?.[col - 1],
       this.tilemap.tiles[row + 1]?.[col],
-    ].filter(tile => tile !== undefined);
+    ].filter((tile) => tile !== undefined);
   }
 
   getConnected(tile1: Tile): Tile[] {
@@ -273,33 +307,40 @@ export class GameContext extends Struct({
 
     while (queue.size() > 0) {
       const tile = queue.deq() as Tile;
-      console.log("visted set", Array.from(visited))
-      console.log("tile", tile.pos.x.toString(), tile.pos.y.toString());
+      console.log('visted set', Array.from(visited));
+      console.log('tile', tile.pos.x.toString(), tile.pos.y.toString());
       if (!visited.has(tile)) connectedTiles.push(tile);
       visited.add(tile);
       const neighbors = this.neighbors(Number(tile.pos.x), Number(tile.pos.y));
-      console.log("tile neigbors", neighbors.length)
+      console.log('tile neigbors', neighbors.length);
       for (const n of neighbors) {
-      let condition = 
-        (
-          (n.tileType.equals(tile.tileType)
-          .or(tile.tileType.equals(TileType.Road).and(n.tileType.equals(TileType.Castle))))
-        )
-        .and(Bool(!visited.has(n)))
-        console.log("n", n.pos.x.toString(), n.pos.y.toString())
-        console.log("condition", condition, n.tileType.toString(), tile.tileType.toString())
-        Provable.if(condition, Field(queue.enq(n)), Field(0))
+        let condition = n.tileType
+          .equals(tile.tileType)
+          .or(
+            tile.tileType
+              .equals(TileType.Road)
+              .and(n.tileType.equals(TileType.Castle))
+          )
+          .and(Bool(!visited.has(n)));
+        console.log('n', n.pos.x.toString(), n.pos.y.toString());
+        console.log(
+          'condition',
+          condition,
+          n.tileType.toString(),
+          tile.tileType.toString()
+        );
+        Provable.if(condition, Field(queue.enq(n)), Field(0));
       }
     }
     return connectedTiles;
   }
 
   isInBoundry(row: number, col: number): Bool {
-    return Bool((row >=0 && row < 2 * GRID_SIZE + 1) && (col >=0 && col < 2 * GRID_SIZE + 1))
+    return Bool(
+      row >= 0 && row < 2 * GRID_SIZE + 1 && col >= 0 && col < 2 * GRID_SIZE + 1
+    );
   }
 }
-
-
 
 export function createTrihexDeckBySeed(seed: Field): TriHexDeck {
   const generator = RandomGenerator.from(seed);

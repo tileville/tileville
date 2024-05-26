@@ -122,7 +122,7 @@ export class HexGrid extends GameObjects.Group {
     for (let r = 0; r < this.size + this.size + 1; r++) {
       for (let c = 0; c < this.size + this.size + 1; c++) {
         if (this.grid.has(r, c)) {
-          const h = this.grid.get(r, c) as Hex;
+          const h = this.grid.get(r, c)!;
 
           if (this.grid.has(r, c + 1) && this.grid.get(r, c + 1)?.hexType !== 5)
             h.eEdge.setAlpha(0);
@@ -362,7 +362,7 @@ export class HexGrid extends GameObjects.Group {
     for (let i = 0; i < 3; i++) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const offsets = (shapes as any)[trihex.shape][i];
-      hexes.push(this.grid.get(r + offsets.ro, c + offsets.co) as Hex);
+      hexes.push(this.grid.get(r + offsets.ro, c + offsets.co)!);
 
       if (!touching) {
         for (const n of this.neighbors(r + offsets.ro, c + offsets.co)) {
@@ -422,7 +422,7 @@ export class HexGrid extends GameObjects.Group {
     queue.enq(hex);
 
     while (queue.size() > 0) {
-      const h = queue.deq() as Hex;
+      const h = queue.deq()!;
       if (!visited.has(h)) connectedHexes.push(h);
       visited.add(h);
 
@@ -503,7 +503,7 @@ export class HexGrid extends GameObjects.Group {
 
   nextPopper() {
     if (this.scoreQueue.size() > 0) {
-      const p = this.scoreQueue.deq() as ScorePopper;
+      const p = this.scoreQueue.deq()!;
       p.pop();
 
       if (this.onNewPoints) {

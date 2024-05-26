@@ -5,7 +5,7 @@ import { MutableRefObject, useContext, useEffect } from "react";
 import { useProtokitChainStore } from "@/lib/stores/protokitChain";
 import { useNetworkStore } from "@/lib/stores/network";
 import { LeaderboardIndex } from "tileville-chain-dev";
-import { type ClientAppChain } from "@proto-kit/sdk";
+import { type ClientAppChain } from "tileville-protokit-sdk";
 import { minapolisConfig } from "@/game-config";
 
 import AppChainClientContext from "@/lib/contexts/AppChainClientContext";
