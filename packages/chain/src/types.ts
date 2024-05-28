@@ -6,7 +6,6 @@ import {
   CircuitString,
   Field,
   UInt64,
-  MerkleList,
 } from 'o1js';
 import {
   TRIHEX_DECK_SIZE,
@@ -252,5 +251,3 @@ export class GameInput extends Struct({
   pos: Position,
   trihex: TriHex,
 }) {}
-
-export class MyList extends MerkleList.create(Tile) {}
