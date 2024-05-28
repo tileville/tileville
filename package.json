@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "pnpm:buildPreinstall": "./build_protokit.sh",
+    "preinstall": "./build_protokit.sh",
     "build": "./build_protokit.sh && turbo run build",
     "dev": "turbo run dev",
     "start-server": "turbo run start-server",
