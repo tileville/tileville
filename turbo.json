@@ -1,0 +1,41 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".next/**",
+        ".next/**",
+        "!.next/cache/**",
+        "dist",
+        "../../proto-kit/**",
+        "proto-kit/**"
+      ]
+    },
+    "build^web": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".next/**",
+        ".next/**",
+        "!.next/cache/**",
+        "dist",
+        "../../proto-kit/**",
+        "proto-kit/**"
+      ]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "start-server": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {},
+    "start": {
+      "cache": false
+    }
+  }
+}
