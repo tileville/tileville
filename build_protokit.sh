@@ -37,7 +37,10 @@
 
 # mv "$DIRECTORY" "$DEP_DIRECTORY"
 
-git submodule init && git submodule update && cd proto-kit && npm i && npm build
+echo "Fetching git submodule"
+git submodule update --init --recursive
+echo "Submodule fetched successfully"
+cd proto-kit && npm i && npm build
 echo "#### Protokit dependencies prepared successfully 🔥 ###"
 echo "going back to main directory"
 cd ..
