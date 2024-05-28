@@ -17,7 +17,6 @@
       "dependsOn": ["^build"],
       "outputs": [
         ".next/**",
-        ".next/**",
         "!.next/cache/**",
         "dist",
         "../../proto-kit/**",
