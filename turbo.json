@@ -13,16 +13,6 @@
         "proto-kit/**"
       ]
     },
-    "build^web": {
-      "dependsOn": ["^build"],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist",
-        "../../proto-kit/**",
-        "proto-kit/**"
-      ]
-    },
     "lint": {},
     "dev": {
       "cache": false,
