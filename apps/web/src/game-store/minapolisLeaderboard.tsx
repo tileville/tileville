@@ -65,12 +65,12 @@ export const useArkanoidLeaderboardStore = create<
 
       for (let i = 0; i < LEADERBOARD_SIZE; i++) {
         const leaderboardItem =
-          await client.query.runtime.MinapolisGameHub.leaderboard.get(
+          (await client.query.runtime.MinapolisGameHub.leaderboard.get(
             new LeaderboardIndex({
               competitionId: UInt64.from(+competitionId),
               index: UInt64.from(i),
             })
-          );
+          )) as { score: UInt64; player: PublicKey };
         if (
           leaderboardItem !== undefined &&
           leaderboardItem.player.equals(PublicKey.empty()).not().toBoolean()

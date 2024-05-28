@@ -14,7 +14,7 @@
     "turbo": "^v1.12.2"
   },
   "packageManager": "pnpm@8.6.10",
-  "name": "starter-kit",
+  "name": "tileville",
   "pnpm": {
     "patchedDependencies": {}
   }

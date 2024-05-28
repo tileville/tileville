@@ -4,7 +4,7 @@ import { Bool, PublicKey, UInt64 } from "o1js";
 import { useContext, useEffect } from "react";
 import { useProtokitChainStore } from "@/lib/stores/protokitChain";
 import { useNetworkStore } from "@/lib/stores/network";
-import { GameRecordKey } from "tileville-chain-dev";
+import { Competition, GameRecordKey } from "tileville-chain-dev";
 import { ICompetition } from "@/lib/types";
 import { fromContractCompetition } from "@/lib/typesConverter";
 import { type ClientAppChain } from "@proto-kit/sdk";
@@ -54,21 +54,21 @@ export const useArkanoidCompetitionsStore = create<
           );
 
         let registered =
-          await client.query.runtime.MinapolisGameHub.registrations.get(
+          (await client.query.runtime.MinapolisGameHub.registrations.get(
             new GameRecordKey({
               competitionId: UInt64.from(i),
               player,
             })
-          );
+          )) as Bool;
         registered ??= Bool(false);
 
         const creator =
           await client.query.runtime.MinapolisGameHub.competitionCreator.get(
             UInt64.from(i)
-          );
+          ) as PublicKey;
 
         competitions.push({
-          ...fromContractCompetition(i, curCompetition),
+          ...fromContractCompetition(i, curCompetition as Competition),
           registered: registered.toBoolean(),
           creator,
         });

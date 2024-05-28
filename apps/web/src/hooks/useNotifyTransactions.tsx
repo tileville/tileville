@@ -4,10 +4,7 @@ import { useWalletStore } from "./useWalletStore";
 import { toast } from "react-hot-toast";
 import { usePrevious } from "react-use";
 import { useMemo, useCallback, useEffect } from "react";
-import {
-  PendingTransaction,
-  UnsignedTransaction,
-} from "@proto-kit/sequencer";
+import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
 import { MethodIdResolver } from "@proto-kit/module";
 import truncateMiddle from "truncate-middle";
 import { Field, UInt64, PublicKey, Signature } from "o1js";

@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { useEffect, useState } from "react";
 import { SEQUENCER_GRAPHQL_URL } from "@/constants";
 
 export interface ComputedTransactionJSON {

@@ -13,6 +13,10 @@ importers:
   apps/web:
     specifiers:
       '@aurowallet/mina-provider': 1.0.1
+      '@proto-kit/library': file:../../proto-kit/packages/library
+      '@proto-kit/module': file:../../proto-kit/packages/module
+      '@proto-kit/sdk': file:../../proto-kit/packages/sdk
+      '@proto-kit/sequencer': file:../../proto-kit/packages/sequencer
       '@radix-ui/colors': ^3.0.0-rc.4
       '@radix-ui/react-icons': ^1.3.0
       '@radix-ui/themes': ^2.0.0-rc.3
@@ -35,7 +39,7 @@ importers:
       immer: ^10.0.3
       luxon: ^3.4.4
       next: 14.1.4
-      o1js: 1.1.0
+      o1js: file:../../proto-kit/node_modules/o1js
       o1js-pack: ^0.5.0
       path: ^0.12.7
       phaser: ^3.80.1
@@ -51,17 +55,17 @@ importers:
       tailwind-merge: ^2.0.0
       tailwindcss: 3.3.3
       tailwindcss-animate: ^1.0.7
-      tileville-chain-dev: 0.0.2
-      tileville-protokit-library: 0.1.1
-      tileville-protokit-module: 0.1.1
-      tileville-protokit-sdk: 0.1.1
-      tileville-protokit-sequencer: 0.1.1
+      tileville-chain-dev: workspace:*
       truncate-middle: ^1.0.6
-      tsyringe: 4.8.0
+      tsyringe: file:../../proto-kit/node_modules/tsyringe
       typescript: 5.2.2
       zustand: ^4.4.6
     dependencies:
       '@aurowallet/mina-provider': 1.0.1
+      '@proto-kit/library': file:proto-kit/packages/library_7prjxliqmfytrmkibrhafjt6zq
+      '@proto-kit/module': file:proto-kit/packages/module_o1js@1.1.0+tsyringe@4.8.0
+      '@proto-kit/sdk': file:proto-kit/packages/sdk_bwe4h3wx7paai5qa6ik3n5ag3a
+      '@proto-kit/sequencer': file:proto-kit/packages/sequencer_7txtqfzk4waauxgzbx6eerpdeq
       '@radix-ui/colors': 3.0.0
       '@radix-ui/react-icons': 1.3.0_react@18.3.1
       '@radix-ui/themes': 2.0.3_be7aqewwymzgokzga7kn6ai3z4
@@ -71,7 +75,7 @@ importers:
       immer: 10.1.1
       luxon: 3.4.4
       next: 14.1.4_nnrd3gsncyragczmpvfhocinkq
-      o1js: 1.1.0
+      o1js: file:proto-kit/node_modules/o1js
       o1js-pack: 0.5.4_o1js@1.1.0
       path: 0.12.7
       phaser: 3.80.1
@@ -84,12 +88,8 @@ importers:
       tailwind-merge: 2.3.0
       tailwindcss-animate: 1.0.7_tailwindcss@3.3.3
       tileville-chain-dev: link:../../packages/chain
-      tileville-protokit-library: 0.1.1_o1js@1.1.0+tsyringe@4.8.0
-      tileville-protokit-module: 0.1.1_o1js@1.1.0+tsyringe@4.8.0
-      tileville-protokit-sdk: 0.1.1_o1js@1.1.0+tsyringe@4.8.0
-      tileville-protokit-sequencer: 0.1.1_o1js@1.1.0+tsyringe@4.8.0
       truncate-middle: 1.0.6
-      tsyringe: 4.8.0
+      tsyringe: file:proto-kit/node_modules/tsyringe
       zustand: 4.5.2_fh3lim3ahzt44wg7gtzgoyyvei
     devDependencies:
       '@types/eslint': 8.56.10
@@ -5922,22 +5922,7 @@ packages:
     peerDependencies:
       o1js: ^0.16.2
     dependencies:
-      o1js: 1.1.0
-    dev: false
-
-  /o1js/1.1.0:
-    resolution: {integrity: sha512-rq+ndUFZBzC+Gk3VbXGNu97uFZJTLDmqglP1J8gGWP3Bdchjj+huCtPVvezfiw6+RyjPePaBVSbPWO11HMZiaQ==}
-    engines: {node: '>=18.14.0'}
-    hasBin: true
-    dependencies:
-      blakejs: 1.2.1
-      cachedir: 2.4.0
-      isomorphic-fetch: 3.0.0
-      js-sha256: 0.9.0
-      reflect-metadata: 0.1.14
-      tslib: 2.6.2
-    transitivePeerDependencies:
-      - encoding
+      o1js: file:proto-kit/node_modules/o1js
     dev: false
 
   /object-assign/4.1.1:
@@ -7205,81 +7190,6 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /tileville-protokit-library/0.1.1_o1js@1.1.0+tsyringe@4.8.0:
-    resolution: {integrity: sha512-jOz7TfMCV+Uj+uLelNxJuzHM9bP2aqXvRbCJ7QBU7IQBUIpcB5DbdpEQMs/+xEdOrvnosZW9BhhHTLkCkYzZxw==}
-    peerDependencies:
-      '@proto-kit/common': '*'
-      '@proto-kit/module': '*'
-      '@proto-kit/protocol': '*'
-      '@proto-kit/sequencer': '*'
-      o1js: 1.1.0
-      tsyringe: ^4.7.0
-    dependencies:
-      bigint-isqrt: 0.3.2
-      lodash: 4.17.21
-      loglevel: 1.9.1
-      o1js: 1.1.0
-      reflect-metadata: 0.1.14
-      tsyringe: 4.8.0
-    dev: false
-
-  /tileville-protokit-module/0.1.1_o1js@1.1.0+tsyringe@4.8.0:
-    resolution: {integrity: sha512-x2J8+r81IJW06+kd1XMD2VN4LWQ2FJGOKQr2X1a2OddIVrQiQOyhSjY7XEpKg0T0FrcjhHk6pMbHbRZQEAQvdQ==}
-    peerDependencies:
-      '@proto-kit/common': '*'
-      '@proto-kit/protocol': '*'
-      o1js: 1.1.0
-      tsyringe: ^4.7.0
-    dependencies:
-      lodash: 4.17.21
-      loglevel: 1.9.1
-      o1js: 1.1.0
-      reflect-metadata: 0.1.14
-      tsyringe: 4.8.0
-    dev: false
-
-  /tileville-protokit-sdk/0.1.1_o1js@1.1.0+tsyringe@4.8.0:
-    resolution: {integrity: sha512-9No08L7YB57qQh022cbXnu3MaPPJ6Tgc43FNd496Zle99w/Tq+YArqmdYU6EjEW2Wn0RdwnE8EZAXzHxbVESbQ==}
-    peerDependencies:
-      '@proto-kit/common': '*'
-      '@proto-kit/library': '*'
-      '@proto-kit/module': '*'
-      '@proto-kit/protocol': '*'
-      '@proto-kit/sequencer': '*'
-      o1js: 1.1.0
-      reflect-metadata: ^0.1.13
-      tsyringe: ^4.7.0
-    dependencies:
-      '@urql/core': 4.3.0
-      comlink: 4.4.1
-      lodash: 4.17.21
-      loglevel: 1.9.1
-      o1js: 1.1.0
-      tsyringe: 4.8.0
-    transitivePeerDependencies:
-      - graphql
-    dev: false
-
-  /tileville-protokit-sequencer/0.1.1_o1js@1.1.0+tsyringe@4.8.0:
-    resolution: {integrity: sha512-JEgeLKMW8cgGR6TKElhlFG9kODpNIHiUrfIkbPznSkdDybF8WLd3n2rkUakbkFGu8rncRZDfkYSPuSKlWuBOBQ==}
-    peerDependencies:
-      '@proto-kit/common': '*'
-      '@proto-kit/module': '*'
-      '@proto-kit/protocol': '*'
-      o1js: 1.1.0
-      tsyringe: ^4.7.0
-    dependencies:
-      bullmq: 3.15.8
-      compute-gcd: 1.2.1
-      lodash: 4.17.21
-      o1js: 1.1.0
-      reflect-metadata: 0.1.14
-      ts-pattern: 4.3.0
-      tsyringe: 4.8.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /tmpl/1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
     dev: true
@@ -7398,13 +7308,6 @@ packages:
       tslib: 1.14.1
       typescript: 5.2.2
     dev: true
-
-  /tsyringe/4.8.0:
-    resolution: {integrity: sha512-YB1FG+axdxADa3ncEtRnQCFq/M0lALGLxSZeVNbTU8NqhOVc51nnv2CISTcvc1kyv6EGPtXVr0v6lWeDxiijOA==}
-    engines: {node: '>= 6.0.0'}
-    dependencies:
-      tslib: 1.14.1
-    dev: false
 
   /turbo-darwin-64/1.13.3:
     resolution: {integrity: sha512-glup8Qx1qEFB5jerAnXbS8WrL92OKyMmg5Hnd4PleLljAeYmx+cmmnsmLT7tpaVZIN58EAAwu8wHC6kIIqhbWA==}
@@ -7873,4 +7776,123 @@ packages:
       immer: 10.1.1
       react: 18.3.1
       use-sync-external-store: 1.2.0_react@18.3.1
+    dev: false
+
+  file:proto-kit/node_modules/o1js:
+    resolution: {directory: proto-kit/node_modules/o1js, type: directory}
+    name: o1js
+    version: 1.1.0
+    engines: {node: '>=18.14.0'}
+    hasBin: true
+    dependencies:
+      blakejs: 1.2.1
+      cachedir: 2.4.0
+      isomorphic-fetch: 3.0.0
+      js-sha256: 0.9.0
+      reflect-metadata: 0.1.14
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  file:proto-kit/node_modules/tsyringe:
+    resolution: {directory: proto-kit/node_modules/tsyringe, type: directory}
+    name: tsyringe
+    version: 4.8.0
+    engines: {node: '>= 6.0.0'}
+    dependencies:
+      tslib: 1.14.1
+    dev: false
+
+  file:proto-kit/packages/library_7prjxliqmfytrmkibrhafjt6zq:
+    resolution: {directory: proto-kit/packages/library, type: directory}
+    id: file:proto-kit/packages/library
+    name: '@proto-kit/library'
+    version: 0.1.1-develop.267+b252853
+    peerDependencies:
+      '@proto-kit/common': '*'
+      '@proto-kit/module': '*'
+      '@proto-kit/protocol': '*'
+      '@proto-kit/sequencer': '*'
+      o1js: 1.1.0
+      tsyringe: ^4.7.0
+    dependencies:
+      '@proto-kit/module': file:proto-kit/packages/module_o1js@1.1.0+tsyringe@4.8.0
+      '@proto-kit/sequencer': file:proto-kit/packages/sequencer_7txtqfzk4waauxgzbx6eerpdeq
+      bigint-isqrt: 0.3.2
+      lodash: 4.17.21
+      loglevel: 1.9.1
+      o1js: file:proto-kit/node_modules/o1js
+      reflect-metadata: 0.1.14
+      tsyringe: file:proto-kit/node_modules/tsyringe
+    dev: false
+
+  file:proto-kit/packages/module_o1js@1.1.0+tsyringe@4.8.0:
+    resolution: {directory: proto-kit/packages/module, type: directory}
+    id: file:proto-kit/packages/module
+    name: '@proto-kit/module'
+    version: 0.1.1-develop.267+b252853
+    peerDependencies:
+      '@proto-kit/common': '*'
+      '@proto-kit/protocol': '*'
+      o1js: 1.1.0
+      tsyringe: ^4.7.0
+    dependencies:
+      lodash: 4.17.21
+      loglevel: 1.9.1
+      o1js: file:proto-kit/node_modules/o1js
+      reflect-metadata: 0.1.14
+      tsyringe: file:proto-kit/node_modules/tsyringe
+    dev: false
+
+  file:proto-kit/packages/sdk_bwe4h3wx7paai5qa6ik3n5ag3a:
+    resolution: {directory: proto-kit/packages/sdk, type: directory}
+    id: file:proto-kit/packages/sdk
+    name: '@proto-kit/sdk'
+    version: 0.1.1-develop.267+b252853
+    peerDependencies:
+      '@proto-kit/common': '*'
+      '@proto-kit/library': '*'
+      '@proto-kit/module': '*'
+      '@proto-kit/protocol': '*'
+      '@proto-kit/sequencer': '*'
+      o1js: 1.1.0
+      reflect-metadata: ^0.1.13
+      tsyringe: ^4.7.0
+    dependencies:
+      '@proto-kit/library': file:proto-kit/packages/library_7prjxliqmfytrmkibrhafjt6zq
+      '@proto-kit/module': file:proto-kit/packages/module_o1js@1.1.0+tsyringe@4.8.0
+      '@proto-kit/sequencer': file:proto-kit/packages/sequencer_7txtqfzk4waauxgzbx6eerpdeq
+      '@urql/core': 4.3.0
+      comlink: 4.4.1
+      lodash: 4.17.21
+      loglevel: 1.9.1
+      o1js: file:proto-kit/node_modules/o1js
+      tsyringe: file:proto-kit/node_modules/tsyringe
+    transitivePeerDependencies:
+      - graphql
+    dev: false
+
+  file:proto-kit/packages/sequencer_7txtqfzk4waauxgzbx6eerpdeq:
+    resolution: {directory: proto-kit/packages/sequencer, type: directory}
+    id: file:proto-kit/packages/sequencer
+    name: '@proto-kit/sequencer'
+    version: 0.1.1-develop.267+b252853
+    peerDependencies:
+      '@proto-kit/common': '*'
+      '@proto-kit/module': '*'
+      '@proto-kit/protocol': '*'
+      o1js: 1.1.0
+      tsyringe: ^4.7.0
+    dependencies:
+      '@proto-kit/module': file:proto-kit/packages/module_o1js@1.1.0+tsyringe@4.8.0
+      bullmq: 3.15.8
+      compute-gcd: 1.2.1
+      lodash: 4.17.21
+      o1js: file:proto-kit/node_modules/o1js
+      reflect-metadata: 0.1.14
+      ts-pattern: 4.3.0
+      tsyringe: file:proto-kit/node_modules/tsyringe
+    transitivePeerDependencies:
+      - supports-color
     dev: false

@@ -165,7 +165,7 @@ export const useTestBalanceGetter = () => {
     if (!network.address) return;
     if (balancesStore.balances[network.address] >= 100 * 10 ** 9) return;
 
-    const balances = contextAppChainClient.runtime.resolve("Balances");
+    const balances = (contextAppChainClient.runtime as any).resolve("Balances");
     const sender = PublicKey.fromBase58(network.address);
 
     console.log(balances);

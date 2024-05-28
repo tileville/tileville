@@ -28,7 +28,9 @@ const config = {
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     "@typescript-eslint/no-floating-promises": "off",
-    "@typescript-eslint/unbound-method": "off"
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/no-base-to-string": "off",
+    "@typescript-eslint/no-unsafe-return": "off"
   },
   ignorePatterns: ["**/*.js"],
 };

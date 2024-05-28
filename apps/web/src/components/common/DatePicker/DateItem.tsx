@@ -124,7 +124,7 @@ export const DateItem = ({
               };
               const formatMonth = (item: number) => {
                 item += 1;
-                
+
                 if (item.toString().length < 2) return "0" + item;
                 else return item;
               };

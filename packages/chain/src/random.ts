@@ -26,7 +26,7 @@ export class RandomGenerator extends Struct({
     const val = Gadgets.and(
       this.curValue,
       Field.from(shift64divisor).sub(1),
-      254,
+      254
     );
     return Int64.fromField(val).mod(maxValue);
   }
@@ -45,7 +45,7 @@ export class RandomGenerator extends Struct({
       let val = Gadgets.and(
         this.curValue,
         Field.from(shift64divisor).sub(1),
-        254,
+        254
       );
       result[i] = Int64.fromField(val).mod(maxValues[i]);
 

@@ -25,7 +25,7 @@ export interface IScoreable {
 export class GameHub<
   PublicInput,
   PublicOutput extends IScoreable,
-  GameProof extends Proof<PublicInput, PublicOutput>
+  GameProof extends Proof<PublicInput, PublicOutput>,
 > extends RuntimeModule<unknown> {
   @state() public competitionCreator = StateMap.from<UInt64, PublicKey>(
     UInt64,

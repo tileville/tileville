@@ -18,7 +18,9 @@ export class GameProcessPublicOutput extends Struct({
   currentState: GameContext,
 }) {}
 
-export async function  checkGameElementsGeneration(seed: Field): Promise<GameContext> {
+export async function checkGameElementsGeneration(
+  seed: Field
+): Promise<GameContext> {
   const trihexDeck = createTrihexDeckBySeed(seed);
   const tilemap = generateTileMapBySeed(seed);
   return loadGameContext(trihexDeck, tilemap, Bool(false));
@@ -40,7 +42,9 @@ export class GameElementsGenerationProof extends ZkProgram.Proof(
   GameElementsGeneration
 ) {}
 
-export async function initGameProcess(initial: GameContext): Promise<GameProcessPublicOutput> {
+export async function initGameProcess(
+  initial: GameContext
+): Promise<GameProcessPublicOutput> {
   return new GameProcessPublicOutput({
     initialState: initial,
     currentState: initial,
@@ -77,9 +81,7 @@ export const GameProcess = ZkProgram({
   },
 });
 
-export class GameProcessProof extends ZkProgram.Proof(
-  GameProcess
-) {}
+export class GameProcessProof extends ZkProgram.Proof(GameProcess) {}
 
 export async function checkGameRecord(
   gameElementGenerationProof: GameElementsGenerationProof,

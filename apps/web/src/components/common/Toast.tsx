@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import React, { ReactNode } from "react";
 import { ToasterStore, useToasterStore } from "@/lib/stores/toasterStore";
 import { AnimatePresence, motion } from "framer-motion";
 import { clsx } from "clsx";

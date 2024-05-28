@@ -10,7 +10,7 @@ export default function ConnectButton() {
         {signer != null ? (
           <Button variant="outline" size="3" radius="none">
             <Flex direction={"row"} justify={"center"} align={"center"} gap="2">
-              <img src="/logos/mina.png" alt="mina logo" className="w-4 h-4" />
+              <img src="/logos/mina.png" alt="mina logo" className="h-4 w-4" />
               {chain.chainName}
             </Flex>
           </Button>
@@ -29,12 +29,9 @@ export default function ConnectButton() {
                 radius="none"
               >
                 <span>
-                  {
-                    signer &&
-                  signer.slice(0, 4) + "..." + signer.slice(-4)
-                  }
-                  </span>
-                <CaretDownIcon className="w-8 h-8" />
+                  {signer && signer.slice(0, 4) + "..." + signer.slice(-4)}
+                </span>
+                <CaretDownIcon className="h-8 w-8" />
               </Button>
             </DropdownMenu.Trigger>
           )}
