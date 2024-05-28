@@ -38,6 +38,9 @@ importers:
       '@radix-ui/react-icons':
         specifier: ^1.3.0
         version: 1.3.0(react@18.3.1)
+      '@radix-ui/react-tooltip':
+        specifier: ^1.0.7
+        version: 1.0.7(@types/react-dom@18.2.7)(@types/react@18.2.18)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/themes':
         specifier: ^2.0.0-rc.3
         version: 2.0.3(@types/react-dom@18.2.7)(@types/react@18.2.18)(react-dom@18.3.1)(react@18.3.1)
@@ -166,41 +169,41 @@ importers:
   packages/chain:
     dependencies:
       '@proto-kit/api':
-        specifier: link:proto-kit/packages/api
-        version: link:proto-kit/packages/api
+        specifier: link:../../proto-kit/packages/api
+        version: link:../../proto-kit/packages/api
       '@proto-kit/cli':
-        specifier: link:proto-kit/packages/cli
-        version: link:proto-kit/packages/cli
+        specifier: link:../../proto-kit/packages/cli
+        version: link:../../proto-kit/packages/cli
       '@proto-kit/common':
-        specifier: link:proto-kit/packages/common
-        version: link:proto-kit/packages/common
+        specifier: link:../../proto-kit/packages/common
+        version: link:../../proto-kit/packages/common
       '@proto-kit/library':
-        specifier: link:proto-kit/packages/library
-        version: link:proto-kit/packages/library
+        specifier: link:../../proto-kit/packages/library
+        version: link:../../proto-kit/packages/library
       '@proto-kit/module':
-        specifier: link:proto-kit/packages/module
-        version: link:proto-kit/packages/module
+        specifier: link:../../proto-kit/packages/module
+        version: link:../../proto-kit/packages/module
       '@proto-kit/persistance':
-        specifier: link:proto-kit/packages/persistance
-        version: link:proto-kit/packages/persistance
+        specifier: link:../../proto-kit/packages/persistance
+        version: link:../../proto-kit/packages/persistance
       '@proto-kit/protocol':
-        specifier: link:proto-kit/packages/protocol
-        version: link:proto-kit/packages/protocol
+        specifier: link:../../proto-kit/packages/protocol
+        version: link:../../proto-kit/packages/protocol
       '@proto-kit/sdk':
-        specifier: link:proto-kit/packages/sdk
-        version: link:proto-kit/packages/sdk
+        specifier: link:../../proto-kit/packages/sdk
+        version: link:../../proto-kit/packages/sdk
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
       o1js:
-        specifier: link:proto-kit/node_modules/o1js
-        version: link:proto-kit/node_modules/o1js
+        specifier: link:../../proto-kit/node_modules/o1js
+        version: link:../../proto-kit/node_modules/o1js
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
       tsyringe:
-        specifier: link:proto-kit/node_modules/tsyringe
-        version: link:proto-kit/node_modules/tsyringe
+        specifier: link:../../proto-kit/node_modules/tsyringe
+        version: link:../../proto-kit/node_modules/tsyringe
     devDependencies:
       '@jest/globals':
         specifier: ^29.6.1
