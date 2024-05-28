@@ -1,4 +1,4 @@
-import { type ClientAppChain } from "tileville-protokit-sdk";
+import { type ClientAppChain } from "@proto-kit/sdk";
 import { createContext } from "react";
 
 const AppChainClientContext = createContext<

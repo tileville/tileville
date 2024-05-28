@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "scripts": {
+    "pnpm:devPreinstall": "./build_protokit.sh",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start-server": "turbo run start-server",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "turbo": "^v1.12.2"
+  },
+  "packageManager": "pnpm@8.6.10",
+  "name": "starter-kit",
+  "pnpm": {
+    "patchedDependencies": {}
+  }
+}

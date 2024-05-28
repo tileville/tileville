@@ -1,4 +1,4 @@
-import { type RuntimeModulesRecord } from "tileville-protokit-module";
+import { type RuntimeModulesRecord } from "@proto-kit/module";
 import { type ClientAppChain } from "tileville-chain-dev";
 import { createStore } from "zustand";
 import { ZkNoidGameFeature, ZkNoidGameGenre } from "./platform/game_tags";

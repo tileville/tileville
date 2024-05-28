@@ -1,5 +1,5 @@
 {
-  "name": "tileville-frontend",
+  "name": "web",
   "description": "Tileville: Strategic City Development game on MINA blockchain",
   "private": false,
   "version": "0.1.0",
@@ -16,10 +16,10 @@
   },
   "dependencies": {
     "@aurowallet/mina-provider": "1.0.1",
-    "tileville-protokit-library": "0.1.1",
-    "tileville-protokit-module": "0.1.1",
-    "tileville-protokit-sdk": "0.1.1",
-    "tileville-protokit-sequencer": "0.1.1",
+    "@proto-kit/library": "link:../../proto-kit/packages/library",
+    "@proto-kit/module": "link:../../proto-kit/packages/module",
+    "@proto-kit/sdk": "link:../../proto-kit/packages/sdk",
+    "@proto-kit/sequencer": "link:../../proto-kit/packages/sdk",
     "@radix-ui/colors": "^3.0.0-rc.4",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/themes": "^2.0.0-rc.3",
@@ -29,7 +29,8 @@
     "immer": "^10.0.3",
     "luxon": "^3.4.4",
     "next": "14.1.4",
-    "o1js": "1.1.0",
+    "o1js": "link:../../proto-kit/node_modules/o1js",
+    "tsyringe": "link:../../proto-kit/node_modules/tsyringe",
     "o1js-pack": "^0.5.0",
     "path": "^0.12.7",
     "phaser": "^3.80.1",
@@ -43,7 +44,6 @@
     "tailwindcss-animate": "^1.0.7",
     "tileville-chain-dev": "0.0.2",
     "truncate-middle": "^1.0.6",
-    "tsyringe": "4.8.0",
     "zustand": "^4.4.6"
   },
   "devDependencies": {

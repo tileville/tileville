@@ -7,7 +7,7 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { GameRecordKey } from "tileville-chain-dev";
 import { ICompetition } from "@/lib/types";
 import { fromContractCompetition } from "@/lib/typesConverter";
-import { type ClientAppChain } from "tileville-protokit-sdk";
+import { type ClientAppChain } from "@proto-kit/sdk";
 import { minapolisConfig } from "@/game-config";
 import AppChainClientContext from "@/lib/contexts/AppChainClientContext";
 

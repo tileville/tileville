@@ -7,8 +7,8 @@ import { useMemo, useCallback, useEffect } from "react";
 import {
   PendingTransaction,
   UnsignedTransaction,
-} from "tileville-protokit-sequencer";
-import { MethodIdResolver } from "tileville-protokit-module";
+} from "@proto-kit/sequencer";
+import { MethodIdResolver } from "@proto-kit/module";
 import truncateMiddle from "truncate-middle";
 import { Field, UInt64, PublicKey, Signature } from "o1js";
 

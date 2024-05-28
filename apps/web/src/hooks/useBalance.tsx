@@ -1,14 +1,11 @@
 import { create } from "zustand";
 import { Client, useClientStore } from "./useClientStore";
 import { immer } from "zustand/middleware/immer";
-import {
-  PendingTransaction,
-  UnsignedTransaction,
-} from "tileville-protokit-sequencer";
+import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
 import { PublicKey } from "o1js";
 import { useChainStore } from "./useChainStore";
 import { useWalletStore } from "./useWalletStore";
-import { Balance, TokenId, UInt64 } from "tileville-protokit-library";
+import { Balance, TokenId, UInt64 } from "@proto-kit/library";
 import { useEffect } from "react";
 
 export interface BalancesState {

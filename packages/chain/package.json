@@ -55,15 +55,15 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.2.2",
-    "@proto-kit/api": "link:@proto-kit/api",
-    "@proto-kit/cli": "link:@proto-kit/cli",
-    "@proto-kit/common": "link:@proto-kit/common",
-    "@proto-kit/library": "link:@proto-kit/library",
-    "@proto-kit/module": "link:@proto-kit/module",
-    "@proto-kit/persistance": "link:@proto-kit/persistance",
-    "@proto-kit/protocol": "link:@proto-kit/protocol",
-    "@proto-kit/sdk": "link:@proto-kit/sdk",
-    "o1js": "link:protokit/node_modules/o1js",
-    "tsyringe": "link:protokit/node_modules/tsyringe"
+    "@proto-kit/api": "link:../../proto-kit/packages/api",
+    "@proto-kit/cli": "link:../../proto-kit/packages/cli",
+    "@proto-kit/common": "link:../../proto-kit/packages/common",
+    "@proto-kit/library": "link:../../proto-kit/packages/library",
+    "@proto-kit/module": "link:../../proto-kit/packages/module",
+    "@proto-kit/persistance": "link:../../proto-kit/packages/persistance",
+    "@proto-kit/protocol": "link:../../proto-kit/packages/protocol",
+    "@proto-kit/sdk": "link:../../proto-kit/packages/sdk",
+    "o1js": "link:../../proto-kit/node_modules/o1js",
+    "tsyringe": "link:../../proto-kit/node_modules/tsyringe"
   }
 }
