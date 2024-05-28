@@ -42,5 +42,6 @@ git submodule update --init --recursive
 echo "Submodule fetched successfully"
 cd proto-kit && npm i && npm build
 echo "#### Protokit dependencies prepared successfully 🔥 ###"
+pwd
 echo "going back to main directory"
 cd ..
