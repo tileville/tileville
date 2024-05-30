@@ -15,6 +15,7 @@ export type Database = {
           created_at: string
           game_id: number
           id: number
+          score: number
           wallet_address: string
         }
         Insert: {
@@ -22,6 +23,7 @@ export type Database = {
           created_at?: string
           game_id: number
           id?: number
+          score: number
           wallet_address: string
         }
         Update: {
@@ -29,6 +31,7 @@ export type Database = {
           created_at?: string
           game_id?: number
           id?: number
+          score?: number
           wallet_address?: string
         }
         Relationships: []

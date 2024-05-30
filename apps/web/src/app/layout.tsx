@@ -1,11 +1,11 @@
 import "@radix-ui/themes/styles.css";
-import "../../public/font/font.css"
+import "../../public/font/font.css";
 import "./globals.css";
 import { fjallaOne, monteserrat } from "../styles/fonts";
 import { Theme } from "@radix-ui/themes";
-import { Toaster } from "react-hot-toast";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
+import { ClientLayout } from "./ClientLayout";
 
 export const metadata = {
   title: "TileVille",
@@ -33,8 +33,7 @@ export default function RootLayout({
         >
           <div className="min-h-screen bg-[#ded6b6]">
             <NavBar />
-            {children}
-            <Toaster />
+            <ClientLayout>{children}</ClientLayout>
           </div>
         </Theme>
         <Footer />
