@@ -1,22 +1,21 @@
 {
+  "name": "tileville",
   "private": true,
   "scripts": {
     "build-protokit": "./build_protokit.sh",
-    "build": "turbo run build",
+    "build": "turbo build",
     "dev": "turbo run dev",
     "start-server": "turbo run start-server",
-    "lint": "turbo run lint",
+    "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test"
   },
   "devDependencies": {
-    "next": "14.1.4",
     "prettier": "^3.1.0",
-    "turbo": "^v1.12.2"
+    "turbo": "latest"
   },
-  "packageManager": "pnpm@7.26.0",
-  "name": "tileville",
-  "pnpm": {
-    "patchedDependencies": {}
+  "packageManager": "pnpm@8.9.0",
+  "engines": {
+    "node": ">=18"
   }
 }
