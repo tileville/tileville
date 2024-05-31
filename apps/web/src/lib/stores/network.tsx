@@ -7,14 +7,15 @@ import { NETWORKS, Network } from "@/constants/network";
 
 export interface NetworkState {
   minaNetwork: Network | undefined;
-  setNetwork: (chainId: string) => Promise<void>;
+  setNetwork: (network: Network | undefined) => Promise<void>;
   address: string | undefined;
   walletConnected: boolean;
   protokitClientStarted: boolean;
   onWalletConnected: (address: string | undefined) => Promise<void>;
   onProtokitClientStarted: () => void;
-  connectWallet: () => Promise<void>;
+  connectWallet: (soft: boolean) => Promise<void>;
   walletInstalled: () => boolean;
+
   pendingL2Transactions: PendingTransaction[];
   addPendingL2Transaction: (pendingTransaction: PendingTransaction) => void;
   removePendingL2Transaction: (pendingTransaction: PendingTransaction) => void;
@@ -30,34 +31,48 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
         protokitClientStarted: true,
       });
     },
-    async setNetwork(chainId: string) {
+    async setNetwork(network: Network | undefined) {
       const O1js = await import("o1js");
 
       set((state) => {
-        const minaNetwork = NETWORKS.find((x) => x.chainId == chainId);
-        state.minaNetwork = minaNetwork;
-        if (minaNetwork) {
-          const Network = O1js.Mina.Network(minaNetwork?.graphql);
+        console.log("Target network", network);
+        state.minaNetwork = network;
+        if (network) {
+          const Network = O1js.Mina.Network(network?.graphql);
           O1js.Mina.setActiveInstance(Network);
         }
       });
     },
     address: undefined,
     async onWalletConnected(address: string | undefined) {
-      const network = await (window as any).mina.requestNetwork();
-      this.setNetwork(network.chainId).catch((err) => {
-        console.error("Failed to set network chain id", err);
-      });
+      if (address) {
+        localStorage.minaAdderess = address;
+        const network = await (window as any).mina.requestNetwork();
+        const minaNetwork = NETWORKS.find((x) =>
+          network.chainId != "unknown"
+            ? x.chainId == network.chainId
+            : x.name == network.name
+        );
+
+        this.setNetwork(minaNetwork);
+      } else {
+        localStorage.minaAdderess = "";
+      }
       set((state) => {
         state.address = address;
-        state.walletConnected = true;
+        state.walletConnected = !!address;
       });
     },
-    async connectWallet() {
-      const accounts = await (window as any).mina.requestAccounts();
-      this.onWalletConnected(accounts[0]).catch((err) => {
-        console.error("Failed to set account on wallet connect", err);
-      });
+    async connectWallet(soft: boolean) {
+      if (soft) {
+        if (localStorage.minaAdderess) {
+          this.onWalletConnected(localStorage.minaAdderess);
+          return this.onWalletConnected(localStorage.minaAdderess);
+        }
+      } else {
+        const accounts = await (window as any).mina.requestAccounts();
+        this.onWalletConnected(accounts[0]);
+      }
     },
     walletInstalled() {
       return typeof mina !== "undefined";

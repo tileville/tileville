@@ -111,20 +111,13 @@ export const useProtokitChainStore = create<
 
 export const tickInterval = 5000;
 export const usePollProtokitBlockHeight = () => {
-  const [tick, setTick] = useState(0);
   const chain = useProtokitChainStore();
 
   useEffect(() => {
+    const intervalId = setInterval(() => {
+      chain.loadBlock();
+    }, tickInterval);
     chain.loadBlock();
-  }, [tick]);
-
-  useEffect(() => {
-    const intervalId = setInterval(
-      () => setTick((tick) => tick + 1),
-      tickInterval
-    );
-
-    setTick((tick) => tick + 1);
 
     return () => clearInterval(intervalId);
   }, []);

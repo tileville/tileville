@@ -1,6 +1,7 @@
 import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
+import "reflect-metadata";
 import { fjallaOne, monteserrat } from "../styles/fonts";
 import { Theme } from "@radix-ui/themes";
 import { Footer } from "@/components/Footer";

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@aurowallet/mina-provider": "1.0.1",
+    "@proto-kit/common": "file:../../proto-kit/packages/common",
     "@proto-kit/library": "file:../../proto-kit/packages/library",
     "@proto-kit/module": "file:../../proto-kit/packages/module",
     "@proto-kit/sdk": "file:../../proto-kit/packages/sdk",
