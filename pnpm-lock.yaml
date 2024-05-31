@@ -201,6 +201,9 @@ importers:
       '@proto-kit/sdk':
         specifier: link:../../proto-kit/packages/sdk
         version: link:../../proto-kit/packages/sdk
+      '@proto-kit/sequencer':
+        specifier: link:../../proto-kit/packages/sequencer
+        version: link:../../proto-kit/packages/sequencer
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2

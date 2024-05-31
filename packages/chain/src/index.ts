@@ -13,5 +13,6 @@ export * from './runtime.js';
 export * from './balances.js';
 export * from './GameHub.js';
 export * from './types.js';
+export { getDefaultCompetitions } from './levels.js';
 
 export { ClientAppChain, ProtokitLibrary, UInt64 as ProtoUInt64 };
