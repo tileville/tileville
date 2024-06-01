@@ -208,6 +208,7 @@ export class MenuScene extends Scene {
 
   play() {
     const handleEntryFees = this.game.registry.get("handleEntryFees");
+    
     const checkEntryFeesPaid = JSON.parse(
       window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""
     );

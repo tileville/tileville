@@ -7,13 +7,13 @@ import {
   VideoIcon,
   BookmarkIcon,
   PersonIcon,
+  ListBulletIcon,
+  HomeIcon,
 } from "@radix-ui/react-icons";
-import {
-  GITHUB_URL,
-  GAME_TUTORIAL_VIDEO_URL,
-  ZKIGNITE_PROPOSAL,
-} from "@/constants";
+import { GITHUB_URL, GAME_TUTORIAL_VIDEO_URL } from "@/constants";
 import { usePathname, useRouter } from "next/navigation";
+import "./../app/globals.css";
+// import "./../app/font.css";
 
 export const NavBar = () => {
   const router = useRouter();
@@ -38,6 +38,17 @@ export const NavBar = () => {
             {/* <button className="text-5xl font-black" onClick={() => window.location.reload()}>TileVille</button> */}
           </div>
           <div className="flex space-x-6">
+            <Button
+              variant="outline"
+              size="3"
+              color="jade"
+              highContrast
+              radius="none"
+              onClick={logoClickHandler}
+            >
+              Home
+              <HomeIcon />
+            </Button>
             <Button
               variant="outline"
               size="3"
@@ -91,6 +102,18 @@ export const NavBar = () => {
               >
                 Profile
                 <PersonIcon />
+              </Button>
+            </Link>
+            <Link href="/leaderboard">
+              <Button
+                variant="outline"
+                size="3"
+                color="jade"
+                highContrast
+                radius="none"
+              >
+                Leaderboard
+                <ListBulletIcon />
               </Button>
             </Link>
             <ConnectButton />

@@ -3,7 +3,7 @@ import { AppSupabaseClient, Table } from "@/types";
 export const getAllLeaderboardEntries = async (
   supabase: AppSupabaseClient
 ): Promise<Array<Table<"leaderboard">>> => {
-  const { data, error } = await supabase.from("leaderboard").select("*");
+  const { data, error } = await supabase.from("leaderboard").select("*").order('score', { ascending: false });;
 
   if (error) {
     throw error;

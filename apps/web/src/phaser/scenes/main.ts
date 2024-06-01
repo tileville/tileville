@@ -366,6 +366,13 @@ export class MainScene extends Scene {
   }
 
   endGame() {
+    const handleSaveScore = this.game.registry.get("handleSaveScore");
+
+    if (this.scoreText) {
+      handleSaveScore(this.score)
+      console.log('data send to database')
+    }
+
     this.grid!.sinkBlanks();
     try {
       window.sessionStorage.removeItem(GAME_ENTRY_FEE_KEY);

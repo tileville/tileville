@@ -11,6 +11,7 @@ import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 // import { Footer } from "@/components/Footer";
 
 import dynamic from "next/dynamic";
+import { useLeaderboard } from "@/db/react-query-hooks";
 
 const DynamicPhaserLayerWithNoSSR = dynamic(
   () => import("@/phaser/phaserLayer"),

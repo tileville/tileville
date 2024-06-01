@@ -79,8 +79,8 @@ body {
 }
 
 .radix-themes {
-    --default-font-family: var(--font-press-start), sans-serif;
-    --heading-font-family: var(--font-press-start), sans-serif;
+    --default-font-family: 'mv boli' , sans-serif;
+    --heading-font-family:'mv boli' , sans-serif;
     --font-weight-light: 200;
     --font-weight-regular: 300;
     --font-weight-medium: 600;
@@ -92,5 +92,5 @@ body {
   }
 
   body{
-    font-family: 'my boli' , sans-serif;
+    font-family: 'mv boli' , sans-serif;
   }
