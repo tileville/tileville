@@ -1,43 +1,57 @@
 import { Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { useNetworkLayer } from "@/hooks/useNetworkLayer";
+import { useState } from "react";
+import { PrimaryButton } from "./PrimaryButton";
 
 export default function ConnectButton() {
-  const { signer, chain, connect } = useNetworkLayer();
+  const { signer = "", chain = {}, connect } = useNetworkLayer();
+
+  const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
+
+  const handleFocus = (index: number) => {
+    setFocusedButtonIndex(index);
+  };
   return (
     <>
-      <Flex gap="2">
+      <div className="flex items-center gap-2">
         {signer != null ? (
-          <Button variant="outline" size="3" radius="none">
-            <Flex direction={"row"} justify={"center"} align={"center"} gap="2">
-              <img src="/logos/mina.png" alt="mina logo" className="h-4 w-4" />
-              {chain.chainName}
-            </Flex>
-          </Button>
+          <button className="items-centere bg-primary-30 flex gap-2 rounded-[15px] px-[15px] py-[3.5px]">
+            <img
+              src="/logos/mina.png"
+              alt="mina logo"
+              className="h-4 w-4 invert"
+            />
+            <span>{chain.chainName}</span>
+          </button>
         ) : null}
         <DropdownMenu.Root>
           {signer === null ? (
-            <Button onClick={connect} variant="outline" size="4" radius="none">
-              <span>Connect</span>
-            </Button>
+            <PrimaryButton
+              key={2}
+              onFocus={() => handleFocus(1)}
+              text="Connect"
+              size="sm"
+              autoFocus={1 === focusedButtonIndex}
+              onClickHandler={connect}
+            />
           ) : (
             <DropdownMenu.Trigger>
-              <Button
-                onClick={() => {}}
-                variant="outline"
-                size="3"
-                radius="none"
+              <button
+                // onClick={onClickHandler ? onClickHandler : handleClick}
+                // ref={buttonRef}
+                // onMouseEnter={handleMouseEnter}
+                className="focus-visible-bg-primary-30 focus-bg-primary-30 hover-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-white outline-none hover:border-primary hover:shadow-[0_0_8px_hsl(var(--primary))] hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
               >
-                <span>
-                  {signer && signer.slice(0, 4) + "..." + signer.slice(-4)}
-                </span>
-                <CaretDownIcon className="h-8 w-8" />
-              </Button>
+                {/* {icon} */}
+                {/* {text} */}
+                Connect
+              </button>
             </DropdownMenu.Trigger>
           )}
-          <DropdownMenu.Content className="">
-            <DropdownMenu.Item className="my-10 !bg-transparent">
-              <Button
+          <DropdownMenu.Content className="gradient-bg !bg-black">
+            <DropdownMenu.Item className="!bg-transparent">
+              {/* <Button
                 onClick={() => {
                   console.log("disconnect");
                 }}
@@ -45,11 +59,19 @@ export default function ConnectButton() {
                 size="3"
               >
                 Disconnect
-              </Button>
+              </Button> */}
+
+              <PrimaryButton
+                key={2}
+                onFocus={() => handleFocus(1)}
+                text={"Disconnect"}
+                size="sm"
+                autoFocus={1 === focusedButtonIndex}
+              />
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-      </Flex>
+      </div>
     </>
   );
 }

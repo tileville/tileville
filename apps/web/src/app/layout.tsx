@@ -1,3 +1,5 @@
+// "use client";
+
 import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
@@ -22,7 +24,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${monteserrat.variable}, ${fjallaOne.variable}`}
+      // className={`${monteserrat.variable}, ${fjallaOne.variable}`}
     >
       <body>
         <Theme
@@ -33,8 +35,10 @@ export default function RootLayout({
           radius="large"
         >
           <div className="min-h-screen bg-[#ded6b6]">
-            <NavBar />
-            <ClientLayout>{children}</ClientLayout>
+            <ClientLayout>
+              {/* <NavBar /> */}
+              {children}
+            </ClientLayout>
           </div>
         </Theme>
         <Footer />

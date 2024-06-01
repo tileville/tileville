@@ -20,6 +20,9 @@ importers:
       '@aurowallet/mina-provider':
         specifier: 1.0.1
         version: 1.0.1
+      '@madzadev/audio-player':
+        specifier: ^2.1.13
+        version: 2.1.13
       '@proto-kit/common':
         specifier: file:../../proto-kit/packages/common
         version: file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
@@ -1058,6 +1061,14 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@madzadev/audio-player@2.1.13:
+    resolution: {integrity: sha512-PEGlGAmMIfo6CiLkvtBQ2qyGSCvnoNPH/4N3E2vy91U1FQtteXCDjHmxtZxfQxNKD90RqHELsC8m6U56cu5Zcg==}
+    engines: {node: '>=18'}
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
 
   /@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.2:
     resolution: {integrity: sha512-9bfjwDxIDWmmOKusUcqdS4Rw+SETlp9Dy39Xui9BEGEk19dDwH0jhipwFzEff/pFg95NKymc6TOTbRKcWeRqyQ==}

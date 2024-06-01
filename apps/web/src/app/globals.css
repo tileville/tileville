@@ -3,8 +3,10 @@
 @tailwind utilities;
 
 body {
-    background-color: #ded6b6;
+    /* background-color: #ded6b6; */
+    font-family: monospace;
 }
+
 @layer base {
     :root {
         --background: 0 0% 100%;
@@ -16,8 +18,11 @@ body {
         --popover: 0 0% 100%;
         --popover-foreground: 20 14.3% 4.1%;
 
-        --primary: 24 9.8% 10%;
-        --primary-foreground: 60 9.1% 97.8%;
+        /* below primary color is defined according to theme  */
+        /* same as  =>  rgba(255, 0, 0) || #ff0000  */
+
+        --primary: 97.19 87.05% 27.25%;
+        --primary-foreground: 48, 38%, 79%;
 
         --secondary: 60 4.8% 95.9%;
         --secondary-foreground: 24 9.8% 10%;
@@ -48,7 +53,9 @@ body {
         --popover: 20 14.3% 4.1%;
         --popover-foreground: 60 9.1% 97.8%;
 
-        --primary: 60 9.1% 97.8%;
+        /* below primary color is defined according to theme  */
+        /* same as  =>  rgba(255, 0, 0) || #ff0000  */
+        --primary: 48, 38%, 79%;
         --primary-foreground: 24 9.8% 10%;
 
         --secondary: 12 6.5% 15.1%;
@@ -73,6 +80,7 @@ body {
     * {
         @apply border-border;
     }
+
     body {
         @apply bg-background text-foreground;
     }
@@ -85,12 +93,90 @@ body {
     --font-weight-regular: 300;
     --font-weight-medium: 600;
     --font-weight-bold: 800;
-  }
+}
 
-  canvas{
-    margin-inline: auto;
-  }
 
-  body{
-    font-family: 'my boli' , sans-serif;
-  }
+canvas {
+    margin: auto;
+}
+
+button {
+    font-family: inherit;
+}
+
+.bg-primary-30 {
+    background: hsl(var(--primary), 0.3);
+}
+
+.hover-bg-primary-30:hover,
+.focus-visible-bg-primary-30:focus-visible,
+.focus-bg-primary-30:focus {
+    background: hsl(var(--primary), 0.3);
+}
+
+.gradient-bg {
+    background: linear-gradient(hsl(var(--primary)/ 0.3), hsl(var(--primary-foreground)));
+    background-color: hsl(var(--primary-foreground));
+}
+
+.text-primary-shadow {
+    color: hsl(var(--primary));
+    text-shadow: 0 -2px 1px, 0 0 0, 0 0 1px hsl(var(--primary)), 0 0 3px hsl(var(--primary)), 0 0 2px hsl(var(--primary)), 0 3px 3px #000;
+    font-size: 100px;
+    -webkit-user-select: none;
+    user-select: none;
+    font-family: monospace;
+}
+
+.text-primary-shadow span {
+    animation: blink 2s linear infinite;
+}
+
+.text-primary-shadow span:nth-of-type(2) {
+    animation: blink 3s linear infinite;
+}
+
+.text-primary-shadow span:nth-of-type(3) {
+    animation: blink 4s linear infinite;
+}
+
+@keyframes blink {
+    78% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+
+    79% {
+        color: transparent;
+    }
+
+    80% {
+        text-shadow: none;
+    }
+
+    81% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+
+    82% {
+        color: transparent;
+        text-shadow: none;
+    }
+
+    83% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+
+    92% {
+        color: transparent;
+        text-shadow: none;
+    }
+
+    92.5% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+
+}

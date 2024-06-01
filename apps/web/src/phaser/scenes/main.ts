@@ -8,9 +8,9 @@ import {
   HEX_WIDTH,
 } from "../hex-grid";
 import { Button, pick, shuffle } from "../util";
-import { Scene } from "phaser";
+import Phaser from "phaser";
 
-export class MainScene extends Scene {
+export class MainScene extends Phaser.Scene {
   grid: HexGrid | null = null;
   foreground: Phaser.GameObjects.Image | null = null;
   nextType = 0;
@@ -49,7 +49,7 @@ export class MainScene extends Scene {
     super("main");
   }
 
-  create() {
+  async create() {
     this.add.rectangle(640, 360, 1280, 720);
     const bgImage = this.add.image(640, 360, "map_pattern");
     bgImage.setScale(0.2);
@@ -140,14 +140,14 @@ export class MainScene extends Scene {
 
     this.pickNextTrihex();
 
-    this.foreground = this.add.image(1600, 360, "page");
-    this.foreground.setDepth(3);
+    // this.foreground = this.add.image(1600, 360, "page");
+    // this.foreground.setDepth(3);
 
-    this.tweens.add({
-      targets: this.foreground,
-      props: { x: 2400 },
-      duration: 400,
-    });
+    // this.tweens.add({
+    //   targets: this.foreground,
+    //   props: { x: 2400 },
+    //   duration: 400,
+    // });
 
     this.tweens.add({
       targets: this.rotateLeftButton,
@@ -226,13 +226,21 @@ export class MainScene extends Scene {
 
   rotateRight() {
     this.nextTrihex?.rotateRight();
-    this.grid?.updateTriPreview(this.previewX, this.previewY, this.nextTrihex!);
+    this.grid?.updateTriPreview(
+      this.previewX,
+      this.previewY,
+      this.nextTrihex as Trihex
+    );
     this.updateBigTrihex();
   }
 
   rotateLeft() {
     this.nextTrihex?.rotateLeft();
-    this.grid?.updateTriPreview(this.previewX, this.previewY, this.nextTrihex!);
+    this.grid?.updateTriPreview(
+      this.previewX,
+      this.previewY,
+      this.nextTrihex as Trihex
+    );
     this.updateBigTrihex();
   }
 
@@ -258,7 +266,7 @@ export class MainScene extends Scene {
         this.bigPreviewTrihex[i].setY(HEX_HEIGHT * 1.125 * row);
       }
 
-      this.bigPreviewTrihex[i].setType(this.nextTrihex?.hexes[i]!);
+      this.bigPreviewTrihex[i].setType(this.nextTrihex?.hexes[i] as number);
       if (this.nextTrihex?.hexes[i] === 0)
         this.bigPreviewTrihex[i].setVisible(false);
     }
@@ -366,6 +374,13 @@ export class MainScene extends Scene {
   }
 
   endGame() {
+    const handleSaveScore = this.game.registry.get("handleSaveScore");
+
+    if (this.scoreText) {
+      handleSaveScore(this.score)
+      console.log('data send to database')
+    }
+
     this.grid!.sinkBlanks();
     try {
       window.sessionStorage.removeItem(GAME_ENTRY_FEE_KEY);
@@ -457,13 +472,53 @@ export class MainScene extends Scene {
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
-    this.playAgainButton = new Button(
-      this,
-      1400,
-      630,
-      "play-again-button",
-      this.playAgain.bind(this)
+    this.playAgainButton = this.add.text(1400, 630, "Play Again", {
+      fill: "#000",
+      fontSize: "40px",
+      fontFamily: "monospace",
+    });
+    this.playAgainButton.setOrigin(0.5);
+    this.playAgainButton.setInteractive({ useHandCursor: true });
+
+    this.playAgainButton.on("pointerover", () => {
+      this.tweens.add({
+        targets: this.playAgainButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 60,
+        ease: "Linear",
+      });
+    });
+    this.playAgainButton.on("pointerout", () =>
+      this.tweens.add({
+        targets: this.playAgainButton,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 60,
+        ease: "Linear",
+      })
     );
+    this.playAgainButton.on("pointerdown", () => {
+      this.tweens.add({
+        targets: this.playAgainButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 60,
+        ease: "Linear",
+      });
+      this.playAgain();
+    });
+    this.playAgainButton.on("pointerup", () => {
+      this.playAgain();
+    });
+
+    // this.playAgainButton = new Button(
+    //   this,
+    //   1400,
+    //   630,
+    //   "play-again-button",
+    //   this.playAgain.bind(this)
+    // );
     this.playAgainButton.setDepth(4);
 
     this.breakdownContainer = this.add.container(1500, 300);
@@ -537,7 +592,7 @@ export class MainScene extends Scene {
     });
   }
 
-  playAgain() {
+  async playAgain() {
     this.breakdownContainer?.setVisible(false);
     this.gameOverText?.setVisible(false);
     this.nextRankText?.setVisible(false);
@@ -545,11 +600,11 @@ export class MainScene extends Scene {
     this.playAgainButton?.setVisible(false);
     this.scoreText?.setVisible(false);
 
-    this.tweens.add({
-      targets: this.foreground,
-      props: { x: 1600 },
-      duration: 400,
-    });
+    // this.tweens.add({
+    //   targets: this.foreground,
+    //   props: { x: 1600 },
+    //   duration: 400,
+    // });
 
     this.time.addEvent({
       callback: this.scene.restart,
@@ -573,7 +628,7 @@ export class MainScene extends Scene {
       this.grid.placeTrihex(
         this.previewX,
         this.previewY,
-        this.nextTrihex!,
+        this.nextTrihex as Trihex,
         this.onPlaceTile.bind(this)
       )
     ) {
@@ -581,7 +636,7 @@ export class MainScene extends Scene {
 
       if (
         this.nextTrihex?.hexes[0] === 0 ||
-        !this.grid.canPlaceShape(this.nextTrihex?.shape!)
+        !this.grid.canPlaceShape(this.nextTrihex?.shape as string)
       ) {
         this.time.addEvent({
           callback: this.waitForFinalScore,
@@ -590,7 +645,7 @@ export class MainScene extends Scene {
         });
         this.grid.deactivate();
       }
-      this.grid.updateTriPreview(-100, -100, this.nextTrihex!);
+      this.grid.updateTriPreview(-100, -100, this.nextTrihex as Trihex);
     }
   }
 
@@ -600,7 +655,11 @@ export class MainScene extends Scene {
     } else {
       this.previewX = event.worldX;
       this.previewY = event.worldY;
-      this.grid?.updateTriPreview(event.worldX, event.worldY, this.nextTrihex!);
+      this.grid?.updateTriPreview(
+        event.worldX,
+        event.worldY,
+        this.nextTrihex as Trihex
+      );
     }
     this.pointerDown = true;
   }
@@ -608,7 +667,11 @@ export class MainScene extends Scene {
   onPointerMove(event: Phaser.Input.Pointer) {
     this.previewX = event.worldX;
     this.previewY = event.worldY;
-    this.grid?.updateTriPreview(event.worldX, event.worldY, this.nextTrihex!);
+    this.grid?.updateTriPreview(
+      event.worldX,
+      event.worldY,
+      this.nextTrihex as Trihex
+    );
   }
 
   onKeyDown(event: KeyboardEvent) {

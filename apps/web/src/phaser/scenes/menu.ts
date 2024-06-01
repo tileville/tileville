@@ -1,10 +1,10 @@
 import { GAME_ENTRY_FEE_KEY } from "../../constants";
 import { HexGrid } from "../hex-grid";
 import { Button } from "../util";
-import { Scene } from "phaser";
+import Phaser from "phaser";
 
 const tutorialTexts = [
-  "Tileville is city development Arcade game \nwhere you pay 2 MINA tokens to play the game \nand build your city.",
+  "TileVille is city development Arcade game \nwhere you pay 2 MINA tokens to play the game \nand build your city.",
   "If your score is above 70\nyou will win a level 1 treasure box",
   "Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!",
   "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every Port that you\nconnect to the Center with\nRoads is worth 3 points!",
@@ -23,7 +23,7 @@ const tutorialTypes = [
   [1, 2, 3, 4, 5],
 ];
 
-export class MenuScene extends Scene {
+export class MenuScene extends Phaser.Scene {
   menu: Phaser.GameObjects.Group | null = null;
   background: Phaser.GameObjects.Image | null = null;
   tutorialGrid: HexGrid = {} as HexGrid;
@@ -34,41 +34,91 @@ export class MenuScene extends Scene {
     super("menu");
   }
 
-  create() {
+  async create() {
     this.cameras.main.setBounds(-1280, 0, 3840, 720);
+    this.cameras.main.setBackgroundColor("rgba(0 , 0 , 0 , 0)");
     this.menu = this.add.group();
 
-    this.background = this.add.image(360, 360, "page");
+    // this.background = this.add.image(360, 360, "page");
 
     const map_pattern = this.add.image(920, 360, "map_pattern");
     map_pattern.setScale(0.05);
     map_pattern.setAlpha(0.3);
-    // const title = this.add.bitmapText(50, 150, "font", "Tileville", 70);
-    const tagline = this.add.bitmapText(
+
+    const title = this.add.text(50, 150, "TileVille", {
+      fontFamily: "monospace",
+      fontSize: "70px",
+      color: "#000",
+    });
+
+    // const title = this.add.bitmapText(50, 150, "font", "TileVille", 70);
+
+    const tagline = this.add.text(
       50,
       220,
-      "font",
       "On-chain City-Development Arcade Game on MINA blockchain",
-      70
+      {
+        fontFamily: "monospace",
+        fontSize: "70px",
+        color: "#000",
+      }
     );
-    tagline.setScale(0.3);
-    // this.menu.add(title);
 
-    const playButton = new Button(
-      this,
-      300,
-      400,
-      "play-button",
-      this.play.bind(this)
+    title.setTint(0xffffff);
+    tagline.setTint(0xffffff);
+
+    tagline.setScale(0.3);
+    this.menu.add(title);
+
+    const playButton = this.add.text(300, 400, "Play", {
+      fill: "#000",
+      fontSize: "40px",
+      fontFamily: "monospace",
+    });
+    playButton.setOrigin(0.5);
+    playButton.setInteractive({ useHandCursor: true });
+
+    playButton.on("pointerover", () => {
+      this.tweens.add({
+        targets: playButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 60,
+        ease: "Linear",
+      });
+    });
+    playButton.on("pointerout", () =>
+      this.tweens.add({
+        targets: playButton,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 60,
+        ease: "Linear",
+      })
     );
+    playButton.on("pointerdown", () => {
+      this.tweens.add({
+        targets: playButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 60,
+        ease: "Linear",
+      });
+      this.play();
+    });
+    playButton.on("pointerup", () => {
+      this.play();
+    });
+
     this.menu.add(playButton);
 
-    const demoButtonText = this.add.text(200, 460, "Play free(demo mode)", {
-      fontSize: "32px",
+    const demoButtonText = this.add.text(310, 440, "Play free(demo mode)", {
+      fontSize: "20px",
       color: "#000",
       padding: { x: 20, y: 10 },
       fontStyle: "italic",
     });
+    demoButtonText.setOrigin(0.5);
 
     // Make the text interactive
     demoButtonText.setInteractive({
@@ -87,7 +137,7 @@ export class MenuScene extends Scene {
     });
 
     demoButtonText.on("pointerover", () => {
-      demoButtonText.setStyle({ fill: "#111" });
+      demoButtonText.setStyle({ fill: "#000" });
       demoButtonText.setScale(1.03);
     });
 
@@ -96,13 +146,54 @@ export class MenuScene extends Scene {
       demoButtonText.setScale(1);
     });
 
-    const howToPlayButton = new Button(
-      this,
-      300,
-      550,
-      "how-to-play-button",
-      this.howToPlay.bind(this)
+    demoButtonText.on("pointerover", () => {
+      this.tweens.add({
+        targets: demoButtonText,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 60,
+        ease: "Linear",
+      });
+    });
+    demoButtonText.on("pointerout", () =>
+      this.tweens.add({
+        targets: demoButtonText,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 60,
+        ease: "Linear",
+      })
     );
+
+    const howToPlayButton = this.add.text(300, 550, "How do i play?", {
+      fill: "#000",
+      fontSize: "40px",
+      fontFamily: "monospace",
+    });
+    howToPlayButton.setOrigin(0.5);
+
+    howToPlayButton.setInteractive({ useHandCursor: true });
+    howToPlayButton.on("pointerdown", () => this.howToPlay());
+
+    howToPlayButton.on("pointerover", () => {
+      this.tweens.add({
+        targets: howToPlayButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 60,
+        ease: "Linear",
+      });
+    });
+    howToPlayButton.on("pointerout", () =>
+      this.tweens.add({
+        targets: howToPlayButton,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 60,
+        ease: "Linear",
+      })
+    );
+
     this.menu.add(howToPlayButton);
 
     const grid = new HexGrid(this, 3, 0, 700, 100);
@@ -141,7 +232,7 @@ export class MenuScene extends Scene {
     for (let r = 0; r < tutorialGrid.length; r++) {
       for (let c = 0; c < tutorialGrid.length; c++) {
         if (grid.grid.has(r, c)) {
-          grid.grid.get(r, c)!.setType(tutorialGrid[r][c]!);
+          grid.grid.get(r, c)!.setType(tutorialGrid[r][c] as number);
         }
       }
     }
@@ -206,14 +297,13 @@ export class MenuScene extends Scene {
     });
   }
 
-  play() {
+  async play() {
     const handleEntryFees = this.game.registry.get("handleEntryFees");
     const checkEntryFeesPaid = JSON.parse(
       window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""
     );
     if (!checkEntryFeesPaid) {
-      handleEntryFees();
-      return;
+      return handleEntryFees();
     }
     this.cameras.main.pan(-1280, 0, 500, "Linear", true);
 
