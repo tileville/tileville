@@ -17,7 +17,7 @@ const tracks = [
 export const MediaPlayer = () => {
   const { load, play, pause } = useGlobalAudioPlayer();
   useEffect(() => {
-    load(tracks[0].url, { autoplay: false });
+    load(tracks[0].url, { autoplay: true });
   }, []);
 
   return (
