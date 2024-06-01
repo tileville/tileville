@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@aurowallet/mina-provider": "1.0.1",
-    "@madzadev/audio-player": "^2.1.13",
     "@proto-kit/common": "file:../../proto-kit/packages/common",
     "@proto-kit/library": "file:../../proto-kit/packages/library",
     "@proto-kit/module": "file:../../proto-kit/packages/module",
@@ -45,6 +44,7 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.21.3",
     "react-use": "^17.4.3",
+    "react-use-audio-player": "^2.2.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "tileville-chain-dev": "workspace:*",

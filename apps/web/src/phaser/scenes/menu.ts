@@ -285,16 +285,16 @@ export class MenuScene extends Phaser.Scene {
     const deckCounterImage = this.add.image(-950, 720, "a-shape");
     deckCounterImage.setAlpha(0.5);
 
-    const ambience = this.sound.add("ambience", {
-      loop: true,
-      volume: 0,
-    });
-    ambience.play();
-    this.add.tween({
-      targets: ambience,
-      props: { volume: 0.8 },
-      duration: 1000,
-    });
+    // const ambience = this.sound.add("ambience", {
+    //   loop: true,
+    //   volume: 0,
+    // });
+    // ambience.play();
+    // this.add.tween({
+    //   targets: ambience,
+    //   props: { volume: 0.8 },
+    //   duration: 1000,
+    // });
   }
 
   async play() {

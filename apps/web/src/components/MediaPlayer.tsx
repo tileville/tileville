@@ -1,9 +1,9 @@
-import Player from "@madzadev/audio-player";
-import "@madzadev/audio-player/dist/index.css";
+import { useEffect } from "react";
+import { useGlobalAudioPlayer } from "react-use-audio-player";
 
 const tracks = [
   {
-    url: "/medias/1_NightDrive.mp3",
+    url: "sfx/ambience.wav",
     title: "NightDrive",
     tags: ["house"],
   },
@@ -15,16 +15,27 @@ const tracks = [
 ];
 
 export const MediaPlayer = () => {
+  const { load, play, pause } = useGlobalAudioPlayer();
+  useEffect(() => {
+    load(tracks[0].url, { autoplay: false });
+  }, []);
+
   return (
     <div className="h-[100px]">
-      <Player
-        trackList={tracks}
-        includeTags={false}
-        includeSearch={false}
-        showPlaylist={false}
-        shortTracks={false}
-        customColorScheme={{ playerBackground: "transparent" }}
-      />
+      <button
+        onClick={() => {
+          play();
+        }}
+      >
+        play
+      </button>
+      <button
+        onClick={() => {
+          pause();
+        }}
+      >
+        pause
+      </button>
     </div>
   );
 };
