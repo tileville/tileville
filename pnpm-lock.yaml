@@ -20,18 +20,21 @@ importers:
       '@aurowallet/mina-provider':
         specifier: 1.0.1
         version: 1.0.1
+      '@proto-kit/common':
+        specifier: file:../../proto-kit/packages/common
+        version: file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
       '@proto-kit/library':
         specifier: file:../../proto-kit/packages/library
-        version: file:proto-kit/packages/library(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(tsyringe@4.8.0)
+        version: file:proto-kit/packages/library(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(tsyringe@4.8.0)
       '@proto-kit/module':
         specifier: file:../../proto-kit/packages/module
-        version: file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
+        version: file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
       '@proto-kit/sdk':
         specifier: file:../../proto-kit/packages/sdk
-        version: file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.1.14)(tsyringe@4.8.0)
+        version: file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.1.14)(tsyringe@4.8.0)
       '@proto-kit/sequencer':
         specifier: file:../../proto-kit/packages/sequencer
-        version: file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
+        version: file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
       '@radix-ui/colors':
         specifier: ^3.0.0-rc.4
         version: 3.0.0
@@ -1219,21 +1222,7 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@proto-kit/common@0.1.1-develop.651(o1js@1.1.0)(tsyringe@4.8.0):
-    resolution: {integrity: sha512-y9cUfqAqBNnCHD9syElQqBktUnE0rZcEC4KonKHI/ZLSiJ9ku1q3CXt+Yc9YNajkurtvkT3+9Oov65SZPsUoGQ==}
-    peerDependencies:
-      o1js: 0.13.1
-      tsyringe: ^4.7.0
-    dependencies:
-      lodash: 4.17.21
-      loglevel: 1.9.1
-      o1js: file:proto-kit/node_modules/o1js
-      reflect-metadata: 0.1.14
-      tsyringe: file:proto-kit/node_modules/tsyringe
-      typescript-memoize: 1.1.1
-    dev: false
-
-  /@proto-kit/protocol@0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0):
+  /@proto-kit/protocol@0.1.1-develop.651(@proto-kit/common@0.1.1-develop.267+b252853)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0):
     resolution: {integrity: sha512-bD2YptmPmA0juEjpR8UHXVpIqeqxg4QQLLot6FUbpVgMkPeY9YB18A5/Eh455wPidZozq0HS0BP4BgGw1/BfdA==}
     peerDependencies:
       '@proto-kit/common': '*'
@@ -1241,7 +1230,7 @@ packages:
       ts-pattern: ^4.3.0
       tsyringe: ^4.7.0
     dependencies:
-      '@proto-kit/common': 0.1.1-develop.651(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/common': file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
       lodash: 4.17.21
       loglevel: 1.9.1
       o1js: file:proto-kit/node_modules/o1js
@@ -8201,7 +8190,23 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  file:proto-kit/packages/library(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(tsyringe@4.8.0):
+  file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0):
+    resolution: {directory: proto-kit/packages/common, type: directory}
+    id: file:proto-kit/packages/common
+    name: '@proto-kit/common'
+    peerDependencies:
+      o1js: 1.1.0
+      tsyringe: ^4.7.0
+    dependencies:
+      lodash: 4.17.21
+      loglevel: 1.9.1
+      o1js: file:proto-kit/node_modules/o1js
+      reflect-metadata: 0.1.14
+      tsyringe: file:proto-kit/node_modules/tsyringe
+      typescript-memoize: 1.1.1
+    dev: false
+
+  file:proto-kit/packages/library(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(tsyringe@4.8.0):
     resolution: {directory: proto-kit/packages/library, type: directory}
     id: file:proto-kit/packages/library
     name: '@proto-kit/library'
@@ -8213,10 +8218,10 @@ packages:
       o1js: 1.1.0
       tsyringe: ^4.7.0
     dependencies:
-      '@proto-kit/common': 0.1.1-develop.651(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/module': file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
-      '@proto-kit/sequencer': file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/common': file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/module': file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.267+b252853)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
+      '@proto-kit/sequencer': file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
       bigint-isqrt: 0.3.2
       lodash: 4.17.21
       loglevel: 1.9.1
@@ -8225,7 +8230,7 @@ packages:
       tsyringe: file:proto-kit/node_modules/tsyringe
     dev: false
 
-  file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0):
+  file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0):
     resolution: {directory: proto-kit/packages/module, type: directory}
     id: file:proto-kit/packages/module
     name: '@proto-kit/module'
@@ -8235,8 +8240,8 @@ packages:
       o1js: 1.1.0
       tsyringe: ^4.7.0
     dependencies:
-      '@proto-kit/common': 0.1.1-develop.651(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
+      '@proto-kit/common': file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.267+b252853)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
       lodash: 4.17.21
       loglevel: 1.9.1
       o1js: file:proto-kit/node_modules/o1js
@@ -8244,7 +8249,7 @@ packages:
       tsyringe: file:proto-kit/node_modules/tsyringe
     dev: false
 
-  file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.1.14)(tsyringe@4.8.0):
+  file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.1.14)(tsyringe@4.8.0):
     resolution: {directory: proto-kit/packages/sdk, type: directory}
     id: file:proto-kit/packages/sdk
     name: '@proto-kit/sdk'
@@ -8258,11 +8263,11 @@ packages:
       reflect-metadata: ^0.1.13
       tsyringe: ^4.7.0
     dependencies:
-      '@proto-kit/common': 0.1.1-develop.651(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/library': file:proto-kit/packages/library(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/module': file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
-      '@proto-kit/sequencer': file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/common': file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/library': file:proto-kit/packages/library(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/module': file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.267+b252853)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
+      '@proto-kit/sequencer': file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
       '@urql/core': 4.3.0
       comlink: 4.4.1
       lodash: 4.17.21
@@ -8274,7 +8279,7 @@ packages:
       - graphql
     dev: false
 
-  file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0):
+  file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0):
     resolution: {directory: proto-kit/packages/sequencer, type: directory}
     id: file:proto-kit/packages/sequencer
     name: '@proto-kit/sequencer'
@@ -8285,9 +8290,9 @@ packages:
       o1js: 1.1.0
       tsyringe: ^4.7.0
     dependencies:
-      '@proto-kit/common': 0.1.1-develop.651(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/module': file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
-      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
+      '@proto-kit/common': file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/module': file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
+      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.267+b252853)(o1js@1.1.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
       bullmq: 3.15.8
       compute-gcd: 1.2.1
       lodash: 4.17.21

@@ -3,7 +3,7 @@ import * as ProtokitLibrary from '@proto-kit/library';
 import { UInt64 } from '@proto-kit/library';
 
 export * from './client.config.js';
-export * from './chain.config.js';
+// export * from './chain.config.js';
 
 export * from './MinapolisGameHub.js';
 export * from './GameContext.js';

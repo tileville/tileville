@@ -20,6 +20,6 @@
     "lib": ["es2020"]
   },
   "files": ["node_modules/jest-expect-message/types/index.d.ts"],
-  "include": ["./src/**/*", "./bin/**/*", "./on_startup_scripts/**/*"],
+  "include": ["./src/*", "./bin/**/*", "./on_startup_scripts/**/*"],
   "exclude": ["jest.config.cjs"]
 }
