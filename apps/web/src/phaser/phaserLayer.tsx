@@ -41,7 +41,10 @@ export const PhaserLayer = ({ handleEntryFees }: PhaserLayerProps) => {
       parent: "minapolis-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
-      backgroundColor: "0xded6b6",
+      // scale: {
+      //   autoCenter: Phaser.Scale.CENTER_BOTH,
+      // },
+      transparent: true,
     };
     const game = new Phaser.Game(config);
     game.registry.set("handleEntryFees", handleEntryFees);

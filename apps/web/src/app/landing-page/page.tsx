@@ -1,10 +1,10 @@
 "use client";
 
-import LandingBackground from "@/components/LandingBackground";
 import Link from "next/link";
+import LandingBackground from "../../components/LandingBackground";
 import { useState } from "react";
 
-export const App = () => {
+export const LandingPage = () => {
   // const [audio] = useState(
   //   new Audio(
   //     "https://www.mtris.in/static/media/backgroundSoundTwoCompressed-1.04e567dce9772a9fe642.mp3"
@@ -27,7 +27,7 @@ export const App = () => {
 
         <div className="flex h-[50px] items-center text-sm">
           <Link
-            className="mx-auto cursor-pointer rounded-[15px] border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
+            className="bg-primary-30 mx-auto cursor-pointer rounded-[15px] border-2 border-primary bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
             href="/main-menu"
             // onClick={playAudio}
           >
@@ -39,4 +39,4 @@ export const App = () => {
   );
 };
 
-export default App;
+export default LandingPage;

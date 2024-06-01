@@ -1,3 +1,5 @@
+// "use client";
+
 import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
@@ -33,7 +35,7 @@ export default function RootLayout({
         >
           <div className="min-h-screen bg-[#ded6b6]">
             <ClientLayout>
-              <NavBar />
+              {/* <NavBar /> */}
               {children}
             </ClientLayout>
           </div>
