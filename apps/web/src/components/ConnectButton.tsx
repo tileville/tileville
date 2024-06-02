@@ -6,7 +6,11 @@ import { PrimaryButton } from "./PrimaryButton";
 import Image from "next/image";
 
 export default function ConnectButton() {
-  const { signer = "", chain = {}, connect } = useNetworkLayer();
+  const {
+    signer = "",
+    chain = { chainName: "me" },
+    connect,
+  } = useNetworkLayer();
 
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
 
@@ -16,7 +20,7 @@ export default function ConnectButton() {
 
   return (
     <>
-      <div className="flex w-screen items-center gap-2 bg-red-300">
+      <div className="flex items-center gap-2">
         {signer != null ? (
           <button className="items-centere bg-primary-30 flex gap-2 rounded-[15px] px-[15px] py-[3.5px]">
             <Image
@@ -71,6 +75,9 @@ export default function ConnectButton() {
                 text={"Disconnect"}
                 size="sm"
                 autoFocus={1 === focusedButtonIndex}
+                onClickHandler={() => {
+                  console.log("disconnect");
+                }}
               />
             </DropdownMenu.Item>
           </DropdownMenu.Content>

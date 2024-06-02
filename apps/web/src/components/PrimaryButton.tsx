@@ -15,14 +15,14 @@ export const PrimaryButton = ({
   className,
 }: {
   onFocus: any;
-  text: string;
+  text?: string;
   autoFocus: any;
-  href: string;
+  href?: string;
   size?: string;
-  icon?: string;
-  targetBlank: boolean;
-  onClickHandler: any;
-  className: string;
+  icon?: React.ReactNode;
+  targetBlank?: boolean;
+  onClickHandler?: any;
+  className?: string;
 }) => {
   const buttonRef = useRef<any>(null);
 

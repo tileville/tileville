@@ -1,12 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
-import { PhaserLayer } from "@/phaser/phaserLayer";
+// import { PhaserLayer } from "@/phaser/phaserLayer";
 import { Toaster } from "react-hot-toast";
 import { ChainContext, SignerContext } from "@/contexts";
 import { ChainType } from "@/types";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import LandingBackground from "@/components/LandingBackground";
+
+const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
+  ssr: false,
+});
 
 function Game() {
   const [signer, setSigner] = useState("");

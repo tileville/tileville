@@ -4,13 +4,8 @@ import { Button } from "@radix-ui/themes";
 import Link from "next/link";
 import ConnectButton from "./ConnectButton";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import {
-  GITHUB_URL,
-  GAME_TUTORIAL_VIDEO_URL,
-  ZKIGNITE_PROPOSAL,
-} from "@/constants";
 import { PrimaryButton } from "./PrimaryButton";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { MediaPlayer } from "./MediaPlayer";
 
 export const NavBar = () => {
@@ -27,7 +22,6 @@ export const NavBar = () => {
           <PrimaryButton
             key={1}
             onFocus={() => handleFocus(1)}
-            // text={""}
             size="sm"
             icon={<ChevronLeftIcon width={30} height={30} />}
             autoFocus={1 === focusedButtonIndex}
@@ -48,7 +42,7 @@ export const NavBar = () => {
 const NavLink = ({ to, label }: { to: string; label: string }) => {
   return (
     <Button variant="outline" size="3" radius="none">
-      <Link to={to} className="">
+      <Link href={to} className="">
         {label}
       </Link>
     </Button>

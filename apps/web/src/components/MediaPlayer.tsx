@@ -36,9 +36,9 @@ const tracks = [
 ];
 
 export const MediaPlayer = () => {
-  const { load, play, togglePlayPause, loop, looping } = useGlobalAudioPlayer();
+  const { load, play, togglePlayPause, loop, looping, playing } =
+    useGlobalAudioPlayer();
   const [songIndex, setSongIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     load(tracks[songIndex].url, {
@@ -49,7 +49,6 @@ export const MediaPlayer = () => {
 
   const handleTogglePlayPause = () => {
     togglePlayPause();
-    setIsPlaying(!isPlaying);
   };
 
   const handleNextTrack = () => {
@@ -81,7 +80,7 @@ export const MediaPlayer = () => {
         className="flex items-center justify-center"
         onClick={handleTogglePlayPause}
       >
-        {isPlaying ? <PlayIcon /> : <PauseIcon />}
+        {playing ? <PauseIcon /> : <PlayIcon />}
       </button>
 
       <button

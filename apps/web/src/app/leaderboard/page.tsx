@@ -15,7 +15,7 @@ export default function Leaderboard() {
   return (
     <div className="p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
-        <Table.Root className="border border-black/20">
+        <Table.Root>
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeaderCell>Wallet Address</Table.ColumnHeaderCell>

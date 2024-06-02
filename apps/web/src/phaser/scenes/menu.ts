@@ -34,7 +34,7 @@ export class MenuScene extends Phaser.Scene {
     super("menu");
   }
 
-  async create() {
+   create() {
     this.cameras.main.setBounds(-1280, 0, 3840, 720);
     this.cameras.main.setBackgroundColor("rgba(0 , 0 , 0 , 0)");
     this.menu = this.add.group();
@@ -71,7 +71,7 @@ export class MenuScene extends Phaser.Scene {
     this.menu.add(title);
 
     const playButton = this.add.text(300, 400, "Play", {
-      fill: "#000",
+      color: "#000",
       fontSize: "40px",
       fontFamily: "monospace",
     });
@@ -166,7 +166,7 @@ export class MenuScene extends Phaser.Scene {
     );
 
     const howToPlayButton = this.add.text(300, 550, "How do i play?", {
-      fill: "#000",
+      color: "#000",
       fontSize: "40px",
       fontFamily: "monospace",
     });
@@ -232,7 +232,7 @@ export class MenuScene extends Phaser.Scene {
     for (let r = 0; r < tutorialGrid.length; r++) {
       for (let c = 0; c < tutorialGrid.length; c++) {
         if (grid.grid.has(r, c)) {
-          grid.grid.get(r, c)!.setType(tutorialGrid[r][c] as number);
+          grid.grid.get(r, c)!.setType(tutorialGrid[r][c]!);
         }
       }
     }
@@ -297,7 +297,7 @@ export class MenuScene extends Phaser.Scene {
     // });
   }
 
-  async play() {
+   play() {
     const handleEntryFees = this.game.registry.get("handleEntryFees");
     const checkEntryFeesPaid = JSON.parse(
       window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""

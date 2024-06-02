@@ -39,7 +39,8 @@ export class MainScene extends Phaser.Scene {
   gameOverText: Phaser.GameObjects.BitmapText | null = null;
   rankText: Phaser.GameObjects.BitmapText | null = null;
   nextRankText: Phaser.GameObjects.BitmapText | null = null;
-  playAgainButton: Button | null = null;
+  playAgainButton: Phaser.GameObjects.BitmapText | null = null;
+  // playAgainButton: Button | null = null;
 
   breakdownContainer: Phaser.GameObjects.Container | null = null;
   breakdownHexes: Hex[] = [];
@@ -49,7 +50,7 @@ export class MainScene extends Phaser.Scene {
     super("main");
   }
 
-  async create() {
+   create() {
     this.add.rectangle(640, 360, 1280, 720);
     const bgImage = this.add.image(640, 360, "map_pattern");
     bgImage.setScale(0.2);
@@ -229,8 +230,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       this.previewX,
       this.previewY,
-      this.nextTrihex as Trihex
-    );
+      this.nextTrihex!    );
     this.updateBigTrihex();
   }
 
@@ -239,7 +239,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       this.previewX,
       this.previewY,
-      this.nextTrihex as Trihex
+      this.nextTrihex!
     );
     this.updateBigTrihex();
   }
@@ -266,7 +266,7 @@ export class MainScene extends Phaser.Scene {
         this.bigPreviewTrihex[i].setY(HEX_HEIGHT * 1.125 * row);
       }
 
-      this.bigPreviewTrihex[i].setType(this.nextTrihex?.hexes[i] as number);
+      this.bigPreviewTrihex[i].setType(this.nextTrihex?.hexes[i]!);
       if (this.nextTrihex?.hexes[i] === 0)
         this.bigPreviewTrihex[i].setVisible(false);
     }
@@ -472,15 +472,10 @@ export class MainScene extends Phaser.Scene {
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
-    this.playAgainButton = this.add.text(1400, 630, "Play Again", {
-      fill: "#000",
-      fontSize: "40px",
-      fontFamily: "monospace",
-    });
-    this.playAgainButton.setOrigin(0.5);
-    this.playAgainButton.setInteractive({ useHandCursor: true });
-
-    this.playAgainButton.on("pointerover", () => {
+    this.playAgainButton = this.add.bitmapText(1400, 630, "font", "Play Again" , 40).
+    setInteractive({ useHandCursor: true }).
+    setOrigin(0.5).
+    on("pointerover", () => {
       this.tweens.add({
         targets: this.playAgainButton,
         scaleX: 1.1,
@@ -488,8 +483,17 @@ export class MainScene extends Phaser.Scene {
         duration: 60,
         ease: "Linear",
       });
-    });
-    this.playAgainButton.on("pointerout", () =>
+    }).
+    on("pointerover", () => {
+      this.tweens.add({
+        targets: this.playAgainButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 60,
+        ease: "Linear",
+      });
+    }).
+    on("pointerout", () =>
       this.tweens.add({
         targets: this.playAgainButton,
         scaleX: 1,
@@ -497,8 +501,8 @@ export class MainScene extends Phaser.Scene {
         duration: 60,
         ease: "Linear",
       })
-    );
-    this.playAgainButton.on("pointerdown", () => {
+    ).
+    on("pointerdown", () => {
       this.tweens.add({
         targets: this.playAgainButton,
         scaleX: 1.1,
@@ -507,19 +511,11 @@ export class MainScene extends Phaser.Scene {
         ease: "Linear",
       });
       this.playAgain();
-    });
-    this.playAgainButton.on("pointerup", () => {
+    }).
+    on("pointerup", () => {
       this.playAgain();
-    });
-
-    // this.playAgainButton = new Button(
-    //   this,
-    //   1400,
-    //   630,
-    //   "play-again-button",
-    //   this.playAgain.bind(this)
-    // );
-    this.playAgainButton.setDepth(4);
+    }).
+    setDepth(4);
 
     this.breakdownContainer = this.add.container(1500, 300);
     this.breakdownContainer.setDepth(4);
@@ -592,7 +588,7 @@ export class MainScene extends Phaser.Scene {
     });
   }
 
-  async playAgain() {
+   playAgain() {
     this.breakdownContainer?.setVisible(false);
     this.gameOverText?.setVisible(false);
     this.nextRankText?.setVisible(false);
@@ -628,7 +624,7 @@ export class MainScene extends Phaser.Scene {
       this.grid.placeTrihex(
         this.previewX,
         this.previewY,
-        this.nextTrihex as Trihex,
+        this.nextTrihex!,
         this.onPlaceTile.bind(this)
       )
     ) {
@@ -636,7 +632,7 @@ export class MainScene extends Phaser.Scene {
 
       if (
         this.nextTrihex?.hexes[0] === 0 ||
-        !this.grid.canPlaceShape(this.nextTrihex?.shape as string)
+        !this.grid.canPlaceShape(this.nextTrihex?.shape!)
       ) {
         this.time.addEvent({
           callback: this.waitForFinalScore,
@@ -645,7 +641,7 @@ export class MainScene extends Phaser.Scene {
         });
         this.grid.deactivate();
       }
-      this.grid.updateTriPreview(-100, -100, this.nextTrihex as Trihex);
+      this.grid.updateTriPreview(-100, -100, this.nextTrihex!);
     }
   }
 
@@ -658,7 +654,7 @@ export class MainScene extends Phaser.Scene {
       this.grid?.updateTriPreview(
         event.worldX,
         event.worldY,
-        this.nextTrihex as Trihex
+        this.nextTrihex!
       );
     }
     this.pointerDown = true;
@@ -670,7 +666,7 @@ export class MainScene extends Phaser.Scene {
     this.grid?.updateTriPreview(
       event.worldX,
       event.worldY,
-      this.nextTrihex as Trihex
+      this.nextTrihex!
     );
   }
 

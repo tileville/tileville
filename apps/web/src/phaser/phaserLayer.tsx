@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useEffect } from "react";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
 import { useLeaderboard } from "@/db/react-query-hooks";
