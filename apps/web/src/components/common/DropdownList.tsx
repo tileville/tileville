@@ -14,7 +14,7 @@ export const DropdownList = ({
   startContent,
   endContent,
 }: {
-  title: string;
+  title?: string;
   titleColor?: "left-accent" | "foreground";
   items: string[];
   selectedItem: string;
@@ -92,7 +92,7 @@ export const DropdownList = ({
                 key={index}
                 onClick={() => {
                   setSelectedItem(value);
-                  setIsOpen(false);
+                  setIsOpen(!isOpen);
                 }}
                 className={
                   "font-plexsans text-main hover:text-left-accent h-full w-full cursor-pointer p-2 last:pb-4 hover:bg-[#252525]"

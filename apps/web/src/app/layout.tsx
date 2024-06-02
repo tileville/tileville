@@ -4,7 +4,7 @@ import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
 import "reflect-metadata";
-import { Theme } from "@radix-ui/themes";
+import { Button, Theme } from "@radix-ui/themes";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import { ClientLayout } from "./ClientLayout";
@@ -25,9 +25,9 @@ export default function RootLayout({
       suppressHydrationWarning
       // className={`${monteserrat.variable}, ${fjallaOne.variable}`}
     >
-      <body>
+      <body className="gradient-bg min-h-screen">
         <Theme
-          accentColor="amber"
+          accentColor="green"
           grayColor="olive"
           panelBackground="solid"
           scaling="100%"

@@ -33,6 +33,11 @@ export default function MainMenu() {
       key: 3,
       href: "/profile",
     },
+    {
+      name: "Marketplace",
+      key: 4,
+      href: "/marketplace",
+    },
   ];
 
   return (
