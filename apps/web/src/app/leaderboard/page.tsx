@@ -1,13 +1,10 @@
 "use client";
 import { useLeaderboardData } from "@/db/react-query-hooks";
-import { Table } from "@radix-ui/themes";
+import { Skeleton, Table } from "@radix-ui/themes";
 
 export default function Leaderboard() {
   const { data, isLoading, isError, error } = useLeaderboardData();
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
+  const initialArray = Array(20).fill(0);
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
   }
@@ -26,18 +23,43 @@ export default function Leaderboard() {
           </Table.Header>
 
           <Table.Body>
-            {data?.map((entry) => {
-              return (
-                <Table.Row key={entry.id}>
-                  <Table.RowHeaderCell>
-                    {entry.wallet_address}
-                  </Table.RowHeaderCell>
-                  <Table.Cell>{entry.competition_id}</Table.Cell>
-                  <Table.Cell>{entry.game_id}</Table.Cell>
-                  <Table.Cell>{entry.score}</Table.Cell>
-                </Table.Row>
-              );
-            })}
+            {isLoading ? (
+              <>
+                {initialArray?.map((entry) => {
+                  return (
+                    <Table.Row key={entry.id}>
+                      <Table.RowHeaderCell>
+                        <Skeleton>0x1</Skeleton>
+                      </Table.RowHeaderCell>
+                      <Table.Cell>
+                        <Skeleton>1717325346195</Skeleton>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Skeleton>1717325346195</Skeleton>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Skeleton>70</Skeleton>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                {data?.map((entry) => {
+                  return (
+                    <Table.Row key={entry.id}>
+                      <Table.RowHeaderCell>
+                        {entry.wallet_address}
+                      </Table.RowHeaderCell>
+                      <Table.Cell>{entry.competition_id}</Table.Cell>
+                      <Table.Cell>{entry.game_id}</Table.Cell>
+                      <Table.Cell>{entry.score}</Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </>
+            )}
           </Table.Body>
         </Table.Root>
       </div>

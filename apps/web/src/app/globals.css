@@ -140,6 +140,11 @@ button {
     animation: blink 4s linear infinite;
 }
 
+.text-primary-shadow.sm {
+    font-size: 18px;
+    text-shadow: 0 -1px 0px, 0 0 0, 0 0 0px hsl(var(--primary)), 0 0px 4px hsl(var(--primary)), 0 0 1px hsl(var(--primary)), 0 1px 3px;
+}
+
 @keyframes blink {
     78% {
         color: inherit;

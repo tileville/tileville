@@ -52,10 +52,15 @@ export default function MainMenu() {
               href={button.href}
               targetBlank={false}
               onClickHandler={undefined}
-              className={""}
             />
           ))}
         </div>
+      </div>
+
+      <div className="fixed bottom-0 right-0 p-3 pb-6">
+        <h1 className="text-primary-shadow sm">
+          <span>T</span>il<span>e</span>Vi<span>l</span>le
+        </h1>
       </div>
     </div>
   );
