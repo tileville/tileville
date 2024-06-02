@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { PhaserLayer } from "@/phaser/phaserLayer";
-import { NavBar } from "@/components/NavBar";
 import { Toaster } from "react-hot-toast";
 import { ChainContext, SignerContext } from "@/contexts";
 
@@ -35,15 +34,12 @@ function Game() {
   }, []);
 
   return (
-    <div className="gradient-bg gradient-bg min-h-screen bg-black">
+    <div className="gradient-bg gradient-bg h-[calc(100vh-80px)]">
       <LandingBackground />
       <div className="relative z-10">
-        <NavBar />
-
         <SignerContext.Provider value={{ signer, setSigner }}>
           <ChainContext.Provider value={{ chain, setChain }}>
             <div className="mb-0 w-full">
-              {/* <NavBar /> */}
               <PhaserLayer
                 handleEntryFees={() => {
                   setIsEntryFeesModalOpen(true);

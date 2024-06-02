@@ -21,19 +21,25 @@ export const NavBar = () => {
   };
 
   return (
-    <nav className="mb-6 px-4 pt-2 text-white">
-      <div className="flex w-full items-center justify-between">
-        <PrimaryButton
-          key={1}
-          onFocus={() => handleFocus(1)}
-          // text={""}
-          size="sm"
-          icon={<ChevronLeftIcon />}
-          autoFocus={1 === focusedButtonIndex}
-          href={"/main-menu"}
-        />
-        <ConnectButton />
-        <MediaPlayer />
+    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-white">
+      <div className="flex w-full items-start justify-between">
+        <div>
+          <PrimaryButton
+            key={1}
+            onFocus={() => handleFocus(1)}
+            // text={""}
+            size="sm"
+            icon={<ChevronLeftIcon width={30} height={30} />}
+            autoFocus={1 === focusedButtonIndex}
+            href={"/main-menu"}
+            className={`rounded-3xl !border !border-primary !px-6`}
+          />
+        </div>
+
+        <div>
+          <ConnectButton />
+          <MediaPlayer />
+        </div>
       </div>
     </nav>
   );

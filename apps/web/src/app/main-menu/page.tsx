@@ -41,7 +41,7 @@ export const MainMenu = () => {
 
   return (
     <div
-      className="gradient-bg flex min-h-screen items-center justify-center bg-black"
+      className="flex h-[calc(100vh-80px)] items-center justify-center"
       tabIndex={0}
     >
       <LandingBackground />

@@ -2,7 +2,7 @@ function LandingBackground() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="100vw"
+      width="calc(100vw - 20px)"
       height="100svh"
       preserveAspectRatio="xMidYMid"
       viewBox="0 0 1536 750"

@@ -5,19 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 export const App = () => {
-  // const [audio] = useState(
-  //   new Audio(
-  //     "https://www.mtris.in/static/media/backgroundSoundTwoCompressed-1.04e567dce9772a9fe642.mp3"
-  //   )
-  // );
-
-  // const playAudio = () => {
-  //   audio.play();
-  //   audio.loop = true;
-  // };
-
   return (
-    <div className="gradient-bg gradient-bg flex min-h-screen items-center justify-center bg-black bg-opacity-10 bg-opacity-50">
+    <div className="flex h-[calc(100vh-80px)] items-center justify-center">
       <LandingBackground />
 
       <div className="z-10 space-y-[50px] text-center">
@@ -29,7 +18,6 @@ export const App = () => {
           <Link
             className="mx-auto cursor-pointer rounded-2xl border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
             href="/main-menu"
-            // onClick={playAudio}
           >
             Let's Go
           </Link>

@@ -34,10 +34,10 @@ export default function RootLayout({
           scaling="100%"
           radius="large"
         >
-          <div className="min-h-screen bg-[#ded6b6]">
+          <div className="gradient-bg min-h-screen">
             <ClientLayout>
-              {/* <NavBar /> */}
-              {children}
+              <NavBar />
+              <div className="pt-20">{children}</div>
             </ClientLayout>
           </div>
         </Theme>

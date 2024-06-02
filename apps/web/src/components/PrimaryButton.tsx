@@ -11,6 +11,7 @@ export const PrimaryButton = ({
   icon,
   targetBlank,
   onClickHandler,
+  className,
 }: {
   onFocus: any;
   text: string;
@@ -20,19 +21,12 @@ export const PrimaryButton = ({
   icon: string;
   targetBlank: boolean;
   onClickHandler: any;
+  className: string;
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [clickSound] = useState(
-    new Audio(
-      "/medias/click.mp3"
-    )
-  );
+  const [clickSound] = useState(new Audio("/medias/click.mp3"));
 
-  const [hoverSound] = useState(
-    new Audio(
-      "/medias/hover.wav"
-    )
-  );
+  const [hoverSound] = useState(new Audio("/medias/hover.wav"));
 
   const handleClick = () => {
     clickSound.play();
@@ -61,7 +55,7 @@ export const PrimaryButton = ({
         onClick={onClickHandler ? onClickHandler : handleClick}
         ref={buttonRef}
         onMouseEnter={handleMouseEnter}
-        className="focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-white outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
+        className="focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
       >
         {icon}
         {text}
@@ -76,8 +70,8 @@ export const PrimaryButton = ({
         ref={buttonRef}
         onMouseEnter={handleMouseEnter}
         href={`${href}`}
-        target={`${targetBlank ? "_blank" : "_top"}`}
-        className="focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-white outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
+        className={`${className} focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]`}
+        // className="focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
       >
         {icon}
         {text}
