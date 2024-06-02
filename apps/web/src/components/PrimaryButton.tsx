@@ -1,6 +1,8 @@
 "use client";
+import clsx from "clsx";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAudioPlayer } from "react-use-audio-player";
 
 export const PrimaryButton = ({
   onFocus,
@@ -9,7 +11,6 @@ export const PrimaryButton = ({
   href,
   size,
   icon,
-  targetBlank,
   onClickHandler,
   className,
 }: {
@@ -17,19 +18,28 @@ export const PrimaryButton = ({
   text: string;
   autoFocus: any;
   href: string;
-  size: string;
-  icon: string;
+  size?: string;
+  icon?: string;
   targetBlank: boolean;
   onClickHandler: any;
   className: string;
 }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [clickSound] = useState(new Audio("/medias/click.mp3"));
+  const buttonRef = useRef<any>(null);
 
-  const [hoverSound] = useState(new Audio("/medias/hover.wav"));
+  const { load: loadClickSound, play: playClickSound } = useAudioPlayer();
+  const {
+    load: loadHoverSound,
+    play: playHoverSound,
+    seek: setHoverSoundSeek,
+  } = useAudioPlayer();
+
+  useEffect(() => {
+    loadClickSound("/medias/click.mp3", { autoplay: false, loop: false });
+    loadHoverSound("/medias/hover.wav", { autoplay: false, loop: false });
+  }, []);
 
   const handleClick = () => {
-    clickSound.play();
+    playClickSound();
   };
 
   useEffect(() => {
@@ -39,10 +49,8 @@ export const PrimaryButton = ({
   }, [autoFocus]);
 
   const handleMouseEnter = () => {
-    console.log(hoverSound.currentTime);
-    hoverSound.currentTime = 0;
-    console.log(hoverSound.currentTime);
-    hoverSound.play();
+    setHoverSoundSeek(0);
+    playHoverSound();
     onFocus();
     if (buttonRef.current) {
       buttonRef.current.focus();
@@ -70,8 +78,10 @@ export const PrimaryButton = ({
         ref={buttonRef}
         onMouseEnter={handleMouseEnter}
         href={`${href}`}
-        className={`${className} focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]`}
-        // className="focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
+        className={clsx(
+          className,
+          "focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] font-mono leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
+        )}
       >
         {icon}
         {text}

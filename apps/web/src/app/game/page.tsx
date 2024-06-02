@@ -4,10 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { PhaserLayer } from "@/phaser/phaserLayer";
 import { Toaster } from "react-hot-toast";
 import { ChainContext, SignerContext } from "@/contexts";
-
 import { ChainType } from "@/types";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
-import { Footer } from "@/components/Footer";
 import LandingBackground from "@/components/LandingBackground";
 
 function Game() {

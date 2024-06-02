@@ -3,6 +3,7 @@ import { CaretDownIcon } from "@radix-ui/react-icons";
 import { useNetworkLayer } from "@/hooks/useNetworkLayer";
 import { useState } from "react";
 import { PrimaryButton } from "./PrimaryButton";
+import Image from "next/image";
 
 export default function ConnectButton() {
   const { signer = "", chain = {}, connect } = useNetworkLayer();
@@ -12,15 +13,18 @@ export default function ConnectButton() {
   const handleFocus = (index: number) => {
     setFocusedButtonIndex(index);
   };
+
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex w-screen items-center gap-2 bg-red-300">
         {signer != null ? (
           <button className="items-centere bg-primary-30 flex gap-2 rounded-[15px] px-[15px] py-[3.5px]">
-            <img
+            <Image
               src="/logos/mina.png"
               alt="mina logo"
               className="h-4 w-4 invert"
+              width={40}
+              height={40}
             />
             <span>{chain.chainName}</span>
           </button>

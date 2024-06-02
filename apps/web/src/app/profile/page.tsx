@@ -47,7 +47,7 @@ export default function Profile() {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-4 flex items-center justify-end gap-4">
           <div>Your Total Mina Balance :-</div>

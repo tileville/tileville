@@ -1,49 +1,19 @@
 "use client";
-
 import { useLeaderboardData } from "@/db/react-query-hooks";
-import { Button, Table } from "@radix-ui/themes";
+import { Table } from "@radix-ui/themes";
 
 export default function Leaderboard() {
   const { data, isLoading, isError, error } = useLeaderboardData();
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (isError) {
-    return <div>Error: {error?.message}</div>;
+    return <div>Error: {(error as { message: string }).message}</div>;
   }
 
-  const pastGames = [
-    {
-      id: "13132ulk",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "13132ulk",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "13132ulk",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "13132ulk",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "13132ulk",
-      score: 244,
-      rank: 133,
-    },
-  ];
-
   return (
-    <div className="p-4">
+    <div className="p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <Table.Root className="border border-black/20">
           <Table.Header>

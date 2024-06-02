@@ -1,10 +1,8 @@
 "use client";
-
 import LandingBackground from "@/components/LandingBackground";
 import Link from "next/link";
-import { useState } from "react";
 
-export const App = () => {
+export default function App() {
   return (
     <div className="flex h-[calc(100vh-80px)] items-center justify-center">
       <LandingBackground />
@@ -19,12 +17,10 @@ export const App = () => {
             className="mx-auto cursor-pointer rounded-2xl border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
             href="/main-menu"
           >
-            Let's Go
+            Let&apos;s Go
           </Link>
         </div>
       </div>
     </div>
   );
-};
-
-export default App;
+}

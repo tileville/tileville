@@ -1,14 +1,10 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-// import { PrimaryButton } from "../../components/PrimaryButton";
+import { useState } from "react";
 import LandingBackground from "@/components/LandingBackground";
 import { PrimaryButton } from "@/components/PrimaryButton";
 
-// import { BgSound } from "sfx/backgroundSoundTwo.mp3";
-
-export const MainMenu = () => {
+export default function MainMenu() {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
-  const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   const handleFocus = (index: number) => {
     setFocusedButtonIndex(index);
@@ -21,46 +17,46 @@ export const MainMenu = () => {
       href: "/game",
     },
     {
-      name: "Game Rules",
+      name: "Guide",
       key: 1,
-      href: "/game",
+      href: "/guide",
     },
 
     {
       name: "Leaderboard",
       key: 2,
-      href: "/game",
+      href: "/leaderboard",
     },
 
     {
       name: "User Profile",
       key: 3,
-      href: "/game",
+      href: "/profile",
     },
   ];
 
   return (
     <div
-      className="flex h-[calc(100vh-80px)] items-center justify-center"
+      className="flex h-[calc(100vh-80px)] items-center justify-center pt-20"
       tabIndex={0}
     >
       <LandingBackground />
-
       <div className="z-10 flex w-full items-center justify-center">
         <div className="mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
-          {buttons.map((button, index) => (
+          {buttons.map((button) => (
             <PrimaryButton
               key={button.key}
               onFocus={() => handleFocus(button.key)}
               text={button.name}
               autoFocus={button.key === focusedButtonIndex}
               href={button.href}
+              targetBlank={false}
+              onClickHandler={undefined}
+              className={""}
             />
           ))}
         </div>
       </div>
     </div>
   );
-};
-
-export default MainMenu;
+}

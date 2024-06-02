@@ -4,7 +4,6 @@ import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
 import "reflect-metadata";
-import { fjallaOne, monteserrat } from "../styles/fonts";
 import { Theme } from "@radix-ui/themes";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
@@ -37,7 +36,7 @@ export default function RootLayout({
           <div className="gradient-bg min-h-screen">
             <ClientLayout>
               <NavBar />
-              <div className="pt-20">{children}</div>
+              <div className="">{children}</div>
             </ClientLayout>
           </div>
         </Theme>
