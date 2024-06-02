@@ -8,49 +8,49 @@ import {
   HEX_WIDTH,
 } from "../hex-grid";
 import { Button, pick, shuffle } from "../util";
-import Phaser from "phaser";
+import { Scene, GameObjects, Input, Math as PhaserMath } from "phaser";
 
-export class MainScene extends Phaser.Scene {
+export class MainScene extends Scene {
   grid: HexGrid | null = null;
-  foreground: Phaser.GameObjects.Image | null = null;
+  foreground: GameObjects.Image | null = null;
   nextType = 0;
   nextTrihex: Trihex | null = null;
   nextNextTrihex: Trihex | null = null;
   trihexDeck: Trihex[] = [];
   bigPreviewTrihex: Hex[] = [];
-  bigPreviewContainer: Phaser.GameObjects.Container | null = null;
-  deckCounterImage: Phaser.GameObjects.Image | null = null;
-  deckCounterText: Phaser.GameObjects.BitmapText | null = null;
+  bigPreviewContainer: GameObjects.Container | null = null;
+  deckCounterImage: GameObjects.Image | null = null;
+  deckCounterText: GameObjects.BitmapText | null = null;
   rotateLeftButton: Button | null = null;
   rotateRightButton: Button | null = null;
   openHelpButton: Button | null = null;
   closeHelpButton: Button | null = null;
-  helpPage: Phaser.GameObjects.Image | null = null;
+  helpPage: GameObjects.Image | null = null;
   score = 0;
   scoreBreakdown: number[] = [];
-  scoreText: Phaser.GameObjects.BitmapText | null = null;
-  waves: Phaser.GameObjects.Image | null = null;
-  waves2: Phaser.GameObjects.Image | null = null;
+  scoreText: GameObjects.BitmapText | null = null;
+  waves: GameObjects.Image | null = null;
+  waves2: GameObjects.Image | null = null;
 
   pointerDown = false;
   previewX = 0;
   previewY = 0;
 
-  gameOverText: Phaser.GameObjects.BitmapText | null = null;
-  rankText: Phaser.GameObjects.BitmapText | null = null;
-  nextRankText: Phaser.GameObjects.BitmapText | null = null;
-  playAgainButton: Phaser.GameObjects.BitmapText | null = null;
+  gameOverText: GameObjects.BitmapText | null = null;
+  rankText: GameObjects.BitmapText | null = null;
+  nextRankText: GameObjects.BitmapText | null = null;
+  playAgainButton: GameObjects.BitmapText | null = null;
   // playAgainButton: Button | null = null;
 
-  breakdownContainer: Phaser.GameObjects.Container | null = null;
+  breakdownContainer: GameObjects.Container | null = null;
   breakdownHexes: Hex[] = [];
-  breakdownTexts: Phaser.GameObjects.BitmapText[] = [];
+  breakdownTexts: GameObjects.BitmapText[] = [];
 
   constructor() {
     super("main");
   }
 
-   create() {
+  create() {
     this.add.rectangle(640, 360, 1280, 720);
     const bgImage = this.add.image(640, 360, "map_pattern");
     bgImage.setScale(0.2);
@@ -180,11 +180,11 @@ export class MainScene extends Phaser.Scene {
       duration: 400,
     });
 
-    this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
-    this.input.on(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
-    this.input.on(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
+    this.input.on(Input.Events.POINTER_DOWN, this.onPointerDown, this);
+    this.input.on(Input.Events.POINTER_MOVE, this.onPointerMove, this);
+    this.input.on(Input.Events.POINTER_UP, this.onPointerUp, this);
     this.input.keyboard?.on(
-      Phaser.Input.Keyboard.Events.ANY_KEY_DOWN,
+      Input.Keyboard.Events.ANY_KEY_DOWN,
       this.onKeyDown,
       this
     );
@@ -227,20 +227,13 @@ export class MainScene extends Phaser.Scene {
 
   rotateRight() {
     this.nextTrihex?.rotateRight();
-    this.grid?.updateTriPreview(
-      this.previewX,
-      this.previewY,
-      this.nextTrihex!    );
+    this.grid?.updateTriPreview(this.previewX, this.previewY, this.nextTrihex!);
     this.updateBigTrihex();
   }
 
   rotateLeft() {
     this.nextTrihex?.rotateLeft();
-    this.grid?.updateTriPreview(
-      this.previewX,
-      this.previewY,
-      this.nextTrihex!
-    );
+    this.grid?.updateTriPreview(this.previewX, this.previewY, this.nextTrihex!);
     this.updateBigTrihex();
   }
 
@@ -377,8 +370,8 @@ export class MainScene extends Phaser.Scene {
     const handleSaveScore = this.game.registry.get("handleSaveScore");
 
     if (this.scoreText) {
-      handleSaveScore(this.score)
-      console.log('data send to database')
+      handleSaveScore(this.score);
+      console.log("data send to database");
     }
 
     this.grid!.sinkBlanks();
@@ -409,7 +402,7 @@ export class MainScene extends Phaser.Scene {
         y: 150,
       },
       duration: 700,
-      ease: Phaser.Math.Easing.Quadratic.Out,
+      ease: PhaserMath.Easing.Quadratic.Out,
     });
 
     let rank, message1, message2;
@@ -472,50 +465,51 @@ export class MainScene extends Phaser.Scene {
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
-    this.playAgainButton = this.add.bitmapText(1400, 630, "font", "Play Again" , 40).
-    setInteractive({ useHandCursor: true }).
-    setOrigin(0.5).
-    on("pointerover", () => {
-      this.tweens.add({
-        targets: this.playAgainButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
-      });
-    }).
-    on("pointerover", () => {
-      this.tweens.add({
-        targets: this.playAgainButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
-      });
-    }).
-    on("pointerout", () =>
-      this.tweens.add({
-        targets: this.playAgainButton,
-        scaleX: 1,
-        scaleY: 1,
-        duration: 60,
-        ease: "Linear",
+    this.playAgainButton = this.add
+      .bitmapText(1400, 630, "font", "Play Again", 40)
+      .setInteractive({ useHandCursor: true })
+      .setOrigin(0.5)
+      .on("pointerover", () => {
+        this.tweens.add({
+          targets: this.playAgainButton,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
       })
-    ).
-    on("pointerdown", () => {
-      this.tweens.add({
-        targets: this.playAgainButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
-      });
-      this.playAgain();
-    }).
-    on("pointerup", () => {
-      this.playAgain();
-    }).
-    setDepth(4);
+      .on("pointerover", () => {
+        this.tweens.add({
+          targets: this.playAgainButton,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
+      })
+      .on("pointerout", () =>
+        this.tweens.add({
+          targets: this.playAgainButton,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 60,
+          ease: "Linear",
+        })
+      )
+      .on("pointerdown", () => {
+        this.tweens.add({
+          targets: this.playAgainButton,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
+        this.playAgain();
+      })
+      .on("pointerup", () => {
+        this.playAgain();
+      })
+      .setDepth(4);
 
     this.breakdownContainer = this.add.container(1500, 300);
     this.breakdownContainer.setDepth(4);
@@ -560,7 +554,7 @@ export class MainScene extends Phaser.Scene {
       props: { x: 1040 },
       delay: 300,
       duration: 300,
-      ease: Phaser.Math.Easing.Quadratic.Out,
+      ease: PhaserMath.Easing.Quadratic.Out,
     });
 
     this.tweens.add({
@@ -568,7 +562,7 @@ export class MainScene extends Phaser.Scene {
       props: { x: 1040 },
       delay: 600,
       duration: 300,
-      ease: Phaser.Math.Easing.Quadratic.Out,
+      ease: PhaserMath.Easing.Quadratic.Out,
     });
 
     this.tweens.add({
@@ -576,7 +570,7 @@ export class MainScene extends Phaser.Scene {
       props: { x: 1040 },
       delay: 900,
       duration: 300,
-      ease: Phaser.Math.Easing.Quadratic.Out,
+      ease: PhaserMath.Easing.Quadratic.Out,
     });
 
     this.tweens.add({
@@ -584,11 +578,11 @@ export class MainScene extends Phaser.Scene {
       props: { x: 1040 },
       delay: 1200,
       duration: 300,
-      ease: Phaser.Math.Easing.Quadratic.Out,
+      ease: PhaserMath.Easing.Quadratic.Out,
     });
   }
 
-   playAgain() {
+  playAgain() {
     this.breakdownContainer?.setVisible(false);
     this.gameOverText?.setVisible(false);
     this.nextRankText?.setVisible(false);
@@ -609,7 +603,7 @@ export class MainScene extends Phaser.Scene {
     });
   }
 
-  onPointerUp(event: Phaser.Input.Pointer) {
+  onPointerUp(event: Input.Pointer) {
     if (this.pointerDown) {
       this.previewX = event.worldX;
       this.previewY = event.worldY;
@@ -645,29 +639,21 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  onPointerDown(event: Phaser.Input.Pointer) {
+  onPointerDown(event: Input.Pointer) {
     if (event.worldX === this.previewX && event.worldY === this.previewY) {
       this.placeTrihex();
     } else {
       this.previewX = event.worldX;
       this.previewY = event.worldY;
-      this.grid?.updateTriPreview(
-        event.worldX,
-        event.worldY,
-        this.nextTrihex!
-      );
+      this.grid?.updateTriPreview(event.worldX, event.worldY, this.nextTrihex!);
     }
     this.pointerDown = true;
   }
 
-  onPointerMove(event: Phaser.Input.Pointer) {
+  onPointerMove(event: Input.Pointer) {
     this.previewX = event.worldX;
     this.previewY = event.worldY;
-    this.grid?.updateTriPreview(
-      event.worldX,
-      event.worldY,
-      this.nextTrihex!
-    );
+    this.grid?.updateTriPreview(event.worldX, event.worldY, this.nextTrihex!);
   }
 
   onKeyDown(event: KeyboardEvent) {

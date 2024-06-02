@@ -1,7 +1,7 @@
 import { GAME_ENTRY_FEE_KEY } from "../../constants";
 import { HexGrid } from "../hex-grid";
 import { Button } from "../util";
-import Phaser from "phaser";
+import { Scene, GameObjects } from "phaser";
 
 const tutorialTexts = [
   "TileVille is city development Arcade game \nwhere you pay 2 MINA tokens to play the game \nand build your city.",
@@ -23,18 +23,18 @@ const tutorialTypes = [
   [1, 2, 3, 4, 5],
 ];
 
-export class MenuScene extends Phaser.Scene {
-  menu: Phaser.GameObjects.Group | null = null;
-  background: Phaser.GameObjects.Image | null = null;
+export class MenuScene extends Scene {
+  menu: GameObjects.Group | null = null;
+  background: GameObjects.Image | null = null;
   tutorialGrid: HexGrid = {} as HexGrid;
-  tutorialText: Phaser.GameObjects.BitmapText | null = null;
+  tutorialText: GameObjects.BitmapText | null = null;
   tutorialPage = 0;
   tutorialButton: Button | null = null;
   constructor() {
     super("menu");
   }
 
-   create() {
+  create() {
     this.cameras.main.setBounds(-1280, 0, 3840, 720);
     this.cameras.main.setBackgroundColor("rgba(0 , 0 , 0 , 0)");
     this.menu = this.add.group();
@@ -297,7 +297,7 @@ export class MenuScene extends Phaser.Scene {
     // });
   }
 
-   play() {
+  play() {
     const handleEntryFees = this.game.registry.get("handleEntryFees");
     const checkEntryFeesPaid = JSON.parse(
       window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""
