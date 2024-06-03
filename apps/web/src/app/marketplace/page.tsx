@@ -35,56 +35,99 @@ export default function Marketplace() {
   const cardsData = [
     {
       imgURl: "/img/NFT.avif",
-      id: 0,
+      id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 1,
-    },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
-
     {
       imgURl: "/img/NFT.avif",
       id: 2,
+      price: 0.0001,
+      cardId: 789,
+    },
+    {
+      imgURl: "/img/NFT.avif",
+      id: 2,
+      price: 0.0001,
+      cardId: 789,
+    },
+    {
+      imgURl: "/img/NFT.avif",
+      id: 2,
+      price: 0.0001,
+      cardId: 789,
+    },
+    {
+      imgURl: "/img/NFT.avif",
+      id: 2,
+      price: 0.0001,
+      cardId: 789,
+    },
+    {
+      imgURl: "/img/NFT.avif",
+      id: 2,
+      price: 0.0001,
+      cardId: 789,
+    },
+    {
+      imgURl: "/img/NFT.avif",
+      id: 2,
+      price: 0.0001,
+      cardId: 789,
+    },
+    {
+      imgURl: "/img/NFT.avif",
+      id: 2,
+      price: 0.0001,
+      cardId: 789,
     },
   ];
   const [selectedItem, setSelectedItem] = useState<string>(options[3].text);
@@ -169,7 +212,7 @@ export default function Marketplace() {
           </DropdownMenu.Root>
         </div>
 
-        <div className="grid grid-cols-6 gap-4 text-lg">
+        <div className="grid grid-cols-2 gap-4 text-lg sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {cardsData.map((card) => {
             return (
               <div
@@ -186,21 +229,22 @@ export default function Marketplace() {
                   />
                 </div>
 
-                <div className="px-2 py-3">
+                <div className="px-2 pt-3">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold">#4597</p>
+                    <p className="font-semibold">#{card.cardId}</p>
                     <div className="rounded-md bg-primary px-3 py-[2px] text-white">
                       3888
                     </div>
                   </div>
 
-                  <div className="my-1 font-semibold">
-                    &#60;0.0001 <span className="text-primary-50"> MINA</span>
+                  <div className="mt-1 font-semibold">
+                    &#60;{card.price}{" "}
+                    <span className="text-primary-50"> MINA</span>
                   </div>
                 </div>
 
-                <div>
-                  <button className="w-full bg-primary/30 p-4 font-semibold text-white transition-colors hover:bg-primary">
+                <div className="opacity-0 transition-opacity group-hover/item:opacity-100">
+                  <button className="w-full bg-primary/30 p-2 font-semibold text-white transition-colors hover:bg-primary">
                     Connect Wallet
                   </button>
                 </div>
