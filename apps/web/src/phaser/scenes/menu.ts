@@ -45,7 +45,7 @@ export class MenuScene extends Scene {
     map_pattern.setScale(0.05);
     map_pattern.setAlpha(0.3);
 
-    const title = this.add.text(50, 150, "TileVille", {
+    const title = this.add.text(140, 150, "TileVille", {
       fontFamily: "monospace",
       fontSize: "70px",
       color: "#000",
@@ -54,9 +54,9 @@ export class MenuScene extends Scene {
     // const title = this.add.bitmapText(50, 150, "font", "TileVille", 70);
 
     const tagline = this.add.text(
-      50,
-      220,
-      "On-chain City-Development Arcade Game on MINA blockchain",
+      150,
+      240,
+      "On-chain City-Development \nGame on MINA blockchain",
       {
         fontFamily: "monospace",
         fontSize: "70px",

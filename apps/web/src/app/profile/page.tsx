@@ -1,22 +1,25 @@
 "use client";
 
 import { Modal } from "@/components/common/Modal";
-import { useState } from "react";
+import { Children, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Button, Table } from "@radix-ui/themes";
+import Image from "next/image";
+import { CameraIcon } from "@radix-ui/react-icons";
+import ProfileSideBar from "@/components/ProfileSideBar";
+import RightSideBar from "@/components/RightSideBar";
 
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [rightSlider, setRightSlider] = useState(false);
 
-  // Handler to open the modal
-  // const openModal = () => {
-  //   setModalOpen(true);
-  // };
-
-  // Handler to close the modal
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  function handleToggle() {
+    setRightSlider(!rightSlider);
+  }
 
   const pastGames = [
     {
@@ -52,6 +55,26 @@ export default function Profile() {
         <div className="mb-4 flex items-center justify-end gap-4">
           <div>Your Total Mina Balance :-</div>
           <div className="text-2xl font-semibold">23.898 Minas</div>
+        </div>
+
+        <div className="mb-4">
+          <div
+            className="group relative h-20 w-20 rounded-full"
+            onClick={handleToggle}
+          >
+            <Image
+              src="/img/NFT.avif"
+              width={80}
+              height={80}
+              alt="profile"
+              className="h-full w-full rounded-full object-cover"
+            />
+
+            <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
+            <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
+              <CameraIcon />
+            </span>
+          </div>
         </div>
 
         <Table.Root>
@@ -141,6 +164,10 @@ export default function Profile() {
           </div>
         </Modal>
       </div>
+
+      <RightSideBar handleToggle={handleToggle} rightSlider={rightSlider}>
+        <ProfileSideBar handleToggle={handleToggle} />
+      </RightSideBar>
     </div>
   );
 }
