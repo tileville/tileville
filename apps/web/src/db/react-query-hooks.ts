@@ -6,7 +6,7 @@ import { supabaseUserClientComponentClient } from '@/supabase-clients/supabaseUs
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
 import toast from 'react-hot-toast';
-import { addGameToLeaderboard, getAllLeaderboardEntries, insertEmail } from './supabase-queries';
+import { addGameToLeaderboard, getAllLeaderboardEntries, insertEmail , addProfile } from './supabase-queries';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Table } from '@/types';
 
@@ -76,6 +76,53 @@ export const useLeaderboard = ({
 
         // toastRef.current = null;
         // onSuccess?.();
+      },
+      onError: (error) => {
+        toast.error(String(error), {
+          id: toastRef.current ?? undefined,
+        });
+        toastRef.current = null;
+        onError?.(error);
+      },
+    }
+  );
+};
+
+
+export const useProfile = ({
+  onSuccess,
+  onMutate,
+  onError,
+}: {
+  onSuccess?: () => void;
+  onMutate?: () => void;
+  onError?: (error: unknown) => void;
+}) => {
+  const toastRef = useRef<string | null>(null);
+
+  return useMutation(
+    async (item: {
+      wallet_address: string;
+      username: string;
+      fullname: string;
+      email: string;
+      avatar_url: string;
+    }) => {
+      return addProfile(supabaseUserClientComponentClient, item);
+    },
+    {
+      onMutate: () => {
+        // Optional: Uncomment the line below to show a loading toast
+        // toastRef.current = toast.loading('Saving leaderboard data...');
+        onMutate?.();
+      },
+      onSuccess: () => {
+        toast.success('profile data saved successfully', {
+          id: toastRef.current ?? undefined,
+        });
+
+        toastRef.current = null;
+        onSuccess?.();
       },
       onError: (error) => {
         toast.error(String(error), {

@@ -1,18 +1,57 @@
 "use client";
 
 import { Modal } from "@/components/common/Modal";
-import { Children, useState } from "react";
+import { useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Button, Table } from "@radix-ui/themes";
 import Image from "next/image";
 import { CameraIcon } from "@radix-ui/react-icons";
 import ProfileSideBar from "@/components/ProfileSideBar";
 import RightSideBar from "@/components/RightSideBar";
+import { useProfile } from "@/db/react-query-hooks";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
   const [rightSlider, setRightSlider] = useState(false);
+  const [currentImg, setCurrentImg] = useState("/img/avatars/defaultImg.webp");
+  interface IFormInput {
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+  }
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) =>
+    // console.log(data);
+    profileMutation.mutate({
+      wallet_address: `${new Date().valueOf()}`,
+      username: data.username,
+      fullname: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      avatar_url: currentImg,
+    });
+
+  const profileMutation = useProfile({
+    onSuccess: () => {
+      console.log("Leaderboard data saved successfully");
+    },
+    onMutate: () => {
+      console.log("Saving leaderboard data...");
+    },
+    onError: (error) => {
+      console.error("Error saving leaderboard data:", error);
+    },
+  });
+
+  function selectImage(imgUrl: string) {
+    setCurrentImg(imgUrl);
+  }
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -21,29 +60,44 @@ export default function Profile() {
     setRightSlider(!rightSlider);
   }
 
+  function submitProfileForm(formData: any) {
+    const firstName = formData.get("firstName");
+    const lastName = formData.get("lastName");
+    const username = formData.get("username");
+    const email = formData.get("email");
+
+    profileMutation.mutate({
+      wallet_address: `${new Date().valueOf()}`,
+      username: username,
+      fullname: `${firstName} ${lastName}`,
+      email: email,
+      avatar_url: currentImg,
+    });
+  }
+
   const pastGames = [
     {
-      id: "13132ulk",
+      id: "1",
       score: 244,
       rank: 133,
     },
     {
-      id: "13132ulk",
+      id: "2",
       score: 244,
       rank: 133,
     },
     {
-      id: "13132ulk",
+      id: "3",
       score: 244,
       rank: 133,
     },
     {
-      id: "13132ulk",
+      id: "4",
       score: 244,
       rank: 133,
     },
     {
-      id: "13132ulk",
+      id: "5",
       score: 244,
       rank: 133,
     },
@@ -55,26 +109,6 @@ export default function Profile() {
         <div className="mb-4 flex items-center justify-end gap-4">
           <div>Your Total Mina Balance :-</div>
           <div className="text-2xl font-semibold">23.898 Minas</div>
-        </div>
-
-        <div className="mb-4">
-          <div
-            className="group relative h-20 w-20 rounded-full"
-            onClick={handleToggle}
-          >
-            <Image
-              src="/img/NFT.avif"
-              width={80}
-              height={80}
-              alt="profile"
-              className="h-full w-full rounded-full object-cover"
-            />
-
-            <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
-            <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
-              <CameraIcon />
-            </span>
-          </div>
         </div>
 
         <Table.Root>
@@ -99,17 +133,16 @@ export default function Profile() {
           </Table.Body>
         </Table.Root>
         <Modal
-          isOpen={modalOpen} // Pass the state variable to control modal visibility
-          setIsOpen={setModalOpen} // Pass the function to update modal visibility
-          onClose={closeModal} // Pass a function to handle modal close event
+          isOpen={modalOpen}
+          setIsOpen={setModalOpen}
+          onClose={closeModal}
           trigger={
-            <Button variant="classic" className="mx-4">
+            <Button variant="classic" className="mx-4 !cursor-pointer">
               Trigger Element
             </Button>
-          } // Element that triggers the modal
+          }
         >
-          {/* Content of the modal */}
-          <div className="relative max-h-full w-full max-w-md p-4">
+          <div className="relative max-h-full w-full max-w-md">
             <div className="relative p-4 text-center md:p-5">
               <svg
                 className="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200"
@@ -120,9 +153,9 @@ export default function Profile() {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                 />
               </svg>
@@ -146,27 +179,155 @@ export default function Profile() {
                   </Tooltip.Root>
                 </Tooltip.Provider>
               </h3>
-              <button
-                onClick={closeModal}
-                type="button"
-                className="focus:ring-black-300 dark:focus:black-800 inline-flex items-center rounded-lg bg-black px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-black/90 focus:outline-none focus:ring-4"
-              >
-                Okay lets go!
-              </button>
-              <button
-                onClick={closeModal}
-                type="button"
-                className="ms-3 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
-              >
-                No, cancel
-              </button>
+
+              <div className="text-left">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="mb-4">
+                    <div
+                      className="group relative mx-auto h-20 w-20 rounded-full"
+                      onClick={handleToggle}
+                    >
+                      <Image
+                        src={currentImg}
+                        width={80}
+                        height={80}
+                        alt="profile"
+                        className="h-full w-full rounded-full object-cover"
+                      />
+
+                      <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
+                      <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                        <CameraIcon />
+                      </span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                    <div>
+                      <label htmlFor="firstName" className="block">
+                        First Name
+                        <span className="text-sm text-red-500">*</span>
+                      </label>
+
+                      <div>
+                        <input
+                          type="text"
+                          className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
+                          id="firstName"
+                          placeholder="First Name"
+                          {...register("firstName", {
+                            required: true,
+                          })}
+                        />
+                      </div>
+
+                      <span
+                        className={`${
+                          errors.firstName ? "opacity-100" : ""
+                        } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+                      >
+                        First Name is required..
+                      </span>
+                    </div>
+
+                    <div>
+                      <label htmlFor="lastName" className="block">
+                        Last Name
+                      </label>
+
+                      <div>
+                        <input
+                          type="text"
+                          className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
+                          id="lastName"
+                          placeholder="Last Name"
+                          {...register("lastName")}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-span-2">
+                      <label htmlFor="email" className="block">
+                        Email
+                        <span className="text-sm text-red-500">*</span>
+                      </label>
+
+                      <div>
+                        <input
+                          type="text"
+                          className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
+                          id="email"
+                          placeholder="Email"
+                          {...register("email", {
+                            pattern:
+                              /^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/,
+                            required: true,
+                          })}
+                        />
+                      </div>
+
+                      <span
+                        className={`${
+                          errors.email ? "opacity-100" : ""
+                        } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+                      >
+                        Please put a valid Email..
+                      </span>
+                    </div>
+
+                    <div className="col-span-2">
+                      <label htmlFor="username" className="block">
+                        Username
+                        <span className="text-sm text-red-500">*</span>
+                      </label>
+
+                      <div>
+                        <input
+                          type="text"
+                          className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
+                          id="username"
+                          placeholder="Username"
+                          {...register("username", {
+                            required: true,
+                          })}
+                        />
+                      </div>
+
+                      <span
+                        className={`${
+                          errors.username ? "opacity-100" : ""
+                        } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+                      >
+                        username is required..
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="ms-auto grid max-w-[200px] grid-cols-2 gap-3 pt-8">
+                    <Button
+                      className="pointer"
+                      onClick={closeModal}
+                      type="button"
+                      variant="outline"
+                    >
+                      No, cancel
+                    </Button>
+
+                    <Button
+                      className="pointer"
+                      // onClick={closeModal}
+                      type="submit"
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </Modal>
       </div>
 
       <RightSideBar handleToggle={handleToggle} rightSlider={rightSlider}>
-        <ProfileSideBar handleToggle={handleToggle} />
+        <ProfileSideBar handleToggle={handleToggle} selectImage={selectImage} />
       </RightSideBar>
     </div>
   );

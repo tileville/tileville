@@ -12,27 +12,25 @@ import { useGlobalAudioPlayer } from "react-use-audio-player";
 const tracks = [
   {
     url: "sfx/ambience.wav",
-    title: "NightDrive",
+    title: "Ambience",
     tags: ["house"],
   },
-
   {
-    url: "/medias/2_TheChronic.mp3",
-    title: "The Chronic",
+    url: "/medias/1_melody-of-nature.mp3",
+    title: "Melody Of Nature",
+    tags: ["dnb"],
+  },
+  {
+    url: "/medias/2_scott-buckley-moonlight.mp3",
+    title: "scott buckley moonlight",
     tags: ["dnb"],
   },
 
-  {
-    url: "/medias/1_NightDrive.mp3",
-    title: "The Chronic",
-    tags: ["dnb"],
-  },
-
-  {
-    url: "/medias/3_KeyGenh.mp3",
-    title: "The Chronic",
-    tags: ["dnb"],
-  },
+  // {
+  //   url: "/medias/3_rain.mm4a",
+  //   title: "rain",
+  //   tags: ["dnb"],
+  // },
 ];
 
 export const MediaPlayer = () => {

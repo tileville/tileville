@@ -34,6 +34,29 @@ export const addGameToLeaderboard = async (
   return data;
 };
 
+export const addProfile = async (
+  supabase: AppSupabaseClient,
+  item: {
+    wallet_address: string;
+    username: string;
+    fullname: string;
+    email: string;
+    avatar_url: string;
+  }
+): Promise<Table<"player_profile">> => {
+  const { data, error } = await supabase
+    .from("player_profile")
+    .insert(item)
+    .select("*")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
 
 export const insertEmail = async (
   supabase: AppSupabaseClient,
