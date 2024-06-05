@@ -35,7 +35,6 @@ export default function RootLayout({
         >
           <div className="gradient-bg min-h-screen">
             <ClientLayout>
-              <NavBar />
               <div className="">{children}</div>
             </ClientLayout>
           </div>
