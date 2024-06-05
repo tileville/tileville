@@ -4,9 +4,8 @@ import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
 import "reflect-metadata";
-import { Button, Theme } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
 import { Footer } from "@/components/Footer";
-import { NavBar } from "@/components/NavBar";
 import { ClientLayout } from "./ClientLayout";
 
 export const metadata = {

@@ -106,12 +106,12 @@ export default function NetworkPicker() {
             animate={{ height: "auto" }}
             exit={{ height: 0 }}
             transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-            className="border-left-accent bg-bg-dark absolute top-[90%] flex w-full flex-col items-center overflow-hidden rounded-b border"
+            className="border-left-accent bg-bg-dark absolute top-[90%] flex w-full flex-col items-center overflow-hidden rounded-b"
           >
             {NETWORKS.map((network) => (
               <div
                 key={network.chainId}
-                className="text-header-menu hover:text-left-accent group flex h-full w-full cursor-pointer flex-row items-center gap-2 py-3 pl-2 text-foreground last:rounded-b"
+                className="text-header-menu flex h-full w-full cursor-pointer flex-row items-center gap-2 py-3 pl-2 text-foreground last:rounded-b hover:font-semibold hover:text-black"
                 onClick={() => switchNetwork(network)}
               >
                 <Image

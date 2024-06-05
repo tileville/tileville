@@ -46,7 +46,7 @@ export default function AccountCard({
   return (
     <div
       className={cn(
-        "group flex cursor-pointer items-center justify-center gap-[10px] rounded border ",
+        "group flex cursor-pointer items-center justify-center gap-[10px] rounded",
         "border-right-accent text-header-menu text-bg-dark p-1 px-2 transition duration-75 ease-in",
         "hover:bg-bg-dark hover:text-right-accent lg:justify-normal",
         expanded

@@ -17,7 +17,7 @@ export default function NetworkPickerCard({
   return (
     <div
       className={
-        "border-left-accent bg-left-accent text-header-menu text-bg-dark hover:bg-bg-dark hover:text-left-accent group relative z-10 flex cursor-pointer items-center justify-center gap-[10px] rounded border px-2 py-1"
+        "bg-left-accent text-header-menu text-bg-dark hover:bg-bg-dark hover:text-left-accent group relative z-10 flex cursor-pointer items-center justify-center gap-[10px] rounded  px-2 py-1"
       }
       onClick={() => onClick?.()}
     >

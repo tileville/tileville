@@ -24,7 +24,7 @@ export default function RightSideBar({
         <div
           className="overlay"
           onClick={(e) => {
-            handleToggle(e);
+            handleToggle(e as any);
           }}
         ></div>
       )}

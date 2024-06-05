@@ -36,7 +36,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-white">
+    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black">
       <div className="flex w-full items-start justify-between">
         <div className="flex gap-3">
           <PrimaryButton
