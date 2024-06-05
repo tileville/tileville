@@ -38,7 +38,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   return (
     <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-white">
       <div className="flex w-full items-start justify-between">
-        <div>
+        <div className="flex gap-3">
           <PrimaryButton
             key={1}
             onFocus={() => handleFocus(1)}
@@ -48,6 +48,10 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             href={"/main-menu"}
             className={`rounded-3xl !border !border-primary !px-6`}
           />
+
+          <div className="min-w-[180px]">
+            <MediaPlayer />
+          </div>
         </div>
 
         <div>
@@ -80,7 +84,6 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
               </Link>
             )}
           </div>
-          <MediaPlayer />
         </div>
       </div>
     </nav>
