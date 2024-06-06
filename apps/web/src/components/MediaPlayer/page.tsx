@@ -3,11 +3,10 @@ import {
   PlayIcon,
   TrackNextIcon,
   TrackPreviousIcon,
-  TriangleLeftIcon,
 } from "@radix-ui/react-icons";
-import { Play } from "next/font/google";
 import { useEffect, useState } from "react";
 import { useGlobalAudioPlayer } from "react-use-audio-player";
+import { VolumeControl } from "./VolumeControl";
 
 const tracks = [
   {
@@ -25,17 +24,10 @@ const tracks = [
     title: "scott buckley moonlight",
     tags: ["dnb"],
   },
-
-  // {
-  //   url: "/medias/3_rain.mm4a",
-  //   title: "rain",
-  //   tags: ["dnb"],
-  // },
 ];
 
 export const MediaPlayer = () => {
-  const { load, play, togglePlayPause, loop, looping, playing } =
-    useGlobalAudioPlayer();
+  const { load, togglePlayPause, playing } = useGlobalAudioPlayer();
   const [songIndex, setSongIndex] = useState(0);
 
   useEffect(() => {
@@ -66,27 +58,35 @@ export const MediaPlayer = () => {
   };
 
   return (
-    <div className="grid grid-cols-3 rounded-md py-3 text-primary shadow-md">
-      <button
-        className="flex items-center justify-center"
-        onClick={handlePreviousTrack}
-      >
-        <TrackPreviousIcon />
-      </button>
+    <div className="flex gap-3 rounded-md p-3 text-primary shadow-md">
+      <div className="flex gap-3">
+        <button
+          className="flex items-center justify-center"
+          onClick={handlePreviousTrack}
+        >
+          <TrackPreviousIcon />
+        </button>
 
-      <button
-        className="flex items-center justify-center"
-        onClick={handleTogglePlayPause}
-      >
-        {playing ? <PauseIcon /> : <PlayIcon />}
-      </button>
+        <button
+          className="flex items-center justify-center"
+          onClick={handleTogglePlayPause}
+        >
+          {playing ? <PauseIcon /> : <PlayIcon />}
+        </button>
 
-      <button
-        className="flex items-center justify-center"
-        onClick={handleNextTrack}
-      >
-        <TrackNextIcon />
-      </button>
+        <button
+          className="flex items-center justify-center"
+          onClick={handleNextTrack}
+        >
+          <TrackNextIcon />
+        </button>
+      </div>
+
+      <div className="h-4 w-[1px] bg-primary/10"></div>
+
+      <div>
+        <VolumeControl />
+      </div>
     </div>
   );
 };
