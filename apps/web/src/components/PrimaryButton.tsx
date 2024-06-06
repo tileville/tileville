@@ -95,7 +95,7 @@ export const PrimaryButton = ({
       ref={buttonRef}
       onMouseEnter={handleMouseEnter}
       href={href ? `${href}` : ""}
-      className="focus-visible-bg-primary-30 focus-bg-primary-30 w-fit border-2 border-transparent p-[5px] text-left font-semibold uppercase text-primary outline-none focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:border-primary focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
+      className="focus-visible-bg-primary-30 focus-bg-primary-30 border-2 border-transparent p-[5px] text-left font-semibold uppercase text-primary outline-none focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:border-primary focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
     >
       {text}
     </Link>
