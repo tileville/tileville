@@ -118,9 +118,10 @@ export class LoadScene extends Scene {
       frameHeight: 91,
     });
 
-    this.load.image("play-button", "img/play-button.png");
+    this.load.image("play-button", "img/playBtn.png");
     this.load.image("play-again-button", "img/play-again-button.png");
-    this.load.image("how-to-play-button", "img/how-to-play-button.png");
+    this.load.image("how-to-play-button", "img/howtoplay.png");
+    this.load.image('play-free-demo-button', "img/playFreeDemo.png" )
 
     this.load.bitmapFont("font", "font/font.png", "font/font.fnt");
 

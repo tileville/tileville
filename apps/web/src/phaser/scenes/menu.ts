@@ -70,11 +70,9 @@ export class MenuScene extends Scene {
     tagline.setScale(0.3);
     this.menu.add(title);
 
-    const playButton = this.add.text(300, 400, "Play", {
-      color: "#000",
-      fontSize: "40px",
-      fontFamily: "monospace",
-    });
+    const playButton = this.add.image(300, 400, "play-button");
+
+
     playButton.setOrigin(0.5);
     playButton.setInteractive({ useHandCursor: true });
 
@@ -112,12 +110,7 @@ export class MenuScene extends Scene {
 
     this.menu.add(playButton);
 
-    const demoButtonText = this.add.text(310, 440, "Play free(demo mode)", {
-      fontSize: "20px",
-      color: "#000",
-      padding: { x: 20, y: 10 },
-      fontStyle: "italic",
-    });
+    const demoButtonText = this.add.image(310, 480, "play-free-demo-button");
     demoButtonText.setOrigin(0.5);
 
     // Make the text interactive
@@ -137,12 +130,12 @@ export class MenuScene extends Scene {
     });
 
     demoButtonText.on("pointerover", () => {
-      demoButtonText.setStyle({ fill: "#000" });
+      // demoButtonText.setStyle({ fill: "#000" });
       demoButtonText.setScale(1.03);
     });
 
     demoButtonText.on("pointerout", () => {
-      demoButtonText.setStyle({ fill: "#000" });
+      // demoButtonText.setStyle({ fill: "#000" });
       demoButtonText.setScale(1);
     });
 
@@ -165,11 +158,7 @@ export class MenuScene extends Scene {
       })
     );
 
-    const howToPlayButton = this.add.text(300, 550, "How do i play?", {
-      color: "#000",
-      fontSize: "40px",
-      fontFamily: "monospace",
-    });
+    const howToPlayButton = this.add.image(100, 700, "how-to-play-button");
     howToPlayButton.setOrigin(0.5);
 
     howToPlayButton.setInteractive({ useHandCursor: true });
