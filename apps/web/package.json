@@ -46,6 +46,7 @@
     "react-router-dom": "^6.21.3",
     "react-use": "^17.4.3",
     "react-use-audio-player": "^2.2.0",
+    "reflect-metadata": "^0.2.2",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "tileville-chain-dev": "workspace:*",

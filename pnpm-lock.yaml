@@ -31,7 +31,7 @@ importers:
         version: file:proto-kit/packages/module(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
       '@proto-kit/sdk':
         specifier: file:../../proto-kit/packages/sdk
-        version: file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.1.14)(tsyringe@4.8.0)
+        version: file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.2.2)(tsyringe@4.8.0)
       '@proto-kit/sequencer':
         specifier: file:../../proto-kit/packages/sequencer
         version: file:proto-kit/packages/sequencer(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(o1js@1.1.0)(tsyringe@4.8.0)
@@ -107,6 +107,9 @@ importers:
       react-use-audio-player:
         specifier: ^2.2.0
         version: 2.2.0(react@18.3.1)
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
       tailwind-merge:
         specifier: ^2.0.0
         version: 2.3.0
@@ -8277,7 +8280,7 @@ packages:
       tsyringe: file:proto-kit/node_modules/tsyringe
     dev: false
 
-  file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.1.14)(tsyringe@4.8.0):
+  file:proto-kit/packages/sdk(@proto-kit/common@0.1.1-develop.267+b252853)(@proto-kit/library@0.1.1-develop.267+b252853)(@proto-kit/module@0.1.1-develop.267+b252853)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.267+b252853)(o1js@1.1.0)(reflect-metadata@0.2.2)(tsyringe@4.8.0):
     resolution: {directory: proto-kit/packages/sdk, type: directory}
     id: file:proto-kit/packages/sdk
     name: '@proto-kit/sdk'
@@ -8301,7 +8304,7 @@ packages:
       lodash: 4.17.21
       loglevel: 1.9.1
       o1js: file:proto-kit/node_modules/o1js
-      reflect-metadata: 0.1.14
+      reflect-metadata: 0.2.2
       tsyringe: file:proto-kit/node_modules/tsyringe
     transitivePeerDependencies:
       - graphql
