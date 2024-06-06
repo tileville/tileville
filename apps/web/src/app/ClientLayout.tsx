@@ -17,8 +17,10 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <StoreProtokitUpdater />
+      <QueryClientProvider client={queryClient}>
       <DesktopNavBar autoConnect={true} />
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        {children}
+        </QueryClientProvider>
       <Toaster />
     </>
   );

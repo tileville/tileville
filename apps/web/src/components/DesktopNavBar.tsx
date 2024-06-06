@@ -11,11 +11,14 @@ import { formatAddress, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
 import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
+import { useProfileLazyQuery } from "@/db/react-query-hooks";
+import { toast } from "react-hot-toast";
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
-
   const networkStore = useNetworkStore();
+  const { data, isFetched } = useProfileLazyQuery(networkStore?.address || "");
+
   useEffect(() => {
     if (!walletInstalled()) return;
 
@@ -25,11 +28,28 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   }, []);
 
   useEffect(() => {
-    if (networkStore.walletConnected) {
+    if (
+      networkStore.walletConnected &&
+      isFetched &&
+      (!data?.fullname || !data?.username)
+    ) {
       //Log entry
       // Show modal
+      toast(
+        <div>
+          Hey there! It looks like you haven&apos;t completed your profile yet.
+          Please{" "}
+          <a href="/profile" className="text-blue-950 underline">
+            complete it now
+          </a>{" "}
+          to get the most out of our platform
+        </div>,
+        {
+          duration: 6000,
+        }
+      );
     }
-  }, [networkStore.walletConnected]);
+  }, [networkStore.walletConnected, data, isFetched]);
 
   const handleFocus = (index: number) => {
     setFocusedButtonIndex(index);
