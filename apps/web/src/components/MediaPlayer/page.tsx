@@ -15,12 +15,12 @@ const tracks = [
     tags: ["house"],
   },
   {
-    url: "/medias/1_melody-of-nature.mp3",
+    url: "/medias/sound1.ogg",
     title: "Melody Of Nature",
     tags: ["dnb"],
   },
   {
-    url: "/medias/2_scott-buckley-moonlight.mp3",
+    url: "/medias/sound2.ogg",
     title: "scott buckley moonlight",
     tags: ["dnb"],
   },
