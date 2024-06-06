@@ -4,6 +4,7 @@ import { Skeleton, Table } from "@radix-ui/themes";
 
 export default function Leaderboard() {
   const { data, isLoading, isError, error } = useLeaderboardData();
+
   const initialArray = Array(20).fill(0);
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;

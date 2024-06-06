@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "./PrimaryButton";
 import { useEffect, useState } from "react";
-import { MediaPlayer } from "./MediaPlayer";
+import { MediaPlayer } from "./MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
 import { formatAddress, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
@@ -38,7 +38,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   return (
     <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black">
       <div className="flex w-full items-start justify-between">
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
           <PrimaryButton
             key={1}
             onFocus={() => handleFocus(1)}
