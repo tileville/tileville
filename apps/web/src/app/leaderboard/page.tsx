@@ -1,24 +1,14 @@
 "use client";
 import { useLeaderboardData } from "@/db/react-query-hooks";
 import { Skeleton, Table } from "@radix-ui/themes";
-import Pagination from "./Pagination";
-import { useState } from "react";
 
 export default function Leaderboard() {
   const { data, isLoading, isError, error } = useLeaderboardData();
-  const [currentPage, setCurrentPage] = useState(1);
 
   const initialArray = Array(20).fill(0);
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
   }
-
-  const totalResults = 200; // Total number of results
-  const resultsPerPage = 20; // Number of results per page
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   return (
     <div className="p-4 pt-40">
@@ -74,13 +64,6 @@ export default function Leaderboard() {
           </Table.Body>
         </Table.Root>
       </div>
-
-      <Pagination
-        currentPage={currentPage}
-        totalResults={totalResults}
-        resultsPerPage={resultsPerPage}
-        onPageChange={handlePageChange}
-      />
     </div>
   );
 }
