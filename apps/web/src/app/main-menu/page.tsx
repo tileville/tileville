@@ -57,6 +57,7 @@ export default function MainMenu() {
               href={button.href}
               targetBlank={false}
               onClickHandler={undefined}
+              className="border border-primary"
             />
           ))}
         </div>

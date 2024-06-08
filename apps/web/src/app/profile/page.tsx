@@ -117,42 +117,45 @@ export default function Profile() {
     <div className="p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div>
-          {!!profileData?.fullname && (
-            <h3 className="mb-3">
-              {" "}
-              Welcome,{" "}
-              <span className="text-xl font-semibold">
-                {profileData.fullname}
-              </span>{" "}
-            </h3>
-          )}
-          <div className="flex items-center  gap-3">
-            {!!profileData?.avatar_url && (
-              <div
-                className="group relative h-20 w-20 rounded-full"
-                // onClick={handleToggle}
-              >
-                <Image
-                  src={profileData.avatar_url}
-                  width={80}
-                  height={80}
-                  alt="profile"
-                  className="h-full w-full rounded-full object-cover"
-                />
-
-                <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
-                <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                  <CameraIcon />
-                </span>
+          <div className="flex items-center justify-between gap-3">
+            <div className="items-ceter flex gap-3">
+              <div>
+                {!!profileData?.avatar_url && (
+                  <div className="relative h-20 w-20 rounded-full">
+                    <Image
+                      src={profileData.avatar_url}
+                      width={80}
+                      height={80}
+                      alt="profile"
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
-            )}
 
-            <div>
-              {!!profileData?.username && <h3> {profileData.username}</h3>}
-              {!!profileData?.email && <h3> {profileData.email}</h3>}
+              <div>
+                {!!profileData?.fullname && (
+                  <h3>
+                    <span className="text-xl font-semibold">
+                      {profileData.fullname}
+                    </span>{" "}
+                  </h3>
+                )}
+                {!!profileData?.username && <h3> {profileData.username}</h3>}
+                {!!profileData?.email && <h3> {profileData.email}</h3>}
+              </div>
             </div>
 
-            <div className="mb-4 ms-auto flex items-center justify-end gap-4">
+            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+
+            <div>
+              <h3 className="text-xl font-semibold">Wallet Address</h3>
+              <p>{networkStore?.address}</p>
+            </div>
+
+            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+
+            <div className="mb-4 flex items-center justify-end gap-4">
               <div>Balance :</div>
               <div className="text-2xl font-semibold">1000 MINA</div>
             </div>

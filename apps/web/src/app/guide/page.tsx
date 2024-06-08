@@ -1,14 +1,69 @@
 "use client";
 
+import GuidePhaserLayer from "@/phaser/guide-phaser/GuidephaserLayer";
+import { bibloSwashCaps } from "@/styles/fonts";
+
 export default function Guide() {
   return (
-    <div className="mx-auto h-screen p-40">
-      TileVille is a on-chain strategic city development Arcade game where you
-      pay 2 MINA tokens to play the game. You build your city with roads, parks
-      and windmills in order to achieve a highest score. If your score is above
-      level threshhold, you get a treasure box which contains variety of prices
-      including but not limited to MINA tokens, NFTs, on-chain subscriptions,
-      etc.
+    <div className="pt-20">
+      <main className={`${bibloSwashCaps.variable} relative`}>
+        <div id="parchment"></div>
+        <div id="contain">
+          <p className="inkTitle">TileVille</p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non
+            risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing
+            nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas
+            ligula massa, varius a, semper congue, euismod non, mi. Proin
+            porttitor, orci nec nonummy molestie, enim est eleifend mi, non
+            fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa,
+            scelerisque vitae, consequat in, pretium a, enim. Pellentesque
+            congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum
+            bibendum augue. Praesent egestas leo in pede. Praesent blandit odio
+            eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum
+            ante ipsum primis in faucibus orci luctus et ultrices posuere
+            cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque
+            fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
+          </p>
+          <p>
+            Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut
+            orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius,
+            ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus
+            sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+            Integer id felis. Curabitur aliquet pellentesque diam. Integer quis
+            metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet,
+            consectetuer adipiscing elit. Morbi vel erat non mauris convallis
+            vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus,
+            convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat.
+            Proin feugiat, augue non elementum posuere, metus purus iaculis
+            lectus, et tristique ligula justo vitae magna.
+          </p>
+          <div id="signature">
+            Imperator Caesar Flavius Constantinus
+            <br />
+            Pius Felix Invictus Augustus
+          </div>
+        </div>
+      </main>
+
+      <svg>
+        <filter id="wavy2">
+          <feTurbulence
+            x="0"
+            y="0"
+            baseFrequency="0.02"
+            numOctaves="5"
+            seed="1"
+          />
+          <feDisplacementMap in="SourceGraphic" scale="20" />
+        </filter>
+      </svg>
+
+      <div className="mx-auto flex h-screen items-center justify-center">
+        <div className="w-full">
+          <GuidePhaserLayer />
+        </div>
+      </div>
     </div>
   );
 }

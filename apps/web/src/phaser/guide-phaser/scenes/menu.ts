@@ -1,6 +1,5 @@
-import { GAME_ENTRY_FEE_KEY } from "../../constants";
-import { HexGrid } from "../hex-grid";
-import { Button } from "../util";
+import { HexGrid } from "@/phaser/hex-grid";
+import { Button } from "@/phaser/util";
 import { Scene, GameObjects } from "phaser";
 
 const tutorialTexts = [
@@ -29,7 +28,6 @@ export class MenuScene extends Scene {
   tutorialGrid: HexGrid = {} as HexGrid;
   tutorialText: GameObjects.BitmapText | null = null;
   tutorialPage = 0;
-  tutorialButton: Button | null = null;
   nextArrowBtn: Button | null = null;
   previousArrowBtn: Button | null = null;
   constructor() {
@@ -41,151 +39,43 @@ export class MenuScene extends Scene {
     this.cameras.main.setBackgroundColor("rgba(0 , 0 , 0 , 0)");
     this.menu = this.add.group();
 
-    // this.background = this.add.image(360, 360, "page");
-
     const map_pattern = this.add.image(920, 360, "map_pattern");
     map_pattern.setScale(0.05);
     map_pattern.setAlpha(0.3);
 
-    const title = this.add.text(140, 150, "TileVille", {
+    const title = this.add.text(100, 150, "A Tour To Game", {
       fontFamily: "monospace",
-      fontSize: "70px",
+      fontSize: "40px",
       color: "#000",
     });
-
-    // const title = this.add.bitmapText(50, 150, "font", "TileVille", 70);
-
-    const tagline = this.add.text(
-      150,
-      240,
-      "On-chain City-Development \nGame on MINA blockchain",
-      {
-        fontFamily: "monospace",
-        fontSize: "70px",
-        color: "#000",
-      }
-    );
-
     title.setTint(0xffffff);
-    tagline.setTint(0xffffff);
-
-    tagline.setScale(0.3);
     this.menu.add(title);
 
-    const playButton = this.add.image(300, 400, "play-button");
+    // From Below will be used in the Guide section 
+    const letsGoBtn = this.add.image(250, 300, "letsGoBtn").setScale(0.5);
+    letsGoBtn.setInteractive({ useHandCursor: true });
+    letsGoBtn.on("pointerdown", () => this.howToPlay());
 
-
-    playButton.setOrigin(0.5);
-    playButton.setInteractive({ useHandCursor: true });
-
-    playButton.on("pointerover", () => {
+    letsGoBtn.on("pointerover", () => {
       this.tweens.add({
-        targets: playButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
+        targets: letsGoBtn,
+        scaleX: 0.55,
+        scaleY: 0.55,
         duration: 60,
         ease: "Linear",
       });
     });
-    playButton.on("pointerout", () =>
+    letsGoBtn.on("pointerout", () =>
       this.tweens.add({
-        targets: playButton,
-        scaleX: 1,
-        scaleY: 1,
-        duration: 60,
-        ease: "Linear",
-      })
-    );
-    playButton.on("pointerdown", () => {
-      this.tweens.add({
-        targets: playButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
-      });
-      this.play();
-    });
-    playButton.on("pointerup", () => {
-      this.play();
-    });
-
-    this.menu.add(playButton);
-
-    const demoButtonText = this.add.image(310, 480, "play-free-demo-button");
-    demoButtonText.setOrigin(0.5);
-
-    // Make the text interactive
-    demoButtonText.setInteractive({
-      cursor: "pointer",
-      textDecoration: "underline",
-    });
-
-    demoButtonText.on("pointerdown", () => {
-      console.log("clicked");
-      this.cameras.main.pan(-1280, 0, 500, "Linear", true);
-      this.time.addEvent({
-        delay: 500,
-        callback: this.transition,
-        callbackScope: this,
-      });
-    });
-
-    demoButtonText.on("pointerover", () => {
-      // demoButtonText.setStyle({ fill: "#000" });
-      demoButtonText.setScale(1.03);
-    });
-
-    demoButtonText.on("pointerout", () => {
-      // demoButtonText.setStyle({ fill: "#000" });
-      demoButtonText.setScale(1);
-    });
-
-    demoButtonText.on("pointerover", () => {
-      this.tweens.add({
-        targets: demoButtonText,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
-      });
-    });
-    demoButtonText.on("pointerout", () =>
-      this.tweens.add({
-        targets: demoButtonText,
-        scaleX: 1,
-        scaleY: 1,
+        targets: letsGoBtn,
+        scaleX: 0.5,
+        scaleY: 0.5,
         duration: 60,
         ease: "Linear",
       })
     );
 
-    const howToPlayButton = this.add.image(100, 700, "how-to-play-button");
-    howToPlayButton.setOrigin(0.5);
-
-    howToPlayButton.setInteractive({ useHandCursor: true });
-    howToPlayButton.on("pointerdown", () => this.howToPlay());
-
-    howToPlayButton.on("pointerover", () => {
-      this.tweens.add({
-        targets: howToPlayButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
-      });
-    });
-    howToPlayButton.on("pointerout", () =>
-      this.tweens.add({
-        targets: howToPlayButton,
-        scaleX: 1,
-        scaleY: 1,
-        duration: 60,
-        ease: "Linear",
-      })
-    );
-
-    this.menu.add(howToPlayButton);
+    this.menu.add(letsGoBtn);
 
     const grid = new HexGrid(this, 3, 0, 700, 100);
     grid.grid.get(2, 2)!.setHill(true);
@@ -209,14 +99,6 @@ export class MenuScene extends Scene {
       tutorialTexts[0],
       40
     );
-    // this.tutorialButton = new Button(
-    //   this,
-    //   1265,
-    //   550,
-    //   "next_arrow",
-    //   this.nextTutorialPage.bind(this)
-    // );
-    // this.tutorialButton.setOrigin(0, 0.5);
 
     this.previousArrowBtn = new Button(
       this,
@@ -279,56 +161,13 @@ export class MenuScene extends Scene {
     grid.updateEdges();
 
     this.tutorialGrid = grid;
-
-    this.add.bitmapText(-1160, 30, "font", "0 points", 60);
-
-    const rotateLeftButton = new Button(this, -1185, 180, "rotate", () => {
-      console.log("a");
-    });
-    rotateLeftButton.setFlipX(true);
-    // const rotateRightButton = new Button(this, -935, 180, 'rotate', () => {
-    //   console.log('a');
-    // });
-
-    const deckCounterText = this.add.bitmapText(-1050, 620, "font", "25", 60);
-    deckCounterText.setOrigin(0.5, 0.45);
-
-    const deckCounterImage = this.add.image(-950, 720, "a-shape");
-    deckCounterImage.setAlpha(0.5);
-
-    // const ambience = this.sound.add("ambience", {
-    //   loop: true,
-    //   volume: 0,
-    // });
-    // ambience.play();
-    // this.add.tween({
-    //   targets: ambience,
-    //   props: { volume: 0.8 },
-    //   duration: 1000,
-    // });
-  }
-
-  play() {
-    const handleEntryFees = this.game.registry.get("handleEntryFees");
-    const checkEntryFeesPaid = JSON.parse(
-      window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""
-    );
-    if (!checkEntryFeesPaid) {
-      return handleEntryFees();
-    }
-    this.cameras.main.pan(-1280, 0, 500, "Linear", true);
-
-    this.time.addEvent({
-      delay: 500,
-      callback: this.transition,
-      callbackScope: this,
-    });
   }
 
   transition() {
     this.scene.start("main");
   }
 
+  // Below code will be used in guide section
   howToPlay() {
     this.tutorialPage = -1;
     this.nextTutorialPage();
@@ -348,7 +187,6 @@ export class MenuScene extends Scene {
       this.tutorialGrid.grid.get(3, 6)?.setVisible(false);
     } else {
       console.log(this.tutorialPage);
-      // this.tutorialButton!.setFrame(this.tutorialPage);
       this.tutorialText!.setText(tutorialTexts[this.tutorialPage]);
       for (const hex of this.tutorialGrid.hexes) {
         hex.setSketchy(

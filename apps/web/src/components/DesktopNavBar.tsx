@@ -89,6 +89,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
                 onClick={() => {
                   networkStore.connectWallet(false);
                 }}
+                className="border border-primary"
               />
             ) : (
               <Link

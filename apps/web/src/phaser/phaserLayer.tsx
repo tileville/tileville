@@ -2,7 +2,6 @@
 import { useCallback, useEffect } from "react";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
 import { useLeaderboard } from "@/db/react-query-hooks";
-import { useNetworkLayer } from "@/hooks/useNetworkLayer";
 import { useNetworkStore } from "@/lib/stores/network";
 
 type PhaserLayerProps = {
@@ -27,13 +26,13 @@ export const PhaserLayer = ({ handleEntryFees }: PhaserLayerProps) => {
   const handleSaveLeaderboardData = useCallback(
     (finalScore: number) => {
       leaderboardMutation.mutate({
-        competition_id: new Date().valueOf(), // You might want to get these dynamically
-        game_id: new Date().valueOf(), // You might want to get these dynamically
+        competition_id: new Date().valueOf(),
+        game_id: new Date().valueOf(),
         score: finalScore,
-        wallet_address: "0x1", // Assuming signer is the wallet address
+        wallet_address: `${!!address ? address : "Played Without Address"}`,
       });
     },
-    [leaderboardMutation]
+    [leaderboardMutation, address]
   );
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
