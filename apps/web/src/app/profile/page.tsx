@@ -10,6 +10,7 @@ import RightSideBar from "@/components/RightSideBar";
 import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
+import CompleteProfile from "./completeProfileModal";
 
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -28,20 +29,23 @@ export default function Profile() {
     username: string;
   }
 
+  console.log(networkStore?.address);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) =>
-    // console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = (data) => (
     profileMutation.mutate({
-      wallet_address: `${new Date().valueOf()}`,
+      wallet_address: `${networkStore?.address}`,
       username: data.username,
       fullname: `${data.firstName} ${data.lastName}`,
       email: data.email,
       avatar_url: currentImg,
-    });
+    }),
+    closeModal()
+  );
 
   const profileMutation = useProfile({
     onSuccess: () => {
@@ -65,22 +69,6 @@ export default function Profile() {
   function handleToggle() {
     setRightSlider(!rightSlider);
   }
-
-  function submitProfileForm(formData: any) {
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
-    const username = formData.get("username");
-    const email = formData.get("email");
-
-    profileMutation.mutate({
-      wallet_address: `${new Date().valueOf()}`,
-      username: username,
-      fullname: `${firstName} ${lastName}`,
-      email: email,
-      avatar_url: currentImg,
-    });
-  }
-
   const pastGames = [
     {
       id: "1",
@@ -129,15 +117,45 @@ export default function Profile() {
     <div className="p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div>
-          {/* <div className="mb-4 flex items-center justify-end gap-4">
-          <div>W :</div>
-          <div className="text-2xl font-semibold">1000 MINA</div>
-        </div> */}
+          {!!profileData?.fullname && (
+            <h3 className="mb-3">
+              {" "}
+              Welcome,{" "}
+              <span className="text-xl font-semibold">
+                {profileData.fullname}
+              </span>{" "}
+            </h3>
+          )}
+          <div className="flex items-center  gap-3">
+            {!!profileData?.avatar_url && (
+              <div
+                className="group relative h-20 w-20 rounded-full"
+                // onClick={handleToggle}
+              >
+                <Image
+                  src={profileData.avatar_url}
+                  width={80}
+                  height={80}
+                  alt="profile"
+                  className="h-full w-full rounded-full object-cover"
+                />
 
-          {!!profileData?.fullname && <h3> Welcome, {profileData.fullname}</h3>}
-          <div className="mb-4 flex items-center justify-end gap-4">
-            <div>Balance :</div>
-            <div className="text-2xl font-semibold">1000 MINA</div>
+                <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
+                <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  <CameraIcon />
+                </span>
+              </div>
+            )}
+
+            <div>
+              {!!profileData?.username && <h3> {profileData.username}</h3>}
+              {!!profileData?.email && <h3> {profileData.email}</h3>}
+            </div>
+
+            <div className="mb-4 ms-auto flex items-center justify-end gap-4">
+              <div>Balance :</div>
+              <div className="text-2xl font-semibold">1000 MINA</div>
+            </div>
           </div>
         </div>
 
@@ -333,28 +351,6 @@ export default function Profile() {
             </div>
           </div>
         </Modal>
-
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeaderCell>Competition Id</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Score</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Rank</Table.ColumnHeaderCell>
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {pastGames.map((game) => {
-              return (
-                <Table.Row key={game.id}>
-                  <Table.RowHeaderCell>{game.id}</Table.RowHeaderCell>
-                  <Table.Cell>{game.score}</Table.Cell>
-                  <Table.Cell>{game.rank}</Table.Cell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table.Root>
       </div>
 
       <RightSideBar handleToggle={handleToggle} rightSlider={rightSlider}>
