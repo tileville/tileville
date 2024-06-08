@@ -1,47 +1,40 @@
 "use client";
 
-import GuidePhaserLayer from "@/phaser/guide-phaser/GuidephaserLayer";
 import { bibloSwashCaps } from "@/styles/fonts";
+import dynamic from "next/dynamic";
+
+const GuidePhaserLayer = dynamic(
+  () => import("@/phaser/guide-phaser/GuidephaserLayer"),
+  {
+    ssr: false,
+  }
+);
 
 export default function Guide() {
   return (
-    <div className="pt-20">
-      <main className={`${bibloSwashCaps.variable} relative`}>
+    <div className="overflow-y-scroll pt-20">
+      {/* <main className={`${bibloSwashCaps.variable} relative`}>
         <div id="parchment"></div>
         <div id="contain">
-          <p className="inkTitle">TileVille</p>
+          <p className="inkTitle">Fellow Builder</p>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non
-            risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing
-            nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas
-            ligula massa, varius a, semper congue, euismod non, mi. Proin
-            porttitor, orci nec nonummy molestie, enim est eleifend mi, non
-            fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa,
-            scelerisque vitae, consequat in, pretium a, enim. Pellentesque
-            congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum
-            bibendum augue. Praesent egestas leo in pede. Praesent blandit odio
-            eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum
-            ante ipsum primis in faucibus orci luctus et ultrices posuere
-            cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque
-            fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
+            You stepped off the boat onto the pristine shores of Nicobar, the
+            salty sea breeze whispering tales of adventure. As the newly
+            appointed builder architect, you marveled at the lush green forests
+            blanketing the island&apos;s interior, untamed and wild. This was
+            your canvas, waiting to be transformed into a thriving metropolis.
           </p>
           <p>
-            Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut
-            orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius,
-            ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus
-            sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
-            Integer id felis. Curabitur aliquet pellentesque diam. Integer quis
-            metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet,
-            consectetuer adipiscing elit. Morbi vel erat non mauris convallis
-            vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus,
-            convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat.
-            Proin feugiat, augue non elementum posuere, metus purus iaculis
-            lectus, et tristique ligula justo vitae magna.
+            Clutching your satchel filled with the game&apos;s rules and
+            resource tiles, you set off into the heart of the island. The first
+            step was to establish a base camp, a temporary shelter where you
+            could plan your city&apos;s layout. Using the provided tree tiles,
+            you constructed a sturdy cabin, the fresh scent of pine filling the
+            air.
           </p>
           <div id="signature">
-            Imperator Caesar Flavius Constantinus
             <br />
-            Pius Felix Invictus Augustus
+            TileVille Counsil
           </div>
         </div>
       </main>
@@ -57,7 +50,7 @@ export default function Guide() {
           />
           <feDisplacementMap in="SourceGraphic" scale="20" />
         </filter>
-      </svg>
+      </svg> */}
 
       <div className="mx-auto flex h-screen items-center justify-center">
         <div className="w-full">

@@ -5,8 +5,8 @@ import { LoadScene, MenuScene } from "./scenes";
 export const GuidePhaserLayer = () => {
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
-      width: 1280,
-      height: "80%",
+      width: 1200,
+      height: 600,
       parent: "minapolis-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene],
@@ -19,7 +19,7 @@ export const GuidePhaserLayer = () => {
     };
   }, []);
 
-  return <div id="minapolis-hex" />;
+  return <div id="minapolis-hex" className="" />;
 };
 
 export default GuidePhaserLayer;
