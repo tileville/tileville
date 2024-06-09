@@ -2,15 +2,15 @@
 import { Modal } from "@/components/common/Modal";
 import { useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { Button, Table } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import Image from "next/image";
-import { CameraIcon } from "@radix-ui/react-icons";
+import { CameraIcon, CopyIcon } from "@radix-ui/react-icons";
 import ProfileSideBar from "@/components/ProfileSideBar";
 import RightSideBar from "@/components/RightSideBar";
 import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
-import CompleteProfile from "./completeProfileModal";
+import toast from "react-hot-toast";
 
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -97,6 +97,19 @@ export default function Profile() {
     },
   ];
 
+  const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
+    try {
+      await navigator.clipboard.writeText(toCopyContent);
+      toast(<>{copiedType} copied to clipboard!</>, {
+        duration: 2000,
+      });
+    } catch (err) {
+      toast(<>Error copying {copiedType}! Please Try Again</>, {
+        duration: 2000,
+      });
+    }
+  };
+
   if (!networkStore.address) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -132,7 +145,6 @@ export default function Profile() {
                   </div>
                 )}
               </div>
-
               <div>
                 {!!profileData?.fullname && (
                   <h3>
@@ -141,8 +153,26 @@ export default function Profile() {
                     </span>{" "}
                   </h3>
                 )}
-                {!!profileData?.username && <h3> {profileData.username}</h3>}
-                {!!profileData?.email && <h3> {profileData.email}</h3>}
+                <p className="tet-sm text-gray-500">
+                  {!!profileData?.username && (
+                    <div className="flex items-center gap-2">
+                      <h3>{profileData.username}</h3>
+                      <button
+                        onClick={() => {
+                          copyToClipBoard(
+                            `${profileData.username}`,
+                            "username"
+                          );
+                        }}
+                      >
+                        <CopyIcon />
+                      </button>
+                    </div>
+                  )}
+                </p>
+                <p className="tet-sm text-gray-500">
+                  {!!profileData?.email && <h3> {profileData.email}</h3>}
+                </p>
               </div>
             </div>
 
@@ -150,7 +180,20 @@ export default function Profile() {
 
             <div>
               <h3 className="text-xl font-semibold">Wallet Address</h3>
-              <p>{networkStore?.address}</p>
+              <div className="flex items-center gap-2">
+                <p>{networkStore?.address}</p>
+
+                <button
+                  onClick={() => {
+                    copyToClipBoard(
+                      `${networkStore.address}`,
+                      "Wallet Address"
+                    );
+                  }}
+                >
+                  <CopyIcon />
+                </button>
+              </div>
             </div>
 
             <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>

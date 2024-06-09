@@ -313,14 +313,14 @@ input[type="range"] {
   background: conic-gradient(#fff3, #fff0 2% 24%, #fff2 25%, #4321 0, #0000 27% 48%, #9632 50%, #fff2 0, #fff0 52% 73%, #9632 75%, #fff3 0, #fff0 78% 97%, #9632);
 }
 
-main p {
+.guide-section-content p {
   font-size: 2.25em;
   color: #7F3300;
   margin-top: .75em;
   text-align: justify;
 }
 
-div p:not(:first-child)::first-letter {
+.guide-section-content div p:not(:first-child)::first-letter {
   float: left;
   font: 1.7em/1em Morris;
   /* a little relief for the first letter*/

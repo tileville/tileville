@@ -13,7 +13,9 @@ const GuidePhaserLayer = dynamic(
 export default function Guide() {
   return (
     <div className="overflow-y-scroll pt-20">
-      {/* <main className={`${bibloSwashCaps.variable} relative`}>
+      <main
+        className={`${bibloSwashCaps.variable} guide-section-content relative`}
+      >
         <div id="parchment"></div>
         <div id="contain">
           <p className="inkTitle">Fellow Builder</p>
@@ -50,7 +52,7 @@ export default function Guide() {
           />
           <feDisplacementMap in="SourceGraphic" scale="20" />
         </filter>
-      </svg> */}
+      </svg>
 
       <div className="mx-auto flex h-screen items-center justify-center">
         <div className="w-full">
