@@ -15,4 +15,9 @@ export const NETWORKS: Network[] = [
     name: "Berkeley",
     graphql: "https://api.minascan.io/node/berkeley/v1/graphql",
   },
+  {
+    chainId: "mainnet",
+    name: "Mainnet",
+    graphql: "https://api.minascan.io/node/mainnet/v1/graphql",
+  },
 ];
