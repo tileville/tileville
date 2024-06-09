@@ -12,8 +12,8 @@ const GuidePhaserLayer = dynamic(
 
 export default function Guide() {
   return (
-    <div className="overflow-y-scroll pt-20">
-      <main
+    <div className="overflow-y-scroll">
+      {/* <main
         className={`${bibloSwashCaps.variable} guide-section-content relative`}
       >
         <div id="parchment"></div>
@@ -39,9 +39,9 @@ export default function Guide() {
             TileVille Counsil
           </div>
         </div>
-      </main>
+      </main> */}
 
-      <svg>
+      {/* <svg>
         <filter id="wavy2">
           <feTurbulence
             x="0"
@@ -52,7 +52,7 @@ export default function Guide() {
           />
           <feDisplacementMap in="SourceGraphic" scale="20" />
         </filter>
-      </svg>
+      </svg> */}
 
       <div className="mx-auto flex h-screen items-center justify-center">
         <div className="w-full">
