@@ -40,8 +40,9 @@ export class MainScene extends Scene {
   rankText: GameObjects.BitmapText | null = null;
   nextRankText: GameObjects.BitmapText | null = null;
   playAgainButton: GameObjects.BitmapText | null = null;
-  // playAgainButton: Button | null = null;
+  shareButton: GameObjects.Image | null = null;
 
+  // playAgainButton: Button | null = null;
   breakdownContainer: GameObjects.Container | null = null;
   breakdownHexes: Hex[] = [];
   breakdownTexts: GameObjects.BitmapText[] = [];
@@ -505,9 +506,53 @@ export class MainScene extends Scene {
           ease: "Linear",
         });
         this.playAgain();
+
       })
       .on("pointerup", () => {
         this.playAgain();
+      })
+      .setDepth(4)
+
+      this.shareButton  = this.add.image(1450, 700, 'share-score-button')
+      .setInteractive({ useHandCursor: true })
+      .on("pointerover", () => {
+        this.tweens.add({
+          targets: this.shareButton,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
+      })
+      .on("pointerover", () => {
+        this.tweens.add({
+          targets: this.shareButton,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
+      })
+      .on("pointerout", () =>
+        this.tweens.add({
+          targets: this.shareButton,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 60,
+          ease: "Linear",
+        })
+      )
+      .on("pointerdown", () => {
+        this.tweens.add({
+          targets: this.shareButton,
+          scaleX: 0.55,
+          scaleY: 0.55,
+          duration: 60,
+          ease: "Linear",
+        });
+      })
+      .on("pointerup", () => {
+        this.navigateToExternalSite(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Hey I received ${this.score} in the #TileVille Game Of @TileVilleSocial! \n\n${window.location.origin}`)}`);
       })
       .setDepth(4);
 
@@ -580,6 +625,14 @@ export class MainScene extends Scene {
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
     });
+
+    this.tweens.add({
+      targets: this.shareButton,
+      props: { x: 1040 },
+      delay: 1500,
+      duration: 300,
+      ease: PhaserMath.Easing.Quadratic.Out,
+    });
   }
 
   playAgain() {
@@ -588,6 +641,7 @@ export class MainScene extends Scene {
     this.nextRankText?.setVisible(false);
     this.rankText?.setVisible(false);
     this.playAgainButton?.setVisible(false);
+    this.shareButton?.setVisible(false);
     this.scoreText?.setVisible(false);
 
     // this.tweens.add({
@@ -601,6 +655,10 @@ export class MainScene extends Scene {
       callbackScope: this.scene,
       delay: 500,
     });
+  }
+
+  navigateToExternalSite(url : string) {
+    window.open(url, '_blank');
   }
 
   onPointerUp(event: Input.Pointer) {
