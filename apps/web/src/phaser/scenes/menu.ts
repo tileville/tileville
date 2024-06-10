@@ -4,7 +4,7 @@ import { Button } from "../util";
 import { Scene, GameObjects } from "phaser";
 
 const tutorialTexts = [
-  "TileVille is city development Arcade game \nwhere you pay 2 MINA tokens to play the game \nand build your city.",
+  "TileVille is city development Arcade game \nwhere you pay 2 MINA tokens to play \nthe game and build your city.",
   "If your score is above 70\nyou will win a level 1 treasure box",
   "Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!",
   "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every Port that you\nconnect to the Center with\nRoads is worth 3 points!",
