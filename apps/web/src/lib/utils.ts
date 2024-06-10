@@ -64,3 +64,8 @@ export function buildClient<
 
 export const formatPubkey = (pubkey: PublicKey | undefined) =>
   pubkey ? pubkey.toBase58().slice(0, 16) + "..." : "None";
+
+export const getShareScoreTwitterContent = (score: number) =>
+  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    `Just conquered Nicobar with a score of ${score} in @TileVilleSocial 🏆 The strategic city-builder on @MinaProtocol is a must-play. Build your dream city: https://tileville.xyz #TileVille #MinaBlockchain #CityBuilder`
+  )}`;

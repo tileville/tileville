@@ -1,3 +1,4 @@
+import { getShareScoreTwitterContent } from "@/lib/utils";
 import { GAME_ENTRY_FEE_KEY } from "../../constants";
 import {
   HexGrid,
@@ -506,14 +507,14 @@ export class MainScene extends Scene {
           ease: "Linear",
         });
         this.playAgain();
-
       })
       .on("pointerup", () => {
         this.playAgain();
       })
-      .setDepth(4)
+      .setDepth(4);
 
-      this.shareButton  = this.add.image(1450, 700, 'share-score-button')
+    this.shareButton = this.add
+      .image(1450, 700, "share-score-button")
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () => {
         this.tweens.add({
@@ -552,7 +553,7 @@ export class MainScene extends Scene {
         });
       })
       .on("pointerup", () => {
-        this.navigateToExternalSite(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Hey I received ${this.score} in the #TileVille Game Of @TileVilleSocial! \n\n${window.location.origin}`)}`);
+        this.navigateToExternalSite(getShareScoreTwitterContent(this.score));
       })
       .setDepth(4);
 
@@ -657,8 +658,8 @@ export class MainScene extends Scene {
     });
   }
 
-  navigateToExternalSite(url : string) {
-    window.open(url, '_blank');
+  navigateToExternalSite(url: string) {
+    window.open(url, "_blank");
   }
 
   onPointerUp(event: Input.Pointer) {
