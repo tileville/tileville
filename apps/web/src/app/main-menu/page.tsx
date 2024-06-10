@@ -38,6 +38,11 @@ export default function MainMenu() {
       key: 4,
       href: "/marketplace",
     },
+    {
+      name: "FAQs",
+      key: 5,
+      href: "/faq",
+    },
   ];
 
   return (
