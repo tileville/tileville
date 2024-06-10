@@ -1,6 +1,6 @@
 "use client";
 import { Modal } from "@/components/common/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Button } from "@radix-ui/themes";
 import Image from "next/image";
@@ -12,44 +12,96 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
 
+const pastGames = [
+  {
+    id: "1",
+    score: 244,
+    rank: 133,
+  },
+  {
+    id: "2",
+    score: 244,
+    rank: 133,
+  },
+  {
+    id: "3",
+    score: 244,
+    rank: 133,
+  },
+  {
+    id: "4",
+    score: 244,
+    rank: 133,
+  },
+  {
+    id: "5",
+    score: 244,
+    rank: 133,
+  },
+];
+
+interface IFormInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  avatar_url: string;
+}
+
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
   const [rightSlider, setRightSlider] = useState(false);
-  const [currentImg, setCurrentImg] = useState("/img/avatars/defaultImg.webp");
   const networkStore = useNetworkStore();
-  const { data: profileData } = useProfileLazyQuery(
+
+  const { data: profileData, refetch } = useProfileLazyQuery(
     networkStore?.address || ""
   );
 
   console.log("profile data", profileData);
-  interface IFormInput {
-    firstName: string;
-    lastName: string;
-    email: string;
-    username: string;
-  }
-
   console.log(networkStore?.address);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+    setValue,
+    watch,
+  } = useForm<IFormInput>({
+    defaultValues: {
+      firstName: (profileData?.fullname ?? "").split(" ")[0],
+      lastName: (profileData?.fullname ?? "").split(" ")[1],
+      email: profileData?.email || "",
+      username: profileData?.username || "",
+      avatar_url: profileData?.avatar_url || "/img/avatars/defaultImg.webp",
+    },
+  });
+
+  useEffect(() => {
+    if (profileData) {
+      const { email, fullname, username, avatar_url } = profileData;
+      setValue("email", email ?? "");
+      setValue("firstName", (fullname ?? "").split(" ")[0]);
+      setValue("lastName", (fullname ?? "").split(" ")[1]);
+      setValue("avatar_url", avatar_url ?? "/img/avatars/defaultImg.webp");
+      setValue("username", username ?? "");
+    }
+  }, [profileData, setValue]);
+
   const onSubmit: SubmitHandler<IFormInput> = (data) => (
     profileMutation.mutate({
       wallet_address: `${networkStore?.address}`,
       username: data.username,
       fullname: `${data.firstName} ${data.lastName}`,
       email: data.email,
-      avatar_url: currentImg,
+      avatar_url: data.avatar_url,
     }),
     closeModal()
   );
 
   const profileMutation = useProfile({
     onSuccess: () => {
-      console.log("Leaderboard data saved successfully");
+      console.log("Profile data saved successfully");
+      refetch();
     },
     onMutate: () => {
       console.log("Saving leaderboard data...");
@@ -60,7 +112,7 @@ export default function Profile() {
   });
 
   function selectImage(imgUrl: string) {
-    setCurrentImg(imgUrl);
+    setValue("avatar_url", imgUrl);
   }
   const closeModal = () => {
     setModalOpen(false);
@@ -69,33 +121,8 @@ export default function Profile() {
   function handleToggle() {
     setRightSlider(!rightSlider);
   }
-  const pastGames = [
-    {
-      id: "1",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "2",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "3",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "4",
-      score: 244,
-      rank: 133,
-    },
-    {
-      id: "5",
-      score: 244,
-      rank: 133,
-    },
-  ];
+
+  const avatarUrl = watch("avatar_url");
 
   const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
     try {
@@ -261,7 +288,7 @@ export default function Profile() {
                       onClick={handleToggle}
                     >
                       <Image
-                        src={currentImg}
+                        src={avatarUrl}
                         width={80}
                         height={80}
                         alt="profile"
@@ -285,7 +312,6 @@ export default function Profile() {
                         <input
                           type="text"
                           className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
-                          id="firstName"
                           placeholder="First Name"
                           {...register("firstName", {
                             required: true,

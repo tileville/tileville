@@ -1,5 +1,19 @@
 import { AppSupabaseClient, Table } from "@/types";
 
+async function isProfileExist(
+  supabase: AppSupabaseClient,
+  wallet_address: string
+): Promise<boolean> {
+  const { data } = await supabase
+    .from("player_profile")
+    .select("wallet_address")
+    .eq("wallet_address", wallet_address)
+    .single();
+
+  if (data) return true;
+  return false;
+}
+
 export const getAllLeaderboardEntries = async (
   supabase: AppSupabaseClient
 ): Promise<Array<Table<"leaderboard">>> => {
@@ -47,17 +61,29 @@ export const addProfile = async (
     avatar_url: string;
   }
 ): Promise<Table<"player_profile">> => {
-  const { data, error } = await supabase
-    .from("player_profile")
-    .insert(item)
-    .select("*")
-    .single();
-
-  if (error) {
-    throw error;
+  const isExist = await isProfileExist(supabase, item.wallet_address);
+  if (isExist) {
+    const { wallet_address, ...other_field } = item;
+    const { data, error } = await supabase
+      .from("player_profile")
+      .update(other_field)
+      .eq("wallet_address", item.wallet_address)
+      .single();
+    if (error) {
+      throw error;
+    }
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from("player_profile")
+      .insert(item)
+      .select("*")
+      .single();
+    if (error) {
+      throw error;
+    }
+    return data;
   }
-
-  return data;
 };
 
 export const fetchProfile = async (
