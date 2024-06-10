@@ -1,4 +1,5 @@
 import { AppSupabaseClient, Table } from "@/types";
+import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
 
 async function isProfileExist(
   supabase: AppSupabaseClient,
@@ -8,6 +9,18 @@ async function isProfileExist(
     .from("player_profile")
     .select("wallet_address")
     .eq("wallet_address", wallet_address)
+    .single();
+
+  if (data) return true;
+  return false;
+}
+
+export async function isUsernameExist(username: string): Promise<boolean> {
+  const supabase = supabaseUserClientComponentClient;
+  const { data } = await supabase
+    .from("player_profile")
+    .select("id")
+    .eq("username", username)
     .single();
 
   if (data) return true;

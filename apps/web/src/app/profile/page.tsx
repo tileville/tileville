@@ -11,6 +11,7 @@ import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
+import { isUsernameExist } from "@/db/supabase-queries";
 
 const pastGames = [
   {
@@ -66,6 +67,7 @@ export default function Profile() {
     formState: { errors },
     setValue,
     watch,
+    setError,
   } = useForm<IFormInput>({
     defaultValues: {
       firstName: (profileData?.fullname ?? "").split(" ")[0],
@@ -75,6 +77,11 @@ export default function Profile() {
       avatar_url: profileData?.avatar_url || "/img/avatars/defaultImg.webp",
     },
   });
+
+  // useEffect(() => {
+  //   if (uname) {
+
+  // }, [uname]);
 
   useEffect(() => {
     if (profileData) {
@@ -87,16 +94,26 @@ export default function Profile() {
     }
   }, [profileData, setValue]);
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => (
-    profileMutation.mutate({
-      wallet_address: `${networkStore?.address}`,
-      username: data.username,
-      fullname: `${data.firstName} ${data.lastName}`,
-      email: data.email,
-      avatar_url: data.avatar_url,
-    }),
-    closeModal()
-  );
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const isExist = await isUsernameExist(data.username);
+    if (isExist) {
+      setError("username", {
+        type: "custom",
+        message: "Username already exist",
+      });
+      return;
+    }
+    return (
+      profileMutation.mutate({
+        wallet_address: `${networkStore?.address}`,
+        username: data.username,
+        fullname: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        avatar_url: data.avatar_url,
+      }),
+      closeModal()
+    );
+  };
 
   const profileMutation = useProfile({
     onSuccess: () => {
@@ -395,7 +412,7 @@ export default function Profile() {
                           errors.username ? "opacity-100" : ""
                         } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
                       >
-                        username is required..
+                        {errors.username?.message}
                       </span>
                     </div>
                   </div>
