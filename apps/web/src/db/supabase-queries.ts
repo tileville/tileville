@@ -42,6 +42,20 @@ export const getAllLeaderboardEntries = async (
   return data;
 };
 
+export const getAllCompetitionsEntries = async (
+  supabase: AppSupabaseClient
+): Promise<Array<Table<"tileville_competitions">>> => {
+  const { data, error } = await supabase
+    .from("tileville_competitions")
+    .select("*")
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
 export const addGameToLeaderboard = async (
   supabase: AppSupabaseClient,
   item: {

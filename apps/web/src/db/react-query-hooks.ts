@@ -12,6 +12,7 @@ import {
   insertEmail,
   addProfile,
   fetchProfile,
+  getAllCompetitionsEntries,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
@@ -154,6 +155,19 @@ export const useLeaderboardData = () => {
     }
   );
 };
+
+export const useCompetitionsData = () => {
+  return useQuery(
+    ["tileville_competitions"],
+    () => getAllCompetitionsEntries(supabaseUserClientComponentClient),
+    {
+      // staleTime: 1000 * 60 * 5, // 5 minutes
+      // cacheTime: 1000 * 60 * 10, // 10 minutes
+      refetchOnWindowFocus: false, // Disable refetch on window focus
+    }
+  );
+};
+
 
 export const useProfileLazyQuery = (walletAddress: string) => {
   return useQuery({

@@ -14,7 +14,7 @@ export default function MainMenu() {
     {
       name: "Play Game",
       key: 0,
-      href: "/game",
+      href: "/competitions",
     },
     {
       name: "Guide",

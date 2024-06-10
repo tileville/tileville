@@ -87,6 +87,48 @@ export type Database = {
         }
         Relationships: []
       }
+      tileville_competitions: {
+        Row: {
+          created_at: string
+          description: string
+          end_date: string
+          funds: number
+          id: number
+          name: string
+          participation_fee: number | null
+          poster_url: string | null
+          seed: number
+          start_date: string
+          unique_keyname: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          end_date: string
+          funds?: number
+          id?: number
+          name: string
+          participation_fee?: number | null
+          poster_url?: string | null
+          seed?: number
+          start_date?: string
+          unique_keyname: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          end_date?: string
+          funds?: number
+          id?: number
+          name?: string
+          participation_fee?: number | null
+          poster_url?: string | null
+          seed?: number
+          start_date?: string
+          unique_keyname?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
