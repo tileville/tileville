@@ -8,6 +8,7 @@ import { ChainContext, SignerContext } from "@/contexts";
 import { ChainType } from "@/types";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import LandingBackground from "@/components/LandingBackground";
+import { useParams } from "next/navigation";
 
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
@@ -20,6 +21,9 @@ function Game() {
     chainId: 0,
     chainName: "",
   });
+
+  const params = useParams<{ uniqueKey: string }>();
+  console.log(params);
 
   const cachedInit = useCallback(async function () {
     if ((window as any).mina) {
