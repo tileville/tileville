@@ -55,6 +55,7 @@ export default function Competitions() {
                   <div className="flex gap-3 text-sm font-medium">
                     <div className="flex items-center gap-2">
                       <CalendarIcon />
+                      <p>Event Startig in 12 days 12 hours 23 mins 23 sec</p>
                     </div>
                     <div className="h-full w-[1px] bg-primary/30"></div>
                     <div className="flex items-center gap-2">
