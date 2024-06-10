@@ -39,7 +39,7 @@ export default function MainMenu() {
       href: "/marketplace",
     },
     {
-      name: "FAQs",
+      name: "FAQ",
       key: 5,
       href: "/faq",
     },
