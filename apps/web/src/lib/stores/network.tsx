@@ -48,12 +48,13 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
       if (address) {
         localStorage.minaAdderess = address;
         const network = await (window as any).mina.requestNetwork();
+        console.log("network from wallet", network, network.chainId);
         const minaNetwork = NETWORKS.find((x) =>
           network.chainId != "unknown"
             ? x.chainId == network.chainId
-            : x.name == network.name
+            : x.name == network.name || x.networkID === network.networkID
         );
-
+        console.log("mina network", minaNetwork);
         this.setNetwork(minaNetwork);
       } else {
         localStorage.minaAdderess = "";

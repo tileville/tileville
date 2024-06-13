@@ -16,7 +16,6 @@ export interface BalancesState {
   loadBalance: (chainId: string, address: string) => Promise<void>;
 }
 
-
 export interface BalanceQueryResponse {
   data: {
     account:
@@ -29,8 +28,6 @@ export interface BalanceQueryResponse {
   };
 }
 
-
-
 export const useMinaBalancesStore = create<
   BalancesState,
   [["zustand/immer", never]]
@@ -42,37 +39,40 @@ export const useMinaBalancesStore = create<
       set((state) => {
         state.loading = true;
       });
-
-      const response = await fetch(
-        NETWORKS.find((x) => x.chainId == chainId)?.graphql!,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: `
-            query {
-              account(publicKey: "${address}") {
-                balance {
-                  total
+      try {
+        const response = await fetch(
+          NETWORKS.find((x) => x.chainId == chainId)?.graphql!,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              query: `
+              query {
+                account(publicKey: "${address}") {
+                  balance {
+                    total
+                  }
+                  delegate
+                  nonce
                 }
-                delegate
-                nonce
               }
-            }
-          `,
-          }),
-        }
-      );
+            `,
+            }),
+          }
+        );
 
-      const { data } = (await response.json()) as BalanceQueryResponse;
-      const balance = BigInt(data.account?.balance.total ?? "0");
+        const { data } = (await response.json()) as BalanceQueryResponse;
+        const balance = BigInt(data.account?.balance.total ?? "0");
 
-      set((state) => {
-        state.loading = false;
-        state.balances[address] = balance ?? 0n;
-      });
+        set((state) => {
+          state.loading = false;
+          state.balances[address] = balance ?? 0n;
+        });
+      } catch (error) {
+        console.warn(`Failed to fetch balance for address ${address}`);
+      }
     },
   }))
 );

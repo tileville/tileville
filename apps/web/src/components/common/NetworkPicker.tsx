@@ -29,6 +29,7 @@ export default function NetworkPicker() {
       await (window as any).mina.switchChain({
         chainId: network.chainId,
       });
+      console.log("network===", network);
       networkStore.setNetwork(network);
       setExpanded(false);
     } catch (e: any) {
