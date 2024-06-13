@@ -13,6 +13,7 @@ import {
   addProfile,
   fetchProfile,
   getAllCompetitionsEntries,
+  getAllCompetitionsNames,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
@@ -175,4 +176,15 @@ export const useProfileLazyQuery = (walletAddress: string) => {
     queryFn: async () =>
       fetchProfile(supabaseUserClientComponentClient, walletAddress),
   });
+};
+
+
+export const useCompetitionsName = () => {
+  return useQuery(
+    ["tileville_competitions"],
+    () => getAllCompetitionsNames(supabaseUserClientComponentClient),
+    {
+      refetchOnWindowFocus: false, // Disable refetch on window focus
+    }
+  );
 };

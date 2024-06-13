@@ -1,9 +1,36 @@
 "use client";
-import { useLeaderboardData } from "@/db/react-query-hooks";
+import {
+  useCompetitionsName,
+  useLeaderboardData,
+} from "@/db/react-query-hooks";
 import { Skeleton, Table } from "@radix-ui/themes";
+import { DropdownMenu } from "@radix-ui/themes";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function Leaderboard() {
   const { data, isLoading, isError, error } = useLeaderboardData();
+  const {
+    data: competitionData,
+    isLoading: competitionLoading,
+    isError: IsCompetitionError,
+    error: competitionError,
+  } = useCompetitionsName();
+  const options = [
+    {
+      text: "Hero's Tileville League",
+      id: "heros_tileville",
+    },
+
+    {
+      text: "Default Competition",
+      id: "default_comp",
+    },
+  ];
+
+  console.log(competitionData);
+
+  const [selectedItem, setSelectedItem] = useState<string>(options[0].text);
 
   const initialArray = Array(20).fill(0);
   if (isError) {
@@ -13,6 +40,39 @@ export default function Leaderboard() {
   return (
     <div className="p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
+        <div className="mb-3 flex items-center gap-3">
+          <p>Select Competitions</p>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <button className="border-primary-30 flex h-10 min-w-[224px] items-center justify-between rounded-md border bg-transparent px-3 font-semibold text-primary outline-none">
+                <span>{selectedItem}</span>
+                <span>
+                  <Image
+                    src="icons/topBottomArrows.svg"
+                    width={24}
+                    height={24}
+                    alt="arrows"
+                  />
+                </span>
+              </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content className="min-w-[224px] !bg-transparent backdrop-blur-2xl">
+              {options.map((option, id) => {
+                return (
+                  <DropdownMenu.Item
+                    key={option.id}
+                    onClick={() => {
+                      setSelectedItem(options[id].text);
+                    }}
+                    className="hover:bg-primary"
+                  >
+                    {option.text}
+                  </DropdownMenu.Item>
+                );
+              })}
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        </div>
         <Table.Root>
           <Table.Header>
             <Table.Row>

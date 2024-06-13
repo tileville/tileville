@@ -169,3 +169,32 @@ export const insertEmail = async (
 
   return data;
 };
+
+// export const getAllCompetitionsNames = async (
+//   supabase: AppSupabaseClient
+// ): Promise<Array<Table<"tileville_competitions">>> => {
+//   const { data, error } = await supabase
+//     .from("tileville_competitions")
+//     .select("*")
+
+//   if (error) {
+//     throw error;
+//   }
+
+//   return data;
+// };
+
+
+export const getAllCompetitionsNames = async (
+  supabase: AppSupabaseClient
+): Promise<Array<{ id: number; name: string }>> => {
+  const { data, error } = await supabase
+    .from("tileville_competitions")
+    .select("id, name")
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
