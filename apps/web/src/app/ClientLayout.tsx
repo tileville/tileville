@@ -11,16 +11,15 @@ const StoreProtokitUpdater = dynamic(
     ssr: false,
   }
 );
-// This layout component can be used with React state, context and more as it is a client component.
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <StoreProtokitUpdater />
       <QueryClientProvider client={queryClient}>
-      <DesktopNavBar autoConnect={true} />
+        <DesktopNavBar autoConnect={true} />
         {children}
-        </QueryClientProvider>
+      </QueryClientProvider>
       <Toaster />
     </>
   );

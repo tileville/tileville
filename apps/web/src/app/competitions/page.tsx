@@ -3,9 +3,34 @@ import { useCompetitionsData } from "@/db/react-query-hooks";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { Skeleton } from "@radix-ui/themes";
+import { Button, Skeleton } from "@radix-ui/themes";
+import { useNetworkStore } from "@/lib/stores/network";
+import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
+import { useState } from "react";
+
+export type Competition = {
+  created_at: string;
+  description: string;
+  end_date: string;
+  funds: number;
+  id: number;
+  name: string;
+  participation_fee: number | null;
+  poster_url: string | null;
+  seed: number;
+  start_date: string;
+  unique_keyname: string;
+};
+
+///competitions/${competition.unique_keyname}/game
 export default function Competitions() {
   const { data, isLoading, isError, error } = useCompetitionsData();
+  const [isFeeModalOpen, setIsFeesModalOpen] = useState(false);
+  const [selectedCompetition, setSelectedCompetition] = useState<Competition>(
+    {} as Competition
+  );
+
+  const networkStore = useNetworkStore();
   const initialArray = Array(2).fill(0);
 
   if (isError) {
@@ -13,6 +38,16 @@ export default function Competitions() {
   }
 
   console.log(data);
+
+  const handleJoinCompetition = async ({
+    unique_keyname,
+    participation_fee,
+  }: {
+    unique_keyname: string;
+    participation_fee: number;
+  }) => {
+    // Check If wallet is connected
+  };
 
   return (
     <>
@@ -93,12 +128,15 @@ export default function Competitions() {
                       <div className="col-span-2 p-4">
                         <div className="flex h-full items-start">
                           <div className="mr-3 flex h-full w-[1px] flex-col items-start bg-primary/30"></div>
-                          <Link
+                          <Button
                             className="mx-auto w-full cursor-pointer rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
-                            href={`/competitions/${competition.unique_keyname}/game`}
+                            onClick={() => {
+                              setSelectedCompetition(competition);
+                              setIsFeesModalOpen(true);
+                            }}
                           >
                             Join Now
-                          </Link>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -109,6 +147,13 @@ export default function Competitions() {
           )}
         </div>
       </div>
+      <GameEntryFeesModal
+        open={isFeeModalOpen}
+        handleClose={() => {
+          setIsFeesModalOpen(false);
+        }}
+        competition={selectedCompetition}
+      />
     </>
   );
 }

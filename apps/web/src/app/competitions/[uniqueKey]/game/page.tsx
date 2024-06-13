@@ -16,7 +16,6 @@ const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
 
 function Game() {
   const [signer, setSigner] = useState("");
-  const [isEntryFeesModalOpen, setIsEntryFeesModalOpen] = useState(false);
   const [chain, setChain] = useState<ChainType>({
     chainId: 0,
     chainName: "",
@@ -49,16 +48,10 @@ function Game() {
             <div className="mb-0 w-full">
               <PhaserLayer
                 handleEntryFees={() => {
-                  setIsEntryFeesModalOpen(true);
+                  // setIsEntryFeesModalOpen(true);
                 }}
               />
               <Toaster />
-              <GameEntryFeesModal
-                open={isEntryFeesModalOpen}
-                handleClose={() => {
-                  setIsEntryFeesModalOpen(false);
-                }}
-              />
             </div>
           </ChainContext.Provider>
         </SignerContext.Provider>

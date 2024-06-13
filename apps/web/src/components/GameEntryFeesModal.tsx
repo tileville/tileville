@@ -1,32 +1,29 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes";
 import { useNetworkLayer } from "@/hooks/useNetworkLayer";
 import { FAUCET_URL } from "@/constants";
+import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
+import { type Competition } from "@/app/competitions/page";
 
 export const GameEntryFeesModal = ({
   open,
   handleClose,
+  competition,
 }: {
   open: boolean;
   handleClose: () => void;
+  competition: Competition;
 }) => {
-  const { signer, transferEntryFee } = useNetworkLayer();
+  const networkStore = useNetworkStore();
+  const { payParticipationFees } = useParticipationFee();
+
   return (
     <Dialog.Root open={open}>
       <Dialog.Content style={{ maxWidth: 450 }}>
-        <Dialog.Title>Pay Entry Fees</Dialog.Title>
+        <Dialog.Title>Pay Participation Fees</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          You need to pay one time entry fees of 2 MINA token to play this game.
-          If you don&apos;t have tokens, you can get it from{" "}
-          <a
-            href={`${FAUCET_URL}?address=${signer}`}
-            target="_blank"
-            className="text-md font-semibold underline"
-          >
-            here
-          </a>
-        </Dialog.Description>
-        <Dialog.Description size="2" mb="4" className="font-semibold">
-          Make sure to click on Play button again after paying the fees!
+          You need to pay one time participation fees of{" "}
+          {competition.participation_fee} MINA token to join{" "}
+          <strong>{competition.name}</strong> competition.
         </Dialog.Description>
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
@@ -36,13 +33,22 @@ export const GameEntryFeesModal = ({
           </Dialog.Close>
           <Dialog.Close>
             <Button
-              onClick={async () => {
-                await transferEntryFee();
-                handleClose();
-              }}
+              onClick={
+                !!networkStore.address
+                  ? async () => {
+                      await payParticipationFees(
+                        competition.participation_fee ?? 0,
+                        "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
+                      );
+                      handleClose();
+                    }
+                  : async () => {
+                      await networkStore.connectWallet(false);
+                    }
+              }
               color="blue"
             >
-              Pay Entry Fees
+              {!!networkStore.address ? "Pay Entry Fees" : "Connect Wallet"}
             </Button>
           </Dialog.Close>
         </Flex>

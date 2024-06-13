@@ -2,8 +2,15 @@
 import { type PendingTransaction } from "@proto-kit/sequencer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-
+import {
+  SendTransactionResult,
+  ProviderError,
+} from "@aurowallet/mina-provider";
 import { NETWORKS, Network } from "@/constants/network";
+import { useState } from "react";
+import { useSessionStorage } from "react-use";
+import { GAME_ENTRY_FEE_KEY } from "@/constants";
+import toast from "react-hot-toast";
 
 export interface NetworkState {
   minaNetwork: Network | undefined;
@@ -99,3 +106,44 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
     },
   }))
 );
+
+// type ParticipationFeeState = {
+//   payParticipationFee: (fees)
+// }
+
+export const useParticipationFee = () => {
+  const networkStore = useNetworkStore();
+  const [resHash, setResHash] = useState("");
+  const [, setIsEntryFeeFaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
+
+  const payParticipationFees = async (
+    participation_fee: number,
+    treasury_address: string
+  ) => {
+    if (!networkStore.address) {
+      return networkStore.connectWallet(false);
+    }
+    try {
+      const data: SendTransactionResult | ProviderError = await (
+        window as any
+      )?.mina?.sendPayment({
+        amount: participation_fee,
+        to: treasury_address,
+        memo: `Pay fee of ${participation_fee} MINA to tileville.`,
+      });
+      const hash = (data as SendTransactionResult).hash;
+      if (hash) {
+        console.log("response hash", hash);
+        setResHash(hash);
+        setIsEntryFeeFaid(true);
+        // TODO: Store transaction log to supabase
+      } else {
+        toast((data as ProviderError).message || "");
+      }
+    } catch (err) {
+      toast("Failed to transfer entry fees😭");
+    }
+  };
+
+  return { payParticipationFees };
+};
