@@ -94,10 +94,10 @@ export default function Competitions() {
                         <div className="flex h-full items-start">
                           <div className="mr-3 flex h-full w-[1px] flex-col items-start bg-primary/30"></div>
                           <Link
-                            className="mx-auto w-full cursor-pointer rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
-                            href={`/competitions/${competition.unique_keyname}/game`}
+                            className="mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
+                            href={`/competitions/${competition.unique_keyname}/game/1`}
                           >
-                            Join Now
+                            Pay Fee & Join
                           </Link>
                         </div>
                       </div>
