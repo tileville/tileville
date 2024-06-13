@@ -71,7 +71,7 @@ export const useMinaBalancesStore = create<
           state.balances[address] = balance ?? 0n;
         });
       } catch (error) {
-        console.warn(`Failed to fetch balance for address ${address}`);
+        console.warn(`Failed to fetch balance for address ${address}`, error);
       }
     },
   }))
@@ -89,12 +89,19 @@ export const useObserveMinaBalance = () => {
       !network.minaNetwork?.chainId
     )
       return;
+    console.log(
+      "Triggered",
+      chain.block?.height,
+      network.walletConnected,
+      network.minaNetwork?.chainId,
+      network.address,
+      balances
+    );
     balances.loadBalance(network.minaNetwork?.chainId, network.address);
   }, [
     chain.block?.height,
     network.walletConnected,
     network.minaNetwork?.chainId,
     network.address,
-    balances,
   ]);
 };

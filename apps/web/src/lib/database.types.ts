@@ -129,6 +129,39 @@ export type Database = {
         }
         Relationships: []
       }
+      transaction_logs: {
+        Row: {
+          competition_key: string
+          created_at: string
+          game_id: number
+          id: number
+          network: string
+          txn_hash: string
+          txn_status: string
+          wallet_address: string
+        }
+        Insert: {
+          competition_key: string
+          created_at?: string
+          game_id: number
+          id?: number
+          network?: string
+          txn_hash: string
+          txn_status?: string
+          wallet_address: string
+        }
+        Update: {
+          competition_key?: string
+          created_at?: string
+          game_id?: number
+          id?: number
+          network?: string
+          txn_hash?: string
+          txn_status?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

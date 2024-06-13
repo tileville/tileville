@@ -78,6 +78,30 @@ export const addGameToLeaderboard = async (
   return data;
 };
 
+// export const addTransactionLogs = async (
+//   supabase: AppSupabaseClient,
+//   item: {
+//     game_id: string;
+//     competition_key: number;
+//     txh_hash: string;
+//     wallet_address: number;
+//     network: string;
+//     txn_status: string;
+//   }
+// ): Promise<Table<"leaderboard">> => {
+//   const { data, error } = await supabase
+//     .from("leaderboard")
+//     .insert(item)
+//     .select("*")
+//     .single();
+
+//   if (error) {
+//     throw error;
+//   }
+
+//   return data;
+// };
+
 export const addProfile = async (
   supabase: AppSupabaseClient,
   item: {
@@ -138,6 +162,35 @@ export const insertEmail = async (
     .insert(item)
     .select("*")
     .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
+// export const getAllCompetitionsNames = async (
+//   supabase: AppSupabaseClient
+// ): Promise<Array<Table<"tileville_competitions">>> => {
+//   const { data, error } = await supabase
+//     .from("tileville_competitions")
+//     .select("*")
+
+//   if (error) {
+//     throw error;
+//   }
+
+//   return data;
+// };
+
+
+export const getAllCompetitionsNames = async (
+  supabase: AppSupabaseClient
+): Promise<Array<{ id: number; name: string }>> => {
+  const { data, error } = await supabase
+    .from("tileville_competitions")
+    .select("id, name")
 
   if (error) {
     throw error;

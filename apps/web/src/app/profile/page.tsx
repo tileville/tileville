@@ -55,9 +55,8 @@ interface IFormInput {
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
   const [rightSlider, setRightSlider] = useState(false);
-  useObserveMinaBalance();
   const minaBalancesStore = useMinaBalancesStore();
-
+  useObserveMinaBalance();
   const networkStore = useNetworkStore();
   const { data: profileData, refetch } = useProfileLazyQuery(
     networkStore?.address || ""
