@@ -16,6 +16,7 @@ export interface BalancesState {
   loadBalance: (chainId: string, address: string) => Promise<void>;
 }
 
+
 export interface BalanceQueryResponse {
   data: {
     account:
@@ -27,6 +28,8 @@ export interface BalanceQueryResponse {
       | undefined;
   };
 }
+
+
 
 export const useMinaBalancesStore = create<
   BalancesState,

@@ -12,7 +12,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
 import { isUsernameExist } from "@/db/supabase-queries";
-
+import {
+  useObserveMinaBalance,
+  useMinaBalancesStore,
+} from "@/lib/stores/minaBalances";
 const pastGames = [
   {
     id: "1",
@@ -52,8 +55,10 @@ interface IFormInput {
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
   const [rightSlider, setRightSlider] = useState(false);
-  const networkStore = useNetworkStore();
+  useObserveMinaBalance();
+  const minaBalancesStore = useMinaBalancesStore();
 
+  const networkStore = useNetworkStore();
   const { data: profileData, refetch } = useProfileLazyQuery(
     networkStore?.address || ""
   );
@@ -244,7 +249,15 @@ export default function Profile() {
 
             <div className="mb-4 flex items-center justify-end gap-4">
               <div>Balance :</div>
-              <div className="text-2xl font-semibold">1000 MINA</div>
+              <div className="text-2xl font-semibold">
+                {(
+                  Number(
+                    minaBalancesStore.balances[networkStore.address] ?? 0n
+                  ) /
+                  10 ** 9
+                ).toFixed(2)}{" "}
+                MINA
+              </div>
             </div>
           </div>
         </div>

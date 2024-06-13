@@ -11,11 +11,11 @@ import { useEffect, useMemo } from "react";
 import { ClientAppChain } from "tileville-chain-dev";
 
 export default function StoreProtokitUpdater() {
-  const client = useMemo(() => buildClient(DefaultRuntimeModules), []);
+  // const client = useMemo(() => buildClient(DefaultRuntimeModules), []);
   // const networkStore = useNetworkStore();
-  // usePollMinaBlockHeight();
+  usePollMinaBlockHeight();
   // usePollProtokitBlockHeight();
-  // useObserveMinaBalance();
+  useObserveMinaBalance();
 
   // useEffect(() => {
   //   console.log("##### STARTING TILEVILLE PROTOKIT CLIENT 🚀🚀####");

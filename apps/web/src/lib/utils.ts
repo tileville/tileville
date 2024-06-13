@@ -69,3 +69,8 @@ export const getShareScoreTwitterContent = (score: number) =>
   `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     `Just conquered Nicobar with a score of ${score} in @TileVilleSocial 🏆 The strategic city-builder on @MinaProtocol is a must-play. Build your dream city: https://tileville.xyz #TileVille #MinaBlockchain #CityBuilder`
   )}`;
+
+export const formatBalance = (balance: bigint) => {
+  // return (Number(balance ?? 0n) / 10 ** 9).toFixed(2);
+  return "1000";
+};

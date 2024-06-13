@@ -9,6 +9,7 @@ import { MethodIdResolver } from "@proto-kit/module";
 import truncateMiddle from "truncate-middle";
 import { Field, UInt64, PublicKey, Signature } from "o1js";
 
+
 export const useNotifyTransactions = () => {
   const wallet = useWalletStore();
   const chain = useChainStore();
