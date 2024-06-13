@@ -16,21 +16,27 @@ export default function Leaderboard() {
     isError: IsCompetitionError,
     error: competitionError,
   } = useCompetitionsName();
-  const options = [
-    {
-      text: "Hero's Tileville League",
-      id: "heros_tileville",
-    },
+  // let competitionData = [
+  //   {
+  //     text: "Hero's Tileville League",
+  //     id: "heros_tileville",
+  //   },
 
-    {
-      text: "Default Competition",
-      id: "default_comp",
-    },
-  ];
+  //   {
+  //     text: "Default Competition",
+  //     id: "default_comp",
+  //   },
+  // ];
 
   console.log(competitionData);
 
-  const [selectedItem, setSelectedItem] = useState<string>(options[0].text);
+  const [selectedItem, setSelectedItem] = useState<any>(
+    competitionData[0].name
+  );
+
+  if (IsCompetitionError) {
+    return <div>Error: {(error as { message: string }).message}</div>;
+  }
 
   const initialArray = Array(20).fill(0);
   if (isError) {
@@ -57,16 +63,16 @@ export default function Leaderboard() {
               </button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content className="min-w-[224px] !bg-transparent backdrop-blur-2xl">
-              {options.map((option, id) => {
+              {competitionData.map((competition) => {
                 return (
                   <DropdownMenu.Item
-                    key={option.id}
+                    key={competition.id}
                     onClick={() => {
-                      setSelectedItem(options[id].text);
+                      setSelectedItem(competition.id);
                     }}
                     className="hover:bg-primary"
                   >
-                    {option.text}
+                    {competition.name}
                   </DropdownMenu.Item>
                 );
               })}
