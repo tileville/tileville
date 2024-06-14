@@ -198,3 +198,8 @@ export const getAllCompetitionsNames = async (
 
   return data;
 };
+
+type Transaction = {
+  
+}
+export const addTransactionLog = async (transaction: )
