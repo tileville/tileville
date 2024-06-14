@@ -99,6 +99,7 @@ export type Database = {
           poster_url: string | null
           seed: number
           start_date: string
+          treasury_address: string | null
           unique_keyname: string
         }
         Insert: {
@@ -112,6 +113,7 @@ export type Database = {
           poster_url?: string | null
           seed?: number
           start_date?: string
+          treasury_address?: string | null
           unique_keyname: string
         }
         Update: {
@@ -125,6 +127,7 @@ export type Database = {
           poster_url?: string | null
           seed?: number
           start_date?: string
+          treasury_address?: string | null
           unique_keyname?: string
         }
         Relationships: []
@@ -133,7 +136,6 @@ export type Database = {
         Row: {
           competition_key: string
           created_at: string
-          game_id: number
           id: number
           network: string
           txn_hash: string
@@ -143,7 +145,6 @@ export type Database = {
         Insert: {
           competition_key: string
           created_at?: string
-          game_id: number
           id?: number
           network?: string
           txn_hash: string
@@ -153,7 +154,6 @@ export type Database = {
         Update: {
           competition_key?: string
           created_at?: string
-          game_id?: number
           id?: number
           network?: string
           txn_hash?: string

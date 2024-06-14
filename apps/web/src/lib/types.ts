@@ -22,3 +22,11 @@ export interface ICompetition {
   reward: bigint;
   registered?: boolean;
 }
+
+export type TransactionLog = {
+  txn_hash: string;
+  wallet_address: string;
+  competition_key: string;
+  network: string;
+  txn_status: string;
+};

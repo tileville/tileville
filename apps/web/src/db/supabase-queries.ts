@@ -1,5 +1,6 @@
 import { AppSupabaseClient, Table } from "@/types";
 import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
+import { TransactionLog } from "@/lib/types";
 
 async function isProfileExist(
   supabase: AppSupabaseClient,
@@ -47,7 +48,7 @@ export const getAllCompetitionsEntries = async (
 ): Promise<Array<Table<"tileville_competitions">>> => {
   const { data, error } = await supabase
     .from("tileville_competitions")
-    .select("*")
+    .select("*");
 
   if (error) {
     throw error;
@@ -184,13 +185,12 @@ export const insertEmail = async (
 //   return data;
 // };
 
-
 export const getAllCompetitionsNames = async (
   supabase: AppSupabaseClient
 ): Promise<Array<{ id: number; name: string }>> => {
   const { data, error } = await supabase
     .from("tileville_competitions")
-    .select("id, name")
+    .select("id, name");
 
   if (error) {
     throw error;
@@ -199,7 +199,20 @@ export const getAllCompetitionsNames = async (
   return data;
 };
 
-type Transaction = {
-  
-}
-export const addTransactionLog = async (transaction: )
+export const addTransactionLog = async (
+  transaction: TransactionLog
+): Promise<Table<"transaction_logs">> => {
+  const supabase = supabaseUserClientComponentClient;
+
+  const { data, error } = await supabase
+    .from("transaction_logs")
+    .insert(transaction)
+    .select("*")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
