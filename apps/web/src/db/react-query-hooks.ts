@@ -14,6 +14,7 @@ import {
   fetchProfile,
   getAllCompetitionsEntries,
   getAllCompetitionsNames,
+  getFilteredLeaderboardEntries,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
@@ -169,7 +170,6 @@ export const useCompetitionsData = () => {
   );
 };
 
-
 export const useProfileLazyQuery = (walletAddress: string) => {
   return useQuery({
     queryKey: ["user_profile", walletAddress],
@@ -178,12 +178,25 @@ export const useProfileLazyQuery = (walletAddress: string) => {
   });
 };
 
-
 export const useCompetitionsName = () => {
   return useQuery(
     ["tileville_competitions"],
     () => getAllCompetitionsNames(supabaseUserClientComponentClient),
     {
+      refetchOnWindowFocus: false, // Disable refetch on window focus
+    }
+  );
+};
+
+
+export const useFilteredLeaderboardData = (competitionId : number) => {
+  return useQuery(
+    ["leaderboard", competitionId],
+    () => getFilteredLeaderboardEntries(competitionId),
+    {
+      enabled: !!competitionId, // Only run this query if competitionId is not null
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      cacheTime: 1000 * 60 * 10, // 10 minutes
       refetchOnWindowFocus: false, // Disable refetch on window focus
     }
   );
