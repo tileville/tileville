@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useSessionStorage } from "react-use";
 import { GAME_ENTRY_FEE_KEY } from "@/constants";
 import toast from "react-hot-toast";
+import { addTransactionLog } from "@/db/supabase-queries";
 
 export interface NetworkState {
   minaNetwork: Network | undefined;
@@ -119,10 +120,12 @@ export const useParticipationFee = () => {
 
   const payParticipationFees = async (
     participation_fee: number,
-    treasury_address: string
-  ) => {
+    treasury_address: string,
+    competition_key: string
+  ): Promise<{ id: number } | null | undefined> => {
     if (!networkStore.address) {
-      return networkStore.connectWallet(false);
+      networkStore.connectWallet(false);
+      return null;
     }
     try {
       const data: SendTransactionResult | ProviderError = await (
@@ -138,11 +141,22 @@ export const useParticipationFee = () => {
         setResHash(hash);
         setIsEntryFeeFaid(true);
         // TODO: Store transaction log to supabase
+        const response = await addTransactionLog({
+          txn_hash: hash,
+          wallet_address: networkStore.address,
+          network: networkStore.minaNetwork?.networkID || NETWORKS[1].networkID,
+          competition_key,
+          txn_status: "PENDING",
+          is_game_played: false,
+        });
+        console.log("Add transaction log response", response);
+        return response;
       } else {
         toast((data as ProviderError).message || "");
       }
     } catch (err) {
       toast("Failed to transfer entry fees😭");
+      return null;
     }
   };
 

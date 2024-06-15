@@ -79,30 +79,6 @@ export const addGameToLeaderboard = async (
   return data;
 };
 
-// export const addTransactionLogs = async (
-//   supabase: AppSupabaseClient,
-//   item: {
-//     game_id: string;
-//     competition_key: number;
-//     txh_hash: string;
-//     wallet_address: number;
-//     network: string;
-//     txn_status: string;
-//   }
-// ): Promise<Table<"leaderboard">> => {
-//   const { data, error } = await supabase
-//     .from("leaderboard")
-//     .insert(item)
-//     .select("*")
-//     .single();
-
-//   if (error) {
-//     throw error;
-//   }
-
-//   return data;
-// };
-
 export const addProfile = async (
   supabase: AppSupabaseClient,
   item: {
@@ -203,12 +179,29 @@ export const addTransactionLog = async (
   transaction: TransactionLog
 ): Promise<Table<"transaction_logs">> => {
   const supabase = supabaseUserClientComponentClient;
-
   const { data, error } = await supabase
     .from("transaction_logs")
     .insert(transaction)
     .select("*")
     .single();
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const fetchTransactions = async (
+  wallet_address: string,
+  txn_status: "PENDING" | "SUCCEED" | "FAILED"
+): Promise<Array<Table<"transaction_logs">>> => {
+  const supabase = supabaseUserClientComponentClient;
+
+  const { data, error } = await supabase
+    .from("transaction_logs")
+    .select("*")
+    .eq("wallet_address", wallet_address)
+    .eq("txn_status", txn_status);
 
   if (error) {
     throw error;

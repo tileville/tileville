@@ -29,4 +29,5 @@ export type TransactionLog = {
   competition_key: string;
   network: string;
   txn_status: string;
+  is_game_played: boolean;
 };

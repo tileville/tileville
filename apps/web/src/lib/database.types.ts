@@ -137,6 +137,7 @@ export type Database = {
           competition_key: string
           created_at: string
           id: number
+          is_game_played: boolean
           network: string
           txn_hash: string
           txn_status: string
@@ -146,6 +147,7 @@ export type Database = {
           competition_key: string
           created_at?: string
           id?: number
+          is_game_played?: boolean
           network?: string
           txn_hash: string
           txn_status?: string
@@ -155,6 +157,7 @@ export type Database = {
           competition_key?: string
           created_at?: string
           id?: number
+          is_game_played?: boolean
           network?: string
           txn_hash?: string
           txn_status?: string

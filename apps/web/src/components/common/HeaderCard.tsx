@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { clsx } from "clsx";
 import { motion } from "framer-motion";

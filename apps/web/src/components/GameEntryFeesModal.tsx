@@ -3,7 +3,10 @@ import { useNetworkLayer } from "@/hooks/useNetworkLayer";
 import { FAUCET_URL } from "@/constants";
 import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
 import { type Competition } from "@/app/competitions/page";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
+let timeoutId = null;
 export const GameEntryFeesModal = ({
   open,
   handleClose,
@@ -15,6 +18,30 @@ export const GameEntryFeesModal = ({
 }) => {
   const networkStore = useNetworkStore();
   const { payParticipationFees } = useParticipationFee();
+  const router = useRouter();
+
+  const handlePayParticipationFess = async () => {
+    const data = await payParticipationFees(
+      competition.participation_fee ?? 0,
+      "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
+      competition.unique_keyname
+    );
+    if (data?.id) {
+      toast(
+        `You have joined the ${competition.name} competition successfully. Redirecting you to the game screen now.`
+      );
+      timeoutId = setTimeout(() => {
+        router.push(
+          `/competitions/${competition.unique_keyname}/game/${data.id}`
+        );
+      }, 3000);
+      handleClose();
+    } else {
+      toast(
+        `Operation failed. If amount deducted from your wallet, please reach out to support handles mentioned in FAQ page.`
+      );
+    }
+  };
 
   return (
     <Dialog.Root open={open}>
@@ -35,13 +62,7 @@ export const GameEntryFeesModal = ({
             <Button
               onClick={
                 !!networkStore.address
-                  ? async () => {
-                      await payParticipationFees(
-                        competition.participation_fee ?? 0,
-                        "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
-                      );
-                      handleClose();
-                    }
+                  ? handlePayParticipationFess
                   : async () => {
                       await networkStore.connectWallet(false);
                     }

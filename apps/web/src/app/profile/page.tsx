@@ -11,11 +11,12 @@ import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
-import { isUsernameExist } from "@/db/supabase-queries";
+import { fetchTransactions, isUsernameExist } from "@/db/supabase-queries";
 import {
   useObserveMinaBalance,
   useMinaBalancesStore,
 } from "@/lib/stores/minaBalances";
+
 const pastGames = [
   {
     id: "1",
@@ -82,10 +83,17 @@ export default function Profile() {
     },
   });
 
-  // useEffect(() => {
-  //   if (uname) {
-
-  // }, [uname]);
+  useEffect(() => {
+    if (networkStore.address) {
+      fetchTransactions(networkStore.address, "PENDING")
+        .then((response) => {
+          console.log("pending transactions response", response);
+        })
+        .catch((error) => {
+          console.log("fetch transactions error", error);
+        });
+    }
+  }, [networkStore.address]);
 
   useEffect(() => {
     if (profileData) {
