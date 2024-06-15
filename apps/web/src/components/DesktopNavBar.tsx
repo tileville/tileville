@@ -73,7 +73,19 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           </div>
         </div>
 
-        <div>
+        <div className="flex items-center gap-3">
+          <a
+            id="follow-button"
+            className="ms-auto flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+            title="Follow @tileVille on X"
+            href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fpublish.twitter.com%2F&amp;ref_src=twsrc%5Etfw%7Ctwcamp%5Ebuttonembed%7Ctwterm%5Efollow%7Ctwgr%5EtileVille&amp;region=follow_link&amp;screen_name=tileVilleSocial"
+          >
+            <i className="twitterIcon"></i>
+            <span className="label ms-1 whitespace-nowrap text-xs" id="l">
+              Follow
+            </span>
+          </a>
+
           <div className="flex gap-5">
             {networkStore.walletConnected && networkStore.address ? (
               <>

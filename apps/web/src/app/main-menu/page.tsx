@@ -19,29 +19,41 @@ export default function MainMenu() {
     {
       name: "Guide",
       key: 1,
+      targetBlank: false,
       href: "/guide",
     },
 
     {
       name: "Leaderboard",
       key: 2,
+      targetBlank: false,
       href: "/leaderboard",
     },
 
     {
       name: "User Profile",
       key: 3,
+      targetBlank: false,
       href: "/profile",
     },
     {
       name: "Marketplace",
       key: 4,
+      targetBlank: false,
       href: "/marketplace",
     },
     {
       name: "FAQ",
       key: 5,
+      targetBlank: true,
       href: "/faq",
+    },
+
+    {
+      name: "ZKNOID games store",
+      key: 6,
+      href: "https://app.zknoid.io/",
+      targetBlank: true,
     },
   ];
 
@@ -60,7 +72,7 @@ export default function MainMenu() {
               text={button.name}
               autoFocus={button.key === focusedButtonIndex}
               href={button.href}
-              targetBlank={false}
+              targetBlank={button.targetBlank}
               onClickHandler={undefined}
               className="border border-primary"
             />

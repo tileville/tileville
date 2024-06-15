@@ -209,3 +209,21 @@ export const fetchTransactions = async (
 
   return data;
 };
+
+
+export const getFilteredLeaderboardEntries = async (
+  competitionId: number
+): Promise<Array<Table<"leaderboard">>> => {
+  const supabase = supabaseUserClientComponentClient;
+  const { data, error } = await supabase
+    .from("leaderboard")
+    .select("*")
+    .eq("competition_id", competitionId)
+    .order("score", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};

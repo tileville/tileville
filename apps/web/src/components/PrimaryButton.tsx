@@ -11,6 +11,7 @@ export const PrimaryButton = ({
   href,
   size,
   icon,
+  targetBlank,
   onClickHandler,
   className,
 }: {
@@ -95,6 +96,7 @@ export const PrimaryButton = ({
       ref={buttonRef}
       onMouseEnter={handleMouseEnter}
       href={href ? `${href}` : ""}
+      target={`${targetBlank ? "_blank" : "_self"}`}
       className="focus-visible-bg-primary-30 focus-bg-primary-30 p-[5px] text-left font-semibold uppercase text-primary outline-none outline-offset-0 focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus:outline-1 focus:outline-primary focus-visible:border-primary focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
     >
       {text}
