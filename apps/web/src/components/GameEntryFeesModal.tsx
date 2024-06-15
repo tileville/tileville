@@ -67,7 +67,11 @@ export const GameEntryFeesModal = ({
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button onClick={handlePayParticipationFess} color="blue">
+            <Button
+              onClick={handlePayParticipationFess}
+              variant="solid"
+              color="green"
+            >
               {!!networkStore.address ? "Pay Entry Fees" : "Connect Wallet"}
             </Button>
           </Dialog.Close>
