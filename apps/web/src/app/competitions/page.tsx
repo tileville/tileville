@@ -52,17 +52,24 @@ export default function Competitions() {
   return (
     <>
       <div className="mx-auto max-w-[1280px] p-4 pt-20">
-        <div className="flex items-center justify-center">
-          <h2 className="text-4xl">Competitions</h2>
-
-          <div>
-            <Image
-              src="/image/cards/trophyGolden.png"
-              width={70}
-              height={70}
-              alt="trophy"
-            />
+        <div className="relative flex items-center justify-between">
+          <div className="flex items-center">
+            <h2 className="text-4xl">Competitions</h2>
+            <div>
+              <Image
+                src="/image/cards/trophyGolden.png"
+                width={70}
+                height={70}
+                alt="trophy"
+              />
+            </div>
           </div>
+          <Link
+            href="/competitions/demo-game"
+            className="rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
+          >
+            Play Demo Game
+          </Link>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-3">

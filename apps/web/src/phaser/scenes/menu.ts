@@ -71,94 +71,95 @@ export class MenuScene extends Scene {
 
     tagline.setScale(0.3);
     this.menu.add(title);
+    const isDemoGame = this.game.registry.get("isDemoGame");
 
-    const playButton = this.add.image(300, 400, "play-button");
+    if (isDemoGame) {
+      const demoButtonText = this.add.image(310, 480, "play-free-demo-button");
+      demoButtonText.setOrigin(0.5);
 
-
-    playButton.setOrigin(0.5);
-    playButton.setInteractive({ useHandCursor: true });
-
-    playButton.on("pointerover", () => {
-      this.tweens.add({
-        targets: playButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
+      // Make the text interactive
+      demoButtonText.setInteractive({
+        cursor: "pointer",
+        textDecoration: "underline",
       });
-    });
-    playButton.on("pointerout", () =>
-      this.tweens.add({
-        targets: playButton,
-        scaleX: 1,
-        scaleY: 1,
-        duration: 60,
-        ease: "Linear",
-      })
-    );
-    playButton.on("pointerdown", () => {
-      this.tweens.add({
-        targets: playButton,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
+
+      demoButtonText.on("pointerdown", () => {
+        console.log("clicked");
+        this.cameras.main.pan(-1280, 0, 500, "Linear", true);
+        this.time.addEvent({
+          delay: 500,
+          callback: this.transition,
+          callbackScope: this,
+        });
       });
-      this.play();
-    });
-    playButton.on("pointerup", () => {
-      this.play();
-    });
 
-    this.menu.add(playButton);
-
-    const demoButtonText = this.add.image(310, 480, "play-free-demo-button");
-    demoButtonText.setOrigin(0.5);
-
-    // Make the text interactive
-    demoButtonText.setInteractive({
-      cursor: "pointer",
-      textDecoration: "underline",
-    });
-
-    demoButtonText.on("pointerdown", () => {
-      console.log("clicked");
-      this.cameras.main.pan(-1280, 0, 500, "Linear", true);
-      this.time.addEvent({
-        delay: 500,
-        callback: this.transition,
-        callbackScope: this,
+      demoButtonText.on("pointerover", () => {
+        // demoButtonText.setStyle({ fill: "#000" });
+        demoButtonText.setScale(1.03);
       });
-    });
 
-    demoButtonText.on("pointerover", () => {
-      // demoButtonText.setStyle({ fill: "#000" });
-      demoButtonText.setScale(1.03);
-    });
-
-    demoButtonText.on("pointerout", () => {
-      // demoButtonText.setStyle({ fill: "#000" });
-      demoButtonText.setScale(1);
-    });
-
-    demoButtonText.on("pointerover", () => {
-      this.tweens.add({
-        targets: demoButtonText,
-        scaleX: 1.1,
-        scaleY: 1.1,
-        duration: 60,
-        ease: "Linear",
+      demoButtonText.on("pointerout", () => {
+        // demoButtonText.setStyle({ fill: "#000" });
+        demoButtonText.setScale(1);
       });
-    });
-    demoButtonText.on("pointerout", () =>
-      this.tweens.add({
-        targets: demoButtonText,
-        scaleX: 1,
-        scaleY: 1,
-        duration: 60,
-        ease: "Linear",
-      })
-    );
+
+      demoButtonText.on("pointerover", () => {
+        this.tweens.add({
+          targets: demoButtonText,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
+      });
+      demoButtonText.on("pointerout", () =>
+        this.tweens.add({
+          targets: demoButtonText,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 60,
+          ease: "Linear",
+        })
+      );
+    } else {
+      const playButton = this.add.image(300, 400, "play-button");
+      playButton.setOrigin(0.5);
+      playButton.setInteractive({ useHandCursor: true });
+
+      playButton.on("pointerover", () => {
+        this.tweens.add({
+          targets: playButton,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
+      });
+      playButton.on("pointerout", () =>
+        this.tweens.add({
+          targets: playButton,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 60,
+          ease: "Linear",
+        })
+      );
+      playButton.on("pointerdown", () => {
+        this.tweens.add({
+          targets: playButton,
+          scaleX: 1.1,
+          scaleY: 1.1,
+          duration: 60,
+          ease: "Linear",
+        });
+        this.play();
+      });
+      playButton.on("pointerup", () => {
+        this.play();
+      });
+
+      this.menu.add(playButton);
+    }
 
     const howToPlayButton = this.add.image(100, 700, "how-to-play-button");
     howToPlayButton.setOrigin(0.5);
@@ -224,7 +225,7 @@ export class MenuScene extends Scene {
       550,
       "next_arrow",
       this.backTutorialPage.bind(this)
-    )
+    );
     this.previousArrowBtn.angle = 180;
 
     this.previousArrowBtn.setOrigin(0, 0.5);
@@ -309,13 +310,6 @@ export class MenuScene extends Scene {
   }
 
   play() {
-    const handleEntryFees = this.game.registry.get("handleEntryFees");
-    const checkEntryFeesPaid = JSON.parse(
-      window.sessionStorage.getItem(GAME_ENTRY_FEE_KEY) || ""
-    );
-    if (!checkEntryFeesPaid) {
-      return handleEntryFees();
-    }
     this.cameras.main.pan(-1280, 0, 500, "Linear", true);
 
     this.time.addEvent({
@@ -359,9 +353,9 @@ export class MenuScene extends Scene {
   }
 
   backTutorialPage() {
-    console.log(this.tutorialPage)
+    console.log(this.tutorialPage);
     this.tutorialPage -= 1;
-    if (this.tutorialPage < 0 ) {
+    if (this.tutorialPage < 0) {
       this.cameras.main.pan(640, 0, 1000, "Power2");
       this.tutorialGrid.grid.get(0, 6)?.setVisible(false);
       this.tutorialGrid.grid.get(3, 0)?.setVisible(false);

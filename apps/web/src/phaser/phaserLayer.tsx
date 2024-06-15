@@ -5,12 +5,13 @@ import { useLeaderboard } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 
 type PhaserLayerProps = {
-  handleEntryFees: () => void;
+  isDemoGame: boolean;
 };
 
-export const PhaserLayer = ({ handleEntryFees }: PhaserLayerProps) => {
+export const PhaserLayer = ({ isDemoGame }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   console.log("address", address);
+
   const leaderboardMutation = useLeaderboard({
     onSuccess: () => {
       console.log("Leaderboard data saved successfully");
@@ -47,7 +48,7 @@ export const PhaserLayer = ({ handleEntryFees }: PhaserLayerProps) => {
       transparent: true,
     };
     const game = new Phaser.Game(config);
-    game.registry.set("handleEntryFees", handleEntryFees);
+    game.registry.set("isDemoGame", isDemoGame);
     game.registry.set("handleSaveScore", handleSaveLeaderboardData);
 
     return () => {

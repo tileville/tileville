@@ -1,12 +1,11 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes";
-import { useNetworkLayer } from "@/hooks/useNetworkLayer";
-import { FAUCET_URL } from "@/constants";
 import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
 import { type Competition } from "@/app/competitions/page";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-let timeoutId = null;
+let timeoutId: NodeJS.Timeout;
 export const GameEntryFeesModal = ({
   open,
   handleClose,
@@ -21,6 +20,9 @@ export const GameEntryFeesModal = ({
   const router = useRouter();
 
   const handlePayParticipationFess = async () => {
+    if (!networkStore.address) {
+      return networkStore.connectWallet(false);
+    }
     const data = await payParticipationFees(
       competition.participation_fee ?? 0,
       "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
@@ -43,6 +45,12 @@ export const GameEntryFeesModal = ({
     }
   };
 
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <Dialog.Root open={open}>
       <Dialog.Content style={{ maxWidth: 450 }}>
@@ -59,16 +67,7 @@ export const GameEntryFeesModal = ({
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button
-              onClick={
-                !!networkStore.address
-                  ? handlePayParticipationFess
-                  : async () => {
-                      await networkStore.connectWallet(false);
-                    }
-              }
-              color="blue"
-            >
+            <Button onClick={handlePayParticipationFess} color="blue">
               {!!networkStore.address ? "Pay Entry Fees" : "Connect Wallet"}
             </Button>
           </Dialog.Close>
