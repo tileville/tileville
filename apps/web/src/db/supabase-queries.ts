@@ -227,3 +227,19 @@ export const getFilteredLeaderboardEntries = async (
 
   return data;
 };
+
+export const getUsername = async (
+  wallet_address: string
+): Promise<Array<Table<"player_profile">>> => {
+  const supabase = supabaseUserClientComponentClient;
+  const { data, error } = await supabase
+    .from("player_profile")
+    .select("username")
+    .eq("wallet_address", wallet_address)
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};

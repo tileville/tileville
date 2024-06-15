@@ -437,23 +437,21 @@ export default function Profile() {
                     </div>
                   </div>
 
-                  <div className="ms-auto grid max-w-[200px] grid-cols-2 gap-3 pt-8">
-                    <Button
-                      className="pointer"
+                  <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
+                    <button
+                      className="h-10 rounded-full border-primary bg-primary/30 px-5 py-2 text-sm font-medium hover:bg-primary/50"
                       onClick={closeModal}
                       type="button"
-                      variant="outline"
                     >
                       No, cancel
-                    </Button>
+                    </button>
 
-                    <Button
-                      className="pointer"
-                      // onClick={closeModal}
+                    <button
+                      className="rounded-full bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
                       type="submit"
                     >
                       Submit
-                    </Button>
+                    </button>
                   </div>
                 </form>
               </div>
