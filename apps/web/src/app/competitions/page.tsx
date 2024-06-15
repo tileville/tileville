@@ -7,6 +7,7 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import { useState } from "react";
 import Link from "next/link";
+import CompetitionLoading from "./competitionLoading";
 
 export type Competition = {
   created_at: string;
@@ -51,12 +52,11 @@ export default function Competitions() {
 
   return (
     <>
-      <div className="relative  p-4 pt-20">
-        <div className="relative mx-auto max-w-[1280px]">
-          <div className="flex items-center justify-center">
-            <div className="flex items-center justify-center">
+      <div>
+        <div className="mx-auto max-w-[1280px] p-4 pt-20">
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center">
               <h2 className="text-4xl">Competitions</h2>
-
               <div>
                 <Image
                   src="/image/cards/trophyGolden.png"
@@ -66,11 +66,17 @@ export default function Competitions() {
                 />
               </div>
             </div>
+            <Link
+              href="/competitions/demo-game"
+              className="rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
+            >
+              Play Demo Game
+            </Link>
           </div>
 
           <div className="mt-5 grid grid-cols-1 gap-3">
             {isLoading ? (
-              <>Loading....</>
+              <CompetitionLoading />
             ) : (
               <>
                 {data?.map((competition) => {

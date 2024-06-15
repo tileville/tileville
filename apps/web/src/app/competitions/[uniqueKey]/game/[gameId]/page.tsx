@@ -45,11 +45,7 @@ function Game() {
         <SignerContext.Provider value={{ signer, setSigner }}>
           <ChainContext.Provider value={{ chain, setChain }}>
             <div className="mb-0 w-full">
-              <PhaserLayer
-                handleEntryFees={() => {
-                  // setIsEntryFeesModalOpen(true);
-                }}
-              />
+              <PhaserLayer isDemoGame={false} />
               <Toaster />
             </div>
           </ChainContext.Provider>
