@@ -50,7 +50,7 @@ export default function MainMenu() {
     },
 
     {
-      name: "Play More Games",
+      name: "ZKNOID games store",
       key: 6,
       href: "https://app.zknoid.io/",
       targetBlank: true,
