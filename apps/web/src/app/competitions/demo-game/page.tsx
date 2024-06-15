@@ -12,7 +12,11 @@ export default function DemoGame() {
       <LandingBackground />
       <div className="relative z-10">
         <div className="mb-0 w-full">
-          <PhaserLayer isDemoGame={true} />
+          <PhaserLayer
+            isDemoGame={true}
+            isGamePlayAllowed={true}
+            gamePlayDisAllowMessage=""
+          />
         </div>
       </div>
     </div>

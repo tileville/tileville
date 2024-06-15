@@ -31,3 +31,5 @@ export type TransactionLog = {
   txn_status: string;
   is_game_played: boolean;
 };
+
+export type TransactionStatus = "PENDING" | "CONFIRMED" | "FAILED";

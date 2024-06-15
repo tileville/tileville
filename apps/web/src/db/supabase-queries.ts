@@ -195,9 +195,28 @@ export const addTransactionLog = async (
   return data;
 };
 
+export const updateTransactionLog = async (
+  txn_hash: string,
+  update_payload: { txn_status: string; is_game_played: boolean }
+): Promise<Table<'transaction_logs'>> => {
+  const supabase = supabaseUserClientComponentClient;
+
+  const { data, error } = await supabase
+    .from("transaction_logs")
+    .update(update_payload)
+    .eq("txn_hash", txn_hash)
+    .single();
+
+  if (error) {
+    throw error
+  }
+  return data;
+};
+
+
 export const fetchTransactions = async (
   wallet_address: string,
-  txn_status: "PENDING" | "SUCCEED" | "FAILED"
+  txn_status: string
 ): Promise<Array<Table<"transaction_logs">>> => {
   const supabase = supabaseUserClientComponentClient;
 
@@ -214,6 +233,20 @@ export const fetchTransactions = async (
   return data;
 };
 
+export const fetchTransactionLogById = async (
+  wallet_address: string,
+  id: number
+): Promise<Table<"transaction_logs">> => {
+  const supabase = supabaseUserClientComponentClient;
+  const { data, error } = await supabase
+    .from("transaction_logs")
+    .select("*")
+    .eq("wallet_address", wallet_address)
+    .eq("id", id)
+    .single();
+  if (error) throw error;
+  return data;
+};
 
 export const getFilteredLeaderboardEntries = async (
   competitionId: number
@@ -231,8 +264,6 @@ export const getFilteredLeaderboardEntries = async (
 
   return data;
 };
-
-
 
 export const getUsername = async (
   wallet_address: string

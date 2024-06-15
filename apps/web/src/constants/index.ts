@@ -22,3 +22,10 @@ export enum Currency {
 export const ROUND_PRICE = 0;
 export const BRIDGE_ADDR =
   "B62qkh5QbigkTTXF464h5k6GW76SHL7wejUbKxKy5vZ9qr9dEcowe6G";
+
+export const BLOCKBERRY_MAINNET_BASE_URL =
+  "https://api.blockberry.one/mina-mainnet";
+
+export const BLOCKBERRY_API_KEY =
+  process.env.NEXT_PUBLIC_BLOCKBERRY_API_KEY ||
+  "DVz3toZ3FiqrwSakq7EwiA0wZ6HCYb";

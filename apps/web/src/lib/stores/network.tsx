@@ -141,12 +141,16 @@ export const useParticipationFee = () => {
         setResHash(hash);
         setIsEntryFeeFaid(true);
         // TODO: Store transaction log to supabase
+        // by default confirm txn for berkeley network
         const response = await addTransactionLog({
           txn_hash: hash,
           wallet_address: networkStore.address,
           network: networkStore.minaNetwork?.networkID || NETWORKS[1].networkID,
           competition_key,
-          txn_status: "PENDING",
+          txn_status:
+            networkStore.minaNetwork?.networkID === "mina:mainnet"
+              ? "PENDING"
+              : "CONFIRMED",
           is_game_played: false,
         });
         console.log("Add transaction log response", response);

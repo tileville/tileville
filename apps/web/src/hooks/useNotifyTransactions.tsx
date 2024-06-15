@@ -9,7 +9,6 @@ import { MethodIdResolver } from "@proto-kit/module";
 import truncateMiddle from "truncate-middle";
 import { Field, UInt64, PublicKey, Signature } from "o1js";
 
-
 export const useNotifyTransactions = () => {
   const wallet = useWalletStore();
   const chain = useChainStore();
@@ -26,7 +25,7 @@ export const useNotifyTransactions = () => {
 
   const notifyTransaction = useCallback(
     (
-      status: "PENDING" | "SUCCESS" | "FAILURE",
+      status: "PENDING" | "CONFIRMED" | "FAILURE",
       transaction: UnsignedTransaction | PendingTransaction
     ) => {
       if (!client.client) return;
@@ -51,7 +50,7 @@ export const useNotifyTransactions = () => {
         switch (status) {
           case "PENDING":
             return `⏳ Transaction sent: ${moduleName}.${methodName}`;
-          case "SUCCESS":
+          case "CONFIRMED":
             return `✅ Transaction successful: ${moduleName}.${methodName}`;
           case "FAILURE":
             return `❌ Transaction failed: ${moduleName}.${methodName}`;
@@ -103,7 +102,7 @@ export const useNotifyTransactions = () => {
 
     confirmedPendingTransactions?.forEach(({ tx, status }) => {
       wallet.removePendingTransaction(tx);
-      notifyTransaction(status ? "SUCCESS" : "FAILURE", tx);
+      notifyTransaction(status ? "CONFIRMED" : "FAILURE", tx);
     });
   }, [
     chain.block,

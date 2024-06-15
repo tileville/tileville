@@ -1,6 +1,4 @@
-import { NextRequest } from "next/server";
-
-export function GET(req: NextRequest) {
+export function GET() {
   const data = {
     name: "MinaPolis",
     description: "An on-chain city development arcade game",

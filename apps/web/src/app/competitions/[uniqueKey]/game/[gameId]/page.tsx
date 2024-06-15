@@ -2,54 +2,82 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
-// import { PhaserLayer } from "@/phaser/phaserLayer";
 import { Toaster } from "react-hot-toast";
-import { ChainContext, SignerContext } from "@/contexts";
-import { ChainType } from "@/types";
 import LandingBackground from "@/components/LandingBackground";
 import { useParams } from "next/navigation";
+import {
+  useMainnetTransactionStatus,
+  useTransactionLogById,
+} from "@/db/react-query-hooks";
+import { useNetworkStore } from "@/lib/stores/network";
+import { TransactionStatus } from "@/lib/types";
 
+const GAMEPLAY_DISALLOW_MESSAGE_DEFAULT =
+  "We are fetching your participation fee payment trsanction details...";
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
 });
 
 function Game() {
-  const [signer, setSigner] = useState("");
-  const [chain, setChain] = useState<ChainType>({
-    chainId: 0,
-    chainName: "",
-  });
+  const params = useParams<{ uniqueKey: string; gameId: string }>();
+  const [isGamePlayAllowed, setIsGamePlayAllowed] = useState(false);
+  const [gamePlayDisAllowMessage, setGamePlayDisallowMessage] = useState(
+    GAMEPLAY_DISALLOW_MESSAGE_DEFAULT
+  );
 
-  const params = useParams<{ uniqueKey: string }>();
-  console.log(params);
+  const networkStore = useNetworkStore();
+  const {
+    data: gameTransaction,
+    isLoading: isGameTransactionLoading,
+    error: gameTransactionError,
+    isSuccess,
+  } = useTransactionLogById(networkStore.address!, parseInt(params.gameId));
 
-  const cachedInit = useCallback(async function () {
-    if ((window as any).mina) {
-      const accounts = await (window as any).mina.requestAccounts();
-      const network = await (window as any).mina.requestNetwork();
-      setSigner(accounts[0]);
-      setChain({ chainId: network.chainId, chainName: network.name });
-    }
-  }, []);
+  console.log("game txn data", { gameTransaction, gameTransactionError });
+  const {
+    data: txnStatusData,
+    isLoading,
+    isError,
+  } = useMainnetTransactionStatus(
+    gameTransaction?.txn_hash || "",
+    gameTransaction?.txn_status || "PENDING",
+    gameTransaction?.is_game_played ?? false
+  );
 
   useEffect(() => {
-    cachedInit()
-      .then((res) => {})
-      .catch(() => {});
-  }, []);
+    if (
+      gameTransaction &&
+      gameTransaction.is_game_played === false &&
+      gameTransaction.txn_status === "CONFIRMED"
+    ) {
+      setIsGamePlayAllowed(true);
+      setGamePlayDisallowMessage("");
+    } else if (gameTransaction?.is_game_played) {
+      setGamePlayDisallowMessage(
+        "You have already played the game. Please check your game status in user profile section."
+      );
+    } else if (gameTransaction?.txn_status === "FAILED") {
+      setGamePlayDisallowMessage(
+        "Transaction failed. you are not part of the competition"
+      );
+    }
+  }, [isSuccess, gameTransaction]);
+  console.log(txnStatusData, isLoading, isError);
+
+  //TODO: fetch transaction status from game id
 
   return (
     <div className="gradient-bg gradient-bg h-[calc(100vh-80px)]">
       <LandingBackground />
       <div className="relative z-10">
-        <SignerContext.Provider value={{ signer, setSigner }}>
-          <ChainContext.Provider value={{ chain, setChain }}>
-            <div className="mb-0 w-full">
-              <PhaserLayer isDemoGame={false} />
-              <Toaster />
-            </div>
-          </ChainContext.Provider>
-        </SignerContext.Provider>
+        <div className="mb-0 w-full">
+          <PhaserLayer
+            isDemoGame={false}
+            isGamePlayAllowed={isGamePlayAllowed}
+            gamePlayDisAllowMessage={gamePlayDisAllowMessage}
+          />
+          <Toaster />
+        </div>
       </div>
     </div>
   );

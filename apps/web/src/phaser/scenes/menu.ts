@@ -310,6 +310,11 @@ export class MenuScene extends Scene {
   }
 
   play() {
+    const isGamePlayAllowed = this.game.registry.get("isGamePlayAllowed");
+    const showGameInfoModalFn = this.game.registry.get("showGameInfoModalFn");
+    if (!isGamePlayAllowed) {
+      return showGameInfoModalFn();
+    }
     this.cameras.main.pan(-1280, 0, 500, "Linear", true);
 
     this.time.addEvent({

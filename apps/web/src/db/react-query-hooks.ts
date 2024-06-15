@@ -15,9 +15,12 @@ import {
   getAllCompetitionsEntries,
   getAllCompetitionsNames,
   getFilteredLeaderboardEntries,
+  fetchTransactionLogById,
+  updateTransactionLog,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
+import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
 
 export const useSignup = ({
   onSuccess,
@@ -188,8 +191,7 @@ export const useCompetitionsName = () => {
   );
 };
 
-
-export const useFilteredLeaderboardData = (competitionId : number) => {
+export const useFilteredLeaderboardData = (competitionId: number) => {
   return useQuery(
     ["leaderboard", competitionId],
     () => getFilteredLeaderboardEntries(competitionId),
@@ -198,6 +200,56 @@ export const useFilteredLeaderboardData = (competitionId : number) => {
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 10, // 10 minutes
       refetchOnWindowFocus: false, // Disable refetch on window focus
+    }
+  );
+};
+
+export const useMainnetTransactionStatus = (
+  txn_hash: string,
+  txn_status: string,
+  is_game_played: boolean
+) => {
+  console.log({ txn_hash, txn_status, is_game_played });
+  return useQuery(
+    ["transaction_status_mainnet", txn_hash],
+    () =>
+      fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.blockConfirmationsCount > 2) {
+            return updateTransactionLog(txn_hash, {
+              txn_status: "CONFIRMED",
+              is_game_played,
+            });
+          }
+          if (res.failure_reason !== null) {
+            return updateTransactionLog(txn_hash, {
+              txn_status: "FAILED",
+              is_game_played,
+            });
+          }
+        }),
+    {
+      enabled:
+        !!txn_hash && txn_status === "PENDING" && is_game_played === false,
+      retry: 5,
+    }
+  );
+};
+
+export const useTransactionLogById = (wallet_address: string, id: number) => {
+  return useQuery(
+    ["transaction_log_by_id", wallet_address, id],
+    () => fetchTransactionLogById(wallet_address, id),
+    {
+      enabled: !!wallet_address && !!id,
     }
   );
 };
