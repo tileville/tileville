@@ -2,6 +2,10 @@ import { AppSupabaseClient, Table } from "@/types";
 import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
 import { TransactionLog } from "@/lib/types";
 
+type PlayerProfile = {
+  username: string;
+};
+
 async function isProfileExist(
   supabase: AppSupabaseClient,
   wallet_address: string
@@ -228,18 +232,20 @@ export const getFilteredLeaderboardEntries = async (
   return data;
 };
 
+
+
 export const getUsername = async (
   wallet_address: string
-): Promise<Array<Table<"player_profile">>> => {
+): Promise<PlayerProfile[]> => {
   const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
     .from("player_profile")
     .select("username")
-    .eq("wallet_address", wallet_address)
+    .eq("wallet_address", wallet_address);
 
   if (error) {
     throw error;
   }
 
-  return data;
+  return data as PlayerProfile[];
 };

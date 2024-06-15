@@ -75,7 +75,6 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
 
         <div className="flex items-center gap-3">
           <Link
-            target="_blank"
             id="follow-button"
             className="ms-auto flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
             title="Follow @tileVille on X"
