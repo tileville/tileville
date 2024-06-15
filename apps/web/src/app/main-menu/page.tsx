@@ -45,7 +45,7 @@ export default function MainMenu() {
     {
       name: "FAQ",
       key: 5,
-      targetBlank: true,
+      targetBlank: false,
       href: "/faq",
     },
 

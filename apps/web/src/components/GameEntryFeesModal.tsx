@@ -45,7 +45,7 @@ export const GameEntryFeesModal = ({
 
   return (
     <Dialog.Root open={open}>
-      <Dialog.Content style={{ maxWidth: 450 }}>
+      <Dialog.Content style={{ maxWidth: 450 }} className=" backdrop-blur-2xl">
         <Dialog.Title>Pay Participation Fees</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           You need to pay one time participation fees of{" "}
@@ -54,12 +54,16 @@ export const GameEntryFeesModal = ({
         </Dialog.Description>
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
-            <Button variant="soft" color="gray" onClick={handleClose}>
+            <button
+              className="h-10 rounded-full border-primary bg-primary/30 px-5 py-2 text-sm font-medium hover:bg-primary/50"
+              onClick={handleClose}
+            >
               Cancel
-            </Button>
+            </button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button
+            <button
+              className="rounded-full bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
               onClick={
                 !!networkStore.address
                   ? handlePayParticipationFess
@@ -70,7 +74,7 @@ export const GameEntryFeesModal = ({
               color="blue"
             >
               {!!networkStore.address ? "Pay Entry Fees" : "Connect Wallet"}
-            </Button>
+            </button>
           </Dialog.Close>
         </Flex>
       </Dialog.Content>

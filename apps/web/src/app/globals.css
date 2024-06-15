@@ -87,8 +87,8 @@ body {
 }
 
 .radix-themes {
-    --default-font-family: monospace;
-    --heading-font-family: monospace;
+    /* --default-font-family: monospace;
+    --heading-font-family: monospace; */
     --font-weight-light: 200;
     --font-weight-regular: 300;
     --font-weight-medium: 600;
@@ -133,7 +133,7 @@ button {
     font-size: 100px;
     -webkit-user-select: none;
     user-select: none;
-    font-family: monospace;
+    /* font-family: monospace; */
 }
 
 .text-primary-shadow span {

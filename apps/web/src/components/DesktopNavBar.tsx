@@ -74,7 +74,8 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          <a
+          <Link
+            target="_blank"
             id="follow-button"
             className="ms-auto flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
             title="Follow @tileVille on X"
@@ -84,7 +85,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             <span className="label ms-1 whitespace-nowrap text-xs" id="l">
               Follow
             </span>
-          </a>
+          </Link>
 
           <div className="flex gap-5">
             {networkStore.walletConnected && networkStore.address ? (
