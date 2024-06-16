@@ -29,3 +29,9 @@ export const BLOCKBERRY_MAINNET_BASE_URL =
 export const BLOCKBERRY_API_KEY =
   process.env.NEXT_PUBLIC_BLOCKBERRY_API_KEY ||
   "DVz3toZ3FiqrwSakq7EwiA0wZ6HCYb";
+
+export const POSTHOG_TOKEN =
+  process.env.NEXT_PUBLIC_POSTHOG_TOKEN ||
+  "phc_JosSJyx52qurZc76Tbf9qrnokKRvcL7oZE7aQAifoNH";
+export const POSTHOG_URI =
+  process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";

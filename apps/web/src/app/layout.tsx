@@ -7,6 +7,7 @@ import "reflect-metadata";
 import { Theme } from "@radix-ui/themes";
 import { Footer } from "@/components/Footer";
 import { ClientLayout } from "./ClientLayout";
+import { PHProvider } from "./providers";
 
 export const metadata = {
   title: "TileVille",
@@ -32,11 +33,13 @@ export default function RootLayout({
           scaling="100%"
           radius="large"
         >
-          <div className="gradient-bg min-h-screen">
-            <ClientLayout>
-              <div className="">{children}</div>
-            </ClientLayout>
-          </div>
+          <PHProvider>
+            <div className="gradient-bg min-h-screen">
+              <ClientLayout>
+                <div className="">{children}</div>
+              </ClientLayout>
+            </div>
+          </PHProvider>
         </Theme>
         <Footer />
       </body>
