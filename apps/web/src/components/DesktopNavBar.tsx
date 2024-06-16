@@ -12,11 +12,18 @@ import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
 import { useProfileLazyQuery } from "@/db/react-query-hooks";
 import { toast } from "react-hot-toast";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
+
+const HIDE_BACK_BUTTON_PATHS = ["/main-menu"];
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
   const networkStore = useNetworkStore();
   const { data, isFetched } = useProfileLazyQuery(networkStore?.address || "");
+  const pathname = usePathname();
+  console.log("path name", pathname);
+  const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
 
   useEffect(() => {
     if (!walletInstalled()) return;
@@ -58,15 +65,19 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black">
       <div className="flex w-full items-start justify-between">
         <div className="flex items-center gap-3">
-          <PrimaryButton
-            key={1}
-            onFocus={() => handleFocus(1)}
-            size="sm"
-            icon={<ChevronLeftIcon width={30} height={30} />}
-            autoFocus={1 === focusedButtonIndex}
-            href={"/main-menu"}
-            className={`rounded-3xl !border !border-primary !px-6`}
-          />
+          {
+            <PrimaryButton
+              key={1}
+              onFocus={() => handleFocus(1)}
+              size="sm"
+              icon={<ChevronLeftIcon width={30} height={30} />}
+              autoFocus={1 === focusedButtonIndex}
+              href={"/main-menu"}
+              className={clsx(`rounded-3xl !border !border-primary !px-6`, {
+                hidden: isHideBackBtn,
+              })}
+            />
+          }
 
           <div className="min-w-[180px]">
             <MediaPlayer />
