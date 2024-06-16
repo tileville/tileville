@@ -7,7 +7,7 @@ if (typeof window !== "undefined") {
   posthog.init(POSTHOG_TOKEN, {
     api_host: POSTHOG_URI,
     person_profiles: "identified_only",
-    capture_pageview: false,
+    capture_pageview: true,
     loaded: (posthog) => {
       if (process.env.NODE_ENV === "development") {
         posthog.debug();
