@@ -2,8 +2,7 @@
 import { useCompetitionsData } from "@/db/react-query-hooks";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { Button, Skeleton } from "@radix-ui/themes";
-import { useNetworkStore } from "@/lib/stores/network";
+import { Button } from "@radix-ui/themes";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import { useState } from "react";
 import Link from "next/link";
@@ -23,7 +22,6 @@ export type Competition = {
   unique_keyname: string;
 };
 
-///competitions/${competition.unique_keyname}/game
 export default function Competitions() {
   const { data, isLoading, isError, error } = useCompetitionsData();
   const [isFeeModalOpen, setIsFeesModalOpen] = useState(false);
@@ -31,24 +29,11 @@ export default function Competitions() {
     {} as Competition
   );
 
-  const networkStore = useNetworkStore();
-  const initialArray = Array(2).fill(0);
-
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
   }
 
   console.log(data);
-
-  const handleJoinCompetition = async ({
-    unique_keyname,
-    participation_fee,
-  }: {
-    unique_keyname: string;
-    participation_fee: number;
-  }) => {
-    // Check If wallet is connected
-  };
 
   return (
     <>

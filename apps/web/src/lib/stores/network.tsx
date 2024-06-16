@@ -12,6 +12,7 @@ import { useSessionStorage } from "react-use";
 import { GAME_ENTRY_FEE_KEY } from "@/constants";
 import toast from "react-hot-toast";
 import { addTransactionLog } from "@/db/supabase-queries";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 export interface NetworkState {
   minaNetwork: Network | undefined;
@@ -117,6 +118,9 @@ export const useParticipationFee = () => {
   const networkStore = useNetworkStore();
   const [resHash, setResHash] = useState("");
   const [, setIsEntryFeeFaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
+  const {
+    joinedCompetition: [, logJoinCompetitionError],
+  } = usePosthogEvents();
 
   const payParticipationFees = async (
     participation_fee: number,
@@ -158,8 +162,9 @@ export const useParticipationFee = () => {
       } else {
         toast((data as ProviderError).message || "");
       }
-    } catch (err) {
+    } catch (err: any) {
       toast("Failed to transfer entry fees😭");
+      logJoinCompetitionError(err.toString());
       return null;
     }
   };

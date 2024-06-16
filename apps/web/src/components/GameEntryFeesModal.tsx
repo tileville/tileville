@@ -4,6 +4,7 @@ import { type Competition } from "@/app/competitions/page";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 let timeoutId: NodeJS.Timeout;
 export const GameEntryFeesModal = ({
@@ -18,11 +19,19 @@ export const GameEntryFeesModal = ({
   const networkStore = useNetworkStore();
   const { payParticipationFees } = useParticipationFee();
   const router = useRouter();
+  const {
+    joinedCompetition: [logJoinCompetition],
+  } = usePosthogEvents();
 
   const handlePayParticipationFess = async () => {
     if (!networkStore.address) {
       return networkStore.connectWallet(false);
     }
+    logJoinCompetition({
+      walletAddress: networkStore.address,
+      competition_name: competition.name,
+      network: networkStore.minaNetwork?.networkID || "berkeley",
+    });
     const data = await payParticipationFees(
       competition.participation_fee ?? 0,
       "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
