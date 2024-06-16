@@ -280,3 +280,20 @@ export const getUsername = async (
 
   return data as PlayerProfile[];
 };
+
+export const fetchAllTransactionsByWallet = async (
+  supabase: AppSupabaseClient,
+  wallet_address: string
+): Promise<Array<Table<"transaction_logs">>> => {
+  const { data, error } = await supabase
+    .from("transaction_logs")
+    .select("*")
+    .eq("wallet_address", wallet_address)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};

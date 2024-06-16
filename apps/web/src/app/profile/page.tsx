@@ -2,7 +2,7 @@
 import { Modal } from "@/components/common/Modal";
 import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { Button } from "@radix-ui/themes";
+import { Box, Button, Tabs, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import { CameraIcon, CopyIcon } from "@radix-ui/react-icons";
 import ProfileSideBar from "@/components/ProfileSideBar";
@@ -16,6 +16,11 @@ import {
   useObserveMinaBalance,
   useMinaBalancesStore,
 } from "@/lib/stores/minaBalances";
+import ActiveGames from "@/components/profileTabs/activeGames";
+import PastGames from "@/components/profileTabs/pastGames";
+import Transactions from "@/components/profileTabs/transactions";
+import DigitalCollection from "@/components/profileTabs/digitalCollection";
+import Preferences from "@/components/profileTabs/preferences";
 
 const pastGames = [
   {
@@ -458,6 +463,34 @@ export default function Profile() {
             </div>
           </div>
         </Modal>
+
+        <Tabs.Root defaultValue="active-games">
+          <Tabs.List className="mt-4">
+            <Tabs.Trigger value="active-games">Active Games</Tabs.Trigger>
+            <Tabs.Trigger value="past-games">Past Games</Tabs.Trigger>
+            <Tabs.Trigger value="transactions">Transactions</Tabs.Trigger>
+            <Tabs.Trigger value="collection">Digital Collection</Tabs.Trigger>
+            <Tabs.Trigger value="preferences">Preferences</Tabs.Trigger>
+          </Tabs.List>
+
+          <Box pt="3">
+            <Tabs.Content value="active-games">
+              <ActiveGames />
+            </Tabs.Content>
+            <Tabs.Content value="past-games">
+              <PastGames />
+            </Tabs.Content>
+            <Tabs.Content value="transactions">
+              <Transactions walletAddress={networkStore?.address} />
+            </Tabs.Content>
+            <Tabs.Content value="collection">
+              <DigitalCollection />
+            </Tabs.Content>
+            <Tabs.Content value="preferences">
+              <Preferences />
+            </Tabs.Content>
+          </Box>
+        </Tabs.Root>
       </div>
 
       <RightSideBar handleToggle={handleToggle} rightSlider={rightSlider}>

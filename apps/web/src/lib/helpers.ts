@@ -11,3 +11,20 @@ export const formatAddress = (address: string | undefined) =>
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function formatTimestampToReadableDate(timestamp: string): string {
+  const date = new Date(timestamp);
+
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true
+  };
+
+  return date.toLocaleDateString('en-US', options);
+}

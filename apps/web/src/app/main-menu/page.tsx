@@ -59,12 +59,12 @@ export default function MainMenu() {
 
   return (
     <div
-      className="flex h-[calc(100vh-80px)] items-center justify-center pt-20"
+      className="flex h-screen items-center justify-center pt-20"
       tabIndex={0}
     >
       <LandingBackground />
       <div className="z-10 flex w-full items-center justify-center">
-        <div className="mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
+        <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
           {buttons.map((button) => (
             <PrimaryButton
               key={button.key}
@@ -81,7 +81,7 @@ export default function MainMenu() {
       </div>
 
       <div className="fixed bottom-0 right-0 p-3 pb-6">
-        <h1 className="text-primary-shadow sm">
+        <h1 className="text-primary-shadow sm font-mono">
           <span>T</span>il<span>e</span>Vi<span>l</span>le
         </h1>
       </div>

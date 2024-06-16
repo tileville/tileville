@@ -30,8 +30,8 @@ export default function Leaderboard() {
 
   const [selectedCompetition, setSelectedCompetition] =
     useState<SelectedCompetition>({
-      id: 2,
-      name: "Default Competition",
+      id: 3,
+      name: "Hero's Tileville League",
     } as SelectedCompetition);
 
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardResult[]>(

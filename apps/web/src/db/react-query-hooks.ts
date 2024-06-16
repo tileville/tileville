@@ -17,6 +17,7 @@ import {
   getFilteredLeaderboardEntries,
   fetchTransactionLogById,
   updateTransactionLog,
+  fetchAllTransactionsByWallet,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
@@ -250,6 +251,19 @@ export const useTransactionLogById = (wallet_address: string, id: number) => {
     () => fetchTransactionLogById(wallet_address, id),
     {
       enabled: !!wallet_address && !!id,
+    }
+  );
+};
+
+export const useTransactionsByWallet = (wallet_address: string) => {
+  return useQuery(
+    ["transactions", wallet_address],
+    () => fetchAllTransactionsByWallet(supabaseUserClientComponentClient, wallet_address),
+    {
+      enabled: !!wallet_address, // Only run this query if wallet_address is not null
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      cacheTime: 1000 * 60 * 10, // 10 minutes
+      refetchOnWindowFocus: false, // Disable refetch on window focus
     }
   );
 };

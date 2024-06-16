@@ -35,7 +35,7 @@ export default function CompetitionLoading() {
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-4 w-4">hi </Skeleton>
                   <Skeleton>
-                    <p>Event Startig in 12 days 12 hours 23 mins 23 sec</p>
+                    <p>Event Starting in 12 days 12 hours 23 mins 23 sec</p>
                   </Skeleton>
                 </div>
                 <div className="h-full w-[1px] bg-primary/30"></div>
