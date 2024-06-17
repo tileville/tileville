@@ -20,9 +20,15 @@ async function isProfileExist(
   return false;
 }
 
-export async function isUsernameExist(username: string, userId?: number): Promise<boolean> {
+export async function isUsernameExist(
+  username: string,
+  userId?: number
+): Promise<boolean> {
   const supabase = supabaseUserClientComponentClient;
-  let query = supabase.from("player_profile").select("id").eq("username", username);
+  let query = supabase
+    .from("player_profile")
+    .select("id")
+    .eq("username", username);
   if (userId) {
     query = query.neq("id", userId);
   }
@@ -30,7 +36,6 @@ export async function isUsernameExist(username: string, userId?: number): Promis
 
   return !!data;
 }
-
 
 export const getAllLeaderboardEntries = async (
   supabase: AppSupabaseClient
@@ -198,7 +203,7 @@ export const addTransactionLog = async (
 export const updateTransactionLog = async (
   txn_hash: string,
   update_payload: { txn_status: string; is_game_played: boolean }
-): Promise<Table<'transaction_logs'>> => {
+): Promise<Table<"transaction_logs">> => {
   const supabase = supabaseUserClientComponentClient;
 
   const { data, error } = await supabase
@@ -208,11 +213,10 @@ export const updateTransactionLog = async (
     .single();
 
   if (error) {
-    throw error
+    throw error;
   }
   return data;
 };
-
 
 export const fetchTransactions = async (
   wallet_address: string,
@@ -294,23 +298,34 @@ export const fetchAllTransactionsByWallet = async (
   if (error) {
     throw error;
   }
-
   return data;
 };
 
 export const getFilteredTransactionByStatus = async (
   supabase: AppSupabaseClient,
-  txn_status: number
+  wallet_address: string,
+  txn_status: string
 ): Promise<Array<Table<"transaction_logs">>> => {
-  const { data, error } = await supabase
-    .from("transaction_logs")
-    .select("*")
-    .eq("txn_status", txn_status)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    throw error;
+  if (txn_status !== "ALL") {
+    const { data, error } = await supabase
+      .from("transaction_logs")
+      .select("*")
+      .eq("wallet_address", wallet_address)
+      .eq("txn_status", txn_status)
+      .order("created_at", { ascending: false });
+    if (error) {
+      throw error;
+    }
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from("transaction_logs")
+      .select("*")
+      .eq("wallet_address", wallet_address)
+      .order("created_at", { ascending: false });
+    if (error) {
+      throw error;
+    }
+    return data;
   }
-
-  return data;
 };

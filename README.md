@@ -139,6 +139,8 @@ yarn run dev
 ```
 
 
+Visual Theme and game Asset credit:
+Six Sided Streets (Chris Klimowski)
 
 
 # Reference Links

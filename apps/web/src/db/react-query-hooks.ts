@@ -231,12 +231,12 @@ export const useMainnetTransactionStatus = (
               is_game_played,
             });
           }
-          if (res.failure_reason !== null) {
-            return updateTransactionLog(txn_hash, {
-              txn_status: "FAILED",
-              is_game_played,
-            });
-          }
+          // if (res.failure_reason !== null) {
+          //   return updateTransactionLog(txn_hash, {
+          //     txn_status: "FAILED",
+          //     is_game_played,
+          //   });
+          // }
         }),
     {
       enabled:
@@ -256,28 +256,20 @@ export const useTransactionLogById = (wallet_address: string, id: number) => {
   );
 };
 
-export const useTransactionsByWallet = (wallet_address: string) => {
+export const useTransactionLogByStatus = (
+  wallet_address: string,
+  txn_status: string
+) => {
   return useQuery(
-    ["transactions", wallet_address],
-    () => fetchAllTransactionsByWallet(supabaseUserClientComponentClient, wallet_address),
+    ["transactions", wallet_address, txn_status],
+    () =>
+      getFilteredTransactionByStatus(
+        supabaseUserClientComponentClient,
+        wallet_address,
+        txn_status
+      ),
     {
-      enabled: !!wallet_address, // Only run this query if wallet_address is not null
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 10, // 10 minutes
-      refetchOnWindowFocus: false, // Disable refetch on window focus
-    }
-  );
-};
-
-export const useTransactionLogByStatus = (txn_status: string) => {
-  return useQuery(
-    ["transactions", txn_status],
-    () => getFilteredTransactionByStatus( supabaseUserClientComponentClient , txn_status),
-    {
-      enabled: !!txn_status, // Only run this query if wallet_address is not null
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 10, // 10 minutes
-      refetchOnWindowFocus: false, // Disable refetch on window focus
+      enabled: !!txn_status && !!wallet_address,
     }
   );
 };

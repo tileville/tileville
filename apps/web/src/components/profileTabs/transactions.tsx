@@ -1,8 +1,5 @@
 import TableSkeleton from "@/app/leaderboard/tableSkeleton";
-import {
-  useTransactionLogByStatus,
-  useTransactionsByWallet,
-} from "@/db/react-query-hooks";
+import { useTransactionLogByStatus } from "@/db/react-query-hooks";
 import { formatTimestampToReadableDate } from "@/lib/helpers";
 import { DropdownMenu, Table } from "@radix-ui/themes";
 import Image from "next/image";
@@ -13,29 +10,29 @@ type TransactionsProps = {
   walletAddress: string;
 };
 
+const filterOptions = [
+  { label: "ALL", value: "ALL", key: "all" },
+  {
+    label: "CONFIRMED",
+    value: "CONFIRMED",
+    key: "confirmed",
+  },
+  {
+    label: "PENDING",
+    value: "PENDING",
+    key: "pending",
+  },
+  { label: "FAILED", value: "FAILED", key: "failed" },
+];
+
 export default function Transactions({ walletAddress }: TransactionsProps) {
-  const { data: transactions, isLoading } =
-    useTransactionsByWallet(walletAddress);
+  const [selectedFilter, setSelectedFilter] = useState(filterOptions[0].value);
+  const { data: transactions, isLoading } = useTransactionLogByStatus(
+    walletAddress,
+    selectedFilter
+  );
 
-  const [selectedFilter, setSelectedFilter] = useState("Filter By Status");
   console.log("transactions", transactions);
-
-  const filterOptions = [
-    {
-      value: "Success",
-      key: 0,
-    },
-    {
-      value: "Pending",
-      key: 1,
-    },
-    {
-      value: "Failed",
-      key: 2,
-    },
-  ];
-
-  useTransactionLogByStatus("walletAddress");
 
   return (
     <div className="">
