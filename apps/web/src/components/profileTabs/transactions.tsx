@@ -1,8 +1,13 @@
-import { useTransactionsByWallet } from "@/db/react-query-hooks";
+import TableSkeleton from "@/app/leaderboard/tableSkeleton";
+import {
+  useTransactionLogByStatus,
+  useTransactionsByWallet,
+} from "@/db/react-query-hooks";
 import { formatTimestampToReadableDate } from "@/lib/helpers";
 import { DropdownMenu, Table } from "@radix-ui/themes";
 import Image from "next/image";
 import { useState } from "react";
+import TransactionLoading from "./transactionLoading";
 
 type TransactionsProps = {
   walletAddress: string;
@@ -30,7 +35,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
     },
   ];
 
-  if (isLoading) return <div>Loading...</div>;
+  useTransactionLogByStatus("walletAddress");
 
   return (
     <div className="">
@@ -68,7 +73,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
         </div>
       </div>
 
-      {transactions && transactions.length > 0 ? (
+      <>
         <Table.Root>
           <Table.Header>
             <Table.Row>
@@ -82,23 +87,35 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
           </Table.Header>
 
           <Table.Body>
-            {transactions.map((transaction) => (
-              <Table.Row key={transaction.id}>
-                <Table.Cell>{transaction.txn_hash}</Table.Cell>
-                <Table.Cell>{transaction.network}</Table.Cell>
-                <Table.RowHeaderCell>
-                  {transaction.txn_status}
-                </Table.RowHeaderCell>
-                <Table.Cell>
-                  {formatTimestampToReadableDate(transaction.created_at)}
-                </Table.Cell>
-              </Table.Row>
-            ))}
+            {isLoading ? (
+              <TransactionLoading />
+            ) : (
+              <>
+                {transactions && transactions.length > 0 ? (
+                  <>
+                    {transactions.map((transaction) => (
+                      <Table.Row key={transaction.id}>
+                        <Table.Cell>{transaction.txn_hash}</Table.Cell>
+                        <Table.Cell>{transaction.network}</Table.Cell>
+                        <Table.RowHeaderCell>
+                          {transaction.txn_status}
+                        </Table.RowHeaderCell>
+                        <Table.Cell>
+                          {formatTimestampToReadableDate(
+                            transaction.created_at
+                          )}
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </>
+                ) : (
+                  <h2>No Transactions Found</h2>
+                )}
+              </>
+            )}
           </Table.Body>
         </Table.Root>
-      ) : (
-        <h2>No Transactions Found</h2>
-      )}
+      </>
     </div>
   );
 }

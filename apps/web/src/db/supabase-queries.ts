@@ -20,17 +20,17 @@ async function isProfileExist(
   return false;
 }
 
-export async function isUsernameExist(username: string): Promise<boolean> {
+export async function isUsernameExist(username: string, userId?: number): Promise<boolean> {
   const supabase = supabaseUserClientComponentClient;
-  const { data } = await supabase
-    .from("player_profile")
-    .select("id")
-    .eq("username", username)
-    .single();
+  let query = supabase.from("player_profile").select("id").eq("username", username);
+  if (userId) {
+    query = query.neq("id", userId);
+  }
+  const { data } = await query.single();
 
-  if (data) return true;
-  return false;
+  return !!data;
 }
+
 
 export const getAllLeaderboardEntries = async (
   supabase: AppSupabaseClient
@@ -289,6 +289,23 @@ export const fetchAllTransactionsByWallet = async (
     .from("transaction_logs")
     .select("*")
     .eq("wallet_address", wallet_address)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
+export const getFilteredTransactionByStatus = async (
+  supabase: AppSupabaseClient,
+  txn_status: number
+): Promise<Array<Table<"transaction_logs">>> => {
+  const { data, error } = await supabase
+    .from("transaction_logs")
+    .select("*")
+    .eq("txn_status", txn_status)
     .order("created_at", { ascending: false });
 
   if (error) {
