@@ -31,6 +31,13 @@ export const faqContent: {
         answer:
           "Depends on the competition participation fees. If the competition you are joining doesn’t have a participation fees, you can play the game for free.",
       },
+      {
+        id: 4,
+        question:
+          "Is TileVille inspired by another game? If yes, how do you acknowledge and give credit to the original work",
+        answer:
+          "Yes, TileVille takes inspiration from the web2 game Six Sided Streets by Chris Klimowski. We want to acknowledge and give proper credit to the original work that inspired the core gameplay mechanics and visual aesthetic of TileVille. While TileVille introduces its own unique elements, such as blockchain integration, decentralized governance, and NFT ownership, the fundamental concept of building cities using hexagonal tiles was inspired by Six Sided Streets. We believe in recognizing and respecting the creativity and innovation that came before us",
+      },
     ],
   },
   {
