@@ -14,8 +14,9 @@ import { useProfileLazyQuery } from "@/db/react-query-hooks";
 import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import Image from "next/image";
 
-const HIDE_BACK_BUTTON_PATHS = ["/main-menu"];
+const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
@@ -62,7 +63,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black">
+    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black backdrop-blur-sm">
       <div className="flex w-full items-start justify-between">
         <div className="flex items-center gap-3">
           {
@@ -82,6 +83,20 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           <div className="min-w-[180px]">
             <MediaPlayer />
           </div>
+
+          <Link
+            target="_blank"
+            href={"https://t.me/tilevilleBugs"}
+            className="flex items-center gap-2 rounded-full border-primary bg-primary/30 px-5 py-2 text-xs font-medium hover:bg-primary/50"
+          >
+            <span>Bug Report</span>
+            <Image
+              src="icons/bugReport.svg"
+              width={20}
+              height={20}
+              alt="bug report"
+            />
+          </Link>
         </div>
 
         <div className="flex items-center gap-3">

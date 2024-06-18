@@ -546,11 +546,12 @@ export class MainScene extends Scene {
       .on("pointerdown", () => {
         this.tweens.add({
           targets: this.shareButton,
-          scaleX: 0.55,
-          scaleY: 0.55,
+          scaleX: 0.95,
+          scaleY: 0.95,
           duration: 60,
           ease: "Linear",
         });
+        this.navigateToExternalSite(getShareScoreTwitterContent(this.score));
       })
       .on("pointerup", () => {
         this.navigateToExternalSite(getShareScoreTwitterContent(this.score));

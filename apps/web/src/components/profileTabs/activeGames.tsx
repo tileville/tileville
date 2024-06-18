@@ -50,7 +50,14 @@ export default function ActiveGames({ walletAddress }: ActiveGamesProps) {
                   ))}
                 </>
               ) : (
-                <h2>No Active Games Found</h2>
+                <Table.Row className="w-full p-4">
+                  <Table.Cell
+                    className="w-full text-center text-xl font-semibold"
+                    colSpan={5}
+                  >
+                    No Active Games Found
+                  </Table.Cell>
+                </Table.Row>
               )}
             </>
           )}
