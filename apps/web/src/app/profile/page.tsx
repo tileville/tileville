@@ -387,7 +387,7 @@ export default function Profile() {
                     </span>{" "}
                   </h3>
                 )}
-                <p className="tet-sm text-gray-500">
+                <div className="tet-sm text-gray-500">
                   {!!profileData?.username && (
                     <div className="flex items-center gap-2">
                       <h3>{profileData.username}</h3>
@@ -403,7 +403,7 @@ export default function Profile() {
                       </button>
                     </div>
                   )}
-                </p>
+                </div>
                 <p className="tet-sm text-gray-500">
                   {!!profileData?.email && <h3> {profileData.email}</h3>}
                 </p>

@@ -13,7 +13,7 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { TransactionStatus } from "@/lib/types";
 
 const GAMEPLAY_DISALLOW_MESSAGE_DEFAULT =
-  "We are fetching your participation fee payment trsanction details...";
+  "We are fetching your participation fee payment transaction details...";
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
 });

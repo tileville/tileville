@@ -1,10 +1,17 @@
 import TableSkeleton from "@/app/leaderboard/tableSkeleton";
 import { useTransactionLogByStatus } from "@/db/react-query-hooks";
-import { formatTimestampToReadableDate } from "@/lib/helpers";
+import {
+  formatTimestampToReadableAge,
+  formatTimestampToReadableDate,
+} from "@/lib/helpers";
 import { DropdownMenu, Table } from "@radix-ui/themes";
 import Image from "next/image";
 import { useState } from "react";
 import { TransactionLoading } from "./GameSkeletons";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import Link from "next/link";
+import { CopyIcon } from "@radix-ui/react-icons";
+import toast from "react-hot-toast";
 
 type TransactionsProps = {
   walletAddress: string;
@@ -24,6 +31,19 @@ const filterOptions = [
   },
   { label: "FAILED", value: "FAILED", key: "failed" },
 ];
+
+const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
+  try {
+    await navigator.clipboard.writeText(toCopyContent);
+    toast(<>{copiedType} copied to clipboard!</>, {
+      duration: 2000,
+    });
+  } catch (err) {
+    toast(<>Error copying {copiedType}! Please Try Again</>, {
+      duration: 2000,
+    });
+  }
+};
 
 export default function Transactions({ walletAddress }: TransactionsProps) {
   const [selectedFilter, setSelectedFilter] = useState(filterOptions[0].value);
@@ -79,7 +99,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
               <Table.ColumnHeaderCell>
                 Transaction Status
               </Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Transaction Time</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Age</Table.ColumnHeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -92,15 +112,56 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
                   <>
                     {transactions.map((transaction) => (
                       <Table.Row key={transaction.id}>
-                        <Table.Cell>{transaction.txn_hash}</Table.Cell>
+                        <Table.Cell>
+                          <div className="flex items-center gap-1">
+                            <Link
+                              target="_blank"
+                              href={`https://minascan.io/mainnet/tx/${transaction.txn_hash}`}
+                              className="font-medium text-primary hover:text-primary/80"
+                            >
+                              {transaction.txn_hash}
+                            </Link>
+
+                            <button
+                              onClick={() => {
+                                copyToClipBoard(
+                                  `${transaction.txn_hash}`,
+                                  "Transaction Hash"
+                                );
+                              }}
+                              className="text-primary"
+                            >
+                              <CopyIcon />
+                            </button>
+                          </div>
+                        </Table.Cell>
                         <Table.Cell>{transaction.network}</Table.Cell>
                         <Table.RowHeaderCell>
                           {transaction.txn_status}
                         </Table.RowHeaderCell>
                         <Table.Cell>
-                          {formatTimestampToReadableDate(
-                            transaction.created_at
-                          )}
+                          <Tooltip.Provider delayDuration={300}>
+                            <Tooltip.Root>
+                              <Tooltip.Trigger asChild>
+                                <span className="text-gray-800">
+                                  {formatTimestampToReadableAge(
+                                    transaction.created_at
+                                  )}
+                                </span>
+                              </Tooltip.Trigger>
+                              <Tooltip.Portal>
+                                <Tooltip.Content
+                                  className="whitespace-nowrap rounded-xl bg-primary/10 px-4 py-1 shadow-sm backdrop-blur-xl"
+                                  sideOffset={5}
+                                >
+                                  {formatTimestampToReadableDate(
+                                    transaction.created_at
+                                  )}
+                                  <Tooltip.Arrow className="TooltipArrow border-primary/30 backdrop-blur-xl" />
+                                </Tooltip.Content>
+                              </Tooltip.Portal>
+                            </Tooltip.Root>
+                          </Tooltip.Provider>
                         </Table.Cell>
                       </Table.Row>
                     ))}
