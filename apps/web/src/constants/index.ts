@@ -37,3 +37,5 @@ export const POSTHOG_TOKEN =
   "phc_JosSJyx52qurZc76Tbf9qrnokKRvcL7oZE7aQAifoNH";
 export const POSTHOG_URI =
   process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
+
+export const isMockEnv = process.env.NEXT_PUBLIC_IS_MOCK_ENV || false;

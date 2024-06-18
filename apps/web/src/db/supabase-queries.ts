@@ -1,6 +1,8 @@
 import { AppSupabaseClient, Table } from "@/types";
 import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
 import { TransactionLog } from "@/lib/types";
+import { isMockEnv } from "@/constants";
+import { mockCompetition } from "./mock-data";
 
 type PlayerProfile = {
   username: string;
@@ -58,12 +60,16 @@ export const getAllCompetitionsEntries = async (
   const { data, error } = await supabase
     .from("tileville_competitions")
     .select("*");
+  console.log("competition data", data);
+  const formattedData = data ?? [];
 
+  if (isMockEnv) {
+    formattedData.push(mockCompetition);
+  }
   if (error) {
     throw error;
   }
-
-  return data;
+  return formattedData;
 };
 
 export const saveGameScoreDb = async (
