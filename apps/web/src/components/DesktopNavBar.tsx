@@ -1,9 +1,9 @@
 "use client";
-import { Button } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import clsx from "clsx";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "./PrimaryButton";
-import { useEffect, useState } from "react";
 import { MediaPlayer } from "./MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
 import { formatAddress, walletInstalled } from "@/lib/helpers";
@@ -17,8 +17,8 @@ import {
 } from "@/db/react-query-hooks";
 import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
+import { useMountedState } from "react-use";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu"];
 
@@ -30,14 +30,16 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     networkStore?.address || "",
     "PENDING"
   );
+  const isMounted = useMountedState();
   useMainnetTransactionsStatus(
-    pendingTransactions.map(({ txn_hash, txn_status }) => ({
-      txn_hash,
-      txn_status,
-    }))
+    pendingTransactions
+      .filter(({ network }) => network === "mina:mainnet")
+      .map(({ txn_hash, txn_status }) => ({
+        txn_hash,
+        txn_status,
+      }))
   );
   const pathname = usePathname();
-  console.log("path name", pathname);
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
   const { phClient } = usePosthogEvents();
   console.log("PENDING Transactions", pendingTransactions);
@@ -75,6 +77,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
         }
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkStore.walletConnected, data, isFetched]);
 
   const handleFocus = (index: number) => {
@@ -85,20 +88,17 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black">
       <div className="flex w-full items-start justify-between">
         <div className="flex items-center gap-3">
-          {
-            <PrimaryButton
-              key={1}
-              onFocus={() => handleFocus(1)}
-              size="sm"
-              icon={<ChevronLeftIcon width={30} height={30} />}
-              autoFocus={1 === focusedButtonIndex}
-              href={"/main-menu"}
-              className={clsx(`rounded-3xl !border !border-primary !px-6`, {
-                hidden: isHideBackBtn,
-              })}
-            />
-          }
-
+          <PrimaryButton
+            key={1}
+            onFocus={() => handleFocus(1)}
+            size="sm"
+            icon={<ChevronLeftIcon width={30} height={30} />}
+            autoFocus={1 === focusedButtonIndex}
+            href={"/main-menu"}
+            className={clsx(`rounded-3xl !border !border-primary !px-6`, {
+              hidden: isHideBackBtn,
+            })}
+          />
           <div className="min-w-[180px]">
             <MediaPlayer />
           </div>
@@ -119,57 +119,38 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           </Link>
 
           <div className="flex gap-5">
-            {networkStore.walletConnected && networkStore.address ? (
-              <>
-                <AccountCard text={formatAddress(networkStore.address)} />
-                <NetworkPicker />
-              </>
-            ) : walletInstalled() ? (
-              <HeaderCard
-                svg={"account"}
-                text="Connect wallet"
-                isMiddle={true}
-                onClick={() => {
-                  networkStore.connectWallet(false);
-                }}
-                className="border border-primary"
-              />
-            ) : (
-              <Link
-                href="https://www.aurowallet.com/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+            {isMounted() &&
+              (networkStore.walletConnected && networkStore.address ? (
+                <>
+                  <AccountCard text={formatAddress(networkStore.address)} />
+                  <NetworkPicker />
+                </>
+              ) : walletInstalled() ? (
                 <HeaderCard
                   svg={"account"}
-                  text="Install wallet"
+                  text="Connect wallet"
                   isMiddle={true}
+                  onClick={() => {
+                    networkStore.connectWallet(false);
+                  }}
+                  className="border border-primary"
                 />
-              </Link>
-            )}
+              ) : (
+                <Link
+                  href="https://www.aurowallet.com/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <HeaderCard
+                    svg={"account"}
+                    text="Install wallet"
+                    isMiddle={true}
+                  />
+                </Link>
+              ))}
           </div>
         </div>
       </div>
     </nav>
-  );
-};
-
-const NavLink = ({ to, label }: { to: string; label: string }) => {
-  return (
-    <Button variant="outline" size="3" radius="none">
-      <Link href={to} className="">
-        {label}
-      </Link>
-    </Button>
-  );
-};
-
-export const AnchorNavLink = ({ to, label }: { to: string; label: string }) => {
-  return (
-    <Button variant="outline" size="4" radius="none">
-      <a href={to} target="_blank">
-        {label}
-      </a>
-    </Button>
   );
 };
