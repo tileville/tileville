@@ -1,4 +1,4 @@
-import { Button, Dialog, Flex } from "@radix-ui/themes";
+import { Dialog, Flex } from "@radix-ui/themes";
 import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
 import { type Competition } from "@/app/competitions/page";
 import toast from "react-hot-toast";
@@ -7,15 +7,17 @@ import { useEffect } from "react";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 let timeoutId: NodeJS.Timeout;
+
+type GameEntryFeesModalProps = {
+  open: boolean;
+  handleClose: () => void;
+  competition: Competition;
+};
 export const GameEntryFeesModal = ({
   open,
   handleClose,
   competition,
-}: {
-  open: boolean;
-  handleClose: () => void;
-  competition: Competition;
-}) => {
+}: GameEntryFeesModalProps) => {
   const networkStore = useNetworkStore();
   const { payParticipationFees } = useParticipationFee();
   const router = useRouter();

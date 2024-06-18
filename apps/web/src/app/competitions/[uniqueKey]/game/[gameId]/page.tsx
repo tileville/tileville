@@ -40,8 +40,7 @@ function Game() {
     isError,
   } = useMainnetTransactionStatus(
     gameTransaction?.txn_hash || "",
-    gameTransaction?.txn_status || "PENDING",
-    gameTransaction?.is_game_played ?? false
+    gameTransaction?.txn_status || "PENDING"
   );
 
   useEffect(() => {

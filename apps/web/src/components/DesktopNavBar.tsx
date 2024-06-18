@@ -10,10 +10,15 @@ import { formatAddress, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
 import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
-import { useProfileLazyQuery } from "@/db/react-query-hooks";
+import {
+  useFetchTransactions,
+  useMainnetTransactionsStatus,
+  useProfileLazyQuery,
+} from "@/db/react-query-hooks";
 import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu"];
 
@@ -21,9 +26,21 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
   const networkStore = useNetworkStore();
   const { data, isFetched } = useProfileLazyQuery(networkStore?.address || "");
+  const { data: pendingTransactions = [] } = useFetchTransactions(
+    networkStore?.address || "",
+    "PENDING"
+  );
+  useMainnetTransactionsStatus(
+    pendingTransactions.map(({ txn_hash, txn_status }) => ({
+      txn_hash,
+      txn_status,
+    }))
+  );
   const pathname = usePathname();
   console.log("path name", pathname);
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
+  const { phClient } = usePosthogEvents();
+  console.log("PENDING Transactions", pendingTransactions);
 
   useEffect(() => {
     if (!walletInstalled()) return;
@@ -34,6 +51,9 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   }, []);
 
   useEffect(() => {
+    if (networkStore.walletConnected && isFetched) {
+      phClient.identify(networkStore.address, { username: data?.username });
+    }
     if (
       networkStore.walletConnected &&
       isFetched &&

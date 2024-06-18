@@ -3,7 +3,7 @@
 /* ==================== */
 
 import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import {
@@ -20,6 +20,7 @@ import {
   getPastGames,
   saveGameScoreDb,
   getActiveGames,
+  fetchTransactions,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
@@ -202,12 +203,42 @@ export const useFilteredLeaderboardData = (competition_key: string) => {
   );
 };
 
+export const useMainnetTransactionsStatus = (
+  txns: { txn_hash: string; txn_status: string }[]
+) => {
+  return useQueries({
+    queries: txns.map(({ txn_hash, txn_status }) => ({
+      queryKey: ["transaction_status_mainnet", txn_hash, txn_status],
+      queryFn: () =>
+        fetch(
+          `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+          {
+            headers: {
+              "x-api-key": BLOCKBERRY_API_KEY,
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((res) => {
+            console.log("blockberry api response");
+            if (res.blockConfirmationsCount > 2) {
+              return updateTransactionLog(txn_hash, {
+                txn_status: "CONFIRMED",
+              });
+            }
+          }),
+      staleTime: Infinity,
+      enabled: !!txn_hash && txn_status === "PENDING",
+      retry: 5,
+    })),
+  });
+};
+
 export const useMainnetTransactionStatus = (
   txn_hash: string,
-  txn_status: string,
-  is_game_played: boolean
+  txn_status: string
 ) => {
-  console.log({ txn_hash, txn_status, is_game_played });
+  console.log({ txn_hash, txn_status });
   return useQuery(
     ["transaction_status_mainnet", txn_hash],
     () =>
@@ -224,7 +255,6 @@ export const useMainnetTransactionStatus = (
           if (res.blockConfirmationsCount > 2) {
             return updateTransactionLog(txn_hash, {
               txn_status: "CONFIRMED",
-              is_game_played,
             });
           }
           // if (res.failure_reason !== null) {
@@ -235,8 +265,7 @@ export const useMainnetTransactionStatus = (
           // }
         }),
     {
-      enabled:
-        !!txn_hash && txn_status === "PENDING" && is_game_played === false,
+      enabled: !!txn_hash && txn_status === "PENDING",
       retry: 5,
     }
   );
@@ -286,6 +315,19 @@ export const usePastGames = (wallet_address: string) => {
     () => getPastGames(wallet_address),
     {
       enabled: !!wallet_address,
+    }
+  );
+};
+
+export const useFetchTransactions = (
+  wallet_address: string,
+  txn_status: string
+) => {
+  return useQuery(
+    ["transactions", wallet_address, txn_status],
+    () => fetchTransactions(wallet_address, txn_status),
+    {
+      enabled: !!wallet_address && !!txn_status,
     }
   );
 };

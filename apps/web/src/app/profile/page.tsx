@@ -11,7 +11,7 @@ import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
-import { fetchTransactions, isUsernameExist } from "@/db/supabase-queries";
+import { isUsernameExist } from "@/db/supabase-queries";
 import {
   useObserveMinaBalance,
   useMinaBalancesStore,
@@ -59,18 +59,6 @@ export default function Profile() {
       avatar_url: profileData?.avatar_url || "/img/avatars/defaultImg.webp",
     },
   });
-
-  useEffect(() => {
-    if (networkStore.address) {
-      fetchTransactions(networkStore.address, "PENDING")
-        .then((response) => {
-          console.log("pending transactions response", response);
-        })
-        .catch((error) => {
-          console.log("fetch transactions error", error);
-        });
-    }
-  }, [networkStore.address]);
 
   useEffect(() => {
     if (profileData) {

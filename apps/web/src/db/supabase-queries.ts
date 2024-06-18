@@ -227,7 +227,7 @@ export const addTransactionLog = async (
 
 export const updateTransactionLog = async (
   txn_hash: string,
-  update_payload: { txn_status: string; is_game_played: boolean }
+  update_payload: { txn_status: string }
 ): Promise<Table<"transaction_logs">> => {
   const supabase = supabaseUserClientComponentClient;
 

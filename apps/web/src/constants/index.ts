@@ -9,7 +9,8 @@ export const MY_GITHUB_URL = "https://github.com/satyambnsal";
 export const FEEDBACK_FORM_URL = "https://forms.gle/PyPU67YmDvQvZ7HF9";
 export const ZKIGNITE_PROPOSAL =
   "https://zkignite.minaprotocol.com/zkignite/zkapp-cohort-3/funding/suggestion/655";
-export const GAME_ROADMAP_URL = "https://docs.google.com/document/d/1Bvf_EVjZbPQ7mXUFMmxeZlGfzzd78Bn6Cf1DgZIuquA/edit#heading=h.lq3c7p71mqq7";
+export const GAME_ROADMAP_URL =
+  "https://docs.google.com/document/d/1Bvf_EVjZbPQ7mXUFMmxeZlGfzzd78Bn6Cf1DgZIuquA/edit#heading=h.lq3c7p71mqq7";
 
 export const SEQUENCER_GRAPHQL_URL =
   process.env.NEXT_PUBLIC_SEQUENCER_GRAPHQL_URL ||
