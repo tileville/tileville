@@ -80,7 +80,7 @@ export default function MainMenu() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 right-0 p-3 pb-12">
+      <div className="fixed bottom-0 right-0 p-3 pb-20">
         <h1 className="text-primary-shadow sm font-mono">
           <span>T</span>il<span>e</span>Vi<span>l</span>le
         </h1>

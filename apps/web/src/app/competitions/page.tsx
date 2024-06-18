@@ -6,6 +6,7 @@ import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CompetitionLoading from "./competitionLoading";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 export type Competition = {
   created_at: string;
@@ -26,6 +27,7 @@ type TimeLeft = {
   hours: number;
   minutes: number;
   seconds: number;
+  status: "upcoming" | "ongoing" | "over";
 };
 
 export default function Competitions() {
@@ -36,23 +38,39 @@ export default function Competitions() {
   );
   const [timeLeft, setTimeLeft] = useState<Record<number, TimeLeft>>({});
 
-  const calculateTimeLeft = (endDate: string): TimeLeft => {
-    const difference = +new Date(endDate) - +new Date();
-    let timeLeft = {
+  const calculateTimeLeft = (startDate: string, endDate: string): TimeLeft => {
+    const now = new Date().getTime();
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+    const timeLeft = {
       days: 0,
       hours: 0,
       minutes: 0,
       seconds: 0,
+      status: "upcoming" as "upcoming" | "ongoing" | "over",
     };
 
-    if (difference > 0) {
-      timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
+    if (now < start) {
+      // Before the competition starts
+      const difference = start - now;
+      timeLeft.status = "upcoming";
+      timeLeft.days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      timeLeft.hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      timeLeft.minutes = Math.floor((difference / 1000 / 60) % 60);
+      timeLeft.seconds = Math.floor((difference / 1000) % 60);
+    } else if (now >= start && now < end) {
+      // During the competition
+      const difference = end - now;
+      timeLeft.status = "ongoing";
+      timeLeft.days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      timeLeft.hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      timeLeft.minutes = Math.floor((difference / 1000 / 60) % 60);
+      timeLeft.seconds = Math.floor((difference / 1000) % 60);
+    } else {
+      // After the competition ends
+      timeLeft.status = "over";
     }
+
     return timeLeft;
   };
 
@@ -60,7 +78,10 @@ export default function Competitions() {
     if (data) {
       const initialTimeLeft = data.reduce(
         (acc: Record<number, TimeLeft>, competition: Competition) => {
-          acc[competition.id] = calculateTimeLeft(competition.end_date);
+          acc[competition.id] = calculateTimeLeft(
+            competition.start_date,
+            competition.end_date
+          );
           return acc;
         },
         {}
@@ -72,6 +93,7 @@ export default function Competitions() {
           const newTimeLeft = { ...prevTimeLeft };
           data.forEach((competition) => {
             newTimeLeft[competition.id] = calculateTimeLeft(
+              competition.start_date,
               competition.end_date
             );
           });
@@ -122,7 +144,9 @@ export default function Competitions() {
                     hours: 0,
                     minutes: 0,
                     seconds: 0,
+                    status: "upcoming",
                   };
+
                   return (
                     <div
                       className="border-primary-30 competitionCard group relative grid grid-cols-12 gap-3 overflow-hidden rounded-lg"
@@ -153,48 +177,94 @@ export default function Competitions() {
                         <div className="flex justify-between gap-3 text-sm font-medium">
                           <div className="flex items-center gap-2">
                             <CalendarIcon />
-                            <p>
-                              Event Starting in {time.days} days{" "}
-                              {time.hours < 10 ? `0${time.hours}` : time.hours}{" "}
-                              hours{" "}
-                              {time.minutes < 10
-                                ? `0${time.minutes}`
-                                : time.minutes}{" "}
-                              mins{" "}
-                              {time.seconds < 10
-                                ? `0${time.seconds}`
-                                : time.seconds}
-                              sec
-                            </p>
+                            {time.status === "upcoming" ? (
+                              <p>
+                                Competition Starts in {time.days} days{" "}
+                                {time.hours < 10
+                                  ? `0${time.hours}`
+                                  : time.hours}{" "}
+                                hours{" "}
+                                {time.minutes < 10
+                                  ? `0${time.minutes}`
+                                  : time.minutes}{" "}
+                                mins{" "}
+                                {time.seconds < 10
+                                  ? `0${time.seconds}`
+                                  : time.seconds}{" "}
+                                sec
+                              </p>
+                            ) : time.status === "ongoing" ? (
+                              <p>
+                                Competition Ends in {time.days} days{" "}
+                                {time.hours < 10
+                                  ? `0${time.hours}`
+                                  : time.hours}{" "}
+                                hours{" "}
+                                {time.minutes < 10
+                                  ? `0${time.minutes}`
+                                  : time.minutes}{" "}
+                                mins{" "}
+                                {time.seconds < 10
+                                  ? `0${time.seconds}`
+                                  : time.seconds}{" "}
+                                sec
+                              </p>
+                            ) : (
+                              <p>Competition is over</p>
+                            )}
                           </div>
-                          <div className="h-full w-[1px] bg-primary/30"></div>
-                          <div className="flex items-center gap-2">
-                            <p>Entry Fees:</p>
-                            <p className="text-base font-semibold">
-                              {competition.participation_fee} MINA
-                            </p>
-                          </div>
-                          <div className="h-full w-[1px] bg-primary/30"></div>
-                          <div className="flex items-center gap-2">
-                            <p>Prize Money 🤑:</p>
-                            <p className="text-base font-semibold">
-                              {competition.funds} MINA
-                            </p>
-                          </div>
+                          {time.status !== "over" && (
+                            <>
+                              <div className="h-full w-[1px] bg-primary/30"></div>
+                              <div className="flex items-center gap-2">
+                                <p>Entry Fees:</p>
+                                <p className="text-base font-semibold">
+                                  {competition.participation_fee} MINA
+                                </p>
+                              </div>
+                              <div className="h-full w-[1px] bg-primary/30"></div>
+                              <div className="flex items-center gap-2">
+                                <p>Prize Money 🤑:</p>
+                                <p className="text-base font-semibold">
+                                  {competition.funds} MINA
+                                </p>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
 
                       <div className="col-span-2 p-4">
                         <div className="flex h-full items-start">
-                          <button
-                            className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white"
-                            onClick={() => {
-                              setSelectedCompetition(competition);
-                              setIsFeesModalOpen(true);
-                            }}
-                          >
-                            Join Now
-                          </button>
+                          {time.status !== "over" && (
+                            <Tooltip.Provider delayDuration={300}>
+                              <Tooltip.Root>
+                                <Tooltip.Trigger asChild>
+                                  <button
+                                    className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white disabled:cursor-not-allowed disabled:bg-primary/60"
+                                    onClick={() => {
+                                      setSelectedCompetition(competition);
+                                      setIsFeesModalOpen(true);
+                                    }}
+                                    disabled={time.status === "upcoming"}
+                                  >
+                                    Join Now
+                                  </button>
+                                </Tooltip.Trigger>
+                                {time.status === "upcoming" && (
+                                  <Tooltip.Portal>
+                                    <Tooltip.Content
+                                      className="whitespace-nowrap rounded-md bg-primary/10 px-4 py-1 shadow-lg backdrop-blur-xl"
+                                      sideOffset={5}
+                                    >
+                                      Competition Starts Soon...
+                                      <Tooltip.Arrow className="TooltipArrow" />
+                                    </Tooltip.Content>
+                                  </Tooltip.Portal>
+                                )}
+                              </Tooltip.Root>
+                            </Tooltip.Provider>
+                          )}
                         </div>
                       </div>
                     </div>

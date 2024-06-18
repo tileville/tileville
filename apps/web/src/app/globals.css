@@ -454,12 +454,12 @@ input[type="range"] {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
-.animated-button-v1{
+.animated-button-v1:not(:disabled){
   box-shadow: 4px 4px 0 hsl(var(--primary) / 0.8);
   transition: all 200ms ease;
 }
 
-.animated-button-v1:active{
+.animated-button-v1:not(:disabled):active{
   box-shadow: none;
   transform: translate(4px,  4px);
 }
