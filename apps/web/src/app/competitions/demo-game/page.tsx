@@ -16,6 +16,8 @@ export default function DemoGame() {
             isDemoGame={true}
             isGamePlayAllowed={true}
             gamePlayDisAllowMessage=""
+            competitionKey="demo"
+            gameId={0}
           />
         </div>
       </div>

@@ -309,7 +309,7 @@ export class MenuScene extends Scene {
     // });
   }
 
-  play() {
+  async play() {
     const isGamePlayAllowed = this.game.registry.get("isGamePlayAllowed");
     const showGameInfoModalFn = this.game.registry.get("showGameInfoModalFn");
     if (!isGamePlayAllowed) {
@@ -322,6 +322,13 @@ export class MenuScene extends Scene {
       callback: this.transition,
       callbackScope: this,
     });
+    const handleSaveScore = this.game.registry.get("handleSaveScore");
+    try {
+      await handleSaveScore(0);
+      console.log("successfully initiated game score to 0");
+    } catch (error) {
+      console.log("failed to init game score");
+    }
   }
 
   transition() {

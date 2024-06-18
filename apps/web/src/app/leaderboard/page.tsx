@@ -10,9 +10,13 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import TableSkeleton from "./tableSkeleton";
 
-type SelectedCompetition = { id: number; name: string };
+type SelectedCompetition = {
+  id: number;
+  name: string;
+  competition_key: string;
+};
 type LeaderboardResult = {
-  competition_id: number;
+  competition_key: string;
   created_at: string;
   game_id: number;
   id: number;
@@ -32,6 +36,7 @@ export default function Leaderboard() {
     useState<SelectedCompetition>({
       id: 3,
       name: "Hero's Tileville League",
+      competition_key: "heros_tileville",
     } as SelectedCompetition);
 
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardResult[]>(
@@ -43,7 +48,7 @@ export default function Leaderboard() {
 
   useEffect(() => {
     if (selectedCompetition.id) {
-      getFilteredLeaderboardEntries(selectedCompetition.id)
+      getFilteredLeaderboardEntries(selectedCompetition.competition_key)
         .then(async (leaderboardEntries) => {
           setLeaderboardData(leaderboardEntries);
 
@@ -106,6 +111,7 @@ export default function Leaderboard() {
                   onClick={() => {
                     setSelectedCompetition({
                       id: competition.id,
+                      competition_key: competition.unique_keyname,
                       name: competition.name,
                     });
                   }}

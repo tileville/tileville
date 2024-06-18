@@ -2,7 +2,7 @@
 import { Modal } from "@/components/common/Modal";
 import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { Box, Button, Tabs, Text } from "@radix-ui/themes";
+import { Box, Button, Tabs } from "@radix-ui/themes";
 import Image from "next/image";
 import { CameraIcon, CopyIcon } from "@radix-ui/react-icons";
 import ProfileSideBar from "@/components/ProfileSideBar";
@@ -40,7 +40,7 @@ export default function Profile() {
     networkStore?.address || ""
   );
 
-  console.log("profile data", profileData);
+  // console.log("profile data", profileData);
   console.log(networkStore?.address);
 
   const {
@@ -108,7 +108,7 @@ export default function Profile() {
 
   const profileMutation = useProfile({
     onSuccess: () => {
-      console.log("Profile data saved successfully");
+      // console.log("Profile data saved successfully");
       refetch();
     },
     onMutate: () => {
@@ -470,10 +470,10 @@ export default function Profile() {
 
           <Box pt="3">
             <Tabs.Content value="active-games">
-              <ActiveGames />
+              <ActiveGames walletAddress={networkStore?.address} />
             </Tabs.Content>
             <Tabs.Content value="past-games">
-              <PastGames />
+              <PastGames walletAddress={networkStore?.address} />
             </Tabs.Content>
             <Tabs.Content value="transactions">
               <Transactions walletAddress={networkStore?.address} />

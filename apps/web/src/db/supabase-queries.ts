@@ -39,9 +39,9 @@ export async function isUsernameExist(
 
 export const getAllLeaderboardEntries = async (
   supabase: AppSupabaseClient
-): Promise<Array<Table<"leaderboard">>> => {
+): Promise<Array<Table<"game_scores">>> => {
   const { data, error } = await supabase
-    .from("leaderboard")
+    .from("game_scores")
     .select("*")
     .order("score", { ascending: false });
 
@@ -66,18 +66,43 @@ export const getAllCompetitionsEntries = async (
   return data;
 };
 
-export const addGameToLeaderboard = async (
+export const saveGameScoreDb = async (
   supabase: AppSupabaseClient,
   item: {
-    competition_id: number;
+    competition_key: string;
     game_id: number;
     score: number;
     wallet_address: string;
   }
-): Promise<Table<"leaderboard">> => {
+): Promise<Table<"game_scores">> => {
+  let isExist = false;
+
+  try {
+    const { data } = await supabase
+      .from("game_scores")
+      .select("game_id")
+      .eq("game_id", item.game_id)
+      .single();
+    isExist = !!data;
+  } catch (error) {
+    console.log("failed to check existing game");
+  }
+
+  if (!isExist) {
+    const { data, error } = await supabase
+      .from("game_scores")
+      .insert(item)
+      .select("*")
+      .single();
+    if (error) {
+      throw error;
+    }
+    return data;
+  }
   const { data, error } = await supabase
-    .from("leaderboard")
-    .insert(item)
+    .from("game_scores")
+    .update({ score: item.score })
+    .eq("game_id", item.game_id)
     .select("*")
     .single();
 
@@ -172,10 +197,10 @@ export const insertEmail = async (
 
 export const getAllCompetitionsNames = async (
   supabase: AppSupabaseClient
-): Promise<Array<{ id: number; name: string }>> => {
+): Promise<Array<{ id: number; name: string; unique_keyname: string }>> => {
   const { data, error } = await supabase
     .from("tileville_competitions")
-    .select("id, name");
+    .select("id, name, unique_keyname");
 
   if (error) {
     throw error;
@@ -253,13 +278,13 @@ export const fetchTransactionLogById = async (
 };
 
 export const getFilteredLeaderboardEntries = async (
-  competitionId: number
-): Promise<Array<Table<"leaderboard">>> => {
+  competition_key: string
+): Promise<Array<Table<"game_scores">>> => {
   const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
-    .from("leaderboard")
+    .from("game_scores")
     .select("*")
-    .eq("competition_id", competitionId)
+    .eq("competition_key", competition_key)
     .order("score", { ascending: false });
 
   if (error) {
@@ -328,4 +353,59 @@ export const getFilteredTransactionByStatus = async (
     }
     return data;
   }
+};
+
+export const getPastGames = async (
+  wallet_address: string
+): Promise<Array<Table<"game_scores">>> => {
+  const supabase = supabaseUserClientComponentClient;
+
+  const { data, error } = await supabase
+    .from("game_scores")
+    .select("*")
+    .eq("wallet_address", wallet_address)
+    .order("created_at", { ascending: false })
+    .order("score", { ascending: false });
+
+  console.log("past games data", data);
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
+export const getActiveGames = async (
+  supabase: AppSupabaseClient,
+  wallet_address: string
+): Promise<Array<Table<"transaction_logs">>> => {
+  //TODO: Use filter method for a single query
+  const txnLogsPromise = await supabase
+    .from("transaction_logs")
+    .select("*")
+    .eq("wallet_address", wallet_address)
+    .eq("txn_status", "CONFIRMED")
+    .order("created_at", { ascending: false });
+
+  const gameScoresPromise = await supabase
+    .from("game_scores")
+    .select("game_id")
+    .eq("wallet_address", wallet_address);
+
+  const [
+    { data: gameTxnLogs, error: gameTxnLogsError },
+    { data: gameScoreIds, error: gameScoreError },
+  ] = await Promise.all([txnLogsPromise, gameScoresPromise]);
+  if (gameTxnLogsError) {
+    throw gameTxnLogsError;
+  }
+  if (gameScoreError) {
+    throw gameScoreError;
+  }
+  const existingGameIds = gameScoreIds?.map(({ game_id }) => game_id) || [];
+  const activeGames = (gameTxnLogs ?? []).filter(
+    ({ id }) => !existingGameIds.includes(id)
+  );
+  console.log({ gameTxnLogs, gameScoreIds });
+  return activeGames;
 };

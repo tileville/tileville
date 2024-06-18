@@ -1,6 +1,15 @@
+import { useActiveGames } from "@/db/react-query-hooks";
 import { Table } from "@radix-ui/themes";
+import { ActiveGamesLoading } from "./GameSkeletons";
+import { formatTimestampToReadableDate } from "@/lib/helpers";
+import Link from "next/link";
+type ActiveGamesProps = {
+  walletAddress: string;
+};
 
-export default function ActiveGames() {
+export default function ActiveGames({ walletAddress }: ActiveGamesProps) {
+  const { data: activeGames, isLoading } = useActiveGames(walletAddress);
+
   return (
     <div className="">
       <Table.Root>
@@ -8,39 +17,43 @@ export default function ActiveGames() {
           <Table.Row>
             <Table.ColumnHeaderCell>Game Id</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Competition Name</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Game</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Score</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Network</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Created At</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Gameplay Link</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          <Table.Row>
-            <Table.RowHeaderCell>1</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
-
-          <Table.Row>
-            <Table.RowHeaderCell>2</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
-
-          <Table.Row>
-            <Table.RowHeaderCell>3</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
-
-          <Table.Row>
-            <Table.RowHeaderCell>4</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
+          {isLoading ? (
+            <ActiveGamesLoading />
+          ) : (
+            <>
+              {activeGames && activeGames.length > 0 ? (
+                <>
+                  {activeGames.map((activeGame) => (
+                    <Table.Row key={activeGame.id}>
+                      <Table.Cell>{activeGame.id}</Table.Cell>
+                      <Table.Cell>{activeGame.competition_key}</Table.Cell>
+                      <Table.Cell>{activeGame.network}</Table.Cell>
+                      <Table.Cell>
+                        {formatTimestampToReadableDate(activeGame.created_at)}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link
+                          href={`/competitions/${activeGame.competition_key}/game/${activeGame.id}`}
+                          className="underline"
+                        >
+                          Click to play{" "}
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </>
+              ) : (
+                <h2>No Active Games Found</h2>
+              )}
+            </>
+          )}
         </Table.Body>
       </Table.Root>
     </div>

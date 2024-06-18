@@ -7,7 +7,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import {
-  addGameToLeaderboard,
   getAllLeaderboardEntries,
   insertEmail,
   addProfile,
@@ -17,8 +16,10 @@ import {
   getFilteredLeaderboardEntries,
   fetchTransactionLogById,
   updateTransactionLog,
-  fetchAllTransactionsByWallet,
   getFilteredTransactionByStatus,
+  getPastGames,
+  saveGameScoreDb,
+  getActiveGames,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
@@ -62,7 +63,7 @@ export const useSignup = ({
   );
 };
 
-export const useLeaderboard = ({
+export const useSaveScore = ({
   onSuccess,
   onMutate,
   onError,
@@ -75,12 +76,12 @@ export const useLeaderboard = ({
 
   return useMutation(
     async (item: {
-      competition_id: number;
+      competition_key: string;
       game_id: number;
       score: number;
       wallet_address: string;
     }) => {
-      return addGameToLeaderboard(supabaseUserClientComponentClient, item);
+      return saveGameScoreDb(supabaseUserClientComponentClient, item);
     },
     {
       onMutate: () => {
@@ -88,13 +89,7 @@ export const useLeaderboard = ({
         // toastRef.current = toast.loading('Saving leaderboard data...');
         onMutate?.();
       },
-      onSuccess: () => {
-        // toast.success('Leaderboard data saved successfully', {
-        //   id: toastRef.current ?? undefined,
-        // });
-        // toastRef.current = null;
-        // onSuccess?.();
-      },
+      onSuccess: () => {},
       onError: (error) => {
         toast.error(String(error), {
           id: toastRef.current ?? undefined,
@@ -102,6 +97,7 @@ export const useLeaderboard = ({
         toastRef.current = null;
         onError?.(error);
       },
+      retry: 3,
     }
   );
 };
@@ -193,12 +189,12 @@ export const useCompetitionsName = () => {
   );
 };
 
-export const useFilteredLeaderboardData = (competitionId: number) => {
+export const useFilteredLeaderboardData = (competition_key: string) => {
   return useQuery(
-    ["leaderboard", competitionId],
-    () => getFilteredLeaderboardEntries(competitionId),
+    ["leaderboard", competition_key],
+    () => getFilteredLeaderboardEntries(competition_key),
     {
-      enabled: !!competitionId, // Only run this query if competitionId is not null
+      enabled: !!competition_key, // Only run this query if competitionId is not null
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 10, // 10 minutes
       refetchOnWindowFocus: false, // Disable refetch on window focus
@@ -270,6 +266,26 @@ export const useTransactionLogByStatus = (
       ),
     {
       enabled: !!txn_status && !!wallet_address,
+    }
+  );
+};
+
+export const useActiveGames = (wallet_address: string) => {
+  return useQuery(
+    ["active_games", wallet_address],
+    () => getActiveGames(supabaseUserClientComponentClient, wallet_address),
+    {
+      enabled: !!wallet_address,
+    }
+  );
+};
+
+export const usePastGames = (wallet_address: string) => {
+  return useQuery(
+    ["past_games", wallet_address],
+    () => getPastGames(wallet_address),
+    {
+      enabled: !!wallet_address,
     }
   );
 };

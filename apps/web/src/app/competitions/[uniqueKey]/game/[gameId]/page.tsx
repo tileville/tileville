@@ -75,6 +75,8 @@ function Game() {
             isDemoGame={false}
             isGamePlayAllowed={isGamePlayAllowed}
             gamePlayDisAllowMessage={gamePlayDisAllowMessage}
+            competitionKey={params.uniqueKey}
+            gameId={+params.gameId}
           />
           <Toaster />
         </div>

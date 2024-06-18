@@ -1,6 +1,15 @@
+import { usePastGames } from "@/db/react-query-hooks";
 import { Table } from "@radix-ui/themes";
+import { PastGamesLoading } from "./GameSkeletons";
+import { formatTimestampToReadableDate } from "@/lib/helpers";
 
-export default function PastGames() {
+type PastGamesProps = {
+  walletAddress: string;
+};
+
+export default function PastGames({ walletAddress }: PastGamesProps) {
+  const { data: pastGames, isLoading } = usePastGames(walletAddress);
+  console.log("past games", pastGames);
   return (
     <div className="">
       <Table.Root>
@@ -8,39 +17,36 @@ export default function PastGames() {
           <Table.Row>
             <Table.ColumnHeaderCell>Game Id</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Competition Name</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Game</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Score</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Played on</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Leaderboard Rank</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          <Table.Row>
-            <Table.RowHeaderCell>1</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
-
-          <Table.Row>
-            <Table.RowHeaderCell>2</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
-
-          <Table.Row>
-            <Table.RowHeaderCell>3</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
-
-          <Table.Row>
-            <Table.RowHeaderCell>4</Table.RowHeaderCell>
-            <Table.Cell>Heros Tileville League</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-            <Table.Cell>asdjfadskl</Table.Cell>
-          </Table.Row>
+          {isLoading ? (
+            <PastGamesLoading />
+          ) : (
+            <>
+              {pastGames && pastGames.length > 0 ? (
+                <>
+                  {pastGames.map((game) => (
+                    <Table.Row key={game.id}>
+                      <Table.Cell>{game.id}</Table.Cell>
+                      <Table.Cell>{game.competition_key}</Table.Cell>
+                      <Table.Cell>{game.score}</Table.Cell>
+                      <Table.Cell>
+                        {formatTimestampToReadableDate(game.created_at)}
+                      </Table.Cell>
+                      <Table.Cell>Coming Soon 🚀</Table.Cell>
+                    </Table.Row>
+                  ))}
+                </>
+              ) : (
+                <h2>No Past Games Found</h2>
+              )}
+            </>
+          )}
         </Table.Body>
       </Table.Root>
     </div>

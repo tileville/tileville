@@ -1,49 +1,64 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
-import { useLeaderboard } from "@/db/react-query-hooks";
+import { useSaveScore } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
+import toast from "react-hot-toast";
 
 type PhaserLayerProps = {
   isDemoGame: boolean;
   isGamePlayAllowed: boolean;
   gamePlayDisAllowMessage: string;
+  competitionKey: string;
+  gameId: number;
 };
 
 export const PhaserLayer = ({
   isDemoGame,
   isGamePlayAllowed,
   gamePlayDisAllowMessage,
+  competitionKey,
+  gameId,
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
   console.log("address", address);
 
-  const leaderboardMutation = useLeaderboard({
+  const leaderboardMutation = useSaveScore({
     onSuccess: () => {
-      console.log("Leaderboard data saved successfully");
+      console.log("Game score saved Successfully!");
     },
     onMutate: () => {
-      console.log("Saving leaderboard data...");
+      console.log("Saving game score");
     },
     onError: (error) => {
-      console.error("Error saving leaderboard data:", error);
+      console.error("Error saving game score", error);
     },
   });
   const showGameInfoModalFn = useCallback(() => {
     setShowGameInfoModal(true);
   }, []);
-  const handleSaveLeaderboardData = useCallback(
-    (finalScore: number) => {
+  const handleSaveScore = useCallback(
+    (score: number) => {
+      if (isDemoGame) {
+        return;
+      }
+      if (!address) {
+        toast.error(
+          `Seems there is some issue with wallet connection. Do not play the game as this will not be saved.`
+        );
+        return;
+      }
+
       leaderboardMutation.mutate({
-        competition_id: new Date().valueOf(),
-        game_id: new Date().valueOf(),
-        score: finalScore,
-        wallet_address: `${!!address ? address : "Played Without Address"}`,
+        competition_key: competitionKey,
+        game_id: gameId,
+        score: score,
+        wallet_address: address,
       });
     },
-    [leaderboardMutation, address]
+    [leaderboardMutation, address, isDemoGame]
   );
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
@@ -59,7 +74,7 @@ export const PhaserLayer = ({
     };
     const game = new Phaser.Game(config);
     game.registry.set("isDemoGame", isDemoGame);
-    game.registry.set("handleSaveScore", handleSaveLeaderboardData);
+    game.registry.set("handleSaveScore", handleSaveScore);
     game.registry.set("isGamePlayAllowed", isGamePlayAllowed);
     game.registry.set("gamePlayDisAllowMessage", gamePlayDisAllowMessage);
     game.registry.set("showGameInfoModalFn", showGameInfoModalFn);

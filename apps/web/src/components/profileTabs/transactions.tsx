@@ -4,7 +4,7 @@ import { formatTimestampToReadableDate } from "@/lib/helpers";
 import { DropdownMenu, Table } from "@radix-ui/themes";
 import Image from "next/image";
 import { useState } from "react";
-import TransactionLoading from "./transactionLoading";
+import { TransactionLoading } from "./GameSkeletons";
 
 type TransactionsProps = {
   walletAddress: string;
@@ -38,7 +38,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
     <div className="">
       <div className="flex">
         <div className="mb-3 ms-auto flex items-center gap-3">
-          <p>Filter</p>
+          <p>Filter By Status</p>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
               <button className="border-primary-30 flex h-10 min-w-[160px] items-center justify-between rounded-md border bg-transparent px-3 font-semibold text-primary outline-none">

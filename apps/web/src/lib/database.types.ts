@@ -9,32 +9,43 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      leaderboard: {
+      game_scores: {
         Row: {
-          competition_id: number
+          competition_key: string
           created_at: string
           game_id: number
           id: number
           score: number
+          updated_at: string | null
           wallet_address: string
         }
         Insert: {
-          competition_id: number
+          competition_key: string
           created_at?: string
           game_id: number
           id?: number
           score: number
+          updated_at?: string | null
           wallet_address: string
         }
         Update: {
-          competition_id?: number
+          competition_key?: string
           created_at?: string
           game_id?: number
           id?: number
           score?: number
+          updated_at?: string | null
           wallet_address?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "game_scores_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: true
+            referencedRelation: "transaction_logs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       player_profile: {
         Row: {
