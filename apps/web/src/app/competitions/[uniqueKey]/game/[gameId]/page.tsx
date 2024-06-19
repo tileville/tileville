@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import LandingBackground from "@/components/LandingBackground";
 import { useParams } from "next/navigation";
@@ -10,7 +10,6 @@ import {
   useTransactionLogById,
 } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
-import { TransactionStatus } from "@/lib/types";
 
 const GAMEPLAY_DISALLOW_MESSAGE_DEFAULT =
   "We are fetching your participation fee payment transaction details...";
@@ -28,7 +27,6 @@ function Game() {
   const networkStore = useNetworkStore();
   const {
     data: gameTransaction,
-    isLoading: isGameTransactionLoading,
     error: gameTransactionError,
     isSuccess,
   } = useTransactionLogById(networkStore.address!, parseInt(params.gameId));

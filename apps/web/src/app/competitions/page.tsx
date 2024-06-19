@@ -1,9 +1,8 @@
 "use client";
 import { useCompetitionsData } from "@/db/react-query-hooks";
-import { CalendarIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import CompetitionLoading from "./competitionLoading";
 import { Competition } from "@/types";

@@ -6,7 +6,6 @@ import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 export default function Error({
   error,
-  reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
@@ -15,6 +14,7 @@ export default function Error({
   useEffect(() => {
     // Log the error to an error reporting service
     ph.reactErrorBoundary(error, {} as any);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   return <ErrorBoundaryFallbackComponent className="" />;

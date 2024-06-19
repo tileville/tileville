@@ -1,6 +1,5 @@
 "use client";
 
-import { bibloSwashCaps } from "@/styles/fonts";
 import dynamic from "next/dynamic";
 
 const GuidePhaserLayer = dynamic(
