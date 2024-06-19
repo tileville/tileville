@@ -5,7 +5,6 @@ import { Scene, GameObjects } from "phaser";
 
 const tutorialTexts = [
   "TileVille is city development Arcade game \nwhere you join a competition to play\nthe game and build your city.\n\nEvery competition have a associated\nparticipation fees and rewards.",
-  "If your score is above 70\nyou will win a level 1 treasure box",
   "Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!",
   "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every Port that you\nconnect to the Center with\nRoads is worth 3 points!",
   "Wind Mills are worth 1 point if\nthey're not adjacent to any other\nWind Mills\n\nIf they're also placed on a HILL,\nthey're worth 3 points!",
@@ -347,7 +346,7 @@ export class MenuScene extends Scene {
 
   nextTutorialPage() {
     this.tutorialPage += 1;
-    if (this.tutorialPage >= 7) {
+    if (this.tutorialPage >= tutorialTexts.length) {
       this.cameras.main.pan(640, 0, 1000, "Power2");
       this.tutorialGrid.grid.get(0, 6)?.setVisible(false);
       this.tutorialGrid.grid.get(3, 0)?.setVisible(false);

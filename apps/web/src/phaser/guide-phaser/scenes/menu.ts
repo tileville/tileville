@@ -4,7 +4,6 @@ import { Scene, GameObjects } from "phaser";
 
 const tutorialTexts = [
   "TileVille is city development Arcade game \nwhere you join a competition to play\nthe game and build your city.\n\nEvery competition have a associated\nparticipation fees and rewards.",
-  "If your score is above 70\nyou will win a level 1 treasure box",
   "Place trios of hexes to grow your city\noutward from the Center\n\n\nTry to get the highest score you can!",
   "ROAD hexes are worth 1 point each\nif they're connected to the Center\n\nAdditionally, every Port that you\nconnect to the Center with\nRoads is worth 3 points!",
   "Wind Mills are worth 1 point if\nthey're not adjacent to any other\nWind Mills\n\nIf they're also placed on a HILL,\nthey're worth 3 points!",
@@ -51,7 +50,7 @@ export class MenuScene extends Scene {
     title.setTint(0xffffff);
     this.menu.add(title);
 
-    // From Below will be used in the Guide section 
+    // From Below will be used in the Guide section
     const letsGoBtn = this.add.image(250, 300, "letsGoBtn").setScale(0.5);
     letsGoBtn.setInteractive({ useHandCursor: true });
     letsGoBtn.on("pointerdown", () => this.howToPlay());
@@ -106,7 +105,7 @@ export class MenuScene extends Scene {
       550,
       "next_arrow",
       this.backTutorialPage.bind(this)
-    )
+    );
     this.previousArrowBtn.angle = 180;
 
     this.previousArrowBtn.setOrigin(0, 0.5);
@@ -180,7 +179,7 @@ export class MenuScene extends Scene {
 
   nextTutorialPage() {
     this.tutorialPage += 1;
-    if (this.tutorialPage >= 7) {
+    if (this.tutorialPage >= tutorialTexts.length) {
       this.cameras.main.pan(640, 0, 1000, "Power2");
       this.tutorialGrid.grid.get(0, 6)?.setVisible(false);
       this.tutorialGrid.grid.get(3, 0)?.setVisible(false);
@@ -197,9 +196,9 @@ export class MenuScene extends Scene {
   }
 
   backTutorialPage() {
-    console.log(this.tutorialPage)
+    console.log(this.tutorialPage);
     this.tutorialPage -= 1;
-    if (this.tutorialPage < 0 ) {
+    if (this.tutorialPage < 0) {
       this.cameras.main.pan(640, 0, 1000, "Power2");
       this.tutorialGrid.grid.get(0, 6)?.setVisible(false);
       this.tutorialGrid.grid.get(3, 0)?.setVisible(false);
