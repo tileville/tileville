@@ -37,3 +37,18 @@ type ChainType = {
   chainId: number;
   chainName: string;
 };
+
+type Competition = {
+  created_at: string;
+  description: string;
+  end_date: string;
+  funds: number;
+  id: number;
+  name: string;
+  participation_fee: number | null;
+  poster_url: string | null;
+  seed: number;
+  start_date: string;
+  treasury_address: string | null;
+  unique_keyname: string;
+};
