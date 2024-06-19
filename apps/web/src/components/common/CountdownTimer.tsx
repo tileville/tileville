@@ -21,7 +21,7 @@ export const CountdownTimer = ({
   const getTimeDifference = (countDownTime: number) => {
     const currentTime = new Date().getTime();
     const timeDiffrence = countDownTime - currentTime;
-    let days =
+    const days =
       Math.floor(timeDiffrence / (24 * 60 * 60 * 1000)) >= 10
         ? Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))
         : `0${Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))}`;
@@ -74,52 +74,47 @@ export const CountdownTimer = ({
         "flex h-full w-full flex-col items-center justify-center gap-8 sm:gap-16"
       )}
     >
-      <div className="flex justify-center gap-3 sm:gap-8">
-        <div className="relative flex flex-col gap-5">
-          <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-            <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-            <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+      <div className="flex justify-center gap-3">
+        <div className="relative flex flex-col items-center gap-1">
+          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
+            <span className="text-center font-semibold text-primary">
               {countDownTime?.days}
             </span>
-            <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
           </div>
-          <span className="text-center text-xs capitalize text-[#8486A9] sm:text-2xl">
+          <span className="text-center text-xs capitalize text-black/60">
             {+countDownTime?.days == 1 ? "Day" : "Days"}
           </span>
         </div>
-        <div className="relative flex flex-col gap-5">
-          <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-            <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-            <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+        :
+        <div className="relative flex flex-col items-center gap-1">
+          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
+            <span className="text-center font-semibold text-primary">
               {countDownTime?.hours}
             </span>
-            <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
           </div>
-          <span className="text-center text-xs font-medium text-[#8486A9] sm:text-2xl">
+          <span className="text-center text-xs font-medium text-black/60">
             {+countDownTime?.hours == 1 ? "Hour" : "Hours"}
           </span>
         </div>
-        <div className="relative flex flex-col gap-5">
-          <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-            <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-            <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+        :
+        <div className="relative flex flex-col items-center gap-1">
+          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
+            <span className="text-center font-semibold text-primary">
               {countDownTime?.minutes}
             </span>
-            <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
           </div>
-          <span className="text-center text-xs capitalize text-[#8486A9] sm:text-2xl">
+          <span className="text-center text-xs capitalize text-black/60">
             {+countDownTime?.minutes == 1 ? "Minute" : "Minutes"}
           </span>
         </div>
-        <div className="relative flex flex-col gap-5">
-          <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-            <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-            <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+        :
+        <div className="relative flex flex-col items-center gap-1">
+          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
+            <span className="text-center font-semibold text-primary">
               {countDownTime?.seconds}
             </span>
-            <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
           </div>
-          <span className="text-center text-xs capitalize text-[#8486A9] sm:text-2xl">
+          <span className="text-center text-xs capitalize text-black/60">
             {+countDownTime?.seconds == 1 ? "Second" : "Seconds"}
           </span>
         </div>
