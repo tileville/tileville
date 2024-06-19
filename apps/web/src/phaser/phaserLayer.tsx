@@ -90,7 +90,7 @@ export const PhaserLayer = ({
       <GameInfoModal
         open={showGameInfoModal}
         message={gamePlayDisAllowMessage}
-        title="You are not allowed to play the game"
+        title="Please wait while we are fetching your transaction details"
         handleClose={() => {
           setShowGameInfoModal(false);
         }}
