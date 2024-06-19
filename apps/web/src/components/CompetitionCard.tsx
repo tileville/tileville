@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { Competition } from "@/types";
-import { CalendarIcon } from "@radix-ui/react-icons";
+
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { getMilliseconds, getTime, isAfter, isBefore } from "date-fns";
+import { getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
 
@@ -39,23 +39,20 @@ export const CompetitionCard = ({
     }
   }, []);
 
-  console.log("start date mili sec", getMilliseconds(competition.start_date));
-
   return (
     <div
-      className="border-primary-30 competitionCard group relative grid grid-cols-12 gap-3 overflow-hidden rounded-lg"
+      className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-3 overflow-hidden rounded-lg"
       key={competition.id}
     >
-      <div className="col-span-2 h-36 overflow-hidden">
+      <div className="relative col-span-4 h-full overflow-hidden">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
-          width={300}
-          height={200}
+          fill
           className="h-full w-full object-cover transition-transform group-hover:scale-110"
         />
       </div>
-      <div className="col-span-7 flex flex-col p-4">
+      <div className="col-span-5 flex flex-col p-4">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
         <p className="mb-2 line-clamp-2 text-sm text-black/50">
           {competition.description}
@@ -75,12 +72,14 @@ export const CompetitionCard = ({
           </div>
         </div>
       </div>
-      <div className="col-span-3 p-6">
+      <div className="col-span-3 p-4">
         <div className="flex h-full flex-col items-start justify-between">
           <div className="mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
               <div>
-                <h3 className="font-semibold">Competiton Starts In</h3>
+                <h3 className="py-4 text-xl font-medium">
+                  Competiton Starts In
+                </h3>
                 <CountdownTimer
                   countdownTime={getTime(competition.start_date)}
                 />
@@ -88,7 +87,7 @@ export const CompetitionCard = ({
             )}
             {competitionStatus === "ongoing" && (
               <div>
-                <h3 className="font-semibold">Competiton Ends In</h3>
+                <h3 className="pb-4 text-xl font-medium">Competiton Ends In</h3>
                 <CountdownTimer countdownTime={getTime(competition.end_date)} />
               </div>
             )}
