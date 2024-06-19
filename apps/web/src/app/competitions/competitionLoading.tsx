@@ -1,7 +1,7 @@
 import { Skeleton } from "@radix-ui/themes";
 
 export default function CompetitionLoading() {
-  const initialArray = Array(2).fill(34534123344);
+  const initialArray = [34534123344, 34534123345];
 
   console.log(initialArray);
 

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Competition } from "@/types";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { getMilliseconds, isAfter, isBefore } from "date-fns";
+import { getMilliseconds, getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
 
@@ -20,11 +20,12 @@ export const CompetitionCard = ({
   setSelectedCompetition,
   setIsFeesModalOpen,
 }: CompetitionCardProps) => {
+  console.log("comp data", competition);
   const [competitionStatus, setCompetitionStatus] =
     useState<CompetitionStatus>("upcoming");
+  const [currentDate] = useState(new Date());
 
   useEffect(() => {
-    const currentDate = new Date();
     const isStartBeforeCurrent = isBefore(competition.start_date, currentDate);
     const isStartAfterCurrent = isAfter(competition.start_date, currentDate);
     const isEndAfterCurrent = isAfter(competition.end_date, currentDate);
@@ -37,6 +38,8 @@ export const CompetitionCard = ({
       setCompetitionStatus("ongoing");
     }
   }, []);
+
+  console.log("start date mili sec", getMilliseconds(competition.start_date));
 
   return (
     <div
@@ -52,7 +55,6 @@ export const CompetitionCard = ({
           className="h-full w-full object-cover transition-transform group-hover:scale-110"
         />
       </div>
-
       <div className="col-span-8 flex flex-col p-4">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
         <p className="mb-2 line-clamp-2 text-sm text-black/50">
@@ -67,16 +69,14 @@ export const CompetitionCard = ({
               <div>
                 <h3>Competiton Starts In</h3>
                 <CountdownTimer
-                  countdownTime={getMilliseconds(competition.start_date)}
+                  countdownTime={getTime(competition.start_date)}
                 />
               </div>
             )}
             {competitionStatus === "ongoing" && (
               <div>
                 <h3>Competiton Ends In</h3>
-                <CountdownTimer
-                  countdownTime={getMilliseconds(competition.end_date)}
-                />
+                <CountdownTimer countdownTime={getTime(competition.end_date)} />
               </div>
             )}
           </div>

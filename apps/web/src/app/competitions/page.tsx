@@ -15,6 +15,7 @@ export default function Competitions() {
   const [selectedCompetition, setSelectedCompetition] = useState<Competition>(
     {} as Competition
   );
+  console.log("competitions", data);
   //TODO: Error Message UI improvement
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
@@ -49,14 +50,14 @@ export default function Competitions() {
               <CompetitionLoading />
             ) : (
               <>
-                {data?.map((competition) => {
+                {data?.map((competition) => (
                   <CompetitionCard
                     competition={competition}
                     key={competition.id}
                     setSelectedCompetition={setSelectedCompetition}
                     setIsFeesModalOpen={setIsFeesModalOpen}
-                  />;
-                })}
+                  />
+                ))}
               </>
             )}
           </div>
