@@ -55,7 +55,7 @@ export const CompetitionCard = ({
           className="h-full w-full object-cover transition-transform group-hover:scale-110"
         />
       </div>
-      <div className="col-span-8 flex flex-col p-4">
+      <div className="col-span-7 flex flex-col p-4">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
         <p className="mb-2 line-clamp-2 text-sm text-black/50">
           {competition.description}
@@ -63,11 +63,24 @@ export const CompetitionCard = ({
         <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>
         <div className="flex justify-between gap-3 text-sm font-medium">
           <div className="flex items-center gap-2">
-            <CalendarIcon />
-
+            <p>Entry Fees:</p>
+            <p className="text-base font-semibold">
+              {competition.participation_fee} MINA
+            </p>
+          </div>
+          <div className="h-full w-[1px] bg-primary/30"></div>
+          <div className="flex items-center gap-2">
+            <p>Prize Money 🤑:</p>
+            <p className="text-base font-semibold">{competition.funds} MINA</p>
+          </div>
+        </div>
+      </div>
+      <div className="col-span-3 p-6">
+        <div className="flex h-full flex-col items-start justify-between">
+          <div className="mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
               <div>
-                <h3>Competiton Starts In</h3>
+                <h3 className="font-semibold">Competiton Starts In</h3>
                 <CountdownTimer
                   countdownTime={getTime(competition.start_date)}
                 />
@@ -75,31 +88,12 @@ export const CompetitionCard = ({
             )}
             {competitionStatus === "ongoing" && (
               <div>
-                <h3>Competiton Ends In</h3>
+                <h3 className="font-semibold">Competiton Ends In</h3>
                 <CountdownTimer countdownTime={getTime(competition.end_date)} />
               </div>
             )}
           </div>
-          <>
-            <div className="h-full w-[1px] bg-primary/30"></div>
-            <div className="flex items-center gap-2">
-              <p>Entry Fees:</p>
-              <p className="text-base font-semibold">
-                {competition.participation_fee} MINA
-              </p>
-            </div>
-            <div className="h-full w-[1px] bg-primary/30"></div>
-            <div className="flex items-center gap-2">
-              <p>Prize Money 🤑:</p>
-              <p className="text-base font-semibold">
-                {competition.funds} MINA
-              </p>
-            </div>
-          </>
-        </div>
-      </div>
-      <div className="col-span-2 p-4">
-        <div className="flex h-full items-start">
+
           <Tooltip.Provider delayDuration={300}>
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
