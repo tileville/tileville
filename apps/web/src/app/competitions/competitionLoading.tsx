@@ -58,7 +58,7 @@ export default function CompetitionLoading() {
                   </Skeleton>
                   <Skeleton>
                     <p className="text-base font-semibold">
-                      {competition.funds} MINA
+                      {competition} MINA
                     </p>
                   </Skeleton>
                 </div>{" "}
