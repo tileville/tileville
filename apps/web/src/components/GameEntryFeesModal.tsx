@@ -1,10 +1,11 @@
 import { Dialog, Flex } from "@radix-ui/themes";
 import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
-import { type Competition } from "@/app/competitions/page";
+// import { type Competition } from "@/app/competitions/page";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
+import { Competition } from "@/types";
 
 let timeoutId: NodeJS.Timeout;
 

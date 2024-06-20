@@ -12,6 +12,8 @@ type PhaserLayerProps = {
   gamePlayDisAllowMessage: string;
   competitionKey: string;
   gameId: number;
+  txnHash?: string | undefined;
+  txnStatus?: string | undefined;
 };
 
 export const PhaserLayer = ({
@@ -20,6 +22,8 @@ export const PhaserLayer = ({
   gamePlayDisAllowMessage,
   competitionKey,
   gameId,
+  txnHash,
+  txnStatus,
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
@@ -90,7 +94,9 @@ export const PhaserLayer = ({
       <GameInfoModal
         open={showGameInfoModal}
         message={gamePlayDisAllowMessage}
-        title="You are not allowed to play the game"
+        title="Transaction is pending!"
+        txnHash={txnHash}
+        txnStatus={txnStatus}
         handleClose={() => {
           setShowGameInfoModal(false);
         }}
