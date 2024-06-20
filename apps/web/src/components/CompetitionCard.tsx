@@ -49,7 +49,7 @@ export const CompetitionCard = ({
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
           fill
-          className="h-full w-full object-cover transition-transform group-hover:scale-110"
+          className="h-full w-full object-cover object-left transition-transform group-hover:scale-110"
         />
       </div>
       <div className="col-span-5 flex flex-col p-4">

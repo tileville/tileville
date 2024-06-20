@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ['oqymtqolwjujkayjyxdt.supabase.co'],
+},
   reactStrictMode: true,
   output: "standalone",
   async headers() {
@@ -14,6 +17,5 @@ const nextConfig = {
     ];
   },
 }
-
 
 module.exports = nextConfig
