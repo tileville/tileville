@@ -93,47 +93,11 @@ export default function Marketplace() {
       price: 0.0001,
       cardId: 789,
     },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
   ];
   const [selectedItem, setSelectedItem] = useState<string>(options[3].text);
 
   return (
-    <div className="p-4 pt-40">
+    <div className="relative p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex gap-3">
           <ul className="grid w-fit grid-cols-3">
@@ -252,6 +216,10 @@ export default function Marketplace() {
             );
           })}
         </div>
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center backdrop-blur-xl">
+        <h2 className="text-5xl font-semibold text-white">Coming Soon</h2>
       </div>
     </div>
   );

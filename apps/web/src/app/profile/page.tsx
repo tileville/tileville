@@ -142,7 +142,7 @@ export default function Profile() {
 
   if (!networkStore.address) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
+      <div className="flex  min-h-screen w-full items-center justify-center">
         <Button
           variant="classic"
           className="mx-4 !cursor-pointer"

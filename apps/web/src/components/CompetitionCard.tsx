@@ -20,7 +20,6 @@ export const CompetitionCard = ({
   setSelectedCompetition,
   setIsFeesModalOpen,
 }: CompetitionCardProps) => {
-  console.log("comp data", competition);
   const [competitionStatus, setCompetitionStatus] =
     useState<CompetitionStatus>("upcoming");
   const [currentDate] = useState(new Date());
@@ -54,7 +53,7 @@ export const CompetitionCard = ({
       </div>
       <div className="col-span-5 flex flex-col p-4">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
-        <p className="mb-2 line-clamp-2 text-sm text-black/50">
+        <p className="mb-2 line-clamp-4 text-sm text-black/50">
           {competition.description}
         </p>
         <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>

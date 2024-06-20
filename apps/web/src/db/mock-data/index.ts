@@ -4,7 +4,7 @@ export const mockCompetition = {
     " an exciting tile game where clever players compete. Use smart moves to beat others and build the best patterns. Winners become true tiling heroes!",
   end_date: "2024-06-18T00:00:00",
   funds: 1200,
-  id: 3,
+  id: 999999,
   name: "Hero's Tileville League ",
   participation_fee: 1,
   poster_url: "/image/cards/competition1.png",

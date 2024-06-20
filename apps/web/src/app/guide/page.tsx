@@ -53,7 +53,7 @@ export default function Guide() {
         </filter>
       </svg> */}
 
-      <div className="mx-auto flex h-screen items-center justify-center">
+      <div className="min-h-scree mx-auto  flex items-center justify-center">
         <div className="w-full">
           <GuidePhaserLayer />
         </div>

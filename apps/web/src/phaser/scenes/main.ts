@@ -370,6 +370,7 @@ export class MainScene extends Scene {
 
   endGame() {
     const handleSaveScore = this.game.registry.get("handleSaveScore");
+    const isDemoGame = this.game.registry.get("isDemoGame");
 
     if (this.scoreText) {
       handleSaveScore(this.score);
@@ -467,6 +468,9 @@ export class MainScene extends Scene {
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
+
+    if(isDemoGame){
+
     this.playAgainButton = this.add
       .bitmapText(1400, 630, "font", "Play Again", 40)
       .setInteractive({ useHandCursor: true })
@@ -512,6 +516,9 @@ export class MainScene extends Scene {
         this.playAgain();
       })
       .setDepth(4);
+
+    }
+
 
     this.shareButton = this.add
       .image(1450, 700, "share-score-button")
