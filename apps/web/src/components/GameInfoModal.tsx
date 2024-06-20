@@ -1,8 +1,12 @@
 import { Dialog, Flex } from "@radix-ui/themes";
 import LottieAnimation from "./common/LottieAnimation";
 import PersonWaiting from "../../public/lotties/personWaiting.json";
+import Failed from "../../public/lotties/failed.json";
 import Link from "next/link";
-import { useFetchTransactions } from "@/db/react-query-hooks";
+import {
+  useFetchTransactions,
+  useTransactionLogByStatus,
+} from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 
 export const GameInfoModal = ({
@@ -10,65 +14,94 @@ export const GameInfoModal = ({
   handleClose,
   message,
   title,
+  txnHash,
+  txnStatus,
 }: {
   open: boolean;
   handleClose: () => void;
   message: string;
   title: string;
+  txnHash: string | undefined;
+  txnStatus: string | undefined;
 }) => {
-  const networkStore = useNetworkStore();
-  console.log("pending txnasdfsdfs", networkStore.pendingL2Transactions);
+  console.log("txnHash", txnHash);
+  console.log("txnStatus", txnStatus);
   return (
     <Dialog.Root open={open}>
-      <Dialog.Content style={{ maxWidth: 800 }} className=" backdrop-blur-2xl">
-        <Dialog.Title className="text-center">{title}</Dialog.Title>
-        <div className="mx-auto max-w-[200px]">
-          <LottieAnimation animationData={PersonWaiting} />
-        </div>
-        <Dialog.Description size="2" mb="4">
-          {message}
+      <Dialog.Content
+        style={{ maxWidth: 500 }}
+        className="rounded-md bg-transparent backdrop-blur-2xl"
+      >
+        {false ? (
+          <>
+            <Dialog.Title className="text-center">
+              Transaction Failed
+            </Dialog.Title>
 
-          <p className="font-medium">
-            Generally it takes almost 2 to 3 mins please wait, <br />
-            Till Then you can take a tour to game{" "}
-            <Link href={"/guide"} className="underline">
-              Here
-            </Link>
-            <br />
-            <br />
-          </p>
-          <div>
-            <p className="text-lg font-semibold leading-snug">
-              You can also Check your current Transaction{" "}
-              <Link href={"/guide"} target="_blank" className="underline">
-                here
-              </Link>
-            </p>
-            <p className="text-sm">
-              Don&apos;t Worry! If you don&apos;t Play Now! you can play the
-              game from the{" "}
-              <Link href="/profile" className="underline">
-                Active Games
-              </Link>{" "}
-              in the{" "}
-              <Link href="/profile" className="underline">
-                profile
-              </Link>
-            </p>
-          </div>
+            <Dialog.Description size="2" mb="4">
+              <div className="mx-auto max-w-[300px]">
+                <LottieAnimation animationData={Failed} />
+              </div>
+              <div className="mt-4 text-center">
+                <h3 className="text-2xl font-semibold">Transaction Failed</h3>
+                <p>Please Try Again</p>
+              </div>
+            </Dialog.Description>
+          </>
+        ) : (
+          <>
+            <Dialog.Title className="text-center">{title}</Dialog.Title>
 
-          <p className="mt-3">
-            NOTE:- If your transaction gets succeed from your Wallet but still
-            you are not able to play the game. You can reach out to us{" "}
-            <Link
-              target="_blank"
-              className="underline"
-              href={"https://t.me/tilevilleBugs"}
-            >
-              Here
-            </Link>
-          </p>
-        </Dialog.Description>
+            <Dialog.Description size="2" mb="4">
+              <div className="mx-auto max-w-[300px]">
+                <LottieAnimation animationData={PersonWaiting} />
+              </div>
+              <ul className="flex flex-col gap-y-4 divide-y divide-primary/30">
+                <li className="pt-3">
+                  Transaction on mina on an avg take 2 to 3 mins
+                </li>
+
+                <li className="pt-3">
+                  you can check your transaction{" "}
+                  <Link
+                    target="_blank"
+                    href={`https://minascan.io/mainnet/tx/${txnHash}`}
+                    className="font-medium text-primary underline hover:text-primary/80"
+                  >
+                    Here
+                  </Link>
+                </li>
+
+                <li className="pt-3">
+                  meanwhile you can go through the{" "}
+                  <Link href={"/guide"} className="underline">
+                    Game Tour
+                  </Link>
+                </li>
+
+                <li className="pt-3">
+                  You can play this game later as well from{" "}
+                  <Link href="/profile" className="underline">
+                    profile section
+                  </Link>
+                </li>
+
+                <li className="pt-3">
+                  If your transaction gets succeeded and you still see this
+                  message please{" "}
+                  <Link
+                    target="_blank"
+                    className="underline"
+                    href={"https://t.me/tilevilleBugs"}
+                  >
+                    report a bug
+                  </Link>
+                </li>
+              </ul>
+            </Dialog.Description>
+          </>
+        )}
+
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
             <button

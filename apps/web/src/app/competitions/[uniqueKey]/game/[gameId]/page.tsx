@@ -18,7 +18,10 @@ const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
 });
 
 function Game() {
-  const params = useParams<{ uniqueKey: string; gameId: string }>();
+  const params = useParams<{
+    uniqueKey: string;
+    gameId: string;
+  }>();
   const [isGamePlayAllowed, setIsGamePlayAllowed] = useState(false);
   const [gamePlayDisAllowMessage, setGamePlayDisallowMessage] = useState(
     GAMEPLAY_DISALLOW_MESSAGE_DEFAULT
@@ -74,6 +77,8 @@ function Game() {
             gamePlayDisAllowMessage={gamePlayDisAllowMessage}
             competitionKey={params.uniqueKey}
             gameId={+params.gameId}
+            txnHash={gameTransaction?.txn_hash}
+            txnStatus={gameTransaction?.txn_status}
           />
           <Toaster />
         </div>
