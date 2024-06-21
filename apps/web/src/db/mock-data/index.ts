@@ -6,7 +6,7 @@ export const mockCompetition = {
   funds: 1200,
   id: 3,
   name: "Hero's Tileville League ",
-  participation_fee: 0,
+  participation_fee: 0.1,
   poster_url: "/image/cards/competition1.png",
   seed: 0,
   start_date: "2024-06-12T14:00:32.674173",
