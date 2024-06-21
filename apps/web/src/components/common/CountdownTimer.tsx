@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { getTime } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 
 type CountdownTimerProps = {
@@ -19,12 +20,13 @@ export const CountdownTimer = ({
   });
 
   const getTimeDifference = (countDownTime: number) => {
-    const currentTime = new Date().getTime();
-    const timeDiffrence = countDownTime - currentTime;
+    const currentTime = getTime(new Date());
+    const timeDiffrence = Math.abs(countDownTime - currentTime);
     const days =
       Math.floor(timeDiffrence / (24 * 60 * 60 * 1000)) >= 10
         ? Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))
         : `0${Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))}`;
+
     const hours =
       Math.floor((timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)) >=
       10

@@ -78,7 +78,7 @@ export const CompetitionCard = ({
             {competitionStatus === "upcoming" && (
               <div>
                 <h3 className="py-4 text-xl font-medium">
-                  Competiton Starts In
+                  Competition Starts In
                 </h3>
                 <CountdownTimer
                   countdownTime={getTime(competition.start_date)}
@@ -87,7 +87,9 @@ export const CompetitionCard = ({
             )}
             {competitionStatus === "ongoing" && (
               <div>
-                <h3 className="pb-4 text-xl font-medium">Competiton Ends In</h3>
+                <h3 className="pb-4 text-xl font-medium">
+                  Competition Ends In
+                </h3>
                 <CountdownTimer countdownTime={getTime(competition.end_date)} />
               </div>
             )}
