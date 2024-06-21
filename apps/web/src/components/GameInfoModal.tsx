@@ -28,10 +28,7 @@ export const GameInfoModal = ({
   console.log("txnStatus", txnStatus);
   return (
     <Dialog.Root open={open}>
-      <Dialog.Content
-        style={{ maxWidth: 500 }}
-        className="rounded-md bg-transparent backdrop-blur-2xl"
-      >
+      <Dialog.Content style={{ maxWidth: 500 }} className="rounded-md">
         {false ? (
           <>
             <Dialog.Title className="text-center">
