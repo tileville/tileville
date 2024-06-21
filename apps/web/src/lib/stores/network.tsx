@@ -13,6 +13,8 @@ import { GAME_ENTRY_FEE_KEY } from "@/constants";
 import toast from "react-hot-toast";
 import { addTransactionLog } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
+import { v4 as uuidv4 } from "uuid";
+// import uuid from "uuid";
 
 export interface NetworkState {
   minaNetwork: Network | undefined;
@@ -113,11 +115,9 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
 // type ParticipationFeeState = {
 //   payParticipationFee: (fees)
 // }
-
 export const useParticipationFee = () => {
   const networkStore = useNetworkStore();
-  const [resHash, setResHash] = useState("");
-  const [, setIsEntryFeeFaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
+  const [, setIsEntryFeePaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
   const {
     joinedCompetition: [, logJoinCompetitionError],
   } = usePosthogEvents();
@@ -127,24 +127,28 @@ export const useParticipationFee = () => {
     treasury_address: string,
     competition_key: string
   ): Promise<{ id: number } | null | undefined> => {
+    let hash;
     if (!networkStore.address) {
       networkStore.connectWallet(false);
       return null;
     }
     try {
-      const fees = participation_fee === 0 ? 0.01 : participation_fee;
-      const data: SendTransactionResult | ProviderError = await (
-        window as any
-      )?.mina?.sendPayment({
-        amount: fees,
-        to: treasury_address,
-        memo: `Pay ${fees} MINA.`,
-      });
-      const hash = (data as SendTransactionResult).hash;
+      if (participation_fee === 0) {
+        hash = uuidv4();
+      } else {
+        const data: SendTransactionResult | ProviderError = await (
+          window as any
+        )?.mina?.sendPayment({
+          amount: participation_fee,
+          to: treasury_address,
+          memo: `Pay ${participation_fee} MINA.`,
+        });
+        hash = (data as SendTransactionResult).hash;
+      }
+
       if (hash) {
         console.log("response hash", hash);
-        setResHash(hash);
-        setIsEntryFeeFaid(true);
+        setIsEntryFeePaid(true);
         // TODO: Store transaction log to supabase
         // by default confirm txn for berkeley network
         const response = await addTransactionLog({
@@ -153,15 +157,17 @@ export const useParticipationFee = () => {
           network: networkStore.minaNetwork?.networkID || NETWORKS[1].networkID,
           competition_key,
           txn_status:
-            networkStore.minaNetwork?.networkID === "mina:mainnet"
-              ? "PENDING"
-              : "CONFIRMED",
+            networkStore.minaNetwork?.networkID !== "mina:mainnet" ||
+            participation_fee === 0
+              ? "CONFIRMED"
+              : "PENDING",
           is_game_played: false,
         });
+
         console.log("Add transaction log response", response);
         return response;
       } else {
-        toast((data as ProviderError).message || "");
+        console.log("toast error");
       }
     } catch (err: any) {
       toast("Failed to transfer entry fees😭");
