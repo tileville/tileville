@@ -55,6 +55,7 @@
     "tileville-chain-dev": "workspace:*",
     "truncate-middle": "^1.0.6",
     "tsyringe": "file:../../proto-kit/node_modules/tsyringe",
+    "uuid": "^10.0.0",
     "zustand": "^4.4.6"
   },
   "devDependencies": {

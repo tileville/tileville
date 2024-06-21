@@ -62,7 +62,7 @@ export const GameInfoModal = ({
                 </li>
 
                 <li className="pt-3">
-                  you can check your transaction{" "}
+                  You can check your transaction status{" "}
                   <Link
                     target="_blank"
                     href={`https://minascan.io/mainnet/tx/${txnHash}`}
@@ -73,7 +73,7 @@ export const GameInfoModal = ({
                 </li>
 
                 <li className="pt-3">
-                  meanwhile you can go through the{" "}
+                  Meanwhile you can go through the{" "}
                   <Link href={"/guide"} className="underline">
                     Game Tour
                   </Link>

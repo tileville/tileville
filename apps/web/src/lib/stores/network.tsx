@@ -132,12 +132,13 @@ export const useParticipationFee = () => {
       return null;
     }
     try {
+      const fees = participation_fee === 0 ? 0.01 : participation_fee;
       const data: SendTransactionResult | ProviderError = await (
         window as any
       )?.mina?.sendPayment({
-        amount: participation_fee,
+        amount: fees,
         to: treasury_address,
-        memo: `Pay fee of ${participation_fee} MINA to tileville.`,
+        memo: `Pay ${fees} MINA.`,
       });
       const hash = (data as SendTransactionResult).hash;
       if (hash) {
