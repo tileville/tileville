@@ -8,6 +8,7 @@ import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { Competition } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { validateVoucherCode } from "@/db/supabase-queries";
+import { Spinner } from "./common/Spinner";
 
 let timeoutId: NodeJS.Timeout;
 
@@ -115,17 +116,22 @@ export const GameEntryFeesModal = ({
                 value={voucherCode}
               />
               <button
-                className="rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
+                className="relative flex min-w-[100px] items-center justify-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90 disabled:bg-primary/80"
                 onClick={() => {
                   validateVoucher.mutate(voucherCode);
                 }}
-                disabled={voucherCode.length === 0}
+                disabled={voucherCode.length === 0 || validateVoucher.isLoading}
               >
-                {validateVoucher.isLoading ? "Applying..." : "Apply"}
+                {validateVoucher.isLoading && (
+                  <span className="absolute left-2 top-[5px] w-5">
+                    <Spinner />
+                  </span>
+                )}
+                <span className="inline-block">Apply</span>
               </button>
               {isVoucherCodeValid && (
                 <button
-                  className="text-xs font-medium text-primary"
+                  className="text-xs font-medium text-black/70 text-primary underline"
                   onClick={() => {
                     setVoucherCode("");
                     setIsVoucherCodeValid(false);
