@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
+import { HtmlRenderer } from "./common/HTMLRenderer";
 
 type CompetitionCardProps = {
   competition: Competition;
@@ -54,9 +55,9 @@ export const CompetitionCard = ({
       </div>
       <div className="col-span-5 flex flex-col p-4">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
-        <p className="mb-2 line-clamp-2 text-sm text-black/50">
-          {competition.description}
-        </p>
+        <div className="mb-2 flex flex-col flex-wrap space-y-2 text-sm text-black/50">
+          <HtmlRenderer htmlContent={competition.description} />
+        </div>
         <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>
         <div className="flex justify-between gap-3 text-sm font-medium">
           <div className="flex items-center gap-2">
