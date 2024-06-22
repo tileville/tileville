@@ -131,7 +131,7 @@ export const GameEntryFeesModal = ({
               </button>
               {isVoucherCodeValid && (
                 <button
-                  className="text-xs font-medium text-black/70 text-primary underline"
+                  className="text-xs font-medium text-black/70 underline"
                   onClick={() => {
                     setVoucherCode("");
                     setIsVoucherCodeValid(false);
