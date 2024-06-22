@@ -464,6 +464,10 @@ input[type="range"] {
   transform: translate(4px,  4px);
 }
 
+.fade-slide-in{
+  animation: fade-slide-in 600ms ease;
+}
+
 @keyframes slideIn{
   0%{
     transform: translateX(50px);
@@ -476,8 +480,6 @@ input[type="range"] {
   
 } 
 
-
-
 @keyframes moveToTop {
   0%{
     transform: translateY(40px);
@@ -487,5 +489,16 @@ input[type="range"] {
     transform: translateY(0);
     opacity: 1;
   }
-  
 }
+
+@keyframes fade-slide-in{
+  0%{
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  100%{
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+} 

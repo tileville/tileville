@@ -3,7 +3,7 @@ import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
 // import { type Competition } from "@/app/competitions/page";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { Competition } from "@/types";
 
@@ -22,6 +22,7 @@ export const GameEntryFeesModal = ({
   const networkStore = useNetworkStore();
   const { payParticipationFees } = useParticipationFee();
   const router = useRouter();
+  const [voucherInputOpen, setVoucherInputOpen] = useState(false);
   const {
     joinedCompetition: [logJoinCompetition],
   } = usePosthogEvents();
@@ -71,6 +72,26 @@ export const GameEntryFeesModal = ({
           You need to pay one time participation fees of{" "}
           {competition.participation_fee} MINA token to join{" "}
           <strong>{competition.name}</strong> competition.
+          <button
+            className="text-xs font-medium text-primary"
+            onClick={() => {
+              setVoucherInputOpen(true);
+            }}
+          >
+            Have a voucher code?
+          </button>
+          {voucherInputOpen && (
+            <div className="fade-slide-in flex gap-3 pt-3">
+              <input
+                type="text"
+                placeholder="Enter your voucher code here."
+                className="border-primary-30 h-full w-full rounded-md border bg-transparent px-2 py-2 font-medium outline-none placeholder:text-primary/30"
+              />
+              <button className="rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90">
+                redeem
+              </button>
+            </div>
+          )}
         </Dialog.Description>
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
