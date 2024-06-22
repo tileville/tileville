@@ -95,7 +95,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeaderCell>Transaction Hash</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Network</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Type</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>
                 Transaction Status
               </Table.ColumnHeaderCell>

@@ -176,6 +176,39 @@ export type Database = {
         }
         Relationships: []
       }
+      voucher_codes: {
+        Row: {
+          code: string
+          competition_id: number | null
+          created_at: string
+          expiry_date: string | null
+          id: number
+          is_redeemed: boolean
+          redeemed_at: string | null
+          redeemed_by: string | null
+        }
+        Insert: {
+          code: string
+          competition_id?: number | null
+          created_at?: string
+          expiry_date?: string | null
+          id?: number
+          is_redeemed?: boolean
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+        }
+        Update: {
+          code?: string
+          competition_id?: number | null
+          created_at?: string
+          expiry_date?: string | null
+          id?: number
+          is_redeemed?: boolean
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
