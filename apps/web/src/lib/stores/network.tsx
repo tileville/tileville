@@ -11,9 +11,10 @@ import { useState } from "react";
 import { useSessionStorage } from "react-use";
 import { GAME_ENTRY_FEE_KEY } from "@/constants";
 import toast from "react-hot-toast";
-import { addTransactionLog } from "@/db/supabase-queries";
+import { addTransactionLog, redeemVoucherCode } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
+import { useMutation } from "@tanstack/react-query";
 // import uuid from "uuid";
 
 export interface NetworkState {
@@ -117,50 +118,85 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
 // }
 export const useParticipationFee = () => {
   const networkStore = useNetworkStore();
+  const redeemVoucher = useMutation({
+    mutationFn: redeemVoucherCode,
+  });
   const [, setIsEntryFeePaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
   const {
     joinedCompetition: [, logJoinCompetitionError],
   } = usePosthogEvents();
 
-  const payParticipationFees = async (
-    participation_fee: number,
-    treasury_address: string,
-    competition_key: string
-  ): Promise<{ id: number } | null | undefined> => {
+  const payParticipationFees = async ({
+    participation_fee,
+    treasury_address,
+    competition_key,
+    code,
+    type,
+  }: {
+    participation_fee: number;
+    treasury_address: string;
+    competition_key: string;
+    code?: string;
+    type: "VOUCHER" | "NETWORK" | "FREE";
+  }): Promise<{ id: number } | null | undefined> => {
     let hash;
+    let network = networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
+    let txn_status = "PENDING";
     if (!networkStore.address) {
       networkStore.connectWallet(false);
       return null;
     }
-    try {
-      if (participation_fee === 0) {
+    switch (type) {
+      case "FREE":
         hash = uuidv4();
-      } else {
-        const data: SendTransactionResult | ProviderError = await (
-          window as any
-        )?.mina?.sendPayment({
-          amount: participation_fee,
-          to: treasury_address,
-          memo: `Pay ${participation_fee} MINA.`,
-        });
-        hash = (data as SendTransactionResult).hash;
-      }
-
+        network = "FREE";
+        txn_status = "CONFIRMED";
+        break;
+      case "VOUCHER":
+        try {
+          redeemVoucher.mutate({
+            code: code!,
+            wallet_address: networkStore.address,
+          });
+        } catch (err: any) {
+          toast(
+            `Failed to redeem voucher code. Please report a bug and help make the game better!`
+          );
+        }
+        hash = code;
+        network = "VOUCHER";
+        txn_status = "CONFIRMED";
+        break;
+      case "NETWORK":
+        try {
+          const data: SendTransactionResult | ProviderError = await (
+            window as any
+          )?.mina?.sendPayment({
+            amount: participation_fee,
+            to: treasury_address,
+            memo: `Pay ${participation_fee} MINA.`,
+          });
+          hash = (data as SendTransactionResult).hash;
+          txn_status =
+            networkStore.minaNetwork?.networkID !== "mina:mainnet"
+              ? "CONFIRMED"
+              : "PENDING";
+        } catch (err: any) {
+          toast(`Txn failed with error ${err.toString()}. report a bug`);
+        }
+        break;
+      default:
+    }
+    try {
       if (hash) {
         console.log("response hash", hash);
         setIsEntryFeePaid(true);
-        // TODO: Store transaction log to supabase
-        // by default confirm txn for berkeley network
         const response = await addTransactionLog({
           txn_hash: hash,
           wallet_address: networkStore.address,
-          network: networkStore.minaNetwork?.networkID || NETWORKS[1].networkID,
+          network,
           competition_key,
-          txn_status:
-            networkStore.minaNetwork?.networkID !== "mina:mainnet" ||
-            participation_fee === 0
-              ? "CONFIRMED"
-              : "PENDING",
+          txn_status,
           is_game_played: false,
         });
 
