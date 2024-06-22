@@ -23,7 +23,7 @@ export default function Competitions() {
   return (
     <>
       <div>
-        <div className="mx-auto max-w-[1280px] p-4 pt-20">
+        <div className="mx-auto max-w-[1280px] p-4 py-20">
           <div className="relative flex items-center justify-between">
             <div className="flex items-center">
               <h2 className="text-4xl">Competitions</h2>
