@@ -221,7 +221,7 @@ export const useMainnetTransactionsStatus = (
           .then((response) => response.json())
           .then((res) => {
             console.log("blockberry api response");
-            if (res.blockConfirmationsCount >= 1) {
+            if (res.blockConfirmationsCount >= 1 || res.txStatus === "applied") {
               return updateTransactionLog(txn_hash, {
                 txn_status: "CONFIRMED",
               });
@@ -252,7 +252,7 @@ export const useMainnetTransactionStatus = (
       )
         .then((response) => response.json())
         .then((res) => {
-          if (res.blockConfirmationsCount >= 1) {
+          if (res.blockConfirmationsCount >= 1  || res.txStatus === "applied") {
             return updateTransactionLog(txn_hash, {
               txn_status: "CONFIRMED",
             });

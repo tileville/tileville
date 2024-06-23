@@ -1,14 +1,15 @@
 import clsx from "clsx";
+import { getTime } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 
 type CountdownTimerProps = {
-  countdownTime: number;
+  initialTime: number;
   className?: string;
 };
 let intervalId: NodeJS.Timer;
 
 export const CountdownTimer = ({
-  countdownTime,
+  initialTime,
   className,
 }: CountdownTimerProps) => {
   const [countDownTime, setCountDownTIme] = useState({
@@ -18,13 +19,15 @@ export const CountdownTimer = ({
     seconds: "00",
   });
 
-  const getTimeDifference = (countDownTime: number) => {
-    const currentTime = new Date().getTime();
-    const timeDiffrence = countDownTime - currentTime;
+  const getTimeDifference = (initialTime: number) => {
+    const currentTime = getTime(new Date());
+
+    const timeDiffrence = Math.abs(initialTime - currentTime);
     const days =
       Math.floor(timeDiffrence / (24 * 60 * 60 * 1000)) >= 10
         ? Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))
         : `0${Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))}`;
+
     const hours =
       Math.floor((timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)) >=
       10
@@ -57,15 +60,18 @@ export const CountdownTimer = ({
       });
     }
   };
-  const startCountDown = useCallback(() => {
-    intervalId = setInterval(() => {
-      getTimeDifference(countdownTime);
-    }, 1000);
-  }, []);
 
   useEffect(() => {
-    startCountDown();
-  }, [startCountDown]);
+    if (Number.isInteger(initialTime)) {
+      intervalId = setInterval(() => {
+        getTimeDifference(initialTime);
+      }, 1000);
+    }
+    return () => {
+      clearInterval(intervalId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTime]);
 
   return (
     <div

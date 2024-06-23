@@ -28,10 +28,7 @@ export const GameInfoModal = ({
   console.log("txnStatus", txnStatus);
   return (
     <Dialog.Root open={open}>
-      <Dialog.Content
-        style={{ maxWidth: 500 }}
-        className="rounded-md bg-transparent backdrop-blur-2xl"
-      >
+      <Dialog.Content style={{ maxWidth: 500 }} className="rounded-md">
         {false ? (
           <>
             <Dialog.Title className="text-center">
@@ -62,7 +59,7 @@ export const GameInfoModal = ({
                 </li>
 
                 <li className="pt-3">
-                  you can check your transaction{" "}
+                  You can check your transaction status{" "}
                   <Link
                     target="_blank"
                     href={`https://minascan.io/mainnet/tx/${txnHash}`}
@@ -73,7 +70,7 @@ export const GameInfoModal = ({
                 </li>
 
                 <li className="pt-3">
-                  meanwhile you can go through the{" "}
+                  Meanwhile you can go through the{" "}
                   <Link href={"/guide"} className="underline">
                     Game Tour
                   </Link>

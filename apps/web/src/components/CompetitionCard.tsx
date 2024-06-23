@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
+import { HtmlRenderer } from "./common/HTMLRenderer";
 
 type CompetitionCardProps = {
   competition: Competition;
@@ -53,9 +54,9 @@ export const CompetitionCard = ({
       </div>
       <div className="col-span-5 flex flex-col p-4">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
-        <p className="mb-2 line-clamp-4 text-sm text-black/50">
-          {competition.description}
-        </p>
+        <div className="mb-2 flex flex-col flex-wrap space-y-2 text-sm text-black/50">
+          <HtmlRenderer htmlContent={competition.description} />
+        </div>
         <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>
         <div className="flex justify-between gap-3 text-sm font-medium">
           <div className="flex items-center gap-2">
@@ -77,17 +78,17 @@ export const CompetitionCard = ({
             {competitionStatus === "upcoming" && (
               <div>
                 <h3 className="py-4 text-xl font-medium">
-                  Competiton Starts In
+                  Competition Starts In
                 </h3>
-                <CountdownTimer
-                  countdownTime={getTime(competition.start_date)}
-                />
+                <CountdownTimer initialTime={getTime(competition.start_date)} />
               </div>
             )}
             {competitionStatus === "ongoing" && (
               <div>
-                <h3 className="pb-4 text-xl font-medium">Competiton Ends In</h3>
-                <CountdownTimer countdownTime={getTime(competition.end_date)} />
+                <h3 className="pb-4 text-xl font-medium">
+                  Competition Ends In
+                </h3>
+                <CountdownTimer initialTime={getTime(competition.end_date)} />
               </div>
             )}
           </div>

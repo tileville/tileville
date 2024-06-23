@@ -415,3 +415,44 @@ export const getActiveGames = async (
   console.log({ gameTxnLogs, gameScoreIds });
   return activeGames;
 };
+
+export const validateVoucherCode = async (code: string): Promise<boolean> => {
+  const supabase = supabaseUserClientComponentClient;
+
+  //TODO: Add expiry date check
+  const { data, error } = await supabase
+    .from("voucher_codes")
+    .select("id")
+    .eq("code", code)
+    .eq("is_redeemed", false)
+    .single();
+
+  if (data) return true;
+  if (error) throw error;
+  return false;
+};
+
+export const redeemVoucherCode = async ({
+  code,
+  wallet_address,
+}: {
+  code: string;
+  wallet_address: string;
+}): Promise<boolean> => {
+  const supabase = supabaseUserClientComponentClient;
+
+  const { data, error } = await supabase
+    .from("voucher_codes")
+    .update({
+      is_redeemed: true,
+      redeemed_by: wallet_address,
+      redeemed_at: new Date().toISOString(),
+    })
+    .eq("code", code)
+    .eq("is_redeemed", false)
+    .single();
+
+  if (data) return true;
+  if (error) throw error;
+  return false;
+};
