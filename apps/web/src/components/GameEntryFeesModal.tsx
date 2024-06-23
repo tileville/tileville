@@ -26,14 +26,15 @@ export const GameEntryFeesModal = ({
   const { payParticipationFees } = useParticipationFee();
   const [isShowVoucherCode, setIsVoucherCode] = useState(false);
   const [voucherCode, setVoucherCode] = useState("");
-  const [isVoucherCodeValid, setIsVoucherCodeValid] = useState(false);
+  const [vocherValidationResponse, setVoucherValidationResponse] = useState({
+    isValid: false,
+    message: "",
+  });
   const validateVoucher = useMutation({
     mutationFn: validateVoucherCode,
     onSuccess: (response) => {
       console.log("mutation response", response);
-      if (response) {
-        setIsVoucherCodeValid(true);
-      }
+      setVoucherValidationResponse(response);
     },
   });
 
@@ -57,7 +58,7 @@ export const GameEntryFeesModal = ({
         competition.treasury_address ||
         "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       competition_key: competition.unique_keyname,
-      type: isVoucherCodeValid
+      type: vocherValidationResponse.isValid
         ? "VOUCHER"
         : competition.participation_fee === 0
         ? "FREE"
@@ -110,7 +111,7 @@ export const GameEntryFeesModal = ({
                 placeholder="Enter 14 character voucher code"
                 className="border-primary-30 h-full w-full rounded-md border bg-transparent px-2 py-2 font-medium outline-none placeholder:text-primary/30"
                 onChange={(e) => {
-                  setIsVoucherCodeValid(false);
+                  setVoucherValidationResponse({ isValid: false, message: "" });
                   setVoucherCode(e.target.value);
                 }}
                 value={voucherCode}
@@ -129,12 +130,15 @@ export const GameEntryFeesModal = ({
                 )}
                 <span className="inline-block">Apply</span>
               </button>
-              {isVoucherCodeValid && (
+              {isShowVoucherCode && (
                 <button
                   className="text-xs font-medium text-black/70 underline"
                   onClick={() => {
                     setVoucherCode("");
-                    setIsVoucherCodeValid(false);
+                    setVoucherValidationResponse({
+                      isValid: false,
+                      message: "",
+                    });
                     setIsVoucherCode(false);
                   }}
                 >
@@ -143,10 +147,14 @@ export const GameEntryFeesModal = ({
               )}
             </div>
           )}
-          {isVoucherCodeValid && (
+          {vocherValidationResponse.isValid ? (
             <p className="text-primary">
               Voucher code is valid. click on redeem code button to join the
               competition for free.
+            </p>
+          ) : (
+            <p>
+              <p className="text-red-500">{vocherValidationResponse.message}</p>
             </p>
           )}
         </Dialog.Description>
@@ -166,7 +174,7 @@ export const GameEntryFeesModal = ({
               className="rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
             >
               {!!networkStore.address
-                ? isVoucherCodeValid
+                ? vocherValidationResponse.isValid
                   ? "Redeem Code"
                   : "Pay Entry Fees"
                 : "Connect Wallet"}

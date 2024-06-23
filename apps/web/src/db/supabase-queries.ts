@@ -416,20 +416,23 @@ export const getActiveGames = async (
   return activeGames;
 };
 
-export const validateVoucherCode = async (code: string): Promise<boolean> => {
+export const validateVoucherCode = async (
+  code: string
+): Promise<{ isValid: boolean; message: string }> => {
   const supabase = supabaseUserClientComponentClient;
 
   //TODO: Add expiry date check
   const { data, error } = await supabase
     .from("voucher_codes")
-    .select("id")
+    .select("id, is_redeemed")
     .eq("code", code)
-    .eq("is_redeemed", false)
     .single();
 
-  if (data) return true;
-  if (error) throw error;
-  return false;
+  if (!data) return { isValid: false, message: "vocher code is invalid." };
+  if (data.is_redeemed)
+    return { isValid: false, message: "voucher code is already redeemed" };
+  if (error) return { isValid: false, message: error };
+  return { isValid: true, message: "" };
 };
 
 export const redeemVoucherCode = async ({
