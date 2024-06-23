@@ -3,6 +3,8 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useState } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
+import { CountdownTimer } from "@/components/common/CountdownTimer";
+import { getTime } from "date-fns";
 
 export default function Marketplace() {
   const options = [
@@ -218,8 +220,13 @@ export default function Marketplace() {
         </div>
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center backdrop-blur-xl">
-        <h2 className="text-5xl font-semibold text-white">Coming Soon</h2>
+      <div className="absolute inset-0 flex flex-col items-center justify-start backdrop-blur-sm">
+        <div className="mt-40">
+          <h2 className="mb-4 text-5xl font-semibold tracking-wider text-white">
+            Minting Starts In
+          </h2>
+          <CountdownTimer initialTime={getTime("2024-07-23")} />
+        </div>
       </div>
     </div>
   );

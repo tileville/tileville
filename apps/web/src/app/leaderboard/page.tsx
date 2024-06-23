@@ -86,7 +86,7 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="p-4 pt-40">
+    <div className="p-4 py-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-3 flex items-center justify-end gap-3">
           <p>Select Competitions:</p>
