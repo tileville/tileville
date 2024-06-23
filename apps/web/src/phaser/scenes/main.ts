@@ -627,6 +627,8 @@ export class MainScene extends Scene {
       ease: PhaserMath.Easing.Quadratic.Out,
     });
 
+    if(isDemoGame){
+
     this.tweens.add({
       targets: this.playAgainButton,
       props: { x: 1040 },
@@ -634,6 +636,8 @@ export class MainScene extends Scene {
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
     });
+  }
+
 
     this.tweens.add({
       targets: this.shareButton,
