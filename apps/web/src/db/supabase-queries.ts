@@ -59,7 +59,8 @@ export const getAllCompetitionsEntries = async (
 ): Promise<Array<Table<"tileville_competitions">>> => {
   const { data, error } = await supabase
     .from("tileville_competitions")
-    .select("*");
+    .select("*")
+    .order("priority")
   console.log("competition data", data);
   const formattedData = data ?? [];
 
