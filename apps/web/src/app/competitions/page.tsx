@@ -52,7 +52,7 @@ export default function Competitions() {
                 {data?.map((competition) => (
                   <CompetitionCard
                     competition={competition}
-                    key={competition.id}
+                    key={competition.unique_keyname}
                     setSelectedCompetition={setSelectedCompetition}
                     setIsFeesModalOpen={setIsFeesModalOpen}
                   />

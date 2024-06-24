@@ -6,7 +6,6 @@ type CountdownTimerProps = {
   initialTime: number;
   className?: string;
 };
-let intervalId: NodeJS.Timer;
 
 export const CountdownTimer = ({
   initialTime,
@@ -18,6 +17,7 @@ export const CountdownTimer = ({
     minutes: "00",
     seconds: "00",
   });
+  let intervalId: NodeJS.Timer;
 
   const getTimeDifference = (initialTime: number) => {
     const currentTime = getTime(new Date());
