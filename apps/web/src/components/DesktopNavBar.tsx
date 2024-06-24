@@ -21,11 +21,12 @@ import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
-import { addNovuSubscriber } from "@/lib/novu";
+// import { addNovuSubscriber } from "@/lib/novu";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
+  const [canGoBack, setCanGoBack] = useState(false);
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
   const networkStore = useNetworkStore();
   const router = useRouter();
@@ -45,18 +46,17 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   );
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
-  console.log("is hide back button", isHideBackBtn);
   const { phClient } = usePosthogEvents();
   console.log("PENDING Transactions", pendingTransactions);
 
-  console.log("router", pathname);
-
+  console.log("can go back", canGoBack);
   useEffect(() => {
     if (!walletInstalled()) return;
-
     if (autoConnect) {
       networkStore.connectWallet(true);
     }
+    setCanGoBack(window.history.length > 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -112,7 +112,9 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
               className={clsx(`rounded-3xl !border !border-primary !px-6`, {
                 hidden: isHideBackBtn,
               })}
-              onClickHandler={router.back}
+              onClickHandler={() => {
+                canGoBack ? router.back() : router.push("/main-menu");
+              }}
             />
           )}
 
