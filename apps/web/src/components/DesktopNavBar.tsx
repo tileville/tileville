@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
+import { addNovuSubscriber } from "@/lib/novu";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
 
@@ -61,6 +62,12 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useEffect(() => {
     if (networkStore.walletConnected && isFetched) {
       phClient.identify(networkStore.address, { username: data?.username });
+      // This is not working. debug this.
+      // addNovuSubscriber(networkStore.address!, {
+      //   username: data?.username,
+      //   email: data?.email || "",
+      //   fullname: data?.fullname || "",
+      // });
     }
     if (
       networkStore.walletConnected &&
@@ -112,7 +119,6 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           <div className="min-w-[180px]">
             <MediaPlayer />
           </div>
-
           <Link
             target="_blank"
             href={"https://t.me/tilevilleBugs"}
