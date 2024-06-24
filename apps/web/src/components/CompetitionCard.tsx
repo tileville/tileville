@@ -21,7 +21,6 @@ export const CompetitionCard = ({
   setSelectedCompetition,
   setIsFeesModalOpen,
 }: CompetitionCardProps) => {
-  console.log("comp data", competition);
   const [competitionStatus, setCompetitionStatus] =
     useState<CompetitionStatus>("upcoming");
   const [currentDate] = useState(new Date());

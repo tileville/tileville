@@ -3,6 +3,8 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useState } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
+import { CountdownTimer } from "@/components/common/CountdownTimer";
+import { getTime } from "date-fns";
 
 export default function Marketplace() {
   const options = [
@@ -93,47 +95,11 @@ export default function Marketplace() {
       price: 0.0001,
       cardId: 789,
     },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/NFT.avif",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
   ];
   const [selectedItem, setSelectedItem] = useState<string>(options[3].text);
 
   return (
-    <div className="p-4 pt-40">
+    <div className="relative p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex gap-3">
           <ul className="grid w-fit grid-cols-3">
@@ -251,6 +217,15 @@ export default function Marketplace() {
               </div>
             );
           })}
+        </div>
+      </div>
+
+      <div className="absolute inset-0 flex flex-col items-center justify-start backdrop-blur-sm">
+        <div className="mt-40">
+          <h2 className="mb-4 text-5xl font-semibold tracking-wider text-white">
+            Minting Starts In
+          </h2>
+          <CountdownTimer initialTime={getTime("2024-07-23")} />
         </div>
       </div>
     </div>

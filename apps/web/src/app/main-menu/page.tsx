@@ -59,7 +59,7 @@ export default function MainMenu() {
 
   return (
     <div
-      className="flex h-screen items-center justify-center pt-20"
+      className="flex min-h-screen items-center justify-center pt-20"
       tabIndex={0}
     >
       <LandingBackground />

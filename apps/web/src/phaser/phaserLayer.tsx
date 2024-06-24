@@ -90,7 +90,7 @@ export const PhaserLayer = ({
 
   return (
     <>
-      <div id="minapolis-hex" />
+      <div id="minapolis-hex" className="min-h-[720px]" />
       <GameInfoModal
         open={showGameInfoModal}
         message={gamePlayDisAllowMessage}
