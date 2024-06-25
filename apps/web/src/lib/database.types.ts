@@ -108,6 +108,7 @@ export type Database = {
           name: string
           participation_fee: number | null
           poster_url: string | null
+          priority: number
           seed: number
           start_date: string
           treasury_address: string | null
@@ -122,8 +123,9 @@ export type Database = {
           name: string
           participation_fee?: number | null
           poster_url?: string | null
+          priority?: number
           seed?: number
-          start_date?: string
+          start_date: string
           treasury_address?: string | null
           unique_keyname: string
         }
@@ -136,6 +138,7 @@ export type Database = {
           name?: string
           participation_fee?: number | null
           poster_url?: string | null
+          priority?: number
           seed?: number
           start_date?: string
           treasury_address?: string | null
