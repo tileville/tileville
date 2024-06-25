@@ -8,6 +8,7 @@ import {
   useTransactionLogByStatus,
 } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
+import { BUG_REPORT_URL } from "@/constants";
 
 export const GameInfoModal = ({
   open,
@@ -89,7 +90,7 @@ export const GameInfoModal = ({
                   <Link
                     target="_blank"
                     className="underline"
-                    href={"https://t.me/tilevilleBugs"}
+                    href={BUG_REPORT_URL}
                   >
                     report a bug
                   </Link>

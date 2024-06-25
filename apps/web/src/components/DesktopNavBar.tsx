@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
+import { BUG_REPORT_URL } from "@/constants";
 // import { addNovuSubscriber } from "@/lib/novu";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
@@ -123,7 +124,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           </div>
           <Link
             target="_blank"
-            href={"https://t.me/tilevilleBugs"}
+            href={BUG_REPORT_URL}
             className="flex items-center gap-2 rounded-full border-primary bg-primary/30 px-5 py-2 text-xs font-medium hover:bg-primary/50"
           >
             <span>Bug Report</span>

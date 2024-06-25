@@ -43,3 +43,5 @@ export const NOVU_API_KEY =
   process.env.NEXT_PUBLIC_NOVU_API_KEY || "ed1f7d240a9a31843dc24795660e95d4";
 export const NOVU_APP_ID =
   process.env.NEXT_PUBLIC_NOVU_APP_ID || "OJ-4H0k4zMEd";
+
+export const BUG_REPORT_URL = "https://t.me/tilevilleBugs"
