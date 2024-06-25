@@ -35,10 +35,7 @@ export const MarketplaceOverlay = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log("submitting the form");
-    const isExist = await isUsernameExist(data.name);
-
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
     return emailSentMutation.mutate({
       name: data.name,
       email: data.email,
