@@ -59,7 +59,9 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
     async onWalletConnected(address: string | undefined) {
       if (address) {
         localStorage.minaAdderess = address;
-        const network = await (window as any).mina.requestNetwork();
+        const network = await (window as any).mina.request({
+          method: "mina_requestNetwork",
+        });
         console.log("network from wallet", network, network.chainId);
         const minaNetwork = NETWORKS.find(
           (x) =>
@@ -78,6 +80,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
       });
     },
     async connectWallet(soft: boolean) {
+      console.log("connection bro", (window as any).mina.isPallad);
       if (soft) {
         if (localStorage.minaAdderess) {
           this.onWalletConnected(localStorage.minaAdderess);

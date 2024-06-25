@@ -24,11 +24,16 @@ export const useNetworkLayer = () => {
   }, []);
 
   const connect = useCallback(async () => {
-    if (typeof (window as any).mina == "undefined") {
+    console.log("connection bro", (window as any).mina.isPallad);
+    if ((window as any).mina.isPallad) {
+      console.log("Please disable Pallad Wallet");
+    } else if (typeof (window as any).mina == "undefined") {
       toast("Please install Auro wallet extension!");
     } else {
       const accounts = await (window as any).mina.requestAccounts();
-      const network = await (window as any).mina.requestNetwork();
+      const network = await (window as any).mina.request({
+        method: "mina_requestNetwork",
+      });
       setSigner(accounts[0]);
       setChain({ chainId: network.chainId, chainName: network.name });
     }
