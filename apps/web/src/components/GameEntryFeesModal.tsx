@@ -10,8 +10,6 @@ import { useMutation } from "@tanstack/react-query";
 import { validateVoucherCode } from "@/db/supabase-queries";
 import { Spinner } from "./common/Spinner";
 
-let timeoutId: NodeJS.Timeout;
-
 type GameEntryFeesModalProps = {
   open: boolean;
   handleClose: () => void;
@@ -22,6 +20,7 @@ export const GameEntryFeesModal = ({
   handleClose,
   competition,
 }: GameEntryFeesModalProps) => {
+  let timeoutId: NodeJS.Timeout;
   const networkStore = useNetworkStore();
   const { payParticipationFees } = useParticipationFee();
   const [isShowVoucherCode, setIsVoucherCode] = useState(false);

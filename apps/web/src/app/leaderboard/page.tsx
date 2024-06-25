@@ -28,7 +28,7 @@ export default function Leaderboard() {
   const {
     data: competitionData,
     isLoading: competitionLoading,
-    isError: IsCompetitionError,
+    isError: isCompetitionError,
     error: competitionError,
   } = useCompetitionsName();
 
@@ -79,7 +79,7 @@ export default function Leaderboard() {
     }
   }, [selectedCompetition.id]);
 
-  if (IsCompetitionError) {
+  if (isCompetitionError) {
     return (
       <div>Error: {(competitionError as { message: string }).message}</div>
     );

@@ -184,9 +184,7 @@ export const useCompetitionsName = () => {
   return useQuery(
     ["tileville_competitions"],
     () => getAllCompetitionsNames(supabaseUserClientComponentClient),
-    {
-      refetchOnWindowFocus: false, // Disable refetch on window focus
-    }
+    {}
   );
 };
 
@@ -196,9 +194,6 @@ export const useFilteredLeaderboardData = (competition_key: string) => {
     () => getFilteredLeaderboardEntries(competition_key),
     {
       enabled: !!competition_key, // Only run this query if competitionId is not null
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 10, // 10 minutes
-      refetchOnWindowFocus: false, // Disable refetch on window focus
     }
   );
 };
@@ -221,7 +216,10 @@ export const useMainnetTransactionsStatus = (
           .then((response) => response.json())
           .then((res) => {
             console.log("blockberry api response");
-            if (res.blockConfirmationsCount >= 1 || res.txStatus === "applied") {
+            if (
+              res.blockConfirmationsCount >= 1 ||
+              res.txStatus === "applied"
+            ) {
               return updateTransactionLog(txn_hash, {
                 txn_status: "CONFIRMED",
               });
@@ -252,7 +250,7 @@ export const useMainnetTransactionStatus = (
       )
         .then((response) => response.json())
         .then((res) => {
-          if (res.blockConfirmationsCount >= 1  || res.txStatus === "applied") {
+          if (res.blockConfirmationsCount >= 1 || res.txStatus === "applied") {
             return updateTransactionLog(txn_hash, {
               txn_status: "CONFIRMED",
             });
