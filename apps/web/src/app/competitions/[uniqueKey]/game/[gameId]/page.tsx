@@ -62,7 +62,7 @@ function Game() {
       );
     }
   }, [isSuccess, gameTransaction]);
-  console.log(txnStatusData, isLoading, isError);
+  // console.log(txnStatusData, isLoading, isError);
 
   //TODO: fetch transaction status from game id
 

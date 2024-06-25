@@ -82,6 +82,7 @@ export const PhaserLayer = ({
     game.registry.set("isGamePlayAllowed", isGamePlayAllowed);
     game.registry.set("gamePlayDisAllowMessage", gamePlayDisAllowMessage);
     game.registry.set("showGameInfoModalFn", showGameInfoModalFn);
+    game.registry.set("competitionKey", competitionKey);
     return () => {
       game.destroy(true);
     };

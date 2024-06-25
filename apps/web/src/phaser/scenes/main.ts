@@ -40,6 +40,8 @@ export class MainScene extends Scene {
   gameOverText: GameObjects.BitmapText | null = null;
   rankText: GameObjects.BitmapText | null = null;
   nextRankText: GameObjects.BitmapText | null = null;
+  competitionNameText: GameObjects.BitmapText | null = null;
+  currentTimeText: GameObjects.BitmapText | null = null;
   playAgainButton: GameObjects.BitmapText | null = null;
   shareButton: GameObjects.Image | null = null;
 
@@ -371,6 +373,7 @@ export class MainScene extends Scene {
   endGame() {
     const handleSaveScore = this.game.registry.get("handleSaveScore");
     const isDemoGame = this.game.registry.get("isDemoGame");
+    const competitionKey = this.game.registry.get("competitionKey")
 
     if (this.scoreText) {
       handleSaveScore(this.score);
@@ -468,6 +471,14 @@ export class MainScene extends Scene {
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
+    this.competitionNameText = this.add.bitmapText(1500, 570, "font", `Competition Key: ${competitionKey}`, 24);
+    this.competitionNameText.setOrigin(0.5);
+    this.competitionNameText.setDepth(4);
+
+    const currentTime: string = this.getGameStartTime();
+    this.currentTimeText = this.add.bitmapText(1500, 590, "font", `Played At: ${currentTime}`, 24);
+    this.currentTimeText.setOrigin(0.5);
+    this.currentTimeText.setDepth(4);
 
     if(isDemoGame){
 
@@ -626,6 +637,14 @@ export class MainScene extends Scene {
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
     });
+
+    this.tweens.add({
+      targets: [this.competitionNameText ,  this.currentTimeText],
+      props: { x: 1040 },
+      delay: 1200,
+      duration: 300,
+      ease: PhaserMath.Easing.Quadratic.Out,
+    });
     
     if(isDemoGame){
     this.tweens.add({
@@ -733,6 +752,24 @@ export class MainScene extends Scene {
       this.rotateLeft();
     }
   }
+
+  getGameStartTime(): string {
+    const now: Date = new Date();
+    
+    const months: string[] = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    
+    const month: string = months[now.getUTCMonth()];
+    const day: number = now.getUTCDate();
+    const year: number = now.getUTCFullYear();
+    const hours: string = now.getUTCHours().toString().padStart(2, '0');
+    const minutes: string = now.getUTCMinutes().toString().padStart(2, '0');
+    const seconds: string = now.getUTCSeconds().toString().padStart(2, '0');
+    
+    return `${month} ${day}, ${year} ${hours}:${minutes}:${seconds} UTC`;
+}
 
   update(time: number, delta: number) {
     super.update(time, delta);
