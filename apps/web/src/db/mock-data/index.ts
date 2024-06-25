@@ -9,7 +9,7 @@ export const mockCompetition = {
   participation_fee: 0,
   poster_url: "/image/cards/competition1.png",
   seed: 0,
-  start_date: "2024-06-27T14:00:32.674173",
+  start_date: "2024-06-24T14:00:32.674173",
   treasury_address: "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
   unique_keyname: "heros_tileville1",
   priority: 100,

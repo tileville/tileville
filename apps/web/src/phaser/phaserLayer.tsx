@@ -82,6 +82,7 @@ export const PhaserLayer = ({
     game.registry.set("isGamePlayAllowed", isGamePlayAllowed);
     game.registry.set("gamePlayDisAllowMessage", gamePlayDisAllowMessage);
     game.registry.set("showGameInfoModalFn", showGameInfoModalFn);
+    game.registry.set("competitionKey", competitionKey);
     return () => {
       game.destroy(true);
     };
@@ -90,7 +91,7 @@ export const PhaserLayer = ({
 
   return (
     <>
-      <div id="minapolis-hex" className="min-h-[720px]" />
+      <div id="minapolis-hex" className="min-h-[850px]" />
       <GameInfoModal
         open={showGameInfoModal}
         message={gamePlayDisAllowMessage}

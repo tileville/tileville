@@ -26,7 +26,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
 import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
 
-export const useSignup = ({
+export const useSendEmail = ({
   onSuccess,
   onMutate,
   onError,
@@ -46,7 +46,7 @@ export const useSignup = ({
         onMutate?.();
       },
       onSuccess: () => {
-        toast.success("You will receive an email with our app preview link", {
+        toast.success("You will receive an email before 12 hours when Minting Starts", {
           id: toastRef.current ?? undefined,
         });
 
