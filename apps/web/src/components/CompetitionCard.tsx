@@ -85,7 +85,7 @@ export const CompetitionCard = ({
             )}
             {competitionStatus === "ongoing" && (
               <div>
-                <h3 className="pb-4 text-xl font-medium">
+                <h3 className="py-4 text-xl font-medium">
                   Competition Ends In
                 </h3>
                 <CountdownTimer initialTime={getTime(competition.end_date)} />
@@ -124,23 +124,28 @@ export const CompetitionCard = ({
               )}
             </Tooltip.Root>
           </Tooltip.Provider>
-          {competition.competition_tweet_content && (
-            <button
-              onClick={() => {
-                window.open(
-                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                    competition.competition_tweet_content
-                  )}`,
-                  "_blank",
-                  "noopener,noreferrer"
-                );
-              }}
-            >
-              Tweet About US
-            </button>
-          )}
         </div>
       </div>
+      {competition.competition_tweet_content &&
+        competitionStatus !== "over" && (
+          <button
+            onClick={() => {
+              window.open(
+                `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  competition.competition_tweet_content
+                )}`,
+                "_blank",
+                "noopener,noreferrer"
+              );
+            }}
+            className="competition-tweet-btn ms-auto flex cursor-pointer items-center rounded-full bg-primary px-2 py-1 font-medium text-white"
+          >
+            <i className="twitterIcon h-3 w-3"></i>
+            <span className="label whitespace-nowraw ms-1 font-medium" id="l">
+              Tweet about competition
+            </span>
+          </button>
+        )}
     </div>
   );
 };
