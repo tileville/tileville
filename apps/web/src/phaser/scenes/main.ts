@@ -1,5 +1,8 @@
 import { getShareScoreTwitterContent } from "@/lib/utils";
-import { GAME_ENTRY_FEE_KEY } from "../../constants";
+import {
+  COMPETITION_SCORE_TWEET_DEFAULT_CONTENT,
+  GAME_ENTRY_FEE_KEY,
+} from "../../constants";
 import {
   HexGrid,
   Trihex,
@@ -373,7 +376,7 @@ export class MainScene extends Scene {
   endGame() {
     const handleSaveScore = this.game.registry.get("handleSaveScore");
     const isDemoGame = this.game.registry.get("isDemoGame");
-    const competitionKey = this.game.registry.get("competitionKey")
+    const competitionKey = this.game.registry.get("competitionKey");
 
     if (this.scoreText) {
       handleSaveScore(this.score);
@@ -471,65 +474,74 @@ export class MainScene extends Scene {
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
-    this.competitionNameText = this.add.bitmapText(1500, 570, "font", `Competition Key: ${competitionKey}`, 24);
+    this.competitionNameText = this.add.bitmapText(
+      1500,
+      570,
+      "font",
+      `Competition Key: ${competitionKey}`,
+      24
+    );
     this.competitionNameText.setOrigin(0.5);
     this.competitionNameText.setDepth(4);
 
     const currentTime: string = this.getGameStartTime();
-    this.currentTimeText = this.add.bitmapText(1500, 590, "font", `Played At: ${currentTime}`, 24);
+    this.currentTimeText = this.add.bitmapText(
+      1500,
+      590,
+      "font",
+      `Played At: ${currentTime}`,
+      24
+    );
     this.currentTimeText.setOrigin(0.5);
     this.currentTimeText.setDepth(4);
 
-    if(isDemoGame){
-
-    this.playAgainButton = this.add
-      .bitmapText(1400, 630, "font", "Play Again", 40)
-      .setInteractive({ useHandCursor: true })
-      .setOrigin(0.5)
-      .on("pointerover", () => {
-        this.tweens.add({
-          targets: this.playAgainButton,
-          scaleX: 1.1,
-          scaleY: 1.1,
-          duration: 60,
-          ease: "Linear",
-        });
-      })
-      .on("pointerover", () => {
-        this.tweens.add({
-          targets: this.playAgainButton,
-          scaleX: 1.1,
-          scaleY: 1.1,
-          duration: 60,
-          ease: "Linear",
-        });
-      })
-      .on("pointerout", () =>
-        this.tweens.add({
-          targets: this.playAgainButton,
-          scaleX: 1,
-          scaleY: 1,
-          duration: 60,
-          ease: "Linear",
+    if (isDemoGame) {
+      this.playAgainButton = this.add
+        .bitmapText(1400, 630, "font", "Play Again", 40)
+        .setInteractive({ useHandCursor: true })
+        .setOrigin(0.5)
+        .on("pointerover", () => {
+          this.tweens.add({
+            targets: this.playAgainButton,
+            scaleX: 1.1,
+            scaleY: 1.1,
+            duration: 60,
+            ease: "Linear",
+          });
         })
-      )
-      .on("pointerdown", () => {
-        this.tweens.add({
-          targets: this.playAgainButton,
-          scaleX: 1.1,
-          scaleY: 1.1,
-          duration: 60,
-          ease: "Linear",
-        });
-        this.playAgain();
-      })
-      .on("pointerup", () => {
-        this.playAgain();
-      })
-      .setDepth(4);
-
+        .on("pointerover", () => {
+          this.tweens.add({
+            targets: this.playAgainButton,
+            scaleX: 1.1,
+            scaleY: 1.1,
+            duration: 60,
+            ease: "Linear",
+          });
+        })
+        .on("pointerout", () =>
+          this.tweens.add({
+            targets: this.playAgainButton,
+            scaleX: 1,
+            scaleY: 1,
+            duration: 60,
+            ease: "Linear",
+          })
+        )
+        .on("pointerdown", () => {
+          this.tweens.add({
+            targets: this.playAgainButton,
+            scaleX: 1.1,
+            scaleY: 1.1,
+            duration: 60,
+            ease: "Linear",
+          });
+          this.playAgain();
+        })
+        .on("pointerup", () => {
+          this.playAgain();
+        })
+        .setDepth(4);
     }
-
 
     this.shareButton = this.add
       .image(1450, 700, "share-score-button")
@@ -569,10 +581,15 @@ export class MainScene extends Scene {
           duration: 60,
           ease: "Linear",
         });
-        this.navigateToExternalSite(getShareScoreTwitterContent(this.score));
+        // this.navigateToExternalSite(getShareScoreTwitterContent(this.score));
       })
       .on("pointerup", () => {
-        this.navigateToExternalSite(getShareScoreTwitterContent(this.score));
+        const scoreTweetContent =
+          this.game.registry.get("scoreTweetContent") ||
+          COMPETITION_SCORE_TWEET_DEFAULT_CONTENT;
+        this.navigateToExternalSite(
+          getShareScoreTwitterContent(scoreTweetContent, this.score)
+        );
       })
       .setDepth(4);
 
@@ -639,22 +656,22 @@ export class MainScene extends Scene {
     });
 
     this.tweens.add({
-      targets: [this.competitionNameText ,  this.currentTimeText],
+      targets: [this.competitionNameText, this.currentTimeText],
       props: { x: 1040 },
       delay: 1200,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
     });
-    
-    if(isDemoGame){
-    this.tweens.add({
-      targets: this.playAgainButton,
-      props: { x: 1040 },
-      delay: 1200,
-      duration: 300,
-      ease: PhaserMath.Easing.Quadratic.Out,
-    });
-  }
+
+    if (isDemoGame) {
+      this.tweens.add({
+        targets: this.playAgainButton,
+        props: { x: 1040 },
+        delay: 1200,
+        duration: 300,
+        ease: PhaserMath.Easing.Quadratic.Out,
+      });
+    }
 
     this.tweens.add({
       targets: this.shareButton,
@@ -755,21 +772,31 @@ export class MainScene extends Scene {
 
   getGameStartTime(): string {
     const now: Date = new Date();
-    
+
     const months: string[] = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
-    
+
     const month: string = months[now.getUTCMonth()];
     const day: number = now.getUTCDate();
     const year: number = now.getUTCFullYear();
-    const hours: string = now.getUTCHours().toString().padStart(2, '0');
-    const minutes: string = now.getUTCMinutes().toString().padStart(2, '0');
-    const seconds: string = now.getUTCSeconds().toString().padStart(2, '0');
-    
+    const hours: string = now.getUTCHours().toString().padStart(2, "0");
+    const minutes: string = now.getUTCMinutes().toString().padStart(2, "0");
+    const seconds: string = now.getUTCSeconds().toString().padStart(2, "0");
+
     return `${month} ${day}, ${year} ${hours}:${minutes}:${seconds} UTC`;
-}
+  }
 
   update(time: number, delta: number) {
     super.update(time, delta);

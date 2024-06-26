@@ -14,6 +14,7 @@ type PhaserLayerProps = {
   gameId: number;
   txnHash?: string | undefined;
   txnStatus?: string | undefined;
+  scoreTweetContent: string;
 };
 
 export const PhaserLayer = ({
@@ -24,6 +25,7 @@ export const PhaserLayer = ({
   gameId,
   txnHash,
   txnStatus,
+  scoreTweetContent,
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
@@ -83,6 +85,7 @@ export const PhaserLayer = ({
     game.registry.set("gamePlayDisAllowMessage", gamePlayDisAllowMessage);
     game.registry.set("showGameInfoModalFn", showGameInfoModalFn);
     game.registry.set("competitionKey", competitionKey);
+    game.registry.set("scoreTweetContent", scoreTweetContent);
     return () => {
       game.destroy(true);
     };

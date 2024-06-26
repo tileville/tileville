@@ -51,4 +51,6 @@ type Competition = {
   start_date: string;
   treasury_address: string | null;
   unique_keyname: string;
+  score_tweet_content: string;
+  competition_tweet_content: string;
 };

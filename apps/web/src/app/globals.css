@@ -485,6 +485,25 @@ input[type="range"] {
   transform: translateZ(0);
   display: inline-block;
 }
+
+.competition-tweet-btn{
+  position: absolute;
+  margin: 0.5rem;
+  right: 0;
+  top: 0;
+  transform: translate(100px , -100px);
+  transition: transform 900ms ease;
+  font-size: 10px;
+}
+
+.competition-tweet-btn .twitterIcon{
+  width: 12px;
+  height: 12px;
+}
+.competitionCard:hover .competition-tweet-btn{
+  transform: translate(0);
+
+}
 @keyframes mulShdSpin {
   0%,
   100% {

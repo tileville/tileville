@@ -60,7 +60,7 @@ export const getAllCompetitionsEntries = async (
   const { data, error } = await supabase
     .from("tileville_competitions")
     .select("*")
-    .order("priority")
+    .order("priority");
   console.log("competition data", data);
   const formattedData = data ?? [];
 
@@ -459,4 +459,21 @@ export const redeemVoucherCode = async ({
   if (data) return true;
   if (error) throw error;
   return false;
+};
+
+export const getCompetitionByKey = async (
+  supabase: AppSupabaseClient,
+  unique_keyname: string
+): Promise<Table<"tileville_competitions">> => {
+  const { data, error } = await supabase
+    .from("tileville_competitions")
+    .select("*")
+    .eq("unique_keyname", unique_keyname)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
 };

@@ -43,3 +43,6 @@ export const NOVU_API_KEY =
   process.env.NEXT_PUBLIC_NOVU_API_KEY || "ed1f7d240a9a31843dc24795660e95d4";
 export const NOVU_APP_ID =
   process.env.NEXT_PUBLIC_NOVU_APP_ID || "OJ-4H0k4zMEd";
+
+export const COMPETITION_SCORE_TWEET_DEFAULT_CONTENT =
+  "Just conquered Nicobar with a score of ${score} in @TileVilleSocial 🏆 The strategic city-builder on @MinaProtocol is a must-play. Build your dream city: https://tileville.xyz #TileVille #MinaBlockchain";
