@@ -7,9 +7,9 @@ import { useNetworkStore } from "@/lib/stores/network";
 
 import { AnimatePresence, motion } from "framer-motion";
 import NetworkPickerCard from "@/components/common/NetworkPickerCard";
-import zekoLogo from "/public/image/cards/zekoLogo.svg";
-import berkleyLogo from "/public/image/cards/berkleyLogo.svg";
-import minaLogo from "/public/image/cards/minaLogo.svg";
+import zekoLogo from "/public/image/cards/zekoLogo.png";
+import berkleyLogo from "/public/image/cards/berkleyLogo.png";
+import minaLogo from "/public/image/cards/minaLogo.png";
 import Image from "next/image";
 
 export default function NetworkPicker() {
