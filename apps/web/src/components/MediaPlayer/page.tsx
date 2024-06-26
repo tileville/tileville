@@ -10,7 +10,7 @@ import { VolumeControl } from "./VolumeControl";
 
 const tracks = [
   {
-    url: "sfx/ambience.wav",
+    url: "/sfx/ambience.wav",
     title: "Ambience",
     tags: ["house"],
   },

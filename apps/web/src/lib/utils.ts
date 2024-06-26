@@ -65,12 +65,39 @@ export function buildClient<
 export const formatPubkey = (pubkey: PublicKey | undefined) =>
   pubkey ? pubkey.toBase58().slice(0, 16) + "..." : "None";
 
-export const getShareScoreTwitterContent = (score: number) =>
+export const getShareScoreTwitterContent = (content: string, score: number) =>
   `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-    `Just took a part in a three-day challenge from @ZkNoid in @TileVilleSocial game with a score ${score}!🎊\n\nJoin the event until 24th june to compete with me in strategic city-builder on @MinaProtocol and grab delicious rewards 🏆!\n\n#ZkNoidChallenge #TileVille`
+    `${replaceTemplateVariables(content, { score })}`
   )}`;
 
 export const formatBalance = (balance: bigint) => {
   // return (Number(balance ?? 0n) / 10 ** 9).toFixed(2);
   return "1000";
+};
+
+const replaceTemplateVariables = (
+  template: string,
+  variables: { [key: string]: any }
+): string => {
+  return template.replace(/\$\{(\w+)\}/g, (match, key) => {
+    return variables.hasOwnProperty(key) ? variables[key] : match;
+  });
+};
+
+export const sanitizeString = (str: string) => {
+  if (typeof str !== "string") return str;
+  str = str.trim();
+
+  str = str.replace(/^"(.*)"$/, "$1");
+
+  str = str.replace(/\s+/g, " ");
+
+  str = str.replace(/[<>]/g, ""); // Remove < and >
+  str = str
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/\//g, "&#x2F;");
+
+  return str;
 };

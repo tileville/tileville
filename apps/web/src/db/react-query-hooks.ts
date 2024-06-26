@@ -21,12 +21,13 @@ import {
   saveGameScoreDb,
   getActiveGames,
   fetchTransactions,
+  getCompetitionByKey,
 } from "./supabase-queries";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Table } from "@/types";
 import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
 
-export const useSignup = ({
+export const useSendEmail = ({
   onSuccess,
   onMutate,
   onError,
@@ -46,9 +47,12 @@ export const useSignup = ({
         onMutate?.();
       },
       onSuccess: () => {
-        toast.success("You will receive an email with our app preview link", {
-          id: toastRef.current ?? undefined,
-        });
+        toast.success(
+          "You will receive an email before 12 hours when Minting Starts",
+          {
+            id: toastRef.current ?? undefined,
+          }
+        );
 
         toastRef.current = null;
         onSuccess?.();
@@ -152,11 +156,7 @@ export const useLeaderboardData = () => {
   return useQuery(
     ["leaderboard"],
     () => getAllLeaderboardEntries(supabaseUserClientComponentClient),
-    {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 10, // 10 minutes
-      refetchOnWindowFocus: false, // Disable refetch on window focus
-    }
+    {}
   );
 };
 
@@ -164,11 +164,7 @@ export const useCompetitionsData = () => {
   return useQuery(
     ["tileville_competitions"],
     () => getAllCompetitionsEntries(supabaseUserClientComponentClient),
-    {
-      // staleTime: 1000 * 60 * 5, // 5 minutes
-      // cacheTime: 1000 * 60 * 10, // 10 minutes
-      refetchOnWindowFocus: false, // Disable refetch on window focus
-    }
+    {}
   );
 };
 
@@ -326,6 +322,17 @@ export const useFetchTransactions = (
     () => fetchTransactions(wallet_address, txn_status),
     {
       enabled: !!wallet_address && !!txn_status,
+    }
+  );
+};
+
+export const useCompetitionByKey = (unique_keyname: string) => {
+  return useQuery(
+    ["tileville_competition", unique_keyname],
+    () =>
+      getCompetitionByKey(supabaseUserClientComponentClient, unique_keyname),
+    {
+      enabled: unique_keyname.length > 0,
     }
   );
 };

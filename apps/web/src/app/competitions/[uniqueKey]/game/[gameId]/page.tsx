@@ -6,10 +6,12 @@ import { Toaster } from "react-hot-toast";
 import LandingBackground from "@/components/LandingBackground";
 import { useParams } from "next/navigation";
 import {
+  useCompetitionByKey,
   useMainnetTransactionStatus,
   useTransactionLogById,
 } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
+import { COMPETITION_SCORE_TWEET_DEFAULT_CONTENT } from "@/constants";
 
 const GAMEPLAY_DISALLOW_MESSAGE_DEFAULT =
   "We are fetching your participation fee payment transaction details...";
@@ -33,6 +35,12 @@ function Game() {
     error: gameTransactionError,
     isSuccess,
   } = useTransactionLogById(networkStore.address!, parseInt(params.gameId));
+
+  const {
+    data: competitionData,
+    error: competitionError,
+    isSuccess: isCompetitionSuccess,
+  } = useCompetitionByKey(params.uniqueKey);
 
   console.log("game txn data", { gameTransaction, gameTransactionError });
   const {
@@ -61,8 +69,8 @@ function Game() {
         "Transaction failed. you are not part of the competition"
       );
     }
-  }, [isSuccess, gameTransaction]);
-  console.log(txnStatusData, isLoading, isError);
+  }, [isSuccess, gameTransaction, isCompetitionSuccess, competitionData]);
+  // console.log(txnStatusData, isLoading, isError);
 
   //TODO: fetch transaction status from game id
 
@@ -79,6 +87,10 @@ function Game() {
             gameId={+params.gameId}
             txnHash={gameTransaction?.txn_hash}
             txnStatus={gameTransaction?.txn_status}
+            scoreTweetContent={
+              competitionData?.score_tweet_content ||
+              COMPETITION_SCORE_TWEET_DEFAULT_CONTENT
+            }
           />
           <Toaster />
         </div>
