@@ -177,10 +177,7 @@ export const useParticipationFee = () => {
             memo: `Pay ${participation_fee} MINA.`,
           });
           hash = (data as SendTransactionResult).hash;
-          txn_status =
-            networkStore.minaNetwork?.networkID !== "mina:mainnet"
-              ? "CONFIRMED"
-              : "PENDING";
+          txn_status = "PENDING";
         } catch (err: any) {
           toast(`Txn failed with error ${err.toString()}. report a bug`);
         }
