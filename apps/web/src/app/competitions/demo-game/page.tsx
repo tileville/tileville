@@ -1,6 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import LandingBackground from "@/components/LandingBackground";
+import { COMPETITION_SCORE_TWEET_DEFAULT_CONTENT } from "@/constants";
 
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
@@ -18,6 +19,7 @@ export default function DemoGame() {
             gamePlayDisAllowMessage=""
             competitionKey="demo"
             gameId={0}
+            scoreTweetContent={COMPETITION_SCORE_TWEET_DEFAULT_CONTENT}
           />
         </div>
       </div>

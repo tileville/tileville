@@ -100,6 +100,7 @@ export type Database = {
       }
       tileville_competitions: {
         Row: {
+          competition_tweet_content: string
           created_at: string
           description: string
           end_date: string
@@ -109,12 +110,14 @@ export type Database = {
           participation_fee: number | null
           poster_url: string | null
           priority: number
+          score_tweet_content: string
           seed: number
           start_date: string
           treasury_address: string | null
           unique_keyname: string
         }
         Insert: {
+          competition_tweet_content?: string
           created_at?: string
           description: string
           end_date: string
@@ -124,12 +127,14 @@ export type Database = {
           participation_fee?: number | null
           poster_url?: string | null
           priority?: number
+          score_tweet_content?: string
           seed?: number
           start_date: string
           treasury_address?: string | null
           unique_keyname: string
         }
         Update: {
+          competition_tweet_content?: string
           created_at?: string
           description?: string
           end_date?: string
@@ -139,6 +144,7 @@ export type Database = {
           participation_fee?: number | null
           poster_url?: string | null
           priority?: number
+          score_tweet_content?: string
           seed?: number
           start_date?: string
           treasury_address?: string | null

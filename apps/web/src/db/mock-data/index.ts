@@ -13,6 +13,10 @@ export const mockCompetition = {
   treasury_address: "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
   unique_keyname: "heros_tileville1",
   priority: 100,
+  score_tweet_content:
+    "Just conquered Nicobar with a score of ${score} in @TileVilleSocial 🏆 The strategic city-builder on @MinaProtocol is a must-play. Build your dream city: https://tileville.xyz #TileVille #MinaBlockchain",
+  competition_tweet_content:
+    "Exciting news! I'm joining the next TileVille competition on MINA blockchain🚀 \n\n Build your dream city, compete with players worldwide, and win MINA tokens!\n\nCompetition starts soon - don't miss out! 🏆 Join me at https://tileville.xyz/\n#TileVille #MINABlockchain",
 };
 
 export const mockCompetitions = [

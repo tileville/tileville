@@ -124,6 +124,21 @@ export const CompetitionCard = ({
               )}
             </Tooltip.Root>
           </Tooltip.Provider>
+          {competition.competition_tweet_content && (
+            <button
+              onClick={() => {
+                window.open(
+                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    competition.competition_tweet_content
+                  )}`,
+                  "_blank",
+                  "noopener,noreferrer"
+                );
+              }}
+            >
+              Tweet About US
+            </button>
+          )}
         </div>
       </div>
     </div>
