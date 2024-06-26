@@ -12,11 +12,11 @@ export const ErrorBoundaryFallbackComponent = ({
   return (
     <div
       className={twMerge(
-        "flex h-full w-full flex-col items-center justify-center",
+        "flex h-screen w-full flex-col items-center justify-center space-y-4",
         className
       )}
     >
-      <MonsterSad className="text-primary-600 mx-auto mb-8 h-56 w-56 fill-current drop-shadow-xl" />
+      <MonsterSad className="text-primary-600 mb-8 block h-56 w-56 fill-current drop-shadow-xl" />
       <h1 className="text-2xl font-semibold text-neutral-900">
         Oops... something went wrong.
       </h1>

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { ErrorBoundaryFallbackComponent } from "@/components/error-boundary/ErrorBoundryFallbackComponent";
-import { usePosthogEvents } from "@/hooks/usePosthogEvents";
+import * as Sentry from "@sentry/nextjs";
 
 export default function Error({
   error,
@@ -10,10 +10,9 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const ph = usePosthogEvents();
   useEffect(() => {
     // Log the error to an error reporting service
-    ph.reactErrorBoundary(error, {} as any);
+    Sentry.captureException(error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
