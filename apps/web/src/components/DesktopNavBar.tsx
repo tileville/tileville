@@ -22,6 +22,7 @@ import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
 import { BUG_REPORT_URL } from "@/constants";
+import { anonymousSignIn } from "@/db/supabase-queries";
 // import { addNovuSubscriber } from "@/lib/novu";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
@@ -69,6 +70,13 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
       //   email: data?.email || "",
       //   fullname: data?.fullname || "",
       // });
+      anonymousSignIn()
+        .then(() => {
+          console.log("anonymous login done");
+        })
+        .catch(() => {
+          console.log("failed to do anonymous login");
+        });
     }
     if (
       networkStore.walletConnected &&

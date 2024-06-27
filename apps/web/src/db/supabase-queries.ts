@@ -477,3 +477,14 @@ export const getCompetitionByKey = async (
 
   return data;
 };
+
+export const anonymousSignIn = async () => {
+  const supabase = supabaseUserClientComponentClient;
+  const { data, error } = await supabase.auth.signInAnonymously();
+  if (error) {
+    console.log("sign in error", error);
+    // throw error;
+  }
+  console.log("anonymous sign in succeeded");
+  return data;
+};
