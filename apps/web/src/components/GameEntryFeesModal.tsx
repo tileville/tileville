@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { Competition } from "@/types";
 import { useMutation } from "@tanstack/react-query";
-import { validateVoucherCode } from "@/db/supabase-queries";
 import { Spinner } from "./common/Spinner";
 
 type GameEntryFeesModalProps = {
