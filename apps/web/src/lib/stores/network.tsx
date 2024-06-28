@@ -7,11 +7,10 @@ import {
   ProviderError,
 } from "@aurowallet/mina-provider";
 import { NETWORKS, Network } from "@/constants/network";
-import { useState } from "react";
 import { useSessionStorage } from "react-use";
 import { GAME_ENTRY_FEE_KEY } from "@/constants";
 import toast from "react-hot-toast";
-import { addTransactionLog, redeemVoucherCode } from "@/db/supabase-queries";
+import { addTransactionLog } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
@@ -119,7 +118,17 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
 export const useParticipationFee = () => {
   const networkStore = useNetworkStore();
   const redeemVoucher = useMutation({
-    mutationFn: redeemVoucherCode,
+    mutationFn: ({
+      code,
+      wallet_address,
+    }: {
+      code: string;
+      wallet_address: string;
+    }) =>
+      fetch(`/api/vouchers`, {
+        method: "POST",
+        body: JSON.stringify({ code, wallet_address }),
+      }),
   });
   const [, setIsEntryFeePaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
   const {

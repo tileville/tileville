@@ -120,57 +120,6 @@ export const saveGameScoreDb = async (
   return data;
 };
 
-export const addProfile = async (
-  supabase: AppSupabaseClient,
-  item: {
-    wallet_address: string;
-    username: string;
-    fullname: string;
-    email: string;
-    avatar_url: string;
-  }
-): Promise<Table<"player_profile">> => {
-  const isExist = await isProfileExist(supabase, item.wallet_address);
-  if (isExist) {
-    const { wallet_address, ...other_field } = item;
-    const { data, error } = await supabase
-      .from("player_profile")
-      .update(other_field)
-      .eq("wallet_address", item.wallet_address)
-      .single();
-    if (error) {
-      throw error;
-    }
-    return data;
-  } else {
-    const { data, error } = await supabase
-      .from("player_profile")
-      .insert(item)
-      .select("*")
-      .single();
-    if (error) {
-      throw error;
-    }
-    return data;
-  }
-};
-
-export const fetchProfile = async (
-  supabase: AppSupabaseClient,
-  wallet_address: string
-): Promise<Table<"player_profile"> | null> => {
-  const { data, error } = await supabase
-    .from("player_profile")
-    .select("*")
-    .eq("wallet_address", wallet_address)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-  return data;
-};
-
 export const insertEmail = async (
   supabase: AppSupabaseClient,
   item: { name: string; email: string }
@@ -187,20 +136,6 @@ export const insertEmail = async (
 
   return data;
 };
-
-// export const getAllCompetitionsNames = async (
-//   supabase: AppSupabaseClient
-// ): Promise<Array<Table<"tileville_competitions">>> => {
-//   const { data, error } = await supabase
-//     .from("tileville_competitions")
-//     .select("*")
-
-//   if (error) {
-//     throw error;
-//   }
-
-//   return data;
-// };
 
 export const getAllCompetitionsNames = async (
   supabase: AppSupabaseClient
@@ -417,49 +352,6 @@ export const getActiveGames = async (
   return activeGames;
 };
 
-export const validateVoucherCode = async (
-  code: string
-): Promise<{ isValid: boolean; message: string }> => {
-  const supabase = supabaseUserClientComponentClient;
-
-  //TODO: Add expiry date check
-  const { data, error } = await supabase
-    .from("voucher_codes")
-    .select("id, is_redeemed")
-    .eq("code", code)
-    .single();
-
-  if (!data) return { isValid: false, message: "vocher code is invalid." };
-  if (data.is_redeemed)
-    return { isValid: false, message: "voucher code is already redeemed" };
-  if (error) return { isValid: false, message: error };
-  return { isValid: true, message: "" };
-};
-
-export const redeemVoucherCode = async ({
-  code,
-  wallet_address,
-}: {
-  code: string;
-  wallet_address: string;
-}): Promise<boolean> => {
-  const supabase = supabaseUserClientComponentClient;
-
-  const { data, error } = await supabase
-    .from("voucher_codes")
-    .update({
-      is_redeemed: true,
-      redeemed_by: wallet_address,
-      redeemed_at: new Date().toISOString(),
-    })
-    .eq("code", code)
-    .eq("is_redeemed", false)
-    .single();
-
-  if (data) return true;
-  if (error) throw error;
-  return false;
-};
 
 export const getCompetitionByKey = async (
   supabase: AppSupabaseClient,

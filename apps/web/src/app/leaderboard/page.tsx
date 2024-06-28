@@ -58,9 +58,9 @@ export default function Leaderboard() {
               try {
                 const response: any = await fetch(
                   `/api/player_username?wallet_address=${entry.wallet_address}`
-                );
-                if (response.status && response?.data.length > 0) {
-                  usernameMap[entry.wallet_address] = response.data[0].username;
+                ).then((res) => res.json());
+                if (response.status && !!response?.data.username) {
+                  usernameMap[entry.wallet_address] = response.data.username;
                 } else {
                   usernameMap[entry.wallet_address] = "-";
                 }

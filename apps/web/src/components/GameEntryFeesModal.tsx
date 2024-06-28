@@ -30,7 +30,8 @@ export const GameEntryFeesModal = ({
     message: "",
   });
   const validateVoucher = useMutation({
-    mutationFn: validateVoucherCode,
+    mutationFn: (code: string) =>
+      fetch(`/api/vouchers?code=${code}`).then((res) => res.json()),
     onSuccess: (response) => {
       console.log("mutation response", response);
       setVoucherValidationResponse(response);
