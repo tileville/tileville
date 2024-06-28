@@ -70,7 +70,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
       //   email: data?.email || "",
       //   fullname: data?.fullname || "",
       // });
-      anonymousSignIn()
+      anonymousSignIn({ wallet_address: networkStore.address! })
         .then(() => {
           console.log("anonymous login done");
         })

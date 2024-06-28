@@ -56,9 +56,11 @@ export default function Leaderboard() {
           await Promise.all(
             leaderboardEntries.map(async (entry) => {
               try {
-                const data = await getUsername(entry.wallet_address);
-                if (data && data.length > 0) {
-                  usernameMap[entry.wallet_address] = data[0].username;
+                const response: any = await fetch(
+                  `/api/player_username?wallet_address=${entry.wallet_address}`
+                );
+                if (response.status && response?.data.length > 0) {
+                  usernameMap[entry.wallet_address] = response.data[0].username;
                 } else {
                   usernameMap[entry.wallet_address] = "-";
                 }

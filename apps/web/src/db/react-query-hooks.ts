@@ -9,8 +9,6 @@ import toast from "react-hot-toast";
 import {
   getAllLeaderboardEntries,
   insertEmail,
-  addProfile,
-  fetchProfile,
   getAllCompetitionsEntries,
   getAllCompetitionsNames,
   getFilteredLeaderboardEntries,
@@ -23,8 +21,6 @@ import {
   fetchTransactions,
   getCompetitionByKey,
 } from "./supabase-queries";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { Table } from "@/types";
 import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
 
 export const useSendEmail = ({
@@ -125,7 +121,10 @@ export const useProfile = ({
       email: string;
       avatar_url: string;
     }) => {
-      return addProfile(supabaseUserClientComponentClient, item);
+      return fetch("/api/player_profile", {
+        method: "POST",
+        body: JSON.stringify(item),
+      }).then((res) => res.json());
     },
     {
       onMutate: () => {
@@ -172,7 +171,9 @@ export const useProfileLazyQuery = (walletAddress: string) => {
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () =>
-      fetchProfile(supabaseUserClientComponentClient, walletAddress),
+      fetch(`/api/player_profile?wallet_address=${walletAddress}`).then((res) =>
+        res.json()
+      ),
   });
 };
 

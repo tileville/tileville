@@ -1,6 +1,5 @@
 import { CountdownTimer } from "@/components/common/CountdownTimer";
 import { useSendEmail } from "@/db/react-query-hooks";
-import { isUsernameExist } from "@/db/supabase-queries";
 import { getTime } from "date-fns";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";

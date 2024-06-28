@@ -72,9 +72,13 @@ export default function Profile() {
   }, [profileData, setValue]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const isExist = await isUsernameExist(data.username, profileData?.id);
+    const isExist = await fetch(
+      `/api/player_profile/is_username_exist?username=${data.username}&userId=${
+        profileData?.id || ""
+      }`
+    );
 
-    if (isExist) {
+    if (isExist.status) {
       setError("username", {
         type: "custom",
         message: "Username already exist",

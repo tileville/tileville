@@ -478,7 +478,11 @@ export const getCompetitionByKey = async (
   return data;
 };
 
-export const anonymousSignIn = async () => {
+export const anonymousSignIn = async ({
+  wallet_address,
+}: {
+  wallet_address: string;
+}) => {
   const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase.auth.signInAnonymously();
   if (error) {

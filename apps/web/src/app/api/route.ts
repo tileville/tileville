@@ -1,6 +1,6 @@
 export function GET() {
   const data = {
-    name: "MinaPolis",
+    name: "TileVille",
     description: "An on-chain city development arcade game",
   };
   return Response.json(data);
