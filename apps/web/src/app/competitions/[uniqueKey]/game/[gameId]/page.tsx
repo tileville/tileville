@@ -7,6 +7,7 @@ import LandingBackground from "@/components/LandingBackground";
 import { useParams } from "next/navigation";
 import {
   useCompetitionByKey,
+  useIsGameAlreadyPlayed,
   useMainnetTransactionStatus,
   useTransactionLogById,
 } from "@/db/react-query-hooks";
@@ -35,7 +36,10 @@ function Game() {
     error: gameTransactionError,
     isSuccess,
   } = useTransactionLogById(networkStore.address!, parseInt(params.gameId));
-
+  const {
+    data: isGameAlreadyPlayed = true,
+    isSuccess: isGameAlreadyPlayedRespSuccess,
+  } = useIsGameAlreadyPlayed(parseInt(params.gameId));
   const {
     data: competitionData,
     error: competitionError,
@@ -43,24 +47,13 @@ function Game() {
   } = useCompetitionByKey(params.uniqueKey);
 
   console.log("game txn data", { gameTransaction, gameTransactionError });
-  const {
-    data: txnStatusData,
-    isLoading,
-    isError,
-  } = useMainnetTransactionStatus(
+  useMainnetTransactionStatus(
     gameTransaction?.txn_hash || "",
     gameTransaction?.txn_status || "PENDING"
   );
-
+  console.log({ isGameAlreadyPlayed });
   useEffect(() => {
-    if (
-      gameTransaction &&
-      gameTransaction.is_game_played === false &&
-      gameTransaction.txn_status === "CONFIRMED"
-    ) {
-      setIsGamePlayAllowed(true);
-      setGamePlayDisallowMessage("");
-    } else if (gameTransaction?.is_game_played) {
+    if (isGameAlreadyPlayedRespSuccess && isGameAlreadyPlayed) {
       setGamePlayDisallowMessage(
         "You have already played the game. Please check your game status in user profile section."
       );
@@ -68,8 +61,18 @@ function Game() {
       setGamePlayDisallowMessage(
         "Transaction failed. you are not part of the competition"
       );
+    } else if (gameTransaction && gameTransaction.txn_status === "CONFIRMED") {
+      setIsGamePlayAllowed(true);
+      setGamePlayDisallowMessage("");
     }
-  }, [isSuccess, gameTransaction, isCompetitionSuccess, competitionData]);
+  }, [
+    isSuccess,
+    gameTransaction,
+    isCompetitionSuccess,
+    competitionData,
+    isGameAlreadyPlayed,
+    isGameAlreadyPlayedRespSuccess,
+  ]);
   // console.log(txnStatusData, isLoading, isError);
 
   //TODO: fetch transaction status from game id

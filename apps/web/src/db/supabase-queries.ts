@@ -50,7 +50,6 @@ export const getAllLeaderboardEntries = async (
   if (error) {
     throw error;
   }
-
   return data;
 };
 
@@ -352,7 +351,6 @@ export const getActiveGames = async (
   return activeGames;
 };
 
-
 export const getCompetitionByKey = async (
   supabase: AppSupabaseClient,
   unique_keyname: string
@@ -383,4 +381,19 @@ export const anonymousSignIn = async ({
   }
   console.log("anonymous sign in succeeded");
   return data;
+};
+
+export const isGameAlreadyPlayed = async (
+  game_id: number
+): Promise<boolean> => {
+  const supabase = supabaseUserClientComponentClient;
+  const { data, error } = await supabase
+    .from("game_scores")
+    .select("id")
+    .eq("game_id", game_id);
+
+  if (error) {
+    return false;
+  }
+  return !!data;
 };

@@ -20,6 +20,7 @@ import {
   getActiveGames,
   fetchTransactions,
   getCompetitionByKey,
+  isGameAlreadyPlayed,
 } from "./supabase-queries";
 import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
 
@@ -334,6 +335,16 @@ export const useCompetitionByKey = (unique_keyname: string) => {
       getCompetitionByKey(supabaseUserClientComponentClient, unique_keyname),
     {
       enabled: unique_keyname.length > 0,
+    }
+  );
+};
+
+export const useIsGameAlreadyPlayed = (game_id: number) => {
+  return useQuery(
+    ["game_already_played", game_id],
+    () => isGameAlreadyPlayed(game_id),
+    {
+      enabled: game_id > 0,
     }
   );
 };
