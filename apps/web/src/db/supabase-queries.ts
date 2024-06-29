@@ -390,10 +390,12 @@ export const isGameAlreadyPlayed = async (
   const { data, error } = await supabase
     .from("game_scores")
     .select("id")
-    .eq("game_id", game_id);
+    .eq("game_id", game_id)
+    .single();
 
   if (error) {
     return false;
   }
+  console.log("is game already played reponse", data);
   return !!data;
 };
