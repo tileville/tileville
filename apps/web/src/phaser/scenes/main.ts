@@ -70,8 +70,8 @@ export class MainScene extends Scene {
     // this.waves = this.add.image(640, 360, 'waves');
     // this.waves2 = this.add.image(640, 360, 'waves2');
 
-    this.grid = new HexGrid(this, 5, 8, 0, 0, this.onNewPoints.bind(this));
-    this.trihexDeck = this.createTrihexDeck(25, true);
+    this.grid = new HexGrid(this, 6, 9, 0, 0, this.onNewPoints.bind(this));
+    this.trihexDeck = this.createTrihexDeck(32, true);
 
     this.scoreText = this.add.bitmapText(150, 30, "font", "0 points", 60);
     this.scoreText.setDepth(4);
@@ -297,12 +297,15 @@ export class MainScene extends Scene {
     }
     deck = shuffle(deck);
     for (let i = 0; i < size; i++) {
-      if (i < size / 2) {
+      if (i < (3 * size) / 10) {
         deck[i].hexes[1] = 3;
+      } else if (i < size / 2) {
+        deck[i].hexes[1] = 6
       } else {
         deck[i].hexes[1] = 2;
       }
     }
+
     deck = shuffle(deck);
     for (let i = 0; i < size; i++) {
       if (i < size / 2) {
@@ -380,7 +383,6 @@ export class MainScene extends Scene {
 
     if (this.scoreText) {
       handleSaveScore(this.score);
-      console.log("data send to database");
     }
 
     this.grid!.sinkBlanks();

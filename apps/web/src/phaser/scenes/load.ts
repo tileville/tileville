@@ -75,6 +75,9 @@ export class LoadScene extends Scene {
     this.load.image("empty", "/img/empty.png");
     this.load.image("empty-hill", "/img/empty-hill.png");
 
+    this.load.image("mine", "/img/mine.png");
+    this.load.image("mine-bw", "/img/mine-bw.png");
+    this.load.image("mine-red", "/img/mine-red.png");
     this.load.image("grass", "/img/grass.png");
     this.load.image("grass-bw", "/img/grass-bw.png");
     this.load.image("grass-red", "/img/grass-red.png");
@@ -135,6 +138,7 @@ export class LoadScene extends Scene {
     this.load.audio("port", "/sfx/port.wav");
     this.load.audio("splash", "/sfx/splash.wav");
     this.load.audio("click", "/sfx/click.wav");
+    this.load.audio("digging", "/sfx/digging.mp3");
   }
 
   create() {
