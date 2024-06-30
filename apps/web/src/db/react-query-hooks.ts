@@ -119,7 +119,6 @@ export const useProfile = ({
       wallet_address: string;
       username: string;
       fullname: string;
-      email: string;
       avatar_url: string;
     }) => {
       return fetch("/api/player_profile", {

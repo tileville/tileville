@@ -25,7 +25,6 @@ import Preferences from "@/components/profileTabs/preferences";
 interface IFormInput {
   firstName: string;
   lastName: string;
-  email: string;
   username: string;
   avatar_url: string;
 }
@@ -54,7 +53,6 @@ export default function Profile() {
     defaultValues: {
       firstName: (profileData?.fullname ?? "").split(" ")[0],
       lastName: (profileData?.fullname ?? "").split(" ")[1],
-      email: profileData?.email || "",
       username: profileData?.username || "",
       avatar_url: profileData?.avatar_url || "/img/avatars/defaultImg.webp",
     },
@@ -62,8 +60,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (profileData) {
-      const { email, fullname, username, avatar_url } = profileData;
-      setValue("email", email ?? "");
+      const { fullname, username, avatar_url } = profileData;
       setValue("firstName", (fullname ?? "").split(" ")[0]);
       setValue("lastName", (fullname ?? "").split(" ")[1]);
       setValue("avatar_url", avatar_url ?? "/img/avatars/defaultImg.webp");
@@ -91,7 +88,6 @@ export default function Profile() {
         wallet_address: `${networkStore?.address}`,
         username: data.username,
         fullname: `${data.firstName} ${data.lastName}`,
-        email: data.email,
         avatar_url: data.avatar_url,
       }),
       closeModal()
@@ -139,7 +135,6 @@ export default function Profile() {
 
   // Check if any profile field is missing
   const isProfileIncomplete =
-    !profileData?.email ||
     !profileData?.fullname ||
     !profileData?.username ||
     !profileData?.avatar_url;
@@ -300,37 +295,6 @@ export default function Profile() {
                                 </div>
                               </div>
                               <div className="col-span-2">
-                                <label htmlFor="email" className="block">
-                                  Email
-                                  <span className="text-sm text-red-500">
-                                    *
-                                  </span>
-                                </label>
-
-                                <div>
-                                  <input
-                                    type="text"
-                                    className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
-                                    id="email"
-                                    placeholder="Email"
-                                    {...register("email", {
-                                      pattern:
-                                        /^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/,
-                                      required: true,
-                                    })}
-                                  />
-                                </div>
-
-                                <span
-                                  className={`${
-                                    errors.email ? "opacity-100" : ""
-                                  } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
-                                >
-                                  Please put a valid Email..
-                                </span>
-                              </div>
-
-                              <div className="col-span-2">
                                 <label htmlFor="username" className="block">
                                   Username
                                   <span className="text-sm text-red-500">
@@ -408,9 +372,6 @@ export default function Profile() {
                     </div>
                   )}
                 </div>
-                <p className="tet-sm text-gray-500">
-                  {!!profileData?.email && <h3> {profileData.email}</h3>}
-                </p>
               </div>
             </div>
 
