@@ -86,6 +86,12 @@ export const faqContent: {
         answer:
           "The cities you build during competitions will become NFTs that you own. In the future, you'll be able to purchase islands and develop these cities further.",
       },
+      {
+        id: 4,
+        question: "What happens if the same user is listed multiple times?",
+        answer:
+          "If the same user is listed multiple times on the leaderboard, we will consider their highest rank only. The subsequent positions will be adjusted to ensure each prize goes to a different player. For instance, if User A is first and third, User A will receive the prize for the first rank, and the player who is second will remain second, while the player who is fourth will move up to third place.",
+      },
     ],
   },
   {
