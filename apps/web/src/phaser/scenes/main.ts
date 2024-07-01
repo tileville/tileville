@@ -63,7 +63,7 @@ export class MainScene extends Scene {
     bgImage.setScale(0.2);
     bgImage.setAlpha(0.1);
     this.score = 0;
-    this.scoreBreakdown = [0, 0, 0, 0, 0, 0];
+    this.scoreBreakdown = [0, 0, 0, 0, 0, 0 , 0,0];
 
     this.pointerDown = false;
 
@@ -601,7 +601,7 @@ export class MainScene extends Scene {
     this.breakdownHexes = [];
     this.breakdownTexts = [];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       const h = new Hex(this, 0, 0, -1, -1);
       h.embiggen();
       h.setDepth(4);
@@ -632,6 +632,11 @@ export class MainScene extends Scene {
     this.breakdownHexes[2].setX(125);
     this.breakdownTexts[2].setX(125);
     this.breakdownTexts[2].setText(String(this.scoreBreakdown[1]));
+
+    this.breakdownHexes[3].setType(6);
+    this.breakdownHexes[3].setX(250);
+    this.breakdownTexts[3].setX(250);
+    this.breakdownTexts[3].setText(String(this.scoreBreakdown[6]));
 
     this.tweens.add({
       targets: this.gameOverText,
