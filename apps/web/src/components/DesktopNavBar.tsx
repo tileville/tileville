@@ -4,7 +4,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useMountedState } from "react-use";
 import Image from "next/image";
-import { ChevronLeftIcon } from "@radix-ui/react-icons";
+import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "./PrimaryButton";
 import { MediaPlayer } from "./MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
@@ -156,6 +156,19 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             <i className="twitterIcon"></i>
             <span className="label ms-1 whitespace-nowrap text-xs" id="l">
               Follow
+            </span>
+          </Link>
+
+          <Link
+            id="follow-button"
+            className="ms-auto flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+            title="Follow @tileVille on X"
+            href="https://discord.com/invite/NvNBQZX7rU"
+            target="_blank"
+          >
+            <DiscordLogoIcon />
+            <span className="label ms-1 whitespace-nowrap text-xs" id="l">
+              Join Discord
             </span>
           </Link>
 

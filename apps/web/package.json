@@ -67,7 +67,7 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
-    "@svgr/webpack": "^6.2.0",
+    "@svgr/webpack": "^6.5.1",
     "@types/eslint": "^8.37.0",
     "@types/luxon": "^3.4.2",
     "@types/node": "20.4.6",
