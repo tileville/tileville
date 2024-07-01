@@ -19,6 +19,7 @@
     "@aurowallet/mina-provider": "1.0.1",
     "@novu/node": "^0.24.2",
     "@novu/notification-center": "^0.24.2",
+    "@opentelemetry/api": "^1.9.0",
     "@proto-kit/common": "file:../../proto-kit/packages/common",
     "@proto-kit/library": "file:../../proto-kit/packages/library",
     "@proto-kit/module": "file:../../proto-kit/packages/module",
@@ -66,6 +67,7 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
+    "@svgr/webpack": "^6.2.0",
     "@types/eslint": "^8.37.0",
     "@types/luxon": "^3.4.2",
     "@types/node": "20.4.6",
@@ -83,7 +85,6 @@
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "supabase": "^1.38.6",
-    "@svgr/webpack": "^6.2.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
   }
