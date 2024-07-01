@@ -90,40 +90,42 @@ export default function Leaderboard() {
   return (
     <div className="p-4 py-40">
       <div className="mx-auto max-w-[1280px]">
-        <div className="mb-3 flex items-center justify-end gap-3">
-          <p>Select Competitions:</p>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <button className="border-primary-30 flex h-10 min-w-[224px] items-center justify-between rounded-md border bg-transparent px-3 font-semibold text-primary outline-none">
-                <span>{selectedCompetition.name}</span>
-                <span>
-                  <Image
-                    src="icons/topBottomArrows.svg"
-                    width={24}
-                    height={24}
-                    alt="arrows"
-                  />
-                </span>
-              </button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content className="min-w-[224px] !bg-transparent backdrop-blur-2xl">
-              {competitionData?.map((competition) => (
-                <DropdownMenu.Item
-                  key={competition.id}
-                  onClick={() => {
-                    setSelectedCompetition({
-                      id: competition.id,
-                      competition_key: competition.unique_keyname,
-                      name: competition.name,
-                    });
-                  }}
-                  className="hover:bg-primary"
-                >
-                  {competition.name}
-                </DropdownMenu.Item>
-              ))}
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <p>Select Competitions:</p>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <button className="border-primary-30 flex h-10 min-w-[224px] items-center justify-between rounded-md border bg-transparent px-3 font-semibold text-primary outline-none">
+                  <span>{selectedCompetition.name}</span>
+                  <span>
+                    <Image
+                      src="icons/topBottomArrows.svg"
+                      width={24}
+                      height={24}
+                      alt="arrows"
+                    />
+                  </span>
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content className="min-w-[224px] !bg-transparent backdrop-blur-2xl">
+                {competitionData?.map((competition) => (
+                  <DropdownMenu.Item
+                    key={competition.id}
+                    onClick={() => {
+                      setSelectedCompetition({
+                        id: competition.id,
+                        competition_key: competition.unique_keyname,
+                        name: competition.name,
+                      });
+                    }}
+                    className="hover:bg-primary"
+                  >
+                    {competition.name}
+                  </DropdownMenu.Item>
+                ))}
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          </div>
         </div>
         <Table.Root>
           <Table.Header>
