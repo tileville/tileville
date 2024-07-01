@@ -26,6 +26,9 @@ importers:
       '@novu/notification-center':
         specifier: ^0.24.2
         version: 0.24.2(@types/react@18.2.18)(acorn@8.12.0)(react-dom@18.3.1)(react@18.3.1)
+      '@opentelemetry/api':
+        specifier: ^1.9.0
+        version: 1.9.0
       '@proto-kit/common':
         specifier: file:../../proto-kit/packages/common
         version: file:proto-kit/packages/common(o1js@1.1.0)(tsyringe@4.8.0)
