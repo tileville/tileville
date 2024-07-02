@@ -444,9 +444,12 @@ input[type="range"] {
   animation-duration: 1800ms;
 }
 
-
 .slideAnimOnChilds > *:nth-child(7){
   animation-duration: 2100ms;
+}
+
+.slideAnimOnChilds > *:nth-child(8){
+  animation-duration: 2400ms;
 }
 
 .competitionCard{

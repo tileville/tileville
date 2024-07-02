@@ -29,6 +29,12 @@ export default function MainMenu() {
       targetBlank: false,
       href: "/leaderboard",
     },
+    {
+      name: "Community Section",
+      key: 7,
+      targetBlank: false,
+      href: "/community",
+    },
 
     {
       name: "User Profile",
