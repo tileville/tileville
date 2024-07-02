@@ -68,7 +68,7 @@ export const PhaserLayer = ({
   );
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
-      width: 1280,
+      width: 1405,
       height: "100%",
       parent: "minapolis-hex",
       type: Phaser.AUTO,

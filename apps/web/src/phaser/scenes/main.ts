@@ -464,20 +464,20 @@ export class MainScene extends Scene {
       message2 = "(This is the highest rank!)";
     }
 
-    this.gameOverText = this.add.bitmapText(1500, 70, "font", message1, 60);
+    this.gameOverText = this.add.bitmapText(1625, 70, "font", message1, 60);
     this.gameOverText.setOrigin(0.5);
     this.gameOverText.setDepth(4);
 
-    this.rankText = this.add.bitmapText(1500, 460, "font", rank, 60);
+    this.rankText = this.add.bitmapText(1625, 460, "font", rank, 60);
     this.rankText.setOrigin(0.5);
     this.rankText.setDepth(4);
 
-    this.nextRankText = this.add.bitmapText(1500, 520, "font", message2, 40);
+    this.nextRankText = this.add.bitmapText(1625, 520, "font", message2, 40);
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
     this.competitionNameText = this.add.bitmapText(
-      1500,
+      1625,
       570,
       "font",
       `Competition Key: ${competitionKey}`,
@@ -488,7 +488,7 @@ export class MainScene extends Scene {
 
     const currentTime: string = this.getGameStartTime();
     this.currentTimeText = this.add.bitmapText(
-      1500,
+      1625,
       590,
       "font",
       `Played At: ${currentTime}`,
@@ -499,7 +499,7 @@ export class MainScene extends Scene {
 
     if (isDemoGame) {
       this.playAgainButton = this.add
-        .bitmapText(1400, 630, "font", "Play Again", 40)
+        .bitmapText(1525, 630, "font", "Play Again", 40)
         .setInteractive({ useHandCursor: true })
         .setOrigin(0.5)
         .on("pointerover", () => {
@@ -546,7 +546,7 @@ export class MainScene extends Scene {
     }
 
     this.shareButton = this.add
-      .image(1450, 700, "share-score-button")
+      .image(1575, 700, "share-score-button")
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () => {
         this.tweens.add({
@@ -595,7 +595,7 @@ export class MainScene extends Scene {
       })
       .setDepth(4);
 
-    this.breakdownContainer = this.add.container(1500, 300);
+    this.breakdownContainer = this.add.container(1625, 300);
     this.breakdownContainer.setDepth(4);
 
     this.breakdownHexes = [];
@@ -640,7 +640,7 @@ export class MainScene extends Scene {
 
     this.tweens.add({
       targets: this.gameOverText,
-      props: { x: 1040 },
+      props: { x: 1165 },
       delay: 300,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -648,7 +648,7 @@ export class MainScene extends Scene {
 
     this.tweens.add({
       targets: this.breakdownContainer,
-      props: { x: 1040 },
+      props: { x: 1165 },
       delay: 600,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -656,7 +656,7 @@ export class MainScene extends Scene {
 
     this.tweens.add({
       targets: [this.rankText, this.nextRankText],
-      props: { x: 1040 },
+      props: { x: 1165 },
       delay: 900,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -664,7 +664,7 @@ export class MainScene extends Scene {
 
     this.tweens.add({
       targets: [this.competitionNameText, this.currentTimeText],
-      props: { x: 1040 },
+      props: { x: 1165 },
       delay: 1200,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -673,7 +673,7 @@ export class MainScene extends Scene {
     if (isDemoGame) {
       this.tweens.add({
         targets: this.playAgainButton,
-        props: { x: 1040 },
+        props: { x: 1165 },
         delay: 1200,
         duration: 300,
         ease: PhaserMath.Easing.Quadratic.Out,
@@ -682,7 +682,7 @@ export class MainScene extends Scene {
 
     this.tweens.add({
       targets: this.shareButton,
-      props: { x: 1040 },
+      props: { x: 1165 },
       delay: 1500,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
