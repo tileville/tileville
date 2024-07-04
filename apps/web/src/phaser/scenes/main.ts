@@ -35,8 +35,10 @@ export class MainScene extends Scene {
   scoreBreakdown: number[] = [];
   scoreText: GameObjects.BitmapText | null = null;
 
-  timerText: GameObjects.BitmapText | null = null;
+  // timerText: GameObjects.BitmapText | null = null;
+  timerText: Phaser.GameObjects.Text | null = null;
   timedEvent: Phaser.Time.TimerEvent | null = null;
+  timerPosition =  0;
 
   waves: GameObjects.Image | null = null;
   waves2: GameObjects.Image | null = null;
@@ -207,42 +209,49 @@ export class MainScene extends Scene {
     this.input.on("wheel", this.onMouseWheel, this);
 
 
-    const isTimerGame = this.game.registry.get("isTimerGame");
-    if(isTimerGame){
-      this.initialTime = 15;
-      this.timerText = this.add.bitmapText(900, 100, "font", `Remaining Time : ${this.formatTime(this.initialTime)}`, 44);
-      this.timerText.setTint(0x00ff7f);
-      this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-      
-      // Add a background for the timer
-      // this.timerBackground = this.add.rectangle(1000, 100, 400, 60, 0x000000, 0.5);
-      // this.timerBackground.setOrigin(0.5);
-      // this.timerBackground.setDepth(this.timerText.depth - 1);
-    }
+    this.timerPosition = 1060;
+    const isSpeedVersion = this.game.registry.get("isSpeedVersion");
+    const totalTime = this.game.registry.get("totalTime");
+  if(isSpeedVersion){
+
+    this.initialTime = totalTime;
+    this.timerText = this.add.text(this.timerPosition, 130, `Remaining Time : ${this.formatTime(this.initialTime)}`, {
+      // fontFamily: 'Arial',
+      fontSize: '30px',
+      fontStyle: 'bold',
+      color: '#378209'
+    });
+    this.timerText.setOrigin(0.5);
+    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+  }
 }
 
 
 onEvent() {
   this.initialTime -= 1; 
-  this.timerText?.setText(`Remaining Time : ${this.formatTime(this.initialTime)}`);
+  if (this.timerText) {
+    this.timerText.setText(`Remaining Time : ${this.formatTime(this.initialTime)}`);
   
-  if (this.initialTime <= 10) {
-    // Change color to yellow at 10 seconds
-    this.timerText?.setTint(0xffff00);
-  }
+    if (this.initialTime <= 10) {
+      // Change color to yellow at 10 seconds
+      this.timerText.setColor('#E67E22');
+    }
   
-  if (this.initialTime <= 5) {
-    // Change color to red at 5 seconds
-    this.timerText?.setTint(0xff0000);
-    this.pulseAndShakeTimer();
+    if (this.initialTime <= 5) {
+      // Change color to red at 5 seconds
+      this.timerText.setColor('#DC143C');
+      this.pulseAndShakeTimer();
+    }
   }
 
   if(this.initialTime === 0){
     this.timedEvent?.remove();
     this.grid!.onQueueEmpty = this.endGame.bind(this);
     this.grid!.deactivate();
-    this.timerText?.setPosition(900, 100);
-    this.timerText?.setScale(1);
+    if (this.timerText) {
+      this.timerText.setPosition(this.timerPosition, 130);
+      this.timerText.setScale(1);
+    }
   }
 }
 
@@ -260,8 +269,8 @@ pulseAndShakeTimer() {
   // Shake animation
   this.tweens.add({
     targets: this.timerText,
-    x: 900 + Phaser.Math.Between(-6, 6),
-    y: 100 + Phaser.Math.Between(-6, 6),
+    x: this.timerPosition + Phaser.Math.Between(-6, 6),
+    y: 130 + Phaser.Math.Between(-6, 6),
     duration: 50,
     yoyo: true,
     repeat: 3,
@@ -448,9 +457,9 @@ pulseAndShakeTimer() {
     const isDemoGame = this.game.registry.get("isDemoGame");
     const competitionKey = this.game.registry.get("competitionKey");
 
-    const isTimerGame = this.game.registry.get("isTimerGame");
+    const isSpeedVersion = this.game.registry.get("isSpeedVersion");
 
-      if(isTimerGame){
+      if(isSpeedVersion){
           this.timedEvent?.remove();
       }
 
