@@ -69,7 +69,9 @@ export const CompetitionCard = ({
           <div className="h-full w-[1px] bg-primary/30"></div>
           <div className="flex items-center gap-2">
             <p>Prize Money 🤑:</p>
-            <p className="text-base font-semibold">{competition.funds} MINA</p>
+            <p className="text-base font-semibold">
+              {competition.funds} {competition.currency_symbol}
+            </p>
           </div>
         </div>
       </div>

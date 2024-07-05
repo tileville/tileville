@@ -17,7 +17,7 @@ export const mockCompetition = {
   prizes: [],
   is_speed_version: true,
   speed_duration: 30,
-  currency_symbol: "MINA"
+  currency_symbol: "Dollar"
 }
 
 
