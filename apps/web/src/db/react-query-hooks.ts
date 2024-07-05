@@ -179,7 +179,7 @@ export const useProfileLazyQuery = (walletAddress: string) => {
 
 export const useCompetitionsName = () => {
   return useQuery(
-    ["tileville_competitions"],
+    ["tileville_competitions_name"],
     () => getAllCompetitionsNames(supabaseUserClientComponentClient),
     {}
   );
