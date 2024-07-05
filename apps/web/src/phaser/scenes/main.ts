@@ -211,10 +211,13 @@ export class MainScene extends Scene {
 
     this.timerPosition = 1060;
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
-    const totalTime = this.game.registry.get("totalTime");
+    const speedDuration = this.game.registry.get("speedDuration");
+
+    console.log("isSpeedVersion" , isSpeedVersion)
+    console.log("speedDuration" , speedDuration)
   if(isSpeedVersion){
 
-    this.initialTime = totalTime;
+    this.initialTime = speedDuration;
     this.timerText = this.add.text(this.timerPosition, 130, `Remaining Time : ${this.formatTime(this.initialTime)}`, {
       // fontFamily: 'Arial',
       fontSize: '30px',

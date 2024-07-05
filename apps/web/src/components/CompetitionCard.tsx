@@ -93,50 +93,53 @@ export const CompetitionCard = ({
               </div>
             )}
           </div>
-          {competition.is_speed_version}
+          {competition.is_speed_version && (
+            <div>
+              <div className="mb-2 flex items-center gap-2 text-xl">
+                <span>
+                  <Image
+                    src="/icons/speed.svg"
+                    alt="speed"
+                    width="30"
+                    height="30"
+                  />
+                </span>
+                <p className="text-medium ">Speedy Version</p>
+                <Tooltip.Provider delayDuration={200}>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <InfoCircledIcon
+                        width={24}
+                        height={24}
+                        className="text-black/50 hover:text-black"
+                      />
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content
+                        className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
+                        sideOffset={5}
+                      >
+                        In the speedy version of the game we the player will
+                        need to finish the game in specific amount of time.
+                        <Tooltip.Arrow className="TooltipArrow" />
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                </Tooltip.Provider>
+              </div>
 
-          <div>
-            <div className="mb-2 flex items-center gap-2 text-xl">
-              <span>
-                <Image
-                  src="/icons/speed.svg"
-                  alt="speed"
-                  width="30"
-                  height="30"
-                />
-              </span>
-              <p className="text-medium ">Speedy Version</p>
-              <Tooltip.Provider delayDuration={200}>
-                <Tooltip.Root>
-                  <Tooltip.Trigger asChild>
-                    <InfoCircledIcon
-                      width={24}
-                      height={24}
-                      className="text-black/50 hover:text-black"
-                    />
-                  </Tooltip.Trigger>
-                  <Tooltip.Portal>
-                    <Tooltip.Content
-                      className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                      sideOffset={5}
-                    >
-                      In the speedy version of the game we the player will need
-                      to finish the game in specific amount of time.
-                      <Tooltip.Arrow className="TooltipArrow" />
-                    </Tooltip.Content>
-                  </Tooltip.Portal>
-                </Tooltip.Root>
-              </Tooltip.Provider>
+              <div className="flex items-center gap-2 text-xl">
+                <span>
+                  <TimerIcon width={24} height={24} />
+                </span>
+                <p className="text-medium ">Game Time:-</p>
+                <p className="text-medium ">
+                  {competition.speed_duration} Secs
+                </p>
+              </div>
             </div>
+          )}
 
-            <div className="flex items-center gap-2 text-xl">
-              <span>
-                <TimerIcon width={24} height={24} />
-              </span>
-              <p className="text-medium ">Game Time:-</p>
-              <p className="text-medium ">120 Secs</p>
-            </div>
-          </div>
           <Tooltip.Provider delayDuration={300}>
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
