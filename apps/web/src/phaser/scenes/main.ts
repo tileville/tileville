@@ -31,8 +31,15 @@ export class MainScene extends Scene {
   closeHelpButton: Button | null = null;
   helpPage: GameObjects.Image | null = null;
   score = 0;
+  initialTime = 0;
   scoreBreakdown: number[] = [];
   scoreText: GameObjects.BitmapText | null = null;
+
+  // timerText: GameObjects.BitmapText | null = null;
+  timerText: Phaser.GameObjects.Text | null = null;
+  timedEvent: Phaser.Time.TimerEvent | null = null;
+  timerPosition =  0;
+
   waves: GameObjects.Image | null = null;
   waves2: GameObjects.Image | null = null;
 
@@ -47,6 +54,9 @@ export class MainScene extends Scene {
   currentTimeText: GameObjects.BitmapText | null = null;
   playAgainButton: GameObjects.BitmapText | null = null;
   shareButton: GameObjects.Image | null = null;
+
+  timerBackground: GameObjects.Rectangle | null = null
+
 
   // playAgainButton: Button | null = null;
   breakdownContainer: GameObjects.Container | null = null;
@@ -197,7 +207,79 @@ export class MainScene extends Scene {
     );
 
     this.input.on("wheel", this.onMouseWheel, this);
+
+
+    this.timerPosition = 1060;
+    const isSpeedVersion = this.game.registry.get("isSpeedVersion");
+    const speedDuration = this.game.registry.get("speedDuration");
+
+    console.log("isSpeedVersion" , isSpeedVersion)
+    console.log("speedDuration" , speedDuration)
+  if(isSpeedVersion){
+
+    this.initialTime = speedDuration;
+    this.timerText = this.add.text(this.timerPosition, 130, `Remaining Time : ${this.formatTime(this.initialTime)}`, {
+      // fontFamily: 'Arial',
+      fontSize: '30px',
+      fontStyle: 'bold',
+      color: '#378209'
+    });
+    this.timerText.setOrigin(0.5);
+    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
   }
+}
+
+
+onEvent() {
+  this.initialTime -= 1; 
+  if (this.timerText) {
+    this.timerText.setText(`Remaining Time : ${this.formatTime(this.initialTime)}`);
+  
+    if (this.initialTime <= 10) {
+      // Change color to yellow at 10 seconds
+      this.timerText.setColor('#E67E22');
+    }
+  
+    if (this.initialTime <= 5) {
+      // Change color to red at 5 seconds
+      this.timerText.setColor('#DC143C');
+      this.pulseAndShakeTimer();
+    }
+  }
+
+  if(this.initialTime === 0){
+    this.timedEvent?.remove();
+    this.grid!.onQueueEmpty = this.endGame.bind(this);
+    this.grid!.deactivate();
+    if (this.timerText) {
+      this.timerText.setPosition(this.timerPosition, 130);
+      this.timerText.setScale(1);
+    }
+  }
+}
+
+pulseAndShakeTimer() {
+  // Pulse animation
+  this.tweens.add({
+    targets: this.timerText,
+    scale: 1.05,
+    duration: 200,
+    yoyo: true,
+    repeat: 1,
+    ease: 'Sine.easeInOut'
+  });
+
+  // Shake animation
+  this.tweens.add({
+    targets: this.timerText,
+    x: this.timerPosition + Phaser.Math.Between(-6, 6),
+    y: 130 + Phaser.Math.Between(-6, 6),
+    duration: 50,
+    yoyo: true,
+    repeat: 3,
+    ease: 'Sine.easeInOut'
+  });
+}
 
   onNewPoints(points: number, hexType: number) {
     this.score += points;
@@ -380,6 +462,12 @@ export class MainScene extends Scene {
     const handleSaveScore = this.game.registry.get("handleSaveScore");
     const isDemoGame = this.game.registry.get("isDemoGame");
     const competitionKey = this.game.registry.get("competitionKey");
+
+    const isSpeedVersion = this.game.registry.get("isSpeedVersion");
+
+      if(isSpeedVersion){
+          this.timedEvent?.remove();
+      }
 
     if (this.scoreText) {
       handleSaveScore(this.score);
@@ -714,6 +802,19 @@ export class MainScene extends Scene {
   navigateToExternalSite(url: string) {
     window.open(url, "_blank");
   }
+
+ formatTime(seconds: number): string {
+    // Minutes
+    const minutes = Math.floor(seconds / 60);
+    // Seconds
+    let partInSeconds: number | string = seconds % 60;
+    // Adds left zeros to seconds
+    partInSeconds = partInSeconds.toString().padStart(2, '0');
+    // Returns formated time
+    return `${minutes}:${partInSeconds}`;
+}
+
+
 
   onPointerUp(event: Input.Pointer) {
     if (this.pointerDown) {
