@@ -728,7 +728,7 @@ pulseAndShakeTimer() {
 
     this.tweens.add({
       targets: this.gameOverText,
-      props: { x: 1165 },
+      props: { x: 1105 },
       delay: 300,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -736,7 +736,7 @@ pulseAndShakeTimer() {
 
     this.tweens.add({
       targets: this.breakdownContainer,
-      props: { x: 1165 },
+      props: { x: 1105 },
       delay: 600,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -744,7 +744,7 @@ pulseAndShakeTimer() {
 
     this.tweens.add({
       targets: [this.rankText, this.nextRankText],
-      props: { x: 1165 },
+      props: { x: 1105 },
       delay: 900,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -752,7 +752,7 @@ pulseAndShakeTimer() {
 
     this.tweens.add({
       targets: [this.competitionNameText, this.currentTimeText],
-      props: { x: 1165 },
+      props: { x: 1105 },
       delay: 1200,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -761,7 +761,7 @@ pulseAndShakeTimer() {
     if (isDemoGame) {
       this.tweens.add({
         targets: this.playAgainButton,
-        props: { x: 1165 },
+        props: { x: 1105 },
         delay: 1200,
         duration: 300,
         ease: PhaserMath.Easing.Quadratic.Out,
@@ -770,7 +770,7 @@ pulseAndShakeTimer() {
 
     this.tweens.add({
       targets: this.shareButton,
-      props: { x: 1165 },
+      props: { x: 1105 },
       delay: 1500,
       duration: 300,
       ease: PhaserMath.Easing.Quadratic.Out,
