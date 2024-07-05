@@ -20,6 +20,8 @@ export default function DemoGame() {
             competitionKey="demo"
             gameId={0}
             scoreTweetContent={COMPETITION_SCORE_TWEET_DEFAULT_CONTENT}
+            isSpeedVersion={false}
+            speedDuration={12}
           />
         </div>
       </div>
