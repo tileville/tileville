@@ -1,9 +1,6 @@
 "use client";
 import { useCompetitionsName } from "@/db/react-query-hooks";
-import {
-  getFilteredLeaderboardEntries,
-  getUsername,
-} from "@/db/supabase-queries";
+import { getFilteredLeaderboardEntries } from "@/db/supabase-queries";
 import { Skeleton, Table } from "@radix-ui/themes";
 import { DropdownMenu } from "@radix-ui/themes";
 import Image from "next/image";
