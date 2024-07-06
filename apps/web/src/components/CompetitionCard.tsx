@@ -69,7 +69,9 @@ export const CompetitionCard = ({
           <div className="h-full w-[1px] bg-primary/30"></div>
           <div className="flex items-center gap-2">
             <p>Prize Money 🤑:</p>
-            <p className="text-base font-semibold">{competition.funds} MINA</p>
+            <p className="text-base font-semibold">
+              {competition.funds} {competition.currency_symbol}
+            </p>
           </div>
         </div>
       </div>
@@ -119,8 +121,8 @@ export const CompetitionCard = ({
                         className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
                         sideOffset={5}
                       >
-                        In the speedy version of the game we the player will
-                        need to finish the game in specific amount of time.
+                        In the speedy version of the game, the player will need
+                        to finish the game in specific amount of time.
                         <Tooltip.Arrow className="TooltipArrow" />
                       </Tooltip.Content>
                     </Tooltip.Portal>
