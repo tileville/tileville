@@ -94,6 +94,8 @@ function Game() {
               competitionData?.score_tweet_content ||
               COMPETITION_SCORE_TWEET_DEFAULT_CONTENT
             }
+            isSpeedVersion={competitionData?.is_speed_version}
+            speedDuration={competitionData?.speed_duration}
           />
           <Toaster />
         </div>

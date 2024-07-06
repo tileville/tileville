@@ -53,4 +53,8 @@ type Competition = {
   unique_keyname: string;
   score_tweet_content: string;
   competition_tweet_content: string;
+  prizes: Array;
+  is_speed_version: boolean;
+  speed_duration: number;
+  currency_symbol: string;
 };

@@ -6,6 +6,7 @@ import { getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { HtmlRenderer } from "./common/HTMLRenderer";
+import { InfoCircledIcon, TimerIcon } from "@radix-ui/react-icons";
 
 type CompetitionCardProps = {
   competition: Competition;
@@ -68,7 +69,9 @@ export const CompetitionCard = ({
           <div className="h-full w-[1px] bg-primary/30"></div>
           <div className="flex items-center gap-2">
             <p>Prize Money 🤑:</p>
-            <p className="text-base font-semibold">{competition.funds} MINA</p>
+            <p className="text-base font-semibold">
+              {competition.funds} {competition.currency_symbol}
+            </p>
           </div>
         </div>
       </div>
@@ -92,6 +95,52 @@ export const CompetitionCard = ({
               </div>
             )}
           </div>
+          {competition.is_speed_version && (
+            <div>
+              <div className="mb-2 flex items-center gap-2 text-xl">
+                <span>
+                  <Image
+                    src="/icons/speed.svg"
+                    alt="speed"
+                    width="30"
+                    height="30"
+                  />
+                </span>
+                <p className="text-medium ">Speedy Version</p>
+                <Tooltip.Provider delayDuration={200}>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <InfoCircledIcon
+                        width={24}
+                        height={24}
+                        className="text-black/50 hover:text-black"
+                      />
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content
+                        className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
+                        sideOffset={5}
+                      >
+                        In the speedy version of the game, the player will need
+                        to finish the game in specific amount of time.
+                        <Tooltip.Arrow className="TooltipArrow" />
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                </Tooltip.Provider>
+              </div>
+
+              <div className="flex items-center gap-2 text-xl">
+                <span>
+                  <TimerIcon width={24} height={24} />
+                </span>
+                <p className="text-medium ">Game Time:-</p>
+                <p className="text-medium ">
+                  {competition.speed_duration} Secs
+                </p>
+              </div>
+            </div>
+          )}
 
           <Tooltip.Provider delayDuration={300}>
             <Tooltip.Root>

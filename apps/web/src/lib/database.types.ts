@@ -51,7 +51,6 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
-          email: string | null
           fullname: string | null
           id: number
           username: string
@@ -60,7 +59,6 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
-          email?: string | null
           fullname?: string | null
           id?: number
           username: string
@@ -69,7 +67,6 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
-          email?: string | null
           fullname?: string | null
           id?: number
           username?: string
@@ -102,16 +99,20 @@ export type Database = {
         Row: {
           competition_tweet_content: string
           created_at: string
+          currency_symbol: string
           description: string
           end_date: string
           funds: number
           id: number
+          is_speed_version: boolean
           name: string
           participation_fee: number | null
           poster_url: string | null
           priority: number
+          prizes: Json | null
           score_tweet_content: string
           seed: number
+          speed_duration: number
           start_date: string
           treasury_address: string | null
           unique_keyname: string
@@ -119,16 +120,20 @@ export type Database = {
         Insert: {
           competition_tweet_content?: string
           created_at?: string
+          currency_symbol?: string
           description: string
           end_date: string
           funds?: number
           id?: number
+          is_speed_version?: boolean
           name: string
           participation_fee?: number | null
           poster_url?: string | null
           priority?: number
+          prizes?: Json | null
           score_tweet_content?: string
           seed?: number
+          speed_duration?: number
           start_date: string
           treasury_address?: string | null
           unique_keyname: string
@@ -136,16 +141,20 @@ export type Database = {
         Update: {
           competition_tweet_content?: string
           created_at?: string
+          currency_symbol?: string
           description?: string
           end_date?: string
           funds?: number
           id?: number
+          is_speed_version?: boolean
           name?: string
           participation_fee?: number | null
           poster_url?: string | null
           priority?: number
+          prizes?: Json | null
           score_tweet_content?: string
           seed?: number
+          speed_duration?: number
           start_date?: string
           treasury_address?: string | null
           unique_keyname?: string

@@ -15,6 +15,8 @@ type PhaserLayerProps = {
   txnHash?: string | undefined;
   txnStatus?: string | undefined;
   scoreTweetContent: string;
+  isSpeedVersion: boolean | undefined;
+  speedDuration: number | undefined;
 };
 
 export const PhaserLayer = ({
@@ -26,9 +28,12 @@ export const PhaserLayer = ({
   txnHash,
   txnStatus,
   scoreTweetContent,
+  isSpeedVersion,
+  speedDuration,
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
+  const [totalTime, setTotalTime] = useState(100);
   console.log("address", address);
 
   const leaderboardMutation = useSaveScore({
@@ -86,6 +91,9 @@ export const PhaserLayer = ({
     game.registry.set("showGameInfoModalFn", showGameInfoModalFn);
     game.registry.set("competitionKey", competitionKey);
     game.registry.set("scoreTweetContent", scoreTweetContent);
+    game.registry.set("isSpeedVersion", isSpeedVersion);
+    game.registry.set("speedDuration", speedDuration);
+
     return () => {
       game.destroy(true);
     };
