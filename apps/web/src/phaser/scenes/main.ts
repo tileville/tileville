@@ -34,11 +34,17 @@ export class MainScene extends Scene {
   initialTime = 0;
   scoreBreakdown: number[] = [];
   scoreText: GameObjects.BitmapText | null = null;
+  scoreTextPositionX = 0;
 
   // timerText: GameObjects.BitmapText | null = null;
   timerText: Phaser.GameObjects.Text | null = null;
   timedEvent: Phaser.Time.TimerEvent | null = null;
-  timerPosition =  0;
+  timerPositionX =  0;
+  timerPositionY =  0;
+
+  scoreBackground: Phaser.GameObjects.Graphics | null = null;
+  scoreBackgroundPositionX = 0;
+  timerBackground: Phaser.GameObjects.Graphics | null = null;
 
   waves: GameObjects.Image | null = null;
   waves2: GameObjects.Image | null = null;
@@ -55,9 +61,6 @@ export class MainScene extends Scene {
   playAgainButton: GameObjects.BitmapText | null = null;
   shareButton: GameObjects.Image | null = null;
 
-  timerBackground: GameObjects.Rectangle | null = null
-
-
   // playAgainButton: Button | null = null;
   breakdownContainer: GameObjects.Container | null = null;
   breakdownHexes: Hex[] = [];
@@ -68,6 +71,8 @@ export class MainScene extends Scene {
   }
 
   create() {
+    const isSpeedVersion = this.game.registry.get("isSpeedVersion");
+
     this.add.rectangle(640, 360, 1280, 720);
     const bgImage = this.add.image(640, 360, "map_pattern");
     bgImage.setScale(0.2);
@@ -83,8 +88,59 @@ export class MainScene extends Scene {
     this.grid = new HexGrid(this, 6, 9, 0, 0, this.onNewPoints.bind(this));
     this.trihexDeck = this.createTrihexDeck(32, true);
 
-    this.scoreText = this.add.bitmapText(150, 30, "font", "0 points", 60);
+    if(isSpeedVersion){
+      this.scoreTextPositionX = -40;
+      this.scoreBackgroundPositionX = -50;
+    }else{
+      this.scoreTextPositionX = 140;
+      this.scoreBackgroundPositionX = 130;
+    }
+    this.scoreText = this.add.bitmapText(this.scoreTextPositionX, 30, "font", "0 points", 60);
     this.scoreText.setDepth(4);
+
+    this.scoreBackground = this.add.graphics();
+    this.scoreBackground.fillStyle(0x378209, 0.3); 
+    this.scoreBackground.fillRoundedRect(this.scoreBackgroundPositionX, 25, 225, 80, 8);
+    this.scoreBackground.setDepth(3);
+
+    this.tweens.add({
+      targets: [this.scoreBackground, this.scoreText],
+      props: { x: '+= 800' },
+      duration: 400,
+    });
+
+    if(isSpeedVersion){
+    this.timerPositionX = 330;
+    this.timerPositionY = 65;
+    const speedDuration = this.game.registry.get("speedDuration");
+
+    this.timerBackground = this.add.graphics();
+    this.timerBackground.fillStyle(0xeeeeee, 0.3); 
+    this.timerBackground.fillRoundedRect(this.timerPositionX - 140 , this.timerPositionY - 40, 280, 80 , 8);
+    this.timerBackground.setDepth(3);
+    
+    this.tweens.add({
+      targets: [this.timerBackground, this.timerText],
+      props: { x: '+= 800' },
+      duration: 400,
+    });
+    
+
+    if(isSpeedVersion){
+      this.initialTime = speedDuration;
+      this.timerText = this.add.text(this.timerPositionX, this.timerPositionY, `Time Left: ${this.formatTime(this.initialTime)}`, {
+        // fontFamily: 'Arial',
+        fontSize: '30px',
+        fontStyle: 'bold',
+        color: '#378209'
+      });
+      this.timerText.setDepth(4);
+      this.timerText.setOrigin(0.5);
+      this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+    }
+}
+
+
 
     this.rotateLeftButton = new Button(
       this,
@@ -191,6 +247,15 @@ export class MainScene extends Scene {
       duration: 400,
     });
 
+    if(isSpeedVersion){
+    this.tweens.add({
+      targets: this.timerText,
+      props: { x: (this.timerText?.x ?? 0) + 800 },
+      duration: 400,
+    });
+  }
+
+
     this.tweens.add({
       targets: [this.deckCounterText, this.deckCounterImage],
       props: { x: this.deckCounterText.x + 800 },
@@ -209,40 +274,24 @@ export class MainScene extends Scene {
     this.input.on("wheel", this.onMouseWheel, this);
 
 
-    this.timerPosition = 1060;
-    const isSpeedVersion = this.game.registry.get("isSpeedVersion");
-    const speedDuration = this.game.registry.get("speedDuration");
-
-    console.log("isSpeedVersion" , isSpeedVersion)
-    console.log("speedDuration" , speedDuration)
-  if(isSpeedVersion){
-
-    this.initialTime = speedDuration;
-    this.timerText = this.add.text(this.timerPosition, 130, `Remaining Time : ${this.formatTime(this.initialTime)}`, {
-      // fontFamily: 'Arial',
-      fontSize: '30px',
-      fontStyle: 'bold',
-      color: '#378209'
-    });
-    this.timerText.setOrigin(0.5);
-    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-  }
+   
 }
 
 
 onEvent() {
   this.initialTime -= 1; 
   if (this.timerText) {
-    this.timerText.setText(`Remaining Time : ${this.formatTime(this.initialTime)}`);
-  
+    this.timerText.setText(`Time Left: ${this.formatTime(this.initialTime)}`);
     if (this.initialTime <= 10) {
-      // Change color to yellow at 10 seconds
       this.timerText.setColor('#E67E22');
+      this.timerBackground?.fillStyle(0xE67E22, 0.2); // Yellow with 20% opacity
+      this.timerBackground?.fillRoundedRect(this.timerPositionX - 140 + 800, this.timerPositionY - 40, 280, 60 , 10);
     }
   
     if (this.initialTime <= 5) {
-      // Change color to red at 5 seconds
       this.timerText.setColor('#DC143C');
+      this.timerBackground?.fillStyle(0xDC143C, 0.2); // Red with 20% opacity
+      this.timerBackground?.fillRoundedRect(this.timerPositionX - 140 + 800, this.timerPositionY - 40, 280, 60 , 10);
       this.pulseAndShakeTimer();
     }
   }
@@ -252,16 +301,16 @@ onEvent() {
     this.grid!.onQueueEmpty = this.endGame.bind(this);
     this.grid!.deactivate();
     if (this.timerText) {
-      this.timerText.setPosition(this.timerPosition, 130);
+      this.timerText.setPosition(this.timerPositionX + 800, this.timerPositionY);
       this.timerText.setScale(1);
     }
   }
+  
 }
 
 pulseAndShakeTimer() {
-  // Pulse animation
   this.tweens.add({
-    targets: this.timerText,
+    targets: [this.timerText],
     scale: 1.05,
     duration: 200,
     yoyo: true,
@@ -269,16 +318,17 @@ pulseAndShakeTimer() {
     ease: 'Sine.easeInOut'
   });
 
-  // Shake animation
   this.tweens.add({
-    targets: this.timerText,
-    x: this.timerPosition + Phaser.Math.Between(-6, 6),
-    y: 130 + Phaser.Math.Between(-6, 6),
+    targets: [this.timerText],
+    x: this.timerPositionX + 800 + Phaser.Math.Between(-6, 6),
+    
+    y: this.timerPositionY + Phaser.Math.Between(-6, 6),
     duration: 50,
     yoyo: true,
     repeat: 3,
     ease: 'Sine.easeInOut'
   });
+
 }
 
   onNewPoints(points: number, hexType: number) {
@@ -498,11 +548,62 @@ pulseAndShakeTimer() {
     this.tweens.add({
       targets: this.scoreText,
       props: {
-        y: 150,
+        y: 140,
       },
       duration: 700,
       ease: PhaserMath.Easing.Quadratic.Out,
     });
+
+    if(isSpeedVersion){
+      this.tweens.add({
+        targets: this.timerText,
+        props: {
+          y: 175,
+        },
+        duration: 700,
+        ease: PhaserMath.Easing.Quadratic.Out,
+      });
+    }
+
+
+    this.tweens.add({
+      targets: [this.scoreText],
+      props: {
+        y: 140,
+      },
+      duration: 700,
+      ease: PhaserMath.Easing.Quadratic.Out,
+    });
+
+    this.tweens.add({
+      targets: [this.scoreBackground],
+      props: {
+        y: 110,
+      },
+      duration: 700,
+      ease: PhaserMath.Easing.Quadratic.Out,
+    });
+    
+    // Also in endGame(), update the timer text tween:
+    this.tweens.add({
+      targets: [this.timerText],
+      props: {
+        y: 175,
+      },
+      duration: 700,
+      ease: PhaserMath.Easing.Quadratic.Out,
+    });
+
+    this.tweens.add({
+      targets: [this.timerBackground],
+      props: {
+        y: 110,
+      },
+      duration: 700,
+      ease: PhaserMath.Easing.Quadratic.Out,
+    });
+    
+    
 
     let rank, message1, message2;
     if (this.score === 0) {
@@ -785,6 +886,12 @@ pulseAndShakeTimer() {
     this.playAgainButton?.setVisible(false);
     this.shareButton?.setVisible(false);
     this.scoreText?.setVisible(false);
+    this.timerText?.setVisible(false);
+    this.scoreBackground?.setVisible(false);
+    this.scoreBackground?.setVisible(false);
+    this.timerBackground?.setVisible(false);
+    this.competitionNameText?.setVisible(false)
+    this.currentTimeText?.setVisible(false)
 
     // this.tweens.add({
     //   targets: this.foreground,
