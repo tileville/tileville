@@ -81,7 +81,7 @@ function Game() {
     <div className="gradient-bg gradient-bg h-[calc(100vh-80px)]">
       <LandingBackground />
       <div className="relative z-10">
-        <div className="mb-0 w-full">
+        <div className="mb-0 flex min-h-screen w-full items-center justify-center">
           <PhaserLayer
             isDemoGame={false}
             isGamePlayAllowed={isGamePlayAllowed}

@@ -137,7 +137,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           >
             <span>Bug Report</span>
             <Image
-              src="icons/bugReport.svg"
+              src="/icons/bugReport.svg"
               width={20}
               height={20}
               alt="bug report"
