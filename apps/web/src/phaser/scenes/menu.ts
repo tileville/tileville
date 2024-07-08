@@ -22,6 +22,12 @@ const tutorialTypes = [
   [1, 2, 3, 4, 5],
 ];
 
+const currentLevel = 1;
+
+const nextSceneData = {
+  level: currentLevel,
+};
+
 export class MenuScene extends Scene {
   menu: GameObjects.Group | null = null;
   background: GameObjects.Image | null = null;
@@ -331,7 +337,7 @@ export class MenuScene extends Scene {
   }
 
   transition() {
-    this.scene.start("main");
+    this.scene.start("main", nextSceneData);
   }
 
   howToPlay() {

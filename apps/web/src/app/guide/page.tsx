@@ -11,7 +11,7 @@ const GuidePhaserLayer = dynamic(
 
 export default function Guide() {
   return (
-    <div className="overflow-y-scroll">
+    <div className="overflow-y-auto">
       {/* <main
         className={`${bibloSwashCaps.variable} guide-section-content relative`}
       >

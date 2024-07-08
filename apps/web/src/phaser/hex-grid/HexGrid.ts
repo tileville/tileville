@@ -328,13 +328,23 @@ export class HexGrid extends GameObjects.Group {
     ) {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
-          ["white", "windmill-bw", "grass-bw", "street-bw","","" , "mine-bw"][trihex.hexes[i]]
+          ["white", "windmill-bw", "grass-bw", "street-bw", "", "", "mine-bw"][
+            trihex.hexes[i]
+          ]
         );
       }
     } else {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
-          ["white", "windmill-red", "grass-red", "street-red" ,"","" , "mine-red"][trihex.hexes[i]]
+          [
+            "white",
+            "windmill-red",
+            "grass-red",
+            "street-red",
+            "",
+            "",
+            "mine-red",
+          ][trihex.hexes[i]]
         );
       }
     }
@@ -498,12 +508,8 @@ export class HexGrid extends GameObjects.Group {
           }
         }
       }
-    } else if(hex.hexType === 6){
-      
-      this.scoreQueue.enq(
-        new ScorePopper(this.scene, [hex], 3)
-      );
-
+    } else if (hex.hexType === 6) {
+      this.scoreQueue.enq(new ScorePopper(this.scene, [hex], 3));
     }
   }
 
