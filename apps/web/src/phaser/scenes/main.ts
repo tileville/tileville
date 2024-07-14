@@ -14,6 +14,12 @@ import {
 import { Button, pick, shuffle } from "../util";
 import { Scene, GameObjects, Input, Math as PhaserMath } from "phaser";
 
+interface Level {
+  hexSize: number;
+  hillsCount: number;
+  deckSize: number;
+  isMineTile: boolean;
+}
 export class MainScene extends Scene {
   grid: HexGrid | null = null;
   foreground: GameObjects.Image | null = null;
@@ -68,6 +74,7 @@ export class MainScene extends Scene {
   breakdownTexts: GameObjects.BitmapText[] = [];
 
   currentLevel = 0;
+  levels: Level[] = [];
 
   constructor() {
     super("main");
@@ -78,7 +85,8 @@ export class MainScene extends Scene {
   }
 
   create() {
-    console.log("current level", this.currentLevel);
+    console.log(this.currentLevel);
+    this.levels = JSON.parse(this.cache.text.get("levels")) as Level[];
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
 
     this.add.rectangle(640, 360, 1280, 720);
@@ -87,7 +95,7 @@ export class MainScene extends Scene {
     bgImage.setAlpha(0.1);
     this.score = 0;
 
-    if (this.currentLevel === 5) {
+    if (this.levels[this.currentLevel - 1].isMineTile) {
       this.scoreBreakdown = [0, 0, 0, 0, 0, 0, 0, 0];
     } else {
       this.scoreBreakdown = [0, 0, 0, 0, 0, 0];
@@ -97,23 +105,18 @@ export class MainScene extends Scene {
 
     // this.waves = this.add.image(640, 360, 'waves');
     // this.waves2 = this.add.image(640, 360, 'waves2');
-
-    if (this.currentLevel === 1) {
-      this.grid = new HexGrid(this, 2, 2, 0, 0, this.onNewPoints.bind(this));
-      this.trihexDeck = this.createTrihexDeck(4, true);
-    } else if (this.currentLevel === 2) {
-      this.grid = new HexGrid(this, 3, 5, 0, 0, this.onNewPoints.bind(this));
-      this.trihexDeck = this.createTrihexDeck(9, true);
-    } else if (this.currentLevel === 3) {
-      this.grid = new HexGrid(this, 4, 6, 0, 0, this.onNewPoints.bind(this));
-      this.trihexDeck = this.createTrihexDeck(18, true);
-    } else if (this.currentLevel === 4) {
-      this.grid = new HexGrid(this, 5, 8, 0, 0, this.onNewPoints.bind(this));
-      this.trihexDeck = this.createTrihexDeck(25, true);
-    } else if (this.currentLevel === 5) {
-      this.grid = new HexGrid(this, 6, 9, 0, 0, this.onNewPoints.bind(this));
-      this.trihexDeck = this.createTrihexDeck(32, true);
-    }
+    this.grid = new HexGrid(
+      this,
+      this.levels[this.currentLevel - 1].hexSize,
+      this.levels[this.currentLevel - 1].hillsCount,
+      0,
+      0,
+      this.onNewPoints.bind(this)
+    );
+    this.trihexDeck = this.createTrihexDeck(
+      this.levels[this.currentLevel - 1].deckSize,
+      true
+    );
 
     if (isSpeedVersion) {
       this.scoreTextPositionX = -40;
@@ -488,7 +491,7 @@ export class MainScene extends Scene {
       }
     }
     deck = shuffle(deck);
-    if (this.currentLevel === 5) {
+    if (this.levels[this.currentLevel - 1].isMineTile) {
       for (let i = 0; i < size; i++) {
         if (i < (3 * size) / 10) {
           deck[i].hexes[1] = 3;
@@ -900,7 +903,7 @@ export class MainScene extends Scene {
     this.breakdownHexes = [];
     this.breakdownTexts = [];
     let resultCardCount = 3;
-    if (this.currentLevel === 5) {
+    if (this.levels[this.currentLevel - 1].isMineTile) {
       resultCardCount = 4;
     } else {
       resultCardCount = 3;
@@ -938,7 +941,7 @@ export class MainScene extends Scene {
     this.breakdownTexts[2].setX(125);
     this.breakdownTexts[2].setText(String(this.scoreBreakdown[1]));
 
-    if (this.currentLevel === 5) {
+    if (this.levels[this.currentLevel - 1].isMineTile) {
       this.breakdownHexes[3].setType(6);
       this.breakdownHexes[3].setX(250);
       this.breakdownTexts[3].setX(250);

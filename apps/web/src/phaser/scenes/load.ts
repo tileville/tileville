@@ -124,8 +124,8 @@ export class LoadScene extends Scene {
     this.load.image("play-button", "/img/playBtn.png");
     this.load.image("play-again-button", "/img/play-again-button.png");
     this.load.image("how-to-play-button", "/img/howtoplay.png");
-    this.load.image('play-free-demo-button', "/img/playFreeDemo.png" )
-    this.load.image('share-score-button', "/img/shareScoreBtn.png" )
+    this.load.image("play-free-demo-button", "/img/playFreeDemo.png");
+    this.load.image("share-score-button", "/img/shareScoreBtn.png");
 
     this.load.bitmapFont("font", "/font/font.png", "/font/font.fnt");
 
@@ -139,6 +139,8 @@ export class LoadScene extends Scene {
     this.load.audio("splash", "/sfx/splash.wav");
     this.load.audio("click", "/sfx/click.wav");
     this.load.audio("digging", "/sfx/digging.mp3");
+
+    this.load.text("levels", "/data/levels.json");
   }
 
   create() {
