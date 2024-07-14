@@ -1,8 +1,8 @@
-# MINAPolis: Strategic City Development Game
+# TileVille: Strategic City Development Game
 
 # Overview
 
-MINAPolis is a city-building arcade game on the MINA blockchain that brings strategic gameplay to new heights. You build your city with ROAD, WindMill and Tree hexagonal tiles and if you build a well-planned city, you win rewards.
+TileVille is a city-building arcade game on the MINA blockchain that brings strategic gameplay to new heights. You build your city with ROAD, WindMill and Tree hexagonal tiles and if you build a well-planned city, you win rewards.
 
 
 Navigate the maze of choices as you construct roads, connecting ports to the heart of your city for valuable points. Harness the power of windmills, strategically placing them on hills for maximum efficiency. And don't forget about parks—group them together in threes to create lush oases of greenery, each cluster a beacon of beauty and bounty.
@@ -13,7 +13,7 @@ Here's the deal: for just 2 MINA tokens, you unlock the gates to MINAPolis. Your
 Score above 70, and you've ascended to Level 1—a feat worthy of celebration. Your reward? A treasure trove awaits, packed with ERC20 and ERC721 asset prizes, including MINA tokens and coveted NFTs. Plus, claim your rightful place on the leaderboard and showcase your city-building prowess to the world.
 
 
-# Why MINAPolis
+# Why TileVille
 
 As a dedicated arcade gamer, I've yearned for the thrill of the arcade experience on the blockchain—a world where nostalgia meets innovation. Picture this: I slide my 2 MINA coins into a digital slot machine, playing the game, and I design a perfect city. And when I win, there it is—the coveted treasure box, brimming with exciting prizes like MINA tokens, rare NFTs, and exclusive vouchers.
 
@@ -24,7 +24,7 @@ Yet, in the realm of Web2-based arcade games, this dream feels distant. These ga
 
 # Game Architecture
 
-MINAPolis consists of two primary components: smart contract and the game client app.
+TileVille consists of two primary components: smart contract and the game client app.
 
 Here is the brief explantation of both components:
 
