@@ -79,6 +79,7 @@ export const PhaserLayer = ({
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
       // scale: {
+      //   mode: Phaser.Scale.RESIZE,
       //   autoCenter: Phaser.Scale.CENTER_BOTH,
       // },
       transparent: true,
