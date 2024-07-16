@@ -24,7 +24,6 @@ export const PhaserLayer = ({
   competitionKey,
   gameId,
   txnHash,
-  txnStatus,
   scoreTweetContent,
   isSpeedVersion,
   speedDuration,
@@ -71,7 +70,7 @@ export const PhaserLayer = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [leaderboardMutation, address, isDemoGame]
   );
-  
+
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       width: 1280,
@@ -104,7 +103,6 @@ export const PhaserLayer = ({
       <GameInfoModal
         open={showGameInfoModal}
         txnHash={txnHash}
-        txnStatus={txnStatus}
         handleClose={() => {
           setShowGameInfoModal(false);
         }}

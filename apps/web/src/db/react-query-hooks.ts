@@ -70,7 +70,7 @@ export const useSaveScore = ({
   onMutate,
   onError,
 }: {
-  // onSuccess?: () => void;
+  onSuccess?: () => void;
   onMutate?: () => void;
   onError?: (error: unknown) => void;
 }) => {

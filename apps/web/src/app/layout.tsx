@@ -20,11 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      // className={`${monteserrat.variable}, ${fjallaOne.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning>
       <body className="gradient-bg min-h-screen">
         <Theme
           accentColor="green"
