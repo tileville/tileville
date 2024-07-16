@@ -16,7 +16,6 @@ export default function DemoGame() {
           <PhaserLayer
             isDemoGame={true}
             isGamePlayAllowed={true}
-            gamePlayDisAllowMessage=""
             competitionKey="demo"
             gameId={0}
             scoreTweetContent={COMPETITION_SCORE_TWEET_DEFAULT_CONTENT}

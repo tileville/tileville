@@ -1,15 +1,14 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
 import { useSaveScore } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
-import toast from "react-hot-toast";
 
 type PhaserLayerProps = {
   isDemoGame: boolean;
   isGamePlayAllowed: boolean;
-  gamePlayDisAllowMessage: string;
   competitionKey: string;
   gameId: number;
   txnHash?: string | undefined;
@@ -22,7 +21,6 @@ type PhaserLayerProps = {
 export const PhaserLayer = ({
   isDemoGame,
   isGamePlayAllowed,
-  gamePlayDisAllowMessage,
   competitionKey,
   gameId,
   txnHash,
@@ -33,8 +31,7 @@ export const PhaserLayer = ({
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
-  const [totalTime, setTotalTime] = useState(100);
-  console.log("address", address);
+  // console.log("address", address);
 
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
@@ -47,9 +44,11 @@ export const PhaserLayer = ({
       console.error("Error saving game score", error);
     },
   });
+
   const showGameInfoModalFn = useCallback(() => {
     setShowGameInfoModal(true);
   }, []);
+
   const handleSaveScore = useCallback(
     (score: number) => {
       if (isDemoGame) {
@@ -69,8 +68,10 @@ export const PhaserLayer = ({
         wallet_address: address,
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [leaderboardMutation, address, isDemoGame]
   );
+  
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       width: 1280,
@@ -78,16 +79,13 @@ export const PhaserLayer = ({
       parent: "minapolis-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
-      // scale: {
-      //   autoCenter: Phaser.Scale.CENTER_BOTH,
-      // },
       transparent: true,
     };
+
     const game = new Phaser.Game(config);
     game.registry.set("isDemoGame", isDemoGame);
     game.registry.set("handleSaveScore", handleSaveScore);
     game.registry.set("isGamePlayAllowed", isGamePlayAllowed);
-    game.registry.set("gamePlayDisAllowMessage", gamePlayDisAllowMessage);
     game.registry.set("showGameInfoModalFn", showGameInfoModalFn);
     game.registry.set("competitionKey", competitionKey);
     game.registry.set("scoreTweetContent", scoreTweetContent);
@@ -98,15 +96,13 @@ export const PhaserLayer = ({
       game.destroy(true);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isGamePlayAllowed, gamePlayDisAllowMessage]);
+  }, [isGamePlayAllowed]);
 
   return (
     <>
       <div id="minapolis-hex" className="min-h-[850px]" />
       <GameInfoModal
         open={showGameInfoModal}
-        message={gamePlayDisAllowMessage}
-        title="Transaction is pending!"
         txnHash={txnHash}
         txnStatus={txnStatus}
         handleClose={() => {

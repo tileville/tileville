@@ -355,7 +355,8 @@ export const getCompetitionByKey = async (
   supabase: AppSupabaseClient,
   unique_keyname: string
 ): Promise<Table<"tileville_competitions">> => {
-  if(mockCompetition.unique_keyname === unique_keyname) return mockCompetition
+  if (isMockEnv && mockCompetition.unique_keyname === unique_keyname)
+    return mockCompetition;
   const { data, error } = await supabase
     .from("tileville_competitions")
     .select("*")

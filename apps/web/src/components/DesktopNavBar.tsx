@@ -49,9 +49,6 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
   const { phClient } = usePosthogEvents();
-  console.log("PENDING Transactions", pendingTransactions);
-
-  console.log("can go back", canGoBack);
   useEffect(() => {
     if (!walletInstalled()) return;
     if (autoConnect) {
