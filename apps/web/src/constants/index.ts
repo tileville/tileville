@@ -1,4 +1,8 @@
 import PersonWaiting from "../../public/lotties/personWaiting.json";
+import Failed from "../../public/lotties/failed.json";
+import DoneLottie from "../../public/lotties/doneLottie.json";
+import TxnConfirmed from "../../public/lotties/txnConfirmed.json";
+import confusingLottie from "../../public/lotties/confusingLottie.json";
 
 export const MINA_DENOM = 1e9;
 export const TREASURY_ADDRESS =
@@ -59,7 +63,7 @@ export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
   TRANSACTION_FAILED: {
     title: "Transaction Failed",
     description: "Transaction failed. you are not part of the competition",
-    animation: PersonWaiting,
+    animation: Failed,
   },
   TRANSACTION_PENDING: {
     title: "Transaction is pending.",
@@ -71,18 +75,18 @@ export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
     title: "Game is already played",
     description:
       "You have already played the game. Please check your game status in user profile section.",
-    animation: PersonWaiting,
+    animation: DoneLottie,
   },
   TRANSACTION_CONFIRMED: {
     title: "Transaction Confirmed.",
     description:
       "Transactin is confirmed. Please close the modal and click on play button to start playing.",
-    animation: PersonWaiting,
+    animation: TxnConfirmed,
   },
   NONE: {
     title: "Un-Ohh There Might be some issue",
     description:
-      "Please use the bug report button from Header if you are not able to playe the game.",
-    animation: PersonWaiting,
+      "Please use the bug report button from Header if you are not able to play the game.",
+    animation: confusingLottie,
   },
 };

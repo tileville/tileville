@@ -9,7 +9,7 @@ export const CustomScrollbar = ({
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
 
-  const [yPos, setYPos] = useState(
+  const [yPos] = useState(
     useTransform(
       scrollYProgress,
       [0, 1],

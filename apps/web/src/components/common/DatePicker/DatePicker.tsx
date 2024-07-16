@@ -12,12 +12,14 @@ export const DatePicker = ({
   setDateFrom: (date: string) => void;
   setDateTo: (date: string) => void;
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentDate, _setCurrentDate] = useState<Date>(new Date());
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [activeDate, setActiveDate] = useState<Date | undefined>(undefined);
   const [possibleDate, setPossibleDate] = useState<Date | undefined>(undefined);
   const [pickedDate, setPickedDate] = useState<Date | undefined>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_currentMonth, setCurrentMonth] = useState<number>(
     currentDate.getMonth()
   );
@@ -26,9 +28,9 @@ export const DatePicker = ({
     return new Date(year, month, 0).getDate();
   };
 
-  const getLastDayOfMonth = (year: number, month: number) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
+  // const getLastDayOfMonth = (year: number, month: number) => {
+  //   return new Date(year, month + 1, 0).getDate();
+  // };
 
   const clearDates = () => {
     setDateTo("");

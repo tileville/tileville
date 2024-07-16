@@ -1,4 +1,3 @@
-import TableSkeleton from "@/app/leaderboard/tableSkeleton";
 import { useTransactionLogByStatus } from "@/db/react-query-hooks";
 import {
   formatTimestampToReadableAge,
