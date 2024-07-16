@@ -1,22 +1,20 @@
 import { Dialog, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import LottieAnimation from "./common/LottieAnimation";
-import Failed from "../../public/lotties/failed.json";
 
 import { BUG_REPORT_URL, GAMEPLAY_NOT_ALLOWED_MESSAGES } from "@/constants";
 import { useAtomValue } from "jotai";
 import { gameplayDisallowTypeAtom } from "@/contexts/atoms";
+// import DoneLottie from "../../public/lotties/doneLottie.json";
 
 export const GameInfoModal = ({
   open,
   handleClose,
   txnHash,
-  txnStatus,
 }: {
   open: boolean;
   handleClose: () => void;
   txnHash: string | undefined;
-  txnStatus: string | undefined;
 }) => {
   const gameplayDisallowType = useAtomValue(gameplayDisallowTypeAtom);
   const content = GAMEPLAY_NOT_ALLOWED_MESSAGES[gameplayDisallowType];

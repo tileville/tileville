@@ -10,7 +10,6 @@ interface IFormInput {
 }
 
 export const MarketplaceOverlay = () => {
-  const [isSendingData, setIsSendingData] = useState(false);
   const emailSentMutation = useSendEmail({
     onSuccess: () => {
       console.log("Email Send to database");
@@ -118,7 +117,6 @@ export const MarketplaceOverlay = () => {
 
             <div className="pt-4 text-right">
               <button className="rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]">
-                {isSendingData && <>Loading</>}
                 Subscribe
               </button>
             </div>

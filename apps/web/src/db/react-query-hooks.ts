@@ -66,11 +66,11 @@ export const useSendEmail = ({
 };
 
 export const useSaveScore = ({
-  onSuccess,
+  // onSuccess,
   onMutate,
   onError,
 }: {
-  onSuccess?: () => void;
+  // onSuccess?: () => void;
   onMutate?: () => void;
   onError?: (error: unknown) => void;
 }) => {
@@ -91,7 +91,7 @@ export const useSaveScore = ({
         // toastRef.current = toast.loading('Saving leaderboard data...');
         onMutate?.();
       },
-      onSuccess: () => {},
+      // onSuccess: () => {},
       onError: (error) => {
         toast.error(String(error), {
           id: toastRef.current ?? undefined,

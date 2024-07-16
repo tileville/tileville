@@ -45,7 +45,7 @@ export const CompetitionCard = ({
       className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-3 overflow-hidden rounded-lg"
       key={competition.id}
     >
-      <div className="relative col-span-4 h-full overflow-hidden">
+      <div className="relative col-span-4 h-[400px] w-[400x] overflow-hidden">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
@@ -53,19 +53,35 @@ export const CompetitionCard = ({
           className="h-full w-full object-cover object-left transition-transform group-hover:scale-110"
         />
       </div>
-      <div className="col-span-5 flex flex-col p-4">
+      <div className="col-span-5 flex flex-col py-4 ps-1">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
         <div className="mb-2 flex flex-col flex-wrap space-y-2 text-sm text-black/50">
           <HtmlRenderer htmlContent={competition.description} />
         </div>
         <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>
-        <div className="flex justify-between gap-3 text-sm font-medium">
+        <div className="flex justify-between gap-2 text-sm font-medium">
           <div className="flex items-center gap-2">
             <p>Entry Fees:</p>
             <p className="text-base font-semibold">
               {competition.participation_fee} MINA
             </p>
           </div>
+
+          {competitionStatus === "upcoming" && (
+            <>
+              <div className="h-full w-[1px] bg-primary/30"></div>
+              <div className="flex items-center gap-2">
+                <p>Duration:</p>
+                <p className="text-base font-semibold">
+                  {getDateDifference(
+                    competition.start_date,
+                    competition.end_date
+                  )}
+                </p>
+              </div>
+            </>
+          )}
+
           <div className="h-full w-[1px] bg-primary/30"></div>
           <div className="flex items-center gap-2">
             <p>Prize Money 🤑:</p>
@@ -75,7 +91,7 @@ export const CompetitionCard = ({
           </div>
         </div>
       </div>
-      <div className="col-span-3 p-4">
+      <div className="col-span-3 px-1 py-4">
         <div className="flex h-full flex-col items-start justify-between">
           <div className="mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
@@ -197,4 +213,14 @@ export const CompetitionCard = ({
         )}
     </div>
   );
+};
+
+const getDateDifference = (date1: string, date2: string): string => {
+  const time1 = new Date(date1);
+  const time2 = new Date(date2);
+
+  const differenceMs = time2.getTime() - time1.getTime();
+  const totalHours = Math.round(differenceMs / (1000 * 60 * 60));
+
+  return `${totalHours} hour${totalHours !== 1 ? "s" : ""}`;
 };
