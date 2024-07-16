@@ -1,4 +1,4 @@
-import { Dialog, Flex, Button } from "@radix-ui/themes";
+import { Dialog, Flex } from "@radix-ui/themes";
 import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
 // import { type Competition } from "@/app/competitions/page";
 import toast from "react-hot-toast";

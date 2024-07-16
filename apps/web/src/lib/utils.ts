@@ -101,3 +101,24 @@ export const sanitizeString = (str: string) => {
 
   return str;
 };
+
+export const getDateDifference = (date1: string, date2: string) => {
+  const time1 = new Date(date1);
+  const time2 = new Date(date2);
+
+  const differenceMs = time2.getTime() - time1.getTime();
+  const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+  const hours = Math.round(
+    (differenceMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  let result = "";
+  if (days > 0) {
+    result += `${days} day${days !== 1 ? "s" : ""}`;
+  }
+  if (hours > 0) {
+    if (result) result += " and ";
+    result += `${hours} hour${hours !== 1 ? "s" : ""}`;
+  }
+
+  return result || "0 hours";
+};
