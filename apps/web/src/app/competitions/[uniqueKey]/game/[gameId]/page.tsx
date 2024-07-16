@@ -13,9 +13,9 @@ import {
 } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { COMPETITION_SCORE_TWEET_DEFAULT_CONTENT } from "@/constants";
+import { useSetAtom } from "jotai";
+import { gameplayDisallowTypeAtom } from "@/contexts/atoms";
 
-const GAMEPLAY_DISALLOW_MESSAGE_DEFAULT =
-  "We are fetching your participation fee payment transaction details...";
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
 });
@@ -26,9 +26,7 @@ function Game() {
     gameId: string;
   }>();
   const [isGamePlayAllowed, setIsGamePlayAllowed] = useState(false);
-  const [gamePlayDisAllowMessage, setGamePlayDisallowMessage] = useState(
-    GAMEPLAY_DISALLOW_MESSAGE_DEFAULT
-  );
+  const setGameplayDisallowType = useSetAtom(gameplayDisallowTypeAtom);
 
   const networkStore = useNetworkStore();
   const {
@@ -37,14 +35,11 @@ function Game() {
     isSuccess,
   } = useTransactionLogById(networkStore.address!, parseInt(params.gameId));
   const {
-    data: isGameAlreadyPlayed = true,
+    data: isGameAlreadyPlayed = false,
     isSuccess: isGameAlreadyPlayedRespSuccess,
   } = useIsGameAlreadyPlayed(parseInt(params.gameId));
-  const {
-    data: competitionData,
-    error: competitionError,
-    isSuccess: isCompetitionSuccess,
-  } = useCompetitionByKey(params.uniqueKey);
+  const { data: competitionData, isSuccess: isCompetitionSuccess } =
+    useCompetitionByKey(params.uniqueKey);
 
   console.log("game txn data", { gameTransaction, gameTransactionError });
   useMainnetTransactionStatus(
@@ -53,17 +48,21 @@ function Game() {
   );
   console.log({ isGameAlreadyPlayed });
   useEffect(() => {
-    if (isGameAlreadyPlayedRespSuccess && isGameAlreadyPlayed) {
-      setGamePlayDisallowMessage(
-        "You have already played the game. Please check your game status in user profile section."
-      );
+    if (isGameAlreadyPlayed) {
+      setIsGamePlayAllowed(false);
+      setGameplayDisallowType("GAME_ALREADY_PLAYED");
     } else if (gameTransaction?.txn_status === "FAILED") {
-      setGamePlayDisallowMessage(
-        "Transaction failed. you are not part of the competition"
-      );
+      setIsGamePlayAllowed(false);
+      setGameplayDisallowType("TRANSACTION_FAILED");
     } else if (gameTransaction && gameTransaction.txn_status === "CONFIRMED") {
       setIsGamePlayAllowed(true);
-      setGamePlayDisallowMessage("");
+      setGameplayDisallowType("NONE");
+    } else if (gameTransaction?.txn_status === "PENDING") {
+      setIsGamePlayAllowed(false);
+      setGameplayDisallowType("TRANSACTION_PENDING");
+    } else {
+      setIsGamePlayAllowed(true);
+      setGameplayDisallowType("NONE");
     }
   }, [
     isSuccess,
@@ -72,6 +71,7 @@ function Game() {
     competitionData,
     isGameAlreadyPlayed,
     isGameAlreadyPlayedRespSuccess,
+    setGameplayDisallowType,
   ]);
   // console.log(txnStatusData, isLoading, isError);
 
@@ -85,7 +85,6 @@ function Game() {
           <PhaserLayer
             isDemoGame={false}
             isGamePlayAllowed={isGamePlayAllowed}
-            gamePlayDisAllowMessage={gamePlayDisAllowMessage}
             competitionKey={params.uniqueKey}
             gameId={+params.gameId}
             txnHash={gameTransaction?.txn_hash}

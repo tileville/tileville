@@ -1,3 +1,5 @@
+import PersonWaiting from "../../public/lotties/personWaiting.json";
+
 export const MINA_DENOM = 1e9;
 export const TREASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
@@ -52,3 +54,29 @@ export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 export const supabaseServiceRoleKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+
+export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
+  TRANSACTION_FAILED: {
+    title: "Transaction Failed",
+    description: "Transaction failed. you are not part of the competition",
+    animation: PersonWaiting,
+  },
+  TRANSACTION_PENDING: {
+    title: "Transaction is pending.",
+    description:
+      "We are fetching your participation fee payment transaction details...",
+    animation: PersonWaiting,
+  },
+  GAME_ALREADY_PLAYED: {
+    title: "Game is already played",
+    description:
+      "You have already played the game. Please check your game status in user profile section.",
+    animation: PersonWaiting,
+  },
+  NONE: {
+    title: "Close the Modal",
+    description:
+      "Please close the modal and click on play button to start playing",
+    animation: PersonWaiting,
+  },
+};
