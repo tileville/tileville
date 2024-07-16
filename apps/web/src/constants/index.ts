@@ -73,10 +73,16 @@ export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
       "You have already played the game. Please check your game status in user profile section.",
     animation: PersonWaiting,
   },
-  NONE: {
-    title: "Close the Modal",
+  TRANSACTION_CONFIRMED: {
+    title: "Transaction Confirmed.",
     description:
-      "Please close the modal and click on play button to start playing",
+      "Transactin is confirmed. Please close the modal and click on play button to start playing.",
+    animation: PersonWaiting,
+  },
+  NONE: {
+    title: "Un-Ohh There Might be some issue",
+    description:
+      "Please use the bug report button from Header if you are not able to playe the game.",
     animation: PersonWaiting,
   },
 };

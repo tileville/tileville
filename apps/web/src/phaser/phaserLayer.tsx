@@ -71,6 +71,7 @@ export const PhaserLayer = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [leaderboardMutation, address, isDemoGame]
   );
+  
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       width: 1280,

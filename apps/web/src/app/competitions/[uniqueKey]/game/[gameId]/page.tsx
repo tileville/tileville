@@ -29,24 +29,25 @@ function Game() {
   const setGameplayDisallowType = useSetAtom(gameplayDisallowTypeAtom);
 
   const networkStore = useNetworkStore();
-  const {
-    data: gameTransaction,
-    error: gameTransactionError,
-    isSuccess,
-  } = useTransactionLogById(networkStore.address!, parseInt(params.gameId));
+
+  const { data: gameTransaction, isSuccess } = useTransactionLogById(
+    networkStore.address!,
+    parseInt(params.gameId)
+  );
+
+  const { data: competitionData, isSuccess: isCompetitionSuccess } =
+    useCompetitionByKey(params.uniqueKey);
+
   const {
     data: isGameAlreadyPlayed = false,
     isSuccess: isGameAlreadyPlayedRespSuccess,
   } = useIsGameAlreadyPlayed(parseInt(params.gameId));
-  const { data: competitionData, isSuccess: isCompetitionSuccess } =
-    useCompetitionByKey(params.uniqueKey);
 
-  console.log("game txn data", { gameTransaction, gameTransactionError });
   useMainnetTransactionStatus(
     gameTransaction?.txn_hash || "",
     gameTransaction?.txn_status || "PENDING"
   );
-  console.log({ isGameAlreadyPlayed });
+
   useEffect(() => {
     if (isGameAlreadyPlayed) {
       setIsGamePlayAllowed(false);
@@ -56,12 +57,12 @@ function Game() {
       setGameplayDisallowType("TRANSACTION_FAILED");
     } else if (gameTransaction && gameTransaction.txn_status === "CONFIRMED") {
       setIsGamePlayAllowed(true);
-      setGameplayDisallowType("NONE");
+      setGameplayDisallowType("TRANSACTION_CONFIRMED");
     } else if (gameTransaction?.txn_status === "PENDING") {
       setIsGamePlayAllowed(false);
       setGameplayDisallowType("TRANSACTION_PENDING");
     } else {
-      setIsGamePlayAllowed(true);
+      setIsGamePlayAllowed(false);
       setGameplayDisallowType("NONE");
     }
   }, [
@@ -73,9 +74,6 @@ function Game() {
     isGameAlreadyPlayedRespSuccess,
     setGameplayDisallowType,
   ]);
-  // console.log(txnStatusData, isLoading, isError);
-
-  //TODO: fetch transaction status from game id
 
   return (
     <div className="gradient-bg gradient-bg h-[calc(100vh-80px)]">
