@@ -46,7 +46,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
       const O1js = await import("o1js");
 
       set((state) => {
-        console.log("###Target network###", network);
+        // console.log("###Target network###", network);
         state.minaNetwork = network;
         if (network) {
           const Network = O1js.Mina.Network(network?.graphql);
@@ -59,14 +59,12 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
       if (address) {
         localStorage.minaAdderess = address;
         const network = await (window as any).mina.requestNetwork();
-        console.log("network from wallet", network, network.chainId);
         const minaNetwork = NETWORKS.find(
           (x) =>
             (network.chainId != "unknown"
               ? x.chainId == network.chainId
               : x.name == network.name) || x.networkID === network.networkID
         );
-        console.log("mina network", minaNetwork);
         this.setNetwork(minaNetwork);
       } else {
         localStorage.minaAdderess = "";
@@ -112,9 +110,6 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
   }))
 );
 
-// type ParticipationFeeState = {
-//   payParticipationFee: (fees)
-// }
 export const useParticipationFee = () => {
   const networkStore = useNetworkStore();
   const redeemVoucher = useMutation({
