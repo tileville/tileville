@@ -86,7 +86,7 @@ function Game() {
             competitionKey={params.uniqueKey}
             gameId={+params.gameId}
             txnHash={gameTransaction?.txn_hash}
-            txnStatus={gameTransaction?.txn_status}
+            // txnStatus={gameTransaction?.txn_status}
             scoreTweetContent={
               competitionData?.score_tweet_content ||
               COMPETITION_SCORE_TWEET_DEFAULT_CONTENT
