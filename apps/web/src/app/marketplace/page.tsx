@@ -35,62 +35,74 @@ export default function Marketplace() {
 
   const cardsData = [
     {
-      imgURl: "/img/NFT.avif",
+      imgURl: "/img/marketplace/NFT1.jpg",
       id: 2,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon1.jpg",
+      id: 3,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon2.jpg",
+
+      id: 4,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon3.jpg",
+
+      id: 5,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon4.jpg",
+
+      id: 6,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon5.jpg",
+      id: 7,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon1.jpg",
+      id: 8,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon2.jpg",
+
+      id: 9,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon3.jpg",
+
+      id: 10,
       price: 0.0001,
       cardId: 789,
     },
     {
-      imgURl: "/img/NFT.avif",
-      id: 2,
+      imgURl: "/img/marketplace/comingSoon4.jpg",
+
+      id: 11,
+      price: 0.0001,
+      cardId: 789,
+    },
+    {
+      imgURl: "/img/marketplace/comingSoon5.jpg",
+      id: 12,
       price: 0.0001,
       cardId: 789,
     },
