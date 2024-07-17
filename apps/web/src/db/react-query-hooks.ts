@@ -66,7 +66,7 @@ export const useSendEmail = ({
 };
 
 export const useSaveScore = ({
-  onSuccess,
+  // onSuccess,
   onMutate,
   onError,
 }: {
@@ -91,7 +91,7 @@ export const useSaveScore = ({
         // toastRef.current = toast.loading('Saving leaderboard data...');
         onMutate?.();
       },
-      onSuccess: () => {},
+      // onSuccess: () => {},
       onError: (error) => {
         toast.error(String(error), {
           id: toastRef.current ?? undefined,
@@ -233,7 +233,6 @@ export const useMainnetTransactionStatus = (
   txn_hash: string,
   txn_status: string
 ) => {
-  console.log({ txn_hash, txn_status });
   return useQuery(
     ["transaction_status_mainnet", txn_hash],
     () =>
@@ -252,12 +251,6 @@ export const useMainnetTransactionStatus = (
               txn_status: "CONFIRMED",
             });
           }
-          // if (res.failure_reason !== null) {
-          //   return updateTransactionLog(txn_hash, {
-          //     txn_status: "FAILED",
-          //     is_game_played,
-          //   });
-          // }
         }),
     {
       enabled: !!txn_hash && txn_status === "PENDING",

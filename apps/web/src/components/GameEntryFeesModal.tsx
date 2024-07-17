@@ -1,9 +1,9 @@
-import { Dialog, Flex, Button } from "@radix-ui/themes";
-import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
-// import { type Competition } from "@/app/competitions/page";
+import { Dialog, Flex } from "@radix-ui/themes";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { Competition } from "@/types";
 import { useMutation } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ type GameEntryFeesModalProps = {
   handleClose: () => void;
   competition: Competition;
 };
+
 export const GameEntryFeesModal = ({
   open,
   handleClose,
@@ -28,6 +29,7 @@ export const GameEntryFeesModal = ({
     isValid: false,
     message: "",
   });
+
   const validateVoucher = useMutation({
     mutationFn: (code: string) =>
       fetch(`/api/vouchers?code=${code}`).then((res) => res.json()),
@@ -44,7 +46,13 @@ export const GameEntryFeesModal = ({
 
   const handlePayParticipationFess = async () => {
     if (!networkStore.address) {
-      return networkStore.connectWallet(false);
+      try {
+        networkStore.connectWallet(false);
+      } catch (error) {
+        console.error(`Failed to connect with wallet`, error);
+      } finally {
+        return;
+      }
     }
     logJoinCompetition({
       walletAddress: networkStore.address,
@@ -76,7 +84,7 @@ export const GameEntryFeesModal = ({
       handleClose();
     } else {
       toast(
-        `Operation failed. If amount deducted from your wallet, please reach out to support handles mentioned in FAQ page.`
+        `Failed to connect wallet. Please make sure your wallet extension is unlocked. If issue still persists, Please report a bug!`
       );
     }
   };

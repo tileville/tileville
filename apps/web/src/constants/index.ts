@@ -1,3 +1,9 @@
+import PersonWaiting from "../../public/lotties/personWaiting.json";
+import Failed from "../../public/lotties/failed.json";
+import DoneLottie from "../../public/lotties/doneLottie.json";
+import TxnConfirmed from "../../public/lotties/txnConfirmed.json";
+import confusingLottie from "../../public/lotties/confusingLottie.json";
+
 export const MINA_DENOM = 1e9;
 export const TREASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
@@ -52,3 +58,35 @@ export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 export const supabaseServiceRoleKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+
+export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
+  TRANSACTION_FAILED: {
+    title: "Transaction Failed",
+    description: "Transaction failed. you are not part of the competition",
+    animation: Failed,
+  },
+  TRANSACTION_PENDING: {
+    title: "Transaction is pending.",
+    description:
+      "We are fetching your participation fee payment transaction details...",
+    animation: PersonWaiting,
+  },
+  GAME_ALREADY_PLAYED: {
+    title: "Game is already played",
+    description:
+      "You have already played the game. Please check your game status in user profile section.",
+    animation: DoneLottie,
+  },
+  TRANSACTION_CONFIRMED: {
+    title: "Transaction Confirmed.",
+    description:
+      "Transactin is confirmed. Please close the modal and click on play button to start playing.",
+    animation: TxnConfirmed,
+  },
+  NONE: {
+    title: "Un-Ohh There Might be some issue",
+    description:
+      "Please use the bug report button from Header if you are not able to play the game.",
+    animation: confusingLottie,
+  },
+};

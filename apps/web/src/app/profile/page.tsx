@@ -11,7 +11,6 @@ import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
-import { isUsernameExist } from "@/db/supabase-queries";
 import {
   useObserveMinaBalance,
   useMinaBalancesStore,

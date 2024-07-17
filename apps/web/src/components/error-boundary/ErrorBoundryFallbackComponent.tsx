@@ -2,7 +2,6 @@ import { MonsterSad } from "@/assets";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
 import { BUG_REPORT_URL } from "@/constants";
-import Image from "next/image";
 
 export const ErrorBoundaryFallbackComponent = ({
   className,
@@ -31,12 +30,6 @@ export const ErrorBoundaryFallbackComponent = ({
           className="flex items-center gap-2 rounded-full border-primary bg-primary/30 px-5 py-2 text-xs font-medium hover:bg-primary/50"
         >
           <span>Bug Report</span>
-          {/* <Image
-            src="icons/bugReport.svg"
-            width={20}
-            height={20}
-            alt="bug report"
-          /> */}
         </Link>
       </div>
     </div>
