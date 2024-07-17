@@ -1,4 +1,3 @@
-import { GAME_ENTRY_FEE_KEY } from "../../constants";
 import { HexGrid } from "../hex-grid";
 import { Button } from "../util";
 import { Scene, GameObjects } from "phaser";

@@ -42,15 +42,15 @@ export const MarketplaceOverlay = () => {
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-start backdrop-blur-sm">
-      <div className="fade-slide-in mt-40">
-        <h2 className="mb-4 text-5xl font-semibold tracking-wider text-white">
+      <div className="fade-slide-in mt-40 rounded-md bg-secondary/80 p-6 text-black backdrop-blur-xl">
+        <h2 className="mb-4 text-5xl font-semibold tracking-wider">
           Minting Starts In
         </h2>
-        <div className="py-8">
+        <div className="pb-8 pt-3">
           <CountdownTimer initialTime={getTime("2024-07-23")} />
         </div>
 
-        <div className="rounded-md bg-secondary/80 p-6 backdrop-blur-xl">
+        <div className="">
           <div className="mb-4">
             <h2 className=" text-xl font-semibold leading-none">
               Subscribe for MINT Event
