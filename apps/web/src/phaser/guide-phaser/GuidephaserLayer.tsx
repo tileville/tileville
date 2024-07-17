@@ -7,9 +7,13 @@ export const GuidePhaserLayer = () => {
     const config: Phaser.Types.Core.GameConfig = {
       width: 1200,
       height: 600,
-      parent: "minapolis-hex",
+      parent: "tileville-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene],
+      scale: {
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.FIT,
+      },
       transparent: true,
     };
     const game = new Phaser.Game(config);
@@ -19,7 +23,7 @@ export const GuidePhaserLayer = () => {
     };
   }, []);
 
-  return <div id="minapolis-hex" className="" />;
+  return <div className="" />;
 };
 
 export default GuidePhaserLayer;

@@ -75,9 +75,13 @@ export const PhaserLayer = ({
     const config: Phaser.Types.Core.GameConfig = {
       width: 1280,
       height: "100%",
-      parent: "minapolis-hex",
+      parent: "tileville-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
+      scale: {
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.FIT,
+      },
       transparent: true,
     };
 
@@ -99,7 +103,7 @@ export const PhaserLayer = ({
 
   return (
     <>
-      <div id="minapolis-hex" className="min-h-[850px]" />
+      <div id="" className="min-h-[850px]" />
       <GameInfoModal
         open={showGameInfoModal}
         txnHash={txnHash}

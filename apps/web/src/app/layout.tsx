@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="gradient-bg min-h-screen">
-        <div id="myHex2"></div>
+        <div id="tileville-hex"></div>
         <Theme
           accentColor="green"
           grayColor="olive"
