@@ -45,7 +45,7 @@ export const CompetitionCard = ({
       className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-3 overflow-hidden rounded-lg"
       key={competition.id}
     >
-      <div className="relative col-span-4 h-[400px] w-[400x] overflow-hidden">
+      <div className="relative col-span-6 h-[200px] w-[200px] overflow-hidden rounded-br-md md:col-span-4 md:h-[400px] md:w-[400px] md:rounded-none">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
@@ -53,7 +53,7 @@ export const CompetitionCard = ({
           className="h-full w-full object-cover object-left transition-transform group-hover:scale-110"
         />
       </div>
-      <div className="col-span-5 flex flex-col py-4 ps-1">
+      <div className=" col-span-6 flex flex-col py-4 ps-1 md:col-span-5">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
         <div className="mb-2 flex flex-col flex-wrap space-y-2 text-sm text-black/50">
           <HtmlRenderer htmlContent={competition.description} />
@@ -91,9 +91,9 @@ export const CompetitionCard = ({
           </div>
         </div>
       </div>
-      <div className="col-span-3 px-1 py-4">
-        <div className="flex h-full flex-col items-start justify-between">
-          <div className="mx-auto mb-1 flex items-center gap-2">
+      <div className=" col-span-12 px-1 py-4 md:col-span-3">
+        <div className="grid h-full grid-cols-4 flex-wrap items-center justify-between md:flex md:flex-col md:items-start">
+          <div className="col-span-4 mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
               <div>
                 <h3 className="py-4 text-xl font-medium">
@@ -112,7 +112,7 @@ export const CompetitionCard = ({
             )}
           </div>
           {competition.is_speed_version && (
-            <div>
+            <div className="col-span-4">
               <div className="mb-2 flex items-center gap-2 text-xl">
                 <span>
                   <Image
@@ -157,38 +157,39 @@ export const CompetitionCard = ({
               </div>
             </div>
           )}
-
-          <Tooltip.Provider delayDuration={300}>
-            <Tooltip.Root>
-              <Tooltip.Trigger asChild>
-                <button
-                  className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white disabled:cursor-not-allowed disabled:bg-primary/60"
-                  onClick={() => {
-                    setSelectedCompetition(competition);
-                    setIsFeesModalOpen(true);
-                  }}
-                  disabled={competitionStatus !== "ongoing"}
-                >
-                  {competitionStatus === "ongoing"
-                    ? "Join Now"
-                    : competitionStatus === "upcoming"
-                    ? "Competition Starts Soon"
-                    : "Competition Ended"}
-                </button>
-              </Tooltip.Trigger>
-              {competitionStatus === "upcoming" && (
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className="whitespace-nowrap rounded-md bg-primary/10 px-4 py-1 shadow-lg backdrop-blur-xl"
-                    sideOffset={5}
+          <div className="md:flex-0 col-span-4 flex w-full flex-1 flex-grow md:flex-none">
+            <Tooltip.Provider delayDuration={300}>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <button
+                    className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white disabled:cursor-not-allowed disabled:bg-primary/60"
+                    onClick={() => {
+                      setSelectedCompetition(competition);
+                      setIsFeesModalOpen(true);
+                    }}
+                    disabled={competitionStatus !== "ongoing"}
                   >
-                    Competition Starts Soon...
-                    <Tooltip.Arrow className="TooltipArrow" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              )}
-            </Tooltip.Root>
-          </Tooltip.Provider>
+                    {competitionStatus === "ongoing"
+                      ? "Join Now"
+                      : competitionStatus === "upcoming"
+                      ? "Competition Starts Soon"
+                      : "Competition Ended"}
+                  </button>
+                </Tooltip.Trigger>
+                {competitionStatus === "upcoming" && (
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      className="whitespace-nowrap rounded-md bg-primary/10 px-4 py-1 shadow-lg backdrop-blur-xl"
+                      sideOffset={5}
+                    >
+                      Competition Starts Soon...
+                      <Tooltip.Arrow className="TooltipArrow" />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                )}
+              </Tooltip.Root>
+            </Tooltip.Provider>
+          </div>
         </div>
       </div>
       {competition.competition_tweet_content &&

@@ -69,7 +69,7 @@ export default function MainMenu() {
       tabIndex={0}
     >
       <LandingBackground />
-      <div className="z-10 flex w-full items-center justify-center">
+      <div className="z-10 flex w-full items-center justify-center px-4">
         <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
           {buttons.map((button) => (
             <PrimaryButton
