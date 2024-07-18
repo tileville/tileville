@@ -70,10 +70,9 @@ export const getShareScoreTwitterContent = (content: string, score: number) =>
     `${replaceTemplateVariables(content, { score })}`
   )}`;
 
-export const formatBalance = (balance: bigint) => {
-  // return (Number(balance ?? 0n) / 10 ** 9).toFixed(2);
-  return "1000";
-};
+// export const formatBalance = (balance: bigint) => {
+//   return (Number(balance ?? 0n) / 10 ** 9).toFixed(2);
+// };
 
 const replaceTemplateVariables = (
   template: string,
@@ -101,4 +100,3 @@ export const sanitizeString = (str: string) => {
 
   return str;
 };
-
