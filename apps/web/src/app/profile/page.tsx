@@ -140,7 +140,7 @@ export default function Profile() {
 
   if (!networkStore.address) {
     return (
-      <div className="flex  min-h-screen w-full items-center justify-center">
+      <div className="flex w-full items-center justify-center">
         <Button
           variant="classic"
           className="mx-4 !cursor-pointer"
@@ -157,11 +157,11 @@ export default function Profile() {
   console.log(profileData);
 
   return (
-    <div className="p-4 pt-40">
+    <div className="px-4 pb-16 pt-32">
       <div className="mx-auto max-w-[1280px]">
         <div>
-          <div className="flex items-center justify-between gap-3">
-            <div className="items-ceter flex gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="items-ceter flex flex-[0.5] gap-3">
               <div>
                 {!!profileData?.avatar_url && (
                   <div className="relative h-20 w-20 rounded-full">
@@ -374,7 +374,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+            <div className="flex-[0.5 hidden h-full min-h-[100px] w-[1px] bg-black/10 md:block"></div>
 
             <div>
               <h3 className="text-xl font-semibold">Wallet Address</h3>
@@ -394,7 +394,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+            <div className="hidden h-full min-h-[100px] w-[1px] bg-black/10 md:block"></div>
 
             <div className="mb-4 flex items-center justify-end gap-4">
               <div>Balance :</div>

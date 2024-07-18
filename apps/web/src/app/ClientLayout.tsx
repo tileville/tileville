@@ -20,6 +20,10 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
         <StoreProtokitUpdater />
         <QueryClientProvider client={queryClient}>
           <DesktopNavBar autoConnect={true} />
+          <div
+            id="tileville-hex"
+            className="mx-auto max-h-[calc(100vh-200px)] min-h-screen"
+          ></div>
           {children}
         </QueryClientProvider>
         <Toaster />

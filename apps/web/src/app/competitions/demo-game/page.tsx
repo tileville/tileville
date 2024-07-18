@@ -9,10 +9,10 @@ const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
 
 export default function DemoGame() {
   return (
-    <div className="gradient-bg gradient-bg h-[calc(100vh-80px)]">
+    <div className="gradient-bg gradient-bg">
       <LandingBackground />
       <div className="relative z-10">
-        <div className="mb-0 flex min-h-screen w-full items-center justify-center">
+        <div className="mb-0 flex w-full items-center justify-center">
           <PhaserLayer
             isDemoGame={true}
             isGamePlayAllowed={true}

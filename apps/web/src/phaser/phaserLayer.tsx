@@ -74,7 +74,7 @@ export const PhaserLayer = ({
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       width: 1280,
-      height: "100%",
+      height: 720,
       parent: "tileville-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
@@ -103,7 +103,7 @@ export const PhaserLayer = ({
 
   return (
     <>
-      <div id="" className="min-h-[850px]" />
+      <div id="" className="" />
       <GameInfoModal
         open={showGameInfoModal}
         txnHash={txnHash}

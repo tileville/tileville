@@ -22,7 +22,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="gradient-bg min-h-screen">
-        <div id="tileville-hex"></div>
         <Theme
           accentColor="green"
           grayColor="olive"
@@ -31,7 +30,7 @@ export default function RootLayout({
           radius="large"
         >
           <PHProvider>
-            <div className="gradient-bg min-h-screen">
+            <div>
               <ClientLayout>
                 <div className="">{children}</div>
               </ClientLayout>

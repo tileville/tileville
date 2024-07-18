@@ -5,7 +5,7 @@ export default function Community() {
   return (
     <div className="py-8">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <h1 className="text-center text-4xl font-semibold">
+        <h1 className="mb-3 text-center text-4xl font-semibold">
           Community section
         </h1>
 

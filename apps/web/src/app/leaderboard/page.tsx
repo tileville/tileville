@@ -126,7 +126,7 @@ export default function Leaderboard() {
         </div>
         <Table.Root>
           <Table.Header>
-            <Table.Row>
+            <Table.Row className="whitespace-nowrap">
               <Table.ColumnHeaderCell>Rank</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Wallet Address</Table.ColumnHeaderCell>
