@@ -124,6 +124,15 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             />
           )}
 
+          <div>
+            <Link
+              href="/main-menu"
+              className="text-primary-shadow sm font-mono"
+            >
+              <span>T</span>il<span>e</span>Vi<span>l</span>le
+            </Link>
+          </div>
+
           <div className="min-w-[180px]">
             <MediaPlayer />
           </div>

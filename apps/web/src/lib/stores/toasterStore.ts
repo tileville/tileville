@@ -14,7 +14,7 @@ export const useToasterStore = create<
   [["zustand/persist", never]]
 >(
   persist(
-    (set, get) => ({
+    (set) => ({
       toasts: [],
       addToast: (toast) => {
         set((state) => ({
