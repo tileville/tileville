@@ -23,11 +23,13 @@ import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
 import { BUG_REPORT_URL } from "@/constants";
 import { anonymousSignIn } from "@/db/supabase-queries";
+import { useGlobalConfig } from "@/db/react-query-hooks";
 // import { addNovuSubscriber } from "@/lib/novu";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
+  useGlobalConfig("config_v1");
   const [canGoBack, setCanGoBack] = useState(false);
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
   const networkStore = useNetworkStore();

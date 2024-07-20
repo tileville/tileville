@@ -1,7 +1,8 @@
 import { CountdownTimer } from "@/components/common/CountdownTimer";
+import { globalConfigAtom } from "@/contexts/atoms";
 import { useSendEmail } from "@/db/react-query-hooks";
 import { getTime } from "date-fns";
-import { useState } from "react";
+import { useAtomValue } from "jotai";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface IFormInput {
@@ -10,6 +11,7 @@ interface IFormInput {
 }
 
 export const MarketplaceOverlay = () => {
+  const globalConfig = useAtomValue(globalConfigAtom);
   const emailSentMutation = useSendEmail({
     onSuccess: () => {
       console.log("Email Send to database");
@@ -47,7 +49,9 @@ export const MarketplaceOverlay = () => {
           Minting Starts In
         </h2>
         <div className="pb-8 pt-3">
-          <CountdownTimer initialTime={getTime("2024-07-23")} />
+          <CountdownTimer
+            initialTime={getTime(globalConfig.nft_mint_start_date)}
+          />
         </div>
 
         <div className="">
