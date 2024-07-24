@@ -21,8 +21,11 @@ import {
   fetchTransactions,
   getCompetitionByKey,
   isGameAlreadyPlayed,
+  fetchGlobalConfig,
 } from "./supabase-queries";
 import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
+import { useAtom } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
 
 export const useSendEmail = ({
   onSuccess,
@@ -338,5 +341,20 @@ export const useIsGameAlreadyPlayed = (game_id: number) => {
     {
       enabled: game_id > 0,
     }
+  );
+};
+
+export const useGlobalConfig = (config_name: string) => {
+  const [globalConfig, setGlobalConfig] = useAtom(globalConfigAtom);
+  return useQuery(["global_config", config_name], () =>
+    fetchGlobalConfig(config_name)
+      .then((response) => {
+        const config = response.config_values as { [key: string]: any };
+        setGlobalConfig({ ...globalConfig, ...config });
+        return response;
+      })
+      .catch((error) => {
+        console.error(`Failed to fetch global config from db`, error);
+      })
   );
 };

@@ -401,3 +401,19 @@ export const isGameAlreadyPlayed = async (
   console.log("is game already played reponse", data);
   return !!data;
 };
+
+export const fetchGlobalConfig = async (
+  config_name: string
+): Promise<Table<"global_config">> => {
+  const supabase = supabaseUserClientComponentClient;
+  const { data, error } = await supabase
+    .from("global_config")
+    .select("*")
+    .eq("name", config_name)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};

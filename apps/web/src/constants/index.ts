@@ -90,3 +90,7 @@ export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
     animation: confusingLottie,
   },
 };
+
+export const GLOBAL_CONFIG_DEFAULT = {
+  nft_mint_start_date: "2024-07-29",
+};
