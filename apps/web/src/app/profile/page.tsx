@@ -1,16 +1,16 @@
 "use client";
-import { Modal } from "@/components/common/Modal";
+import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Box, Button, Tabs } from "@radix-ui/themes";
 import Image from "next/image";
 import { CameraIcon, CopyIcon } from "@radix-ui/react-icons";
+import { Modal } from "@/components/common/Modal";
 import ProfileSideBar from "@/components/ProfileSideBar";
 import RightSideBar from "@/components/RightSideBar";
 import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNetworkStore } from "@/lib/stores/network";
-import toast from "react-hot-toast";
 import {
   useObserveMinaBalance,
   useMinaBalancesStore,
@@ -39,7 +39,6 @@ export default function Profile() {
   );
 
   // console.log("profile data", profileData);
-  console.log(networkStore?.address);
 
   const {
     register,
@@ -68,11 +67,13 @@ export default function Profile() {
   }, [profileData, setValue]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const isExist = await fetch(
+    const isExistApiResponse = await fetch(
       `/api/player_profile/is_username_exist?username=${data.username}&userId=${
         profileData?.id || ""
       }`
     );
+
+    const isExist = await isExistApiResponse.json();
 
     if (isExist.status) {
       setError("username", {

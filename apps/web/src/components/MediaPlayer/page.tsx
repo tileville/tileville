@@ -34,6 +34,7 @@ export const MediaPlayer = () => {
     load(tracks[songIndex].url, {
       autoplay: true,
       loop: true,
+      initialVolume: 0.5,
     });
   }, [songIndex, load]);
 
