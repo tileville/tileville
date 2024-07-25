@@ -7,7 +7,7 @@ export const GuidePhaserLayer = () => {
     const config: Phaser.Types.Core.GameConfig = {
       width: 1200,
       height: 600,
-      parent: "tileville-hex",
+      parent: "guide-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene],
       scale: {
@@ -23,7 +23,7 @@ export const GuidePhaserLayer = () => {
     };
   }, []);
 
-  return <div className="" />;
+  return <div className="guide-hex" />;
 };
 
 export default GuidePhaserLayer;

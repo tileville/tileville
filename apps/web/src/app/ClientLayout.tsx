@@ -2,8 +2,9 @@
 import dynamic from "next/dynamic";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { DesktopNavBar } from "@/components/DesktopNavBar";
 import { Provider as JotaiProvider } from "jotai";
+import { DesktopNavBar } from "@/components/navbar/DesktopNavBar";
+import { MobileNavBar } from "@/components/navbar/MobileNavBar";
 
 const queryClient = new QueryClient();
 const StoreProtokitUpdater = dynamic(
@@ -19,11 +20,14 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
       <JotaiProvider>
         <StoreProtokitUpdater />
         <QueryClientProvider client={queryClient}>
-          <DesktopNavBar autoConnect={true} />
-          <div
-            id="tileville-hex"
-            className="mx-auto max-h-[calc(100vh-200px)] min-h-screen"
-          ></div>
+          <div className="hidden md:block">
+            <DesktopNavBar autoConnect={true} />
+          </div>
+
+          <div className="md:hidden">
+            <MobileNavBar />
+          </div>
+          <div className="mx-auto max-h-[calc(100vh-200px)]"></div>
           {children}
         </QueryClientProvider>
         <Toaster />

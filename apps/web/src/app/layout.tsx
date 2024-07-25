@@ -32,7 +32,7 @@ export default function RootLayout({
           <PHProvider>
             <div>
               <ClientLayout>
-                <div className="">{children}</div>
+                <div>{children}</div>
               </ClientLayout>
             </div>
           </PHProvider>

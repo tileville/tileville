@@ -103,7 +103,7 @@ export const PhaserLayer = ({
 
   return (
     <>
-      <div id="" className="" />
+      <div id="tileville-hex" />
       <GameInfoModal
         open={showGameInfoModal}
         txnHash={txnHash}
