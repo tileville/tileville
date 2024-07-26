@@ -417,3 +417,18 @@ export const fetchGlobalConfig = async (
   }
   return data;
 };
+export const getAllNFTsEntries = async (
+  supabase: AppSupabaseClient
+): Promise<Array<Table<"tileville_builder_nfts">>> => {
+  const { data, error } = await supabase
+    .from("tileville_builder_nfts")
+    .select("*")
+    .order("price", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching NFT entries:", error);
+    throw error;
+  }
+
+  return data;
+};

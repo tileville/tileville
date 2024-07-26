@@ -22,6 +22,7 @@ import {
   getCompetitionByKey,
   isGameAlreadyPlayed,
   fetchGlobalConfig,
+  getAllNFTsEntries,
 } from "./supabase-queries";
 import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
 import { useAtom } from "jotai";
@@ -170,6 +171,13 @@ export const useCompetitionsData = () => {
   );
 };
 
+export const useNFTEntries = () => {
+  return useQuery(
+    ["tileville_builder_nfts"],
+    () => getAllNFTsEntries(supabaseUserClientComponentClient),
+    {}
+  );
+};
 export const useProfileLazyQuery = (walletAddress: string) => {
   return useQuery({
     queryKey: ["user_profile", walletAddress],

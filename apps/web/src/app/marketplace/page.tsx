@@ -4,8 +4,11 @@ import Image from "next/image";
 import { useState } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
 import { MarketplaceOverlay } from "@/components/Marketplace/marketplaceOverlay";
+import { NFTModal } from "@/components/NFTModal";
+import { useNFTEntries } from "@/db/react-query-hooks";
 
 export default function Marketplace() {
+  const { data, isLoading, isError, error } = useNFTEntries();
   const options = [
     {
       text: "Price: Low to High",
@@ -33,84 +36,18 @@ export default function Marketplace() {
     },
   ];
 
-  const cardsData = [
-    {
-      imgURl: "/img/marketplace/NFT_1.jpg",
-      id: 2,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_3.jpg",
-      id: 3,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_2.jpg",
-
-      id: 4,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_3.jpg",
-
-      id: 5,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_4.jpg",
-
-      id: 6,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_5.jpg",
-      id: 7,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_3.jpg",
-      id: 8,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_2.jpg",
-
-      id: 9,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_3.jpg",
-
-      id: 10,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_4.jpg",
-
-      id: 11,
-      price: 0.0001,
-      cardId: 789,
-    },
-    {
-      imgURl: "/img/marketplace/NFT_5.jpg",
-      id: 12,
-      price: 0.0001,
-      cardId: 789,
-    },
-  ];
   const [selectedItem, setSelectedItem] = useState<string>(options[3].text);
 
+  console.log("NFT Data", data);
+
+  if (isError) {
+    return <div>Error: {(error as { message: string }).message}</div>;
+  }
+
+  if (isLoading) return <div className="">loading</div>;
+
   return (
-    <div className="relative p-4 pt-40">
+    <div className="relative p-4 pt-20">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex gap-3">
           <ul className="grid w-fit grid-cols-3">
@@ -190,11 +127,11 @@ export default function Marketplace() {
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-lg sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-          {cardsData.map((card) => {
+          {data?.map((nft) => {
             return (
               <div
-                className="border-primary-30 group/item overflow-hidden rounded-md"
-                key={card.id}
+                className="border-primary-30 group/item cursor-pointer overflow-hidden rounded-md"
+                key={nft.nft_id}
               >
                 <div className="w-full overflow-hidden">
                   <Image
@@ -202,28 +139,33 @@ export default function Marketplace() {
                     width="100"
                     height="200"
                     alt="NFT Image"
-                    src={card.imgURl}
+                    src={nft.img_url}
+                    quality={100}
                   />
                 </div>
 
                 <div className="px-2 pt-3">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold">#{card.cardId}</p>
+                    <p className="font-semibold">#{nft.nft_id}</p>
                     <div className="rounded-md bg-primary px-3 py-[2px] text-white">
                       3888
                     </div>
                   </div>
 
                   <div className="mt-1 font-semibold">
-                    &#60;{card.price}{" "}
+                    &#60;
+                    {nft.price}
                     <span className="text-primary-50"> MINA</span>
                   </div>
                 </div>
 
                 <div className="opacity-0 transition-opacity group-hover/item:opacity-100">
-                  <button className="w-full bg-primary/30 p-2 font-semibold text-white transition-colors hover:bg-primary">
-                    Connect Wallet
-                  </button>
+                  <NFTModal
+                    traits={nft.traits}
+                    img_url={nft.img_url}
+                    price={nft.price}
+                    name={nft.name}
+                  />
                 </div>
               </div>
             );
@@ -231,7 +173,7 @@ export default function Marketplace() {
         </div>
       </div>
 
-      <MarketplaceOverlay />
+      {/* <MarketplaceOverlay /> */}
     </div>
   );
 }
