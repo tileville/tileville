@@ -1,44 +1,69 @@
 "use client";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
 import { MarketplaceOverlay } from "@/components/Marketplace/marketplaceOverlay";
 import { NFTModal } from "@/components/NFTModal";
 import { useNFTEntries } from "@/db/react-query-hooks";
 
 export default function Marketplace() {
-  const { data, isLoading, isError, error } = useNFTEntries();
+  const [selectedItem, setSelectedItem] =
+    useState<string>("Price: High to Low");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
+
+  const { data, isLoading, isError, error } = useNFTEntries(
+    sortOrder,
+    activeSearchTerm
+  );
+
+  const handleSearch = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        setActiveSearchTerm(searchTerm);
+      }
+    },
+    [searchTerm]
+  );
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchTerm(event.target.value);
+  };
   const options = [
     {
-      text: "Price: Low to High",
+      text: "Price: High to Low",
       id: 0,
     },
-
     {
-      text: "Price: High to Low",
+      text: "Price: Low to High",
       id: 1,
     },
-
     {
       text: "Recently Listed",
       id: 2,
     },
-
     {
       text: "Common to Rare",
       id: 3,
     },
-
     {
       text: "Rare to Common",
       id: 4,
     },
   ];
 
-  const [selectedItem, setSelectedItem] = useState<string>(options[3].text);
-
-  console.log("NFT Data", data);
+  const handleSortChange = (selectedOption: string) => {
+    setSelectedItem(selectedOption);
+    if (selectedOption === "Price: Low to High") {
+      setSortOrder("asc");
+    } else if (selectedOption === "Price: High to Low") {
+      setSortOrder("desc");
+    }
+  };
 
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
@@ -91,6 +116,9 @@ export default function Marketplace() {
               type="text"
               className="border-primary-30 h-full w-full rounded-md border bg-transparent pl-10 pr-2 font-medium outline-none placeholder:text-primary/30"
               placeholder="Search items"
+              value={searchTerm}
+              onChange={handleSearchInputChange}
+              onKeyPress={handleSearch}
             />
           </div>
 
@@ -113,9 +141,7 @@ export default function Marketplace() {
                 return (
                   <DropdownMenu.Item
                     key={option.id}
-                    onClick={() => {
-                      setSelectedItem(options[id].text);
-                    }}
+                    onClick={() => handleSortChange(option.text)}
                     className="hover:bg-primary"
                   >
                     {option.text}

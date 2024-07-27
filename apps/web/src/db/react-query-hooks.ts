@@ -171,10 +171,18 @@ export const useCompetitionsData = () => {
   );
 };
 
-export const useNFTEntries = () => {
+export const useNFTEntries = (
+  sortOrder: "asc" | "desc" = "desc",
+  searchTerm: string = ""
+) => {
   return useQuery(
-    ["tileville_builder_nfts"],
-    () => getAllNFTsEntries(supabaseUserClientComponentClient),
+    ["tileville_builder_nfts", sortOrder, searchTerm],
+    () =>
+      getAllNFTsEntries(
+        supabaseUserClientComponentClient,
+        sortOrder,
+        searchTerm
+      ),
     {}
   );
 };
