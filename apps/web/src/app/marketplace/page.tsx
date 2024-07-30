@@ -6,6 +6,7 @@ import { DropdownMenu } from "@radix-ui/themes";
 import { MarketplaceOverlay } from "@/components/Marketplace/marketplaceOverlay";
 import { NFTModal } from "@/components/NFTModal";
 import { useNFTEntries } from "@/db/react-query-hooks";
+import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 
 export default function Marketplace() {
   const [selectedItem, setSelectedItem] =
@@ -13,6 +14,9 @@ export default function Marketplace() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
+  const [renderStyle, setRenderStyle] = useState(
+    "grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+  );
 
   const { data, isLoading, isError, error } = useNFTEntries(
     sortOrder,
@@ -69,15 +73,20 @@ export default function Marketplace() {
     return <div>Error: {(error as { message: string }).message}</div>;
   }
 
-  if (isLoading) return <div className="">loading</div>;
-
   return (
     <div className="relative p-4 pt-20">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex gap-3">
           <ul className="grid w-fit grid-cols-3">
             <li>
-              <button className="flex h-10 w-10 items-center justify-center rounded-l-md bg-primary hover:opacity-80">
+              <button
+                className="flex h-10 w-10 items-center justify-center rounded-l-md bg-primary hover:opacity-80"
+                onClick={() => {
+                  setRenderStyle(
+                    "grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+                  );
+                }}
+              >
                 <Image
                   src="/icons/gridFour.svg"
                   alt="grid"
@@ -87,7 +96,14 @@ export default function Marketplace() {
               </button>
             </li>
             <li>
-              <button className="bg-primary-30 flex h-10 w-10 items-center justify-center hover:opacity-80">
+              <button
+                className="bg-primary-30 flex h-10 w-10 items-center justify-center hover:opacity-80"
+                onClick={() => {
+                  setRenderStyle(
+                    "grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
+                  );
+                }}
+              >
                 <Image
                   src="/icons/gridEight.svg"
                   alt="grid"
@@ -137,7 +153,7 @@ export default function Marketplace() {
               </button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content className="min-w-[190px] !bg-transparent backdrop-blur-2xl">
-              {options.map((option, id) => {
+              {options.map((option) => {
                 return (
                   <DropdownMenu.Item
                     key={option.id}
@@ -152,54 +168,59 @@ export default function Marketplace() {
           </DropdownMenu.Root>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 text-lg sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-          {data?.map((nft) => {
-            return (
-              <div
-                className="border-primary-30 group/item cursor-pointer overflow-hidden rounded-md"
-                key={nft.nft_id}
-              >
-                <div className="w-full overflow-hidden">
-                  <Image
-                    className="w-full transition-all group-hover/item:scale-110"
-                    width="100"
-                    height="200"
-                    alt="NFT Image"
-                    src={nft.img_url}
-                    quality={100}
-                  />
-                </div>
+        <div className={`${renderStyle} gap-4 text-lg `}>
+          {isLoading ? (
+            <MarketplaceLoading />
+          ) : (
+            <>
+              {data?.map((nft) => {
+                return (
+                  <div
+                    className="border-primary-30 group/item cursor-pointer overflow-hidden rounded-md"
+                    key={nft.nft_id}
+                  >
+                    <div className="w-full overflow-hidden">
+                      <Image
+                        className="w-full transition-all group-hover/item:scale-110"
+                        width="100"
+                        height="200"
+                        alt="NFT Image"
+                        src={nft.img_url}
+                        quality={100}
+                      />
+                    </div>
 
-                <div className="px-2 pt-3">
-                  <div className="flex items-center justify-between">
-                    <p className="font-semibold">#{nft.nft_id}</p>
-                    <div className="rounded-md bg-primary px-3 py-[2px] text-white">
+                    <div className="px-2 pt-3">
+                      <div className="flex items-center justify-between">
+                        <p className="font-semibold">#{nft.nft_id}</p>
+                        {/* <div className="rounded-md bg-primary px-3 py-[2px] text-white">
                       3888
+                    </div> */}
+                      </div>
+
+                      <div className="mt-1 font-semibold">
+                        {nft.price}
+                        <span className="text-primary-50"> MINA</span>
+                      </div>
+                    </div>
+
+                    <div className="opacity-0 transition-opacity group-hover/item:opacity-100">
+                      <NFTModal
+                        traits={nft.traits}
+                        img_url={nft.img_url}
+                        price={nft.price}
+                        name={nft.name}
+                      />
                     </div>
                   </div>
-
-                  <div className="mt-1 font-semibold">
-                    &#60;
-                    {nft.price}
-                    <span className="text-primary-50"> MINA</span>
-                  </div>
-                </div>
-
-                <div className="opacity-0 transition-opacity group-hover/item:opacity-100">
-                  <NFTModal
-                    traits={nft.traits}
-                    img_url={nft.img_url}
-                    price={nft.price}
-                    name={nft.name}
-                  />
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </>
+          )}
         </div>
       </div>
 
-      {/* <MarketplaceOverlay /> */}
+      <MarketplaceOverlay />
     </div>
   );
 }

@@ -173,7 +173,7 @@ export const useCompetitionsData = () => {
 
 export const useNFTEntries = (
   sortOrder: "asc" | "desc" = "desc",
-  searchTerm: string = ""
+  searchTerm = ""
 ) => {
   return useQuery(
     ["tileville_builder_nfts", sortOrder, searchTerm],
