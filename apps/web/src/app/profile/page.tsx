@@ -38,8 +38,6 @@ export default function Profile() {
     networkStore?.address || ""
   );
 
-  // console.log("profile data", profileData);
-
   const {
     register,
     handleSubmit,
