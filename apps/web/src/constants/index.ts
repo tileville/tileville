@@ -94,3 +94,7 @@ export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
 export const GLOBAL_CONFIG_DEFAULT = {
   nft_mint_start_date: "2024-07-29",
 };
+
+
+export const ACCOUNT_AUTH_MESSAGE = "I am authenticating my wallet for TileVille"
+export const ACCOUNT_AUTH_LOCALSTORAGE_KEY = "tileville_auth_signature"
