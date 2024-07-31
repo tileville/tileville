@@ -1,7 +1,6 @@
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
-import { verifyMessage } from "../utils";
-import { ACCOUNT_AUTH_MESSAGE } from "@/constants";
+import { verifyUserAuthentication } from "../utils";
 
 async function isProfileExist(wallet_address: string): Promise<boolean> {
   const { data } = await supabase
@@ -19,37 +18,21 @@ export async function GET(request: NextRequest) {
   const wallet_address = searchParams.get("wallet_address") || "";
   const authSignature = request.headers.get("Auth-Signature");
 
-  if (!authSignature || !wallet_address) {
-    throw new Error("Authentication failed");
-  }
-
   try {
-    const authSignatureParsed = JSON.parse(authSignature) as {
-      field: string;
-      scalar: string;
-    };
-    const verificationResult = await verifyMessage(
-      wallet_address,
-      authSignatureParsed,
-      ACCOUNT_AUTH_MESSAGE
-    );
-    if (!verificationResult) {
-      throw new Error(`Signature message verification field`);
-    }
-    console.log("--== signature verification succeedded");
+    await verifyUserAuthentication(authSignature, wallet_address);
+
+    const { data, error } = await supabase
+      .from("player_profile")
+      .select("*")
+      .eq("wallet_address", wallet_address)
+      .single();
+
+    if (error) throw error;
+    return Response.json(data);
   } catch (error: any) {
-    throw new Error(`Signature message verification field with error`, error);
+    console.error("Error in GET route:", error);
+    return Response.json({ error: error.message }, { status: 401 });
   }
-
-  const { data, error } = await supabase
-    .from("player_profile")
-    .select("*")
-    .eq("wallet_address", wallet_address)
-    .single();
-
-  console.log("data", data);
-  if (error) throw error;
-  return Response.json(data);
 }
 
 export async function POST(request: NextRequest) {
