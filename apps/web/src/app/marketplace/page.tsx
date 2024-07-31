@@ -180,7 +180,7 @@ export default function Marketplace() {
           </div>
         )}
 
-        <div className="max-h-[calc(100vh-212px)] overflow-auto">
+        <div className="">
           <div className={`${renderStyle}  gap-4  pr-2 text-lg`}>
             {isLoading ? (
               <MarketplaceLoading />
@@ -206,7 +206,7 @@ export default function Marketplace() {
         </div>
       </div>
 
-      {/* <MarketplaceOverlay /> */}
+      <MarketplaceOverlay />
     </div>
   );
 }
