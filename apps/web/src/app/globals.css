@@ -525,6 +525,67 @@ input[type="range"]:focus::-moz-range-thumb {
 .competitionCard:hover .competition-tweet-btn {
   transform: translate(0);
 }
+
+.list-style{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.list-style .listItem{
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  align-items: center;
+  padding: 12px;
+}
+
+.list-header{
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  align-items: center;
+  padding: 12px;
+}
+
+.list-style .nft-img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  grid-column: span 1 / span 1;
+}
+
+.list-style .nft-content{
+  grid-column: span 23 / span 23;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0;
+  grid-template-columns: repeat(23, minmax(0, 1fr));
+  display: grid;
+}
+
+.list-style .nft-content > div:not(:last-child){
+  grid-column: span 4 / span 4;
+}
+.list-style .nft-content > div:last-child{
+  grid-column: span 7 / span 7;
+  text-align: right;
+}
+
+.list-style .nft-content-info{
+  gap: 1rem;
+}
+
+.nft-item{
+  grid-column: span 5 / span 5;
+}
+
+.list-header > div:not(:first-child):not(:last-child){
+  grid-column: span 4 / span 4;
+}
+.list-header > div:last-child{
+  grid-column: span 7 / span 7;
+  text-align: right;
+}
 @keyframes mulShdSpin {
   0%,
   100% {

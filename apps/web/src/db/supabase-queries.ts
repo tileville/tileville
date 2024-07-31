@@ -421,7 +421,7 @@ export const fetchGlobalConfig = async (
 export const getAllNFTsEntries = async (
   supabase: AppSupabaseClient,
   sortOrder: "asc" | "desc" = "desc",
-  searchTerm: string = ""
+  searchTerm = ""
 ): Promise<Array<Table<"tileville_builder_nfts">>> => {
   let query = supabase
     .from("tileville_builder_nfts")
@@ -429,13 +429,11 @@ export const getAllNFTsEntries = async (
     .order("price", { ascending: sortOrder === "asc" });
 
   if (searchTerm) {
-    const numericSearch = parseFloat(searchTerm);
+    const numericSearch = parseInt(searchTerm);
     if (!isNaN(numericSearch)) {
-      // Search for price or nft_id
+      // Search for price, nft_id, or name
       query = query.or(
-        `price.eq.${numericSearch},nft_id.eq.${Math.floor(
-          numericSearch
-        )},name.ilike.%${searchTerm}%`
+        `price.eq.${numericSearch},nft_id.eq.${numericSearch},name.ilike.%${searchTerm}%`
       );
     } else {
       // Search only in name

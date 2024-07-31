@@ -1,4 +1,4 @@
-import { Dialog, Flex } from "@radix-ui/themes";
+import { Dialog, Flex, Table } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
 import {
@@ -11,6 +11,7 @@ import {
   ThickArrowUpIcon,
 } from "@radix-ui/react-icons";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
+import { useNetworkStore } from "@/lib/stores/network";
 
 type Trait = {
   key: string;
@@ -22,13 +23,20 @@ export const NFTModal = ({
   img_url,
   price,
   name,
+  nftID,
+  nftPrice,
+  renderStyle,
 }: {
   traits: Json;
   img_url: string;
   price: ReactNode;
   name: string;
+  nftID: number;
+  nftPrice: number;
+  renderStyle: string;
 }) => {
   // Function to parse traits
+  const networkStore = useNetworkStore();
   const parseTraits = (traits: Json): Trait[] => {
     if (Array.isArray(traits)) {
       return traits.filter(
@@ -49,13 +57,53 @@ export const NFTModal = ({
 
   const parsedTraits = parseTraits(traits);
 
+  const handlePayParticipationFess = () => {
+    if (!networkStore.address) {
+      try {
+        networkStore.connectWallet(false);
+      } catch (error) {
+        console.error(`Failed to connect with wallet`, error);
+      } finally {
+        return;
+      }
+    }
+  };
+
   return (
     <>
       <Dialog.Root>
         <Dialog.Trigger>
-          <button className="w-full bg-primary/30 p-2 font-semibold text-white transition-colors hover:bg-primary">
-            Connect Wallet
-          </button>
+          <div className="border-primary-30 group/item listItem cursor-pointer overflow-hidden rounded-md">
+            <div className="nft-img w-full overflow-hidden">
+              <Image
+                className="w-full transition-all group-hover/item:scale-110"
+                width="100"
+                height="200"
+                alt="NFT Image"
+                src={img_url}
+                quality={100}
+              />
+            </div>
+
+            <div className="nft-content px-2 pt-3">
+              <div className="nft-content-info flex items-center justify-between">
+                <p className="font-semibold">#{nftID}</p>
+              </div>
+
+              {renderStyle === "list-style" && (
+                <>
+                  <div>-</div>
+                  <div>-</div>
+                  <div>-</div>
+                </>
+              )}
+
+              <div className="font-semibold">
+                {nftPrice}
+                <span className="text-primary-50"> MINA</span>
+              </div>
+            </div>
+          </div>
         </Dialog.Trigger>
 
         <Dialog.Content className="!max-w-[1020px]">
@@ -81,10 +129,6 @@ export const NFTModal = ({
                     <span className="text-lg font-semibold">{price}</span> MINA
                   </span>{" "}
                 </div>
-
-                <button className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white disabled:cursor-not-allowed disabled:bg-primary/60">
-                  Connect Wallet
-                </button>
 
                 <div className="mt-4 rounded-md bg-primary/30 p-4">
                   <h3 className="mb-2 text-xl font-semibold">Attributes</h3>
@@ -150,11 +194,14 @@ export const NFTModal = ({
                 Cancel
               </button>
             </Dialog.Close>
-            <Dialog.Close>
-              <button className="h-10 rounded-full border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90">
-                MINT
-              </button>
-            </Dialog.Close>
+            {/* <Dialog.Close> */}
+            <button
+              className="h-10 rounded-full border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
+              onClick={handlePayParticipationFess}
+            >
+              {!!networkStore.address ? "MINT" : "Connect Wallet"}
+            </button>
+            {/* </Dialog.Close> */}
           </Flex>
         </Dialog.Content>
       </Dialog.Root>
