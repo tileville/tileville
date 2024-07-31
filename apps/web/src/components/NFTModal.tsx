@@ -1,8 +1,7 @@
-import { Dialog, Flex, Table } from "@radix-ui/themes";
+import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
 import {
-  BoxIcon,
   CubeIcon,
   FileTextIcon,
   GlobeIcon,
@@ -11,7 +10,7 @@ import {
   ThickArrowUpIcon,
 } from "@radix-ui/react-icons";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
-import { useNetworkStore } from "@/lib/stores/network";
+import { useNetworkStore, usePayNFTMintFee } from "@/lib/stores/network";
 
 type Trait = {
   key: string;
@@ -26,6 +25,8 @@ export const NFTModal = ({
   nftID,
   nftPrice,
   renderStyle,
+  ownerAddress,
+  txnHash,
 }: {
   traits: Json;
   img_url: string;
@@ -34,9 +35,12 @@ export const NFTModal = ({
   nftID: number;
   nftPrice: number;
   renderStyle: string;
+  ownerAddress: string | null;
+  txnHash: string | null;
 }) => {
   // Function to parse traits
   const networkStore = useNetworkStore();
+  const { payNFTMintFees } = usePayNFTMintFee();
   const parseTraits = (traits: Json): Trait[] => {
     if (Array.isArray(traits)) {
       return traits.filter(
@@ -57,15 +61,13 @@ export const NFTModal = ({
 
   const parsedTraits = parseTraits(traits);
 
-  const handlePayParticipationFess = () => {
-    if (!networkStore.address) {
-      try {
-        networkStore.connectWallet(false);
-      } catch (error) {
-        console.error(`Failed to connect with wallet`, error);
-      } finally {
-        return;
-      }
+  const handleMint = async () => {
+    //TODO: Handle loading state for mint button
+
+    try {
+      await payNFTMintFees({ nft_id: nftID, nft_price: nftPrice });
+    } catch (error) {
+      //TODO: Handle error with proper toast
     }
   };
 
@@ -197,7 +199,8 @@ export const NFTModal = ({
             {/* <Dialog.Close> */}
             <button
               className="h-10 rounded-full border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
-              onClick={handlePayParticipationFess}
+              onClick={handleMint}
+              disabled={ownerAddress !== null}
             >
               {!!networkStore.address ? "MINT" : "Connect Wallet"}
             </button>

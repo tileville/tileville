@@ -8,9 +8,12 @@ import {
 } from "@aurowallet/mina-provider";
 import { NETWORKS, Network } from "@/constants/network";
 import { useSessionStorage } from "react-use";
-import { GAME_ENTRY_FEE_KEY } from "@/constants";
+import { DEFAULT_TRASURY_ADDRESS, GAME_ENTRY_FEE_KEY } from "@/constants";
 import toast from "react-hot-toast";
-import { addTransactionLog } from "@/db/supabase-queries";
+import {
+  addNFTTransactionHash,
+  addTransactionLog,
+} from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
@@ -214,4 +217,52 @@ export const useParticipationFee = () => {
   };
 
   return { payParticipationFees };
+};
+
+export const usePayNFTMintFee = () => {
+  const networkStore = useNetworkStore();
+
+  const payNFTMintFees = async ({
+    nft_id,
+    nft_price,
+  }: {
+    nft_id: number;
+    nft_price: number;
+  }): Promise<{ id: number } | null | undefined> => {
+    let txn_hash;
+    if (!networkStore.address) {
+      networkStore.connectWallet(false);
+      return null;
+    }
+
+    //TODO: remove it after testing
+    nft_price = 1;
+    try {
+      const data: SendTransactionResult | ProviderError = await (
+        window as any
+      )?.mina?.sendPayment({
+        amount: nft_price,
+        to: DEFAULT_TRASURY_ADDRESS,
+        memo: `Pay ${nft_price} MINA to mint ${nft_id}`,
+      });
+      txn_hash = (data as SendTransactionResult).hash;
+    } catch (err: any) {
+      toast(`Txn failed with error ${err.toString()}. report a bug`);
+    }
+    try {
+      if (txn_hash) {
+        console.log("response hash", txn_hash);
+        const response = await addNFTTransactionHash({ nft_id, txn_hash });
+        console.log("Add nft transaction log response", response);
+        return { id: nft_id };
+      } else {
+        console.log("toast error");
+      }
+    } catch (err: any) {
+      toast("Failed to pay nft mint fees😭");
+      return null;
+    }
+  };
+
+  return { payNFTMintFees };
 };
