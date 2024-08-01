@@ -1,12 +1,14 @@
 "use client";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { InfoCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { useCallback, useState } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
 import { MarketplaceOverlay } from "@/components/Marketplace/marketplaceOverlay";
 import { NFTModal } from "@/components/NFTModal";
 import { useNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
+import Link from "next/link";
 
 export default function Marketplace() {
   const [selectedItem, setSelectedItem] =
@@ -70,18 +72,18 @@ export default function Marketplace() {
       text: "Price: Low to High",
       id: 1,
     },
-    {
-      text: "Recently Listed",
-      id: 2,
-    },
-    {
-      text: "Common to Rare",
-      id: 3,
-    },
-    {
-      text: "Rare to Common",
-      id: 4,
-    },
+    // {
+    //   text: "Recently Listed",
+    //   id: 2,
+    // },
+    // {
+    //   text: "Common to Rare",
+    //   id: 3,
+    // },
+    // {
+    //   text: "Rare to Common",
+    //   id: 4,
+    // },
   ];
 
   const handleSortChange = (selectedOption: string) => {
@@ -139,6 +141,30 @@ export default function Marketplace() {
               onChange={handleSearchInputChange}
               onKeyPress={handleSearch}
             />
+          </div>
+
+          <div>
+            <Tooltip.Provider delayDuration={200}>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <Link
+                    href="/faq#tileville-builder-nfts"
+                    className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/30 hover:opacity-80"
+                  >
+                    <InfoCircledIcon className="text-white" />
+                  </Link>
+                </Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
+                    sideOffset={5}
+                  >
+                    Click to get more info about TileVille NFTs
+                    <Tooltip.Arrow className="TooltipArrow" />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
+              </Tooltip.Root>
+            </Tooltip.Provider>
           </div>
 
           <DropdownMenu.Root>

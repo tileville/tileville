@@ -6,7 +6,7 @@ export default function FAQPage() {
     <div className="mt-8">
       <div className="mx-auto max-w-7xl divide-y divide-primary/50 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         {faqContent.map(({ id, title, faqs }) => (
-          <div className="mt-4" key={id}>
+          <div className="pt-8" key={id} id={`${id}`}>
             <h2 className="my-8 block text-3xl font-bold tracking-tight">
               {title}
             </h2>
