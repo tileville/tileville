@@ -561,6 +561,7 @@ input[type="range"]:focus::-moz-range-thumb {
   padding-top: 0;
   grid-template-columns: repeat(23, minmax(0, 1fr));
   display: grid;
+  padding-bottom: 0;
 }
 
 .list-style .nft-content > div:not(:last-child){
