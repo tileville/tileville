@@ -417,3 +417,36 @@ export const fetchGlobalConfig = async (
   }
   return data;
 };
+
+export const getAllNFTsEntries = async (
+  supabase: AppSupabaseClient,
+  sortOrder: "asc" | "desc" = "desc",
+  searchTerm = ""
+): Promise<Array<Table<"tileville_builder_nfts">>> => {
+  let query = supabase
+    .from("tileville_builder_nfts")
+    .select("*")
+    .order("price", { ascending: sortOrder === "asc" });
+
+  if (searchTerm) {
+    const numericSearch = parseInt(searchTerm);
+    if (!isNaN(numericSearch)) {
+      // Search for price, nft_id, or name
+      query = query.or(
+        `price.eq.${numericSearch},nft_id.eq.${numericSearch},name.ilike.%${searchTerm}%`
+      );
+    } else {
+      // Search only in name
+      query = query.ilike("name", `%${searchTerm}%`);
+    }
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching NFT entries:", error);
+    throw error;
+  }
+
+  return data as Array<Table<"tileville_builder_nfts">>;
+};
