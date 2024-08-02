@@ -100,7 +100,7 @@ export default function Marketplace() {
   }
 
   return (
-    <div className="relative p-4 pt-20">
+    <div className="relative p-4 py-20">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex gap-3">
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
