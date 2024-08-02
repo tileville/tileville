@@ -9,6 +9,7 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { ATTRIBUTES_DATA } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
+import Link from "next/link";
 
 type Trait = {
   key: string;
@@ -261,6 +262,14 @@ export const NFTModal = ({
                       );
                     })}
                   </ul>
+                  <div className="pt-2">
+                    <Link
+                      href="/faq#tileville-builder-nfts"
+                      className="text-sm font-semibold text-primary underline hover:no-underline"
+                    >
+                      Learn more about the utility of TileVille NFTs
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
