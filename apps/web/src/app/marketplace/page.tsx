@@ -7,6 +7,29 @@ import { MarketplaceOverlay } from "@/components/Marketplace/marketplaceOverlay"
 import { NFTModal } from "@/components/NFTModal";
 import { useNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
+import { Pagination } from "@/components/common/Pagination";
+
+const toggleGroupOptions = [
+  {
+    iconSrc: "/icons/gridFour.svg",
+    gridApplyClass:
+      "grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
+    id: 0,
+  },
+
+  {
+    iconSrc: "/icons/gridEight.svg",
+    gridApplyClass:
+      "grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8",
+    id: 1,
+  },
+
+  {
+    iconSrc: "/icons/listThree.svg",
+    gridApplyClass: "list-style",
+    id: 2,
+  },
+];
 
 export default function Marketplace() {
   const [selectedItem, setSelectedItem] =
@@ -14,37 +37,19 @@ export default function Marketplace() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
-  const toggleGroupOptions = [
-    {
-      iconSrc: "/icons/gridFour.svg",
-      gridApplyClass:
-        "grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
-      id: 0,
-    },
-
-    {
-      iconSrc: "/icons/gridEight.svg",
-      gridApplyClass:
-        "grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8",
-      id: 1,
-    },
-
-    {
-      iconSrc: "/icons/listThree.svg",
-      gridApplyClass: "list-style",
-      id: 2,
-    },
-  ];
   const [selectedToggle, setSelectedToggle] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [renderStyle, setRenderStyle] = useState(
     toggleGroupOptions[0].gridApplyClass
   );
 
-  const { data, isLoading, isError, error } = useNFTEntries(
+  //TODO: Remove active search term. there should be only one search state variablle
+  const { data, isLoading, isError, error } = useNFTEntries({
     sortOrder,
-    activeSearchTerm
-  );
+    searchTerm: activeSearchTerm,
+    currentPage,
+  });
 
   const handleSearch = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -186,7 +191,7 @@ export default function Marketplace() {
               <MarketplaceLoading />
             ) : (
               <>
-                {data?.map((nft) => {
+                {data?.nfts.map((nft) => {
                   return (
                     <NFTModal
                       traits={nft.traits}
@@ -204,9 +209,16 @@ export default function Marketplace() {
             )}
           </div>
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={data?.count || 0}
+          onPageChange={(page) => {
+            setCurrentPage(page);
+          }}
+        />
       </div>
 
-      <MarketplaceOverlay />
+      {/* <MarketplaceOverlay /> */}
     </div>
   );
 }
