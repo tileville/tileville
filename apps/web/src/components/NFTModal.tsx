@@ -10,6 +10,10 @@ import { ATTRIBUTES_DATA } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
+import { CountdownTimer, useCountdownTimer } from "./common/CountdownTimer";
+import { getTime, isFuture } from "date-fns";
+import { useAtomValue } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
 
 type Trait = {
   key: string;
@@ -59,6 +63,7 @@ export const NFTModal = ({
     | undefined;
   const rarityData = configValues?.traits_rarity_counts;
   const totalNFTCount = parseInt(configValues?.total_nft_count || "0", 10);
+  const globalConfig = useAtomValue(globalConfigAtom);
 
   const networkStore = useNetworkStore();
   const parseTraits = (traits: Json): Trait[] => {
@@ -118,6 +123,14 @@ export const NFTModal = ({
     }
   };
 
+  const { countDownTime } = useCountdownTimer(
+    getTime(globalConfig.nft_mint_start_date)
+  );
+  const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
+  // const isMintingEnabled = true;
+
+  const dayTitle = +countDownTime?.days == 1 ? "Day" : "Days";
+  const hourTitle = +countDownTime?.hours == 1 ? "Hour" : "Hours";
   return (
     <>
       <Dialog.Root>
@@ -156,31 +169,47 @@ export const NFTModal = ({
           </div>
         </Dialog.Trigger>
 
-        <Dialog.Content className="!max-w-[1020px]">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Dialog.Title>{name}</Dialog.Title>
+        <Dialog.Content className="relative !m-0 !max-w-[1020px] !rounded-md !p-0">
+          <div className="grid grid-cols-2">
+            <div className="h-full w-full">
               <Image
                 src={img_url}
                 width={853}
                 height={845}
                 alt="img"
-                className="rounded-md"
+                className="h-full object-cover"
                 priority={false}
               />
             </div>
-
-            <div>
-              <div className="mb-3">
+            <div className="bg-primary/30 px-4 py-8">
+              <h1 className="text-2xl font-semibold leading-4">{name}</h1>
+              <div className="my-3">
                 Price:{" "}
                 <span>
                   <span className="text-lg font-semibold">{price}</span> MINA
                 </span>{" "}
               </div>
-
-              <div className="mt-4 rounded-md bg-primary/30 p-4">
-                <h3 className="mb-2 text-xl font-semibold">Attributes</h3>
-                <ul className="grid grid-cols-2 gap-2 text-center">
+              <Flex direction="column" gap="3" mt="4" justify="center">
+                {isMintingDisabled && (
+                  <CountdownTimer
+                    initialTime={getTime(globalConfig.nft_mint_start_date)}
+                  />
+                )}
+                <button
+                  className="h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
+                  onClick={handlePayParticipationFess}
+                  disabled={isMintingDisabled}
+                >
+                  {!!networkStore.address
+                    ? isMintingDisabled
+                      ? `MINTING STARTS SOON`
+                      : "MINT"
+                    : "Connect Wallet"}
+                </button>
+              </Flex>
+              <div className="mt-4 rounded-md">
+                <h3 className="mb-2 font-semibold">Traits</h3>
+                <ul className="grid grid-cols-2 gap-2 text-center text-xs">
                   {parsedTraits.map((trait, index) => {
                     const traitCount =
                       rarityData?.[trait.key]?.[trait.value as string] ?? 0;
@@ -242,12 +271,12 @@ export const NFTModal = ({
                             </Tooltip.Root>
                           </Tooltip.Provider>
                         </div>
-                        <div className="text-lg font-semibold">
+                        <div className="text-md font-semibold">
                           {trait.value}
                         </div>
 
                         <div>
-                          <span className={`rounded p-2 ${bgColor}`}>
+                          <span className={`block rounded p-2 ${bgColor}`}>
                             <span className="mr-1">
                               {rarityData?.[trait.key][trait.value]}
                             </span>
@@ -260,11 +289,11 @@ export const NFTModal = ({
                     );
                   })}
                 </ul>
-                <div className="pt-2">
+                <div className="pt-[0.5px]">
                   <Dialog.Description>
                     <Link
                       href="/faq#tileville-builder-nfts"
-                      className="text-sm font-semibold text-primary underline hover:no-underline"
+                      className="text-xs font-semibold text-primary underline hover:no-underline"
                     >
                       Learn more about the utility of TileVille NFTs
                     </Link>
@@ -273,22 +302,11 @@ export const NFTModal = ({
               </div>
             </div>
           </div>
-
-          <Flex gap="3" mt="4" justify="end">
-            <Dialog.Close>
-              <button className="h-10 rounded-full border-primary bg-primary/30 px-5 py-2 text-sm font-medium hover:bg-primary/50 focus-visible:outline-none">
-                Cancel
-              </button>
-            </Dialog.Close>
-            {/* <Dialog.Close> */}
-            <button
-              className="h-10 rounded-full border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
-              onClick={handlePayParticipationFess}
-            >
-              {!!networkStore.address ? "MINT" : "Connect Wallet"}
+          <Dialog.Close>
+            <button className="absolute bottom-2 right-4 rounded-md border-primary bg-primary/30 px-2 py-2 text-xs font-medium hover:bg-primary/50 focus-visible:outline-none">
+              Cancel
             </button>
-            {/* </Dialog.Close> */}
-          </Flex>
+          </Dialog.Close>
         </Dialog.Content>
       </Dialog.Root>
     </>

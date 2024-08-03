@@ -4,7 +4,6 @@ import Image from "next/image";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useCallback, useState } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
-import { MarketplaceOverlay } from "@/components/Marketplace/marketplaceOverlay";
 import { NFTModal } from "@/components/NFTModal";
 import { useNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
@@ -258,8 +257,6 @@ export default function Marketplace() {
           }}
         />
       </div>
-
-      <MarketplaceOverlay />
     </div>
   );
 }
