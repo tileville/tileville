@@ -59,7 +59,6 @@ export const getAllCompetitionsEntries = async (
     .from("tileville_competitions")
     .select("*")
     .order("priority");
-  console.log("competition data", data);
   const formattedData = data ?? [];
 
   if (isMockEnv) {
@@ -297,7 +296,6 @@ export const getPastGames = async (
     .order("created_at", { ascending: false })
     .order("score", { ascending: false });
 
-  console.log("past games data", data);
   if (error) {
     throw error;
   }
@@ -336,7 +334,7 @@ export const getActiveGames = async (
   const activeGames = (gameTxnLogs ?? []).filter(
     ({ id }) => !existingGameIds.includes(id)
   );
-  console.log({ gameTxnLogs, gameScoreIds });
+  // console.log({ gameTxnLogs, gameScoreIds });
   return activeGames;
 };
 

@@ -357,7 +357,7 @@ export class HexGrid extends GameObjects.Group {
     const c = getCol(x, y);
 
     const hexes: Hex[] = [];
-    console.log({ r, c, trihex });
+    // console.log({ r, c, trihex });
     let touching = false;
     for (let i = 0; i < 3; i++) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

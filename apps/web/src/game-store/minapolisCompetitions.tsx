@@ -63,9 +63,9 @@ export const useArkanoidCompetitionsStore = create<
         registered ??= Bool(false);
 
         const creator =
-          await client.query.runtime.MinapolisGameHub.competitionCreator.get(
+          (await client.query.runtime.MinapolisGameHub.competitionCreator.get(
             UInt64.from(i)
-          ) as PublicKey;
+          )) as PublicKey;
 
         competitions.push({
           ...fromContractCompetition(i, curCompetition as Competition),
@@ -88,7 +88,6 @@ export const useObserveArkanoidCompetitions = () => {
     | ClientAppChain<typeof minapolisConfig.runtimeModules, any, any, any>
     | undefined
   >(AppChainClientContext);
-  console.log("Client", client);
   const chain = useProtokitChainStore();
   const network = useNetworkStore();
   const competitions = useArkanoidCompetitionsStore();

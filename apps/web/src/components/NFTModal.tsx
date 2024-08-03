@@ -128,9 +128,10 @@ export const NFTModal = ({
                 className="w-full transition-all group-hover/item:scale-110"
                 width="100"
                 height="200"
-                alt="NFT Image"
+                alt="NFT"
                 src={img_url}
                 quality={100}
+                priority={false}
               />
             </div>
 
@@ -156,124 +157,122 @@ export const NFTModal = ({
         </Dialog.Trigger>
 
         <Dialog.Content className="!max-w-[1020px]">
-          <Dialog.Title>
-            <h1>{name}</h1>
-          </Dialog.Title>
-          <Dialog.Description size="2" mb="4">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Image
-                  src={img_url}
-                  width={853}
-                  height={845}
-                  alt="img"
-                  className="rounded-md"
-                />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Dialog.Title>{name}</Dialog.Title>
+              <Image
+                src={img_url}
+                width={853}
+                height={845}
+                alt="img"
+                className="rounded-md"
+                priority={false}
+              />
+            </div>
+
+            <div>
+              <div className="mb-3">
+                Price:{" "}
+                <span>
+                  <span className="text-lg font-semibold">{price}</span> MINA
+                </span>{" "}
               </div>
 
-              <div>
-                <div className="mb-3">
-                  Price:{" "}
-                  <span>
-                    <span className="text-lg font-semibold">{price}</span> MINA
-                  </span>{" "}
-                </div>
+              <div className="mt-4 rounded-md bg-primary/30 p-4">
+                <h3 className="mb-2 text-xl font-semibold">Attributes</h3>
+                <ul className="grid grid-cols-2 gap-2 text-center">
+                  {parsedTraits.map((trait, index) => {
+                    const traitCount =
+                      rarityData?.[trait.key]?.[trait.value as string] ?? 0;
+                    const rarityPercentage = getRarityPercentage(
+                      traitCount,
+                      totalNFTCount
+                    );
+                    const bgColor = getRarityBackgroundColor(rarityPercentage);
+                    const textColor = getRarityColor(rarityPercentage);
+                    return (
+                      <li
+                        key={index}
+                        className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-black/70">{trait.key}</span>
 
-                <div className="mt-4 rounded-md bg-primary/30 p-4">
-                  <h3 className="mb-2 text-xl font-semibold">Attributes</h3>
-                  <ul className="grid grid-cols-2 gap-2 text-center">
-                    {parsedTraits.map((trait, index) => {
-                      const traitCount =
-                        rarityData?.[trait.key]?.[trait.value as string] ?? 0;
-                      const rarityPercentage = getRarityPercentage(
-                        traitCount,
-                        totalNFTCount
-                      );
-                      const bgColor =
-                        getRarityBackgroundColor(rarityPercentage);
-                      const textColor = getRarityColor(rarityPercentage);
-                      return (
-                        <li
-                          key={index}
-                          className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-black/70">{trait.key}</span>
+                          <span className="absolute left-2 top-2">
+                            {(ATTRIBUTES_DATA as any)[trait.key]?.Icon &&
+                              React.createElement(
+                                (ATTRIBUTES_DATA as any)[trait.key].Icon
+                              )}
+                          </span>
 
-                            <span className="absolute left-2 top-2">
-                              {(ATTRIBUTES_DATA as any)[trait.key]?.Icon &&
-                                React.createElement(
-                                  (ATTRIBUTES_DATA as any)[trait.key].Icon
-                                )}
-                            </span>
+                          <Tooltip.Provider delayDuration={100}>
+                            <Tooltip.Root>
+                              <Tooltip.Trigger asChild>
+                                <span className="absolute right-2 top-2">
+                                  <InfoCircledIcon />
+                                </span>
+                              </Tooltip.Trigger>
+                              <Tooltip.Portal>
+                                <Tooltip.Content
+                                  className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
+                                  sideOffset={5}
+                                >
+                                  <ul>
+                                    <li className="text-xs text-black/80">
+                                      {
+                                        (ATTRIBUTES_DATA as any)[trait.key]
+                                          .description
+                                      }
+                                    </li>
 
-                            <Tooltip.Provider delayDuration={100}>
-                              <Tooltip.Root>
-                                <Tooltip.Trigger asChild>
-                                  <span className="absolute right-2 top-2">
-                                    <InfoCircledIcon />
-                                  </span>
-                                </Tooltip.Trigger>
-                                <Tooltip.Portal>
-                                  <Tooltip.Content
-                                    className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
-                                    sideOffset={5}
-                                  >
-                                    <ul>
-                                      <li className="text-xs text-black/80">
+                                    {(ATTRIBUTES_DATA as any)[trait.key]
+                                      ?.values?.[trait.value] && (
+                                      <li className="text-xs">
                                         {
                                           (ATTRIBUTES_DATA as any)[trait.key]
-                                            .description
+                                            .values[trait.value]
                                         }
                                       </li>
+                                    )}
+                                  </ul>
 
-                                      {(ATTRIBUTES_DATA as any)[trait.key]
-                                        ?.values?.[trait.value] && (
-                                        <li className="text-xs">
-                                          {
-                                            (ATTRIBUTES_DATA as any)[trait.key]
-                                              .values[trait.value]
-                                          }
-                                        </li>
-                                      )}
-                                    </ul>
+                                  <Tooltip.Arrow className="TooltipArrow" />
+                                </Tooltip.Content>
+                              </Tooltip.Portal>
+                            </Tooltip.Root>
+                          </Tooltip.Provider>
+                        </div>
+                        <div className="text-lg font-semibold">
+                          {trait.value}
+                        </div>
 
-                                    <Tooltip.Arrow className="TooltipArrow" />
-                                  </Tooltip.Content>
-                                </Tooltip.Portal>
-                              </Tooltip.Root>
-                            </Tooltip.Provider>
-                          </div>
-                          <div className="text-lg font-semibold">
-                            {trait.value}
-                          </div>
-
-                          <div>
-                            <span className={`rounded p-2 ${bgColor}`}>
-                              <span className="mr-1">
-                                {rarityData?.[trait.key][trait.value]}
-                              </span>
-                              <span className={`font-semibold ${textColor}`}>
-                                {rarityPercentage}%
-                              </span>
+                        <div>
+                          <span className={`rounded p-2 ${bgColor}`}>
+                            <span className="mr-1">
+                              {rarityData?.[trait.key][trait.value]}
                             </span>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <div className="pt-2">
+                            <span className={`font-semibold ${textColor}`}>
+                              {rarityPercentage}%
+                            </span>
+                          </span>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <div className="pt-2">
+                  <Dialog.Description>
                     <Link
                       href="/faq#tileville-builder-nfts"
                       className="text-sm font-semibold text-primary underline hover:no-underline"
                     >
                       Learn more about the utility of TileVille NFTs
                     </Link>
-                  </div>
+                  </Dialog.Description>
                 </div>
               </div>
             </div>
-          </Dialog.Description>
+          </div>
 
           <Flex gap="3" mt="4" justify="end">
             <Dialog.Close>

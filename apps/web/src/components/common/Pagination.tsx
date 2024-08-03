@@ -58,7 +58,6 @@ export const Pagination = ({
           }`}
         >
           <ChevronLeft
-            as={ChevronLeft}
             className={`${
               currentPage !== 1
                 ? "cursor-pointer fill-primary"

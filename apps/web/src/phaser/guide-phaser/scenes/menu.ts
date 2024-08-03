@@ -184,7 +184,6 @@ export class MenuScene extends Scene {
       this.tutorialGrid.grid.get(3, 0)?.setVisible(false);
       this.tutorialGrid.grid.get(3, 6)?.setVisible(false);
     } else {
-      console.log(this.tutorialPage);
       this.tutorialText!.setText(tutorialTexts[this.tutorialPage]);
       for (const hex of this.tutorialGrid.hexes) {
         hex.setSketchy(
@@ -195,7 +194,6 @@ export class MenuScene extends Scene {
   }
 
   backTutorialPage() {
-    console.log(this.tutorialPage);
     this.tutorialPage -= 1;
     if (this.tutorialPage < 0) {
       this.cameras.main.pan(640, 0, 1000, "Power2");
@@ -203,7 +201,6 @@ export class MenuScene extends Scene {
       this.tutorialGrid.grid.get(3, 0)?.setVisible(false);
       this.tutorialGrid.grid.get(3, 6)?.setVisible(false);
     } else {
-      // console.log(this.tutorialPage);
       this.tutorialText!.setText(tutorialTexts[this.tutorialPage]);
       for (const hex of this.tutorialGrid.hexes) {
         hex.setSketchy(

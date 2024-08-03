@@ -101,11 +101,15 @@ export default function Marketplace() {
   };
 
   if (isError) {
-    return <div>Error: {(error as { message: string }).message}</div>;
+    return (
+      <div className="py-40 text-center">
+        Error: {(error as { message: string }).message}
+      </div>
+    );
   }
 
   return (
-    <div className="relative p-4 py-20">
+    <div className="relative p-4 pb-28 pt-20">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex gap-3">
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
@@ -153,9 +157,10 @@ export default function Marketplace() {
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
                   <Link
-                    href="/faq#tileville-builder-nfts"
-                    className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/30 hover:opacity-80"
+                    href="/traits-info"
+                    className="flex h-10 items-center justify-center gap-2 rounded-md border border-primary bg-primary px-3 text-white hover:bg-primary/90 hover:opacity-80"
                   >
+                    <span>Traits Info</span>
                     <InfoCircledIcon className="text-white" />
                   </Link>
                 </Tooltip.Trigger>
@@ -212,7 +217,17 @@ export default function Marketplace() {
         )}
 
         <div className="">
-          <div className={`${renderStyle}  gap-4  pr-2 text-lg`}>
+          {data?.nfts.length === 0 ? (
+            <div className="py-36 text-center">
+              <h2 className="font-3xl text-center font-semibold">
+                No Results Found
+              </h2>
+            </div>
+          ) : (
+            ""
+          )}
+
+          <div className={`${renderStyle} gap-4  pr-2 text-lg`}>
             {isLoading ? (
               <MarketplaceLoading />
             ) : (

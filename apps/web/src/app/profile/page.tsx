@@ -38,8 +38,6 @@ export default function Profile() {
     networkStore?.address || ""
   );
 
-  // console.log("profile data", profileData);
-
   const {
     register,
     handleSubmit,
@@ -154,8 +152,6 @@ export default function Profile() {
       </div>
     );
   }
-
-  console.log(profileData);
 
   return (
     <div className="p-4 pt-40">

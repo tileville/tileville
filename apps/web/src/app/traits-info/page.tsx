@@ -106,16 +106,17 @@ export default function TraitsInfo() {
                     {trait.items && (
                       <div className="space-y-2 ps-4">
                         {trait.items.map((item) => (
-                          <>
-                            <div className="cursor-pointer p-2 shadow-[#11111a0d_0px_1px_0px,_#11111a1a_0px_0px_8px] backdrop-blur transition-all hover:translate-x-2">
-                              <h3 className="text-base font-semibold text-primary">
-                                {item.name}
-                              </h3>
-                              <p className="text-sm text-black/90">
-                                {item.description}
-                              </p>
-                            </div>
-                          </>
+                          <div
+                            className="p-2 shadow-[#11111a0d_0px_1px_0px,_#11111a1a_0px_0px_8px] backdrop-blur transition-all hover:translate-x-2"
+                            key={item.name}
+                          >
+                            <h3 className="text-base font-semibold text-primary">
+                              {item.name}
+                            </h3>
+                            <p className="text-sm text-black/90">
+                              {item.description}
+                            </p>
+                          </div>
                         ))}
                       </div>
                     )}

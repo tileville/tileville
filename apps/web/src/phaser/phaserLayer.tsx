@@ -30,7 +30,6 @@ export const PhaserLayer = ({
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
-  // console.log("address", address);
 
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
