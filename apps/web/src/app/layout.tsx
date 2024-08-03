@@ -37,7 +37,7 @@ export default function RootLayout({
             </div>
           </PHProvider>
         </Theme>
-        {/* <Footer /> */}
+        <Footer />
       </body>
     </html>
   );

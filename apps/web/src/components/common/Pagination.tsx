@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "@/assets";
 import clsx from "clsx";
 import { DOTS, usePagination } from "@/hooks/usePagination";
-import { PAGINATION_PAGE_SIZE, PAGINATION_SIBLING_COUNT } from "@/constants";
+import { NFT_PAGE_SIZE, PAGINATION_SIBLING_COUNT } from "@/constants";
 
 type PaginationProps = {
   totalCount: number;
@@ -22,7 +22,7 @@ export const Pagination = ({
     currentPage,
     totalCount,
     siblingCount: PAGINATION_SIBLING_COUNT,
-    pageSize: PAGINATION_PAGE_SIZE,
+    pageSize: NFT_PAGE_SIZE,
   });
 
   if (currentPage === 0 || paginationRange.length < 2) {
@@ -41,38 +41,36 @@ export const Pagination = ({
   return (
     <div
       className={clsx(
-        "absolute bottom-0 z-20 flex w-full justify-center border-t border-t-neutral-200 bg-neutral-50 p-4 md:justify-end",
+        "fixed bottom-[54px] left-0 z-10 mt-4 flex w-full items-center justify-center md:justify-end",
         containerClassName
       )}
     >
       <ul
         className={clsx(
-          "text-2xs flex items-center gap-x-1 leading-4 text-neutral-400",
+          "text-2xs back mx-auto flex w-full items-center justify-end gap-x-1 px-4 py-2 leading-4",
           className
         )}
       >
         <li
           onClick={onPrevious}
-          className={clsx("flex h-7 w-7 items-center justify-center", {
-            "pointer-events-none fill-current": currentPage === 1,
-          })}
+          className={`flex h-7 w-7 items-center justify-center ${
+            currentPage === 1 ? "pointer-events-none" : ""
+          }`}
         >
           <ChevronLeft
             as={ChevronLeft}
-            className={clsx(
-              "!text-lg text-neutral-400 transition-all  duration-200",
-              {
-                "cursor-pointer text-neutral-700 hover:text-primary":
-                  currentPage !== 1,
-              }
-            )}
+            className={`${
+              currentPage !== 1
+                ? "cursor-pointer fill-primary"
+                : "cursor-not-allowed fill-primary/50"
+            }   `}
           />
         </li>
         {paginationRange.map((pageNumber, idx) => {
           if (pageNumber === DOTS) {
             return (
               <li
-                className="flex h-7 w-7 items-end justify-center text-neutral-400"
+                className="flex h-7 w-7 items-end justify-center text-primary"
                 key={idx}
               >
                 &#8230;
@@ -82,15 +80,11 @@ export const Pagination = ({
           return (
             <li
               key={idx}
-              className={clsx(
-                "flex h-7 w-7 items-center justify-center text-neutral-400",
-                {
-                  "bg-primary-50 border-primary-200 rounded-[4px] border font-medium text-primary shadow-md":
-                    pageNumber === currentPage,
-                  "cursor-pointer hover:text-primary":
-                    pageNumber !== currentPage,
-                }
-              )}
+              className={`flex h-7 w-7 items-center justify-center text-primary transition-colors ${
+                pageNumber === currentPage
+                  ? "bg-primary-50 border-primary-200 rounded-[4px] border font-medium text-primary shadow-md"
+                  : "cursor-pointer hover:text-primary/60"
+              }`}
               onClick={() => {
                 onPageChange(pageNumber as number);
               }}
@@ -106,13 +100,11 @@ export const Pagination = ({
           })}
         >
           <ChevronRight
-            className={clsx(
-              "!text-lg text-neutral-400 transition-all  duration-200",
-              {
-                "cursor-pointer text-neutral-700 hover:text-primary":
-                  currentPage !== lastPage,
-              }
-            )}
+            className={`${
+              currentPage !== lastPage
+                ? "cursor-pointer fill-primary"
+                : "cursor-not-allowed fill-primary/50"
+            }  `}
           />
         </li>
       </ul>

@@ -202,6 +202,5 @@ export const ATTRIBUTES_DATA = {
   },
 };
 
-export const PAGINATION_PAGE_SIZE = 10;
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
