@@ -208,7 +208,7 @@ export default function Marketplace() {
         </div>
       </div>
 
-      <MarketplaceOverlay />
+      {/* <MarketplaceOverlay /> */}
     </div>
   );
 }
