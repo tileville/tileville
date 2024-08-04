@@ -10,7 +10,7 @@ import { ATTRIBUTES_DATA } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
-import { CountdownTimer, useCountdownTimer } from "./common/CountdownTimer";
+import { CountdownTimer } from "./common/CountdownTimer";
 import { getTime, isFuture } from "date-fns";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
@@ -122,25 +122,19 @@ export const NFTModal = ({
       return "text-primary";
     }
   };
-
-  const { countDownTime } = useCountdownTimer(
-    getTime(globalConfig.nft_mint_start_date)
-  );
   const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
   // const isMintingEnabled = true;
 
-  const dayTitle = +countDownTime?.days == 1 ? "Day" : "Days";
-  const hourTitle = +countDownTime?.hours == 1 ? "Hour" : "Hours";
   return (
     <>
       <Dialog.Root>
         <Dialog.Trigger>
-          <div className="border-primary-30 group/item listItem cursor-pointer overflow-hidden rounded-md">
+          <div className="border-primary-30 group/item listItem fade-slide-in cursor-pointer overflow-hidden rounded-md transition-colors">
             <div className="nft-img w-full overflow-hidden">
               <Image
-                className="w-full transition-all group-hover/item:scale-110"
-                width="100"
-                height="200"
+                className="h-full w-full object-cover transition-all group-hover/item:scale-110"
+                width="852"
+                height="845"
                 alt="NFT"
                 src={img_url}
                 quality={100}
@@ -177,7 +171,7 @@ export const NFTModal = ({
                 width={853}
                 height={845}
                 alt="img"
-                className="h-full object-cover"
+                className="h-full object-cover fade-in-25"
                 priority={false}
               />
             </div>

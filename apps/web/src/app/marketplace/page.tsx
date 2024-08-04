@@ -14,22 +14,45 @@ const toggleGroupOptions = [
   {
     iconSrc: "/icons/gridFour.svg",
     gridApplyClass:
-      "grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
+      "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4",
     id: 0,
   },
 
   {
     iconSrc: "/icons/gridEight.svg",
     gridApplyClass:
-      "grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8",
+      "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2",
     id: 1,
   },
 
   {
     iconSrc: "/icons/listThree.svg",
-    gridApplyClass: "list-style",
+    gridApplyClass: "list-style gap-2",
     id: 2,
   },
+];
+
+const options = [
+  {
+    text: "Price: High to Low",
+    id: 0,
+  },
+  {
+    text: "Price: Low to High",
+    id: 1,
+  },
+  // {
+  //   text: "Recently Listed",
+  //   id: 2,
+  // },
+  // {
+  //   text: "Common to Rare",
+  //   id: 3,
+  // },
+  // {
+  //   text: "Rare to Common",
+  //   id: 4,
+  // },
 ];
 
 export default function Marketplace() {
@@ -52,13 +75,18 @@ export default function Marketplace() {
     currentPage,
   });
 
+  const handleSearchAction = useCallback(() => {
+    setActiveSearchTerm(searchTerm);
+    setCurrentPage(1); // Reset to first page when searching
+  }, [searchTerm, setActiveSearchTerm, setCurrentPage]);
+
   const handleSearch = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === "Enter") {
-        setActiveSearchTerm(searchTerm);
+        handleSearchAction();
       }
     },
-    [searchTerm]
+    [handleSearchAction]
   );
 
   const handleSearchInputChange = (
@@ -66,29 +94,6 @@ export default function Marketplace() {
   ) => {
     setSearchTerm(event.target.value);
   };
-
-  const options = [
-    {
-      text: "Price: High to Low",
-      id: 0,
-    },
-    {
-      text: "Price: Low to High",
-      id: 1,
-    },
-    // {
-    //   text: "Recently Listed",
-    //   id: 2,
-    // },
-    // {
-    //   text: "Common to Rare",
-    //   id: 3,
-    // },
-    // {
-    //   text: "Rare to Common",
-    //   id: 4,
-    // },
-  ];
 
   const handleSortChange = (selectedOption: string) => {
     setSelectedItem(selectedOption);
@@ -137,7 +142,7 @@ export default function Marketplace() {
               );
             })}
           </ul>
-          <div className="relative flex-1">
+          <div className="relative flex-1 overflow-hidden">
             <span className="text-primary-50 absolute left-3 top-1/2 -translate-y-1/2">
               <MagnifyingGlassIcon width={20} height={20} />
             </span>
@@ -149,6 +154,13 @@ export default function Marketplace() {
               onChange={handleSearchInputChange}
               onKeyPress={handleSearch}
             />
+
+            <button
+              className="absolute right-0 top-0 rounded-r-md bg-primary px-3 py-2 text-white hover:bg-primary/80"
+              onClick={handleSearchAction}
+            >
+              Search
+            </button>
           </div>
 
           <div>
@@ -226,7 +238,7 @@ export default function Marketplace() {
             ""
           )}
 
-          <div className={`${renderStyle} gap-4  pr-2 text-lg`}>
+          <div className={`${renderStyle} pr-2 text-lg`}>
             {isLoading ? (
               <MarketplaceLoading />
             ) : (
