@@ -3,8 +3,6 @@ import { Skeleton } from "@radix-ui/themes";
 export default function CompetitionLoading() {
   const initialArray = [34534123344, 34534123345];
 
-  console.log(initialArray);
-
   return (
     <>
       {initialArray?.map((competition) => {

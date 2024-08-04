@@ -26,7 +26,7 @@ export default function NetworkPickerCard({
         alt=""
         width={26}
         height={26}
-        className={"rounded-[5px]"}
+        className={"h-auto rounded-[5px]"}
       />
       {text}
       {toggle && (

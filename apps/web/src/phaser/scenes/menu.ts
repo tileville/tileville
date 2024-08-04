@@ -81,7 +81,6 @@ export class MenuScene extends Scene {
       });
 
       demoButtonText.on("pointerdown", () => {
-        console.log("clicked");
         this.cameras.main.pan(-1280, 0, 500, "Linear", true);
         this.time.addEvent({
           delay: 500,

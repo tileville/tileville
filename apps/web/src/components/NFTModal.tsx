@@ -9,6 +9,11 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { ATTRIBUTES_DATA } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
+import Link from "next/link";
+import { CountdownTimer, useCountdownTimer } from "./common/CountdownTimer";
+import { getTime, isFuture } from "date-fns";
+import { useAtomValue } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
 
 type Trait = {
   key: string;
@@ -58,6 +63,7 @@ export const NFTModal = ({
     | undefined;
   const rarityData = configValues?.traits_rarity_counts;
   const totalNFTCount = parseInt(configValues?.total_nft_count || "0", 10);
+  const globalConfig = useAtomValue(globalConfigAtom);
 
   const networkStore = useNetworkStore();
   const parseTraits = (traits: Json): Trait[] => {
@@ -117,6 +123,14 @@ export const NFTModal = ({
     }
   };
 
+  const { countDownTime } = useCountdownTimer(
+    getTime(globalConfig.nft_mint_start_date)
+  );
+  const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
+  // const isMintingEnabled = true;
+
+  const dayTitle = +countDownTime?.days == 1 ? "Day" : "Days";
+  const hourTitle = +countDownTime?.hours == 1 ? "Hour" : "Hours";
   return (
     <>
       <Dialog.Root>
@@ -127,9 +141,10 @@ export const NFTModal = ({
                 className="w-full transition-all group-hover/item:scale-110"
                 width="100"
                 height="200"
-                alt="NFT Image"
+                alt="NFT"
                 src={img_url}
                 quality={100}
+                priority={false}
               />
             </div>
 
@@ -154,133 +169,144 @@ export const NFTModal = ({
           </div>
         </Dialog.Trigger>
 
-        <Dialog.Content className="!max-w-[1020px]">
-          <Dialog.Title>
-            <h1>{name}</h1>
-          </Dialog.Title>
-          <Dialog.Description size="2" mb="4">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Image
-                  src={img_url}
-                  width={853}
-                  height={845}
-                  alt="img"
-                  className="rounded-md"
-                />
+        <Dialog.Content className="relative !m-0 !max-w-[1020px] !rounded-md !p-0">
+          <div className="grid grid-cols-2">
+            <div className="h-full w-full">
+              <Image
+                src={img_url}
+                width={853}
+                height={845}
+                alt="img"
+                className="h-full object-cover"
+                priority={false}
+              />
+            </div>
+            <div className="bg-primary/30 px-4 py-8">
+              <h1 className="text-2xl font-semibold leading-4">{name}</h1>
+              <div className="my-3">
+                Price:{" "}
+                <span>
+                  <span className="text-lg font-semibold">{price}</span> MINA
+                </span>{" "}
               </div>
+              <Flex direction="column" gap="3" mt="4" justify="center">
+                {isMintingDisabled && (
+                  <CountdownTimer
+                    initialTime={getTime(globalConfig.nft_mint_start_date)}
+                  />
+                )}
+                <button
+                  className="h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
+                  onClick={handlePayParticipationFess}
+                  disabled={isMintingDisabled}
+                >
+                  {!!networkStore.address
+                    ? isMintingDisabled
+                      ? `MINTING STARTS SOON`
+                      : "MINT"
+                    : "Connect Wallet"}
+                </button>
+              </Flex>
+              <div className="mt-4 rounded-md">
+                <h3 className="mb-2 font-semibold">Traits</h3>
+                <ul className="grid grid-cols-2 gap-2 text-center text-xs">
+                  {parsedTraits.map((trait, index) => {
+                    const traitCount =
+                      rarityData?.[trait.key]?.[trait.value as string] ?? 0;
+                    const rarityPercentage = getRarityPercentage(
+                      traitCount,
+                      totalNFTCount
+                    );
+                    const bgColor = getRarityBackgroundColor(rarityPercentage);
+                    const textColor = getRarityColor(rarityPercentage);
+                    return (
+                      <li
+                        key={index}
+                        className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-black/70">{trait.key}</span>
 
-              <div>
-                <div className="mb-3">
-                  Price:{" "}
-                  <span>
-                    <span className="text-lg font-semibold">{price}</span> MINA
-                  </span>{" "}
-                </div>
+                          <span className="absolute left-2 top-2">
+                            {(ATTRIBUTES_DATA as any)[trait.key]?.Icon &&
+                              React.createElement(
+                                (ATTRIBUTES_DATA as any)[trait.key].Icon
+                              )}
+                          </span>
 
-                <div className="mt-4 rounded-md bg-primary/30 p-4">
-                  <h3 className="mb-2 text-xl font-semibold">Attributes</h3>
-                  <ul className="grid grid-cols-2 gap-2 text-center">
-                    {parsedTraits.map((trait, index) => {
-                      const traitCount =
-                        rarityData?.[trait.key]?.[trait.value as string] ?? 0;
-                      const rarityPercentage = getRarityPercentage(
-                        traitCount,
-                        totalNFTCount
-                      );
-                      const bgColor =
-                        getRarityBackgroundColor(rarityPercentage);
-                      const textColor = getRarityColor(rarityPercentage);
-                      return (
-                        <li
-                          key={index}
-                          className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-black/70">{trait.key}</span>
+                          <Tooltip.Provider delayDuration={100}>
+                            <Tooltip.Root>
+                              <Tooltip.Trigger asChild>
+                                <span className="absolute right-2 top-2">
+                                  <InfoCircledIcon />
+                                </span>
+                              </Tooltip.Trigger>
+                              <Tooltip.Portal>
+                                <Tooltip.Content
+                                  className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
+                                  sideOffset={5}
+                                >
+                                  <ul>
+                                    <li className="text-xs text-black/80">
+                                      {
+                                        (ATTRIBUTES_DATA as any)[trait.key]
+                                          .description
+                                      }
+                                    </li>
 
-                            <span className="absolute left-2 top-2">
-                              {(ATTRIBUTES_DATA as any)[trait.key]?.Icon &&
-                                React.createElement(
-                                  (ATTRIBUTES_DATA as any)[trait.key].Icon
-                                )}
-                            </span>
-
-                            <Tooltip.Provider delayDuration={100}>
-                              <Tooltip.Root>
-                                <Tooltip.Trigger asChild>
-                                  <span className="absolute right-2 top-2">
-                                    <InfoCircledIcon />
-                                  </span>
-                                </Tooltip.Trigger>
-                                <Tooltip.Portal>
-                                  <Tooltip.Content
-                                    className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
-                                    sideOffset={5}
-                                  >
-                                    <ul>
-                                      <li className="text-xs text-black/80">
+                                    {(ATTRIBUTES_DATA as any)[trait.key]
+                                      ?.values?.[trait.value] && (
+                                      <li className="text-xs">
                                         {
                                           (ATTRIBUTES_DATA as any)[trait.key]
-                                            .description
+                                            .values[trait.value]
                                         }
                                       </li>
+                                    )}
+                                  </ul>
 
-                                      {(ATTRIBUTES_DATA as any)[trait.key]
-                                        ?.values?.[trait.value] && (
-                                        <li className="text-xs">
-                                          {
-                                            (ATTRIBUTES_DATA as any)[trait.key]
-                                              .values[trait.value]
-                                          }
-                                        </li>
-                                      )}
-                                    </ul>
+                                  <Tooltip.Arrow className="TooltipArrow" />
+                                </Tooltip.Content>
+                              </Tooltip.Portal>
+                            </Tooltip.Root>
+                          </Tooltip.Provider>
+                        </div>
+                        <div className="text-md font-semibold">
+                          {trait.value}
+                        </div>
 
-                                    <Tooltip.Arrow className="TooltipArrow" />
-                                  </Tooltip.Content>
-                                </Tooltip.Portal>
-                              </Tooltip.Root>
-                            </Tooltip.Provider>
-                          </div>
-                          <div className="text-lg font-semibold">
-                            {trait.value}
-                          </div>
-
-                          <div>
-                            <span className={`rounded p-2 ${bgColor}`}>
-                              <span className="mr-1">
-                                {rarityData?.[trait.key][trait.value]}
-                              </span>
-                              <span className={`font-semibold ${textColor}`}>
-                                {rarityPercentage}%
-                              </span>
+                        <div>
+                          <span className={`block rounded p-2 ${bgColor}`}>
+                            <span className="mr-1">
+                              {rarityData?.[trait.key][trait.value]}
                             </span>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                            <span className={`font-semibold ${textColor}`}>
+                              {rarityPercentage}%
+                            </span>
+                          </span>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <div className="pt-[0.5px]">
+                  <Dialog.Description>
+                    <Link
+                      href="/faq#tileville-builder-nfts"
+                      className="text-xs font-semibold text-primary underline hover:no-underline"
+                    >
+                      Learn more about the utility of TileVille NFTs
+                    </Link>
+                  </Dialog.Description>
                 </div>
               </div>
             </div>
-          </Dialog.Description>
-
-          <Flex gap="3" mt="4" justify="end">
-            <Dialog.Close>
-              <button className="h-10 rounded-full border-primary bg-primary/30 px-5 py-2 text-sm font-medium hover:bg-primary/50 focus-visible:outline-none">
-                Cancel
-              </button>
-            </Dialog.Close>
-            {/* <Dialog.Close> */}
-            <button
-              className="h-10 rounded-full border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
-              onClick={handlePayParticipationFess}
-            >
-              {!!networkStore.address ? "MINT" : "Connect Wallet"}
+          </div>
+          <Dialog.Close>
+            <button className="absolute bottom-2 right-4 rounded-md border-primary bg-primary/30 px-2 py-2 text-xs font-medium hover:bg-primary/50 focus-visible:outline-none">
+              Cancel
             </button>
-            {/* </Dialog.Close> */}
-          </Flex>
+          </Dialog.Close>
         </Dialog.Content>
       </Dialog.Root>
     </>

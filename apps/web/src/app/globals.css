@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  /* background-color: #ded6b6; */
-  /* font-family: monospace; */
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -84,6 +79,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 .radix-themes {
@@ -368,7 +367,6 @@ input[type="range"]:focus::-moz-range-thumb {
 .guide-section-content div p:not(:first-child)::first-letter {
   float: left;
   font: 1.7em/1em Morris;
-  /* a little relief for the first letter*/
   text-shadow: 1px 1px 1px black;
   margin: 0 0.5rem;
 }
