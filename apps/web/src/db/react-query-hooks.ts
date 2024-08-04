@@ -32,6 +32,7 @@ import {
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { useLocalStorage } from "react-use";
+// import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 export const useSendEmail = ({
   onSuccess,
@@ -192,15 +193,36 @@ export const useNFTEntries = (
   );
 };
 export const useProfileLazyQuery = (walletAddress: string) => {
+  // const {
+  //   accountAuthSignature = "",
+  //   deleteSignature,
+  //   setSignatureFn,
+  // } = useAuthSignature();
+
   const [authSignature] = useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY);
   return useQuery({
     queryKey: ["user_profile", walletAddress],
-    queryFn: async () =>
-      fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
+    queryFn: async () => {
+      if (!authSignature) {
+        console.warn("Auth signature missing in storage");
+        return;
+      }
+      return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
         headers: {
           "Auth-Signature": authSignature as string,
         },
-      }).then((res) => res.json()),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (!res.success) {
+            toast(`Signature verification failed. Please authenticate again`);
+          }
+          return res;
+        })
+        .catch((e) => {
+          console.log("error message", e);
+        });
+    },
   });
 };
 

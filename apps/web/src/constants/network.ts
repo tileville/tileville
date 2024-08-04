@@ -7,10 +7,10 @@ export interface Network {
 
 export const NETWORKS: Network[] = [
   {
-    chainId: "devnet",
+    chainId: "testnet",
     name: "Devnet",
     graphql: "https://api.minascan.io/node/devnet/v1/graphql",
-    networkID: "mina:devnet",
+    networkID: "mina:testnet",
   },
   {
     chainId: "mainnet",

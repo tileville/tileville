@@ -4,6 +4,7 @@ import {
 } from "@/constants";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useCallback, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useLocalStorage } from "react-use";
 
 export const useAuthSignature = () => {
@@ -13,7 +14,11 @@ export const useAuthSignature = () => {
     ""
   );
 
-  const setSignatureFn = useCallback(() => {
+  const setSignatureFn = () => {
+    console.log("network address", networkStore.address);
+    if (!networkStore.address) {
+      return networkStore.connectWallet(false);
+    }
     (window as any).mina
       ?.signMessage({
         message: ACCOUNT_AUTH_MESSAGE,
@@ -22,13 +27,22 @@ export const useAuthSignature = () => {
         const authSignatureStr = `${signResult.publicKey || ""} ${
           signResult?.signature?.scalar || ""
         } ${signResult?.signature?.field || ""}`;
+        console.log("auth signature", authSignatureStr);
         setSignature(authSignatureStr);
       })
       .catch((error: any) => {
         console.log("failed to set signature", error);
+        if (
+          error.code === 1001 ||
+          (error.message || "").toLowercase().contains("User disconnect")
+        ) {
+          toast(
+            "Your wallet extenstion is locked. please unlock your wallet extension first and then try again"
+          );
+        }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   useEffect(() => {
     if (networkStore.walletConnected) {

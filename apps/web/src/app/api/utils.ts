@@ -23,7 +23,6 @@ export async function isSignatureValid(
   verifyMessage: string
 ) {
   try {
-    console.log("sign 26", signature);
     const signClient = await getSignClient();
     const verifyBody = {
       data: verifyMessage,
@@ -39,6 +38,9 @@ export async function isSignatureValid(
   }
 }
 
+
+
+
 export async function verifyUserAuthentication(
   authSignature: string | null,
   wallet_address: string
@@ -48,7 +50,6 @@ export async function verifyUserAuthentication(
       "Authentication failed: Missing AuthSignature or wallet_address"
     );
   }
-
   try {
     const [publicKey, scalar, field] = authSignature.split(" ");
 

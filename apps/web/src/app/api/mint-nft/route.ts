@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { verifyUserAuthentication } from "../utils";
+import { fetchNFTImageUrl } from "./utils";
 
 export async function POST(request: NextRequest) {
   const payload = await request.json();
@@ -10,6 +11,15 @@ export async function POST(request: NextRequest) {
 
   try {
     await verifyUserAuthentication(authSignature, wallet_address);
+
+    // check transaction status
+    // check nft_id
+    // fetch signed url
+
+    //
+    console.log("signature verification done");
+    const image_url = fetchNFTImageUrl(nft_id);
+    console.log(image_url);
   } catch (error) {}
   // let res = {};
   // if (isExist) {
