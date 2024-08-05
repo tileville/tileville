@@ -14,7 +14,7 @@ export const useCommitmentStore = create<
   [["zustand/persist", never]]
 >(
   persist(
-    (set, get) => ({
+    (set) => ({
       commitment: "0",
       value: "0",
       salt: "0",

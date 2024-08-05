@@ -8,19 +8,19 @@ type PlayerProfile = {
   username: string;
 };
 
-async function isProfileExist(
-  supabase: AppSupabaseClient,
-  wallet_address: string
-): Promise<boolean> {
-  const { data } = await supabase
-    .from("player_profile")
-    .select("wallet_address")
-    .eq("wallet_address", wallet_address)
-    .single();
+// async function isProfileExist(
+//   supabase: AppSupabaseClient,
+//   wallet_address: string
+// ): Promise<boolean> {
+//   const { data } = await supabase
+//     .from("player_profile")
+//     .select("wallet_address")
+//     .eq("wallet_address", wallet_address)
+//     .single();
 
-  if (data) return true;
-  return false;
-}
+//   if (data) return true;
+//   return false;
+// }
 
 export async function isUsernameExist(
   username: string,
@@ -357,15 +357,10 @@ export const getCompetitionByKey = async (
   return data;
 };
 
-export const anonymousSignIn = async ({
-  wallet_address,
-}: {
-  wallet_address: string;
-}) => {
+export const anonymousSignIn = async () => {
   const { data, error } = await supabase.auth.signInAnonymously();
   if (error) {
     console.log("sign in error", error);
-    // throw error;
   }
   console.log("anonymous sign in succeeded");
   return data;

@@ -3,17 +3,18 @@ import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
 import { useNetworkStore } from "@/lib/stores/network";
 import { ATTRIBUTES_DATA } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
-import { CountdownTimer, useCountdownTimer } from "./common/CountdownTimer";
+import { CountdownTimer } from "./common/CountdownTimer";
 import { getTime, isFuture } from "date-fns";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
+import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 
 type Trait = {
   key: string;
@@ -122,25 +123,19 @@ export const NFTModal = ({
       return "text-primary";
     }
   };
-
-  const { countDownTime } = useCountdownTimer(
-    getTime(globalConfig.nft_mint_start_date)
-  );
   const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
   // const isMintingEnabled = true;
 
-  const dayTitle = +countDownTime?.days == 1 ? "Day" : "Days";
-  const hourTitle = +countDownTime?.hours == 1 ? "Hour" : "Hours";
   return (
     <>
       <Dialog.Root>
         <Dialog.Trigger>
-          <div className="border-primary-30 group/item listItem cursor-pointer overflow-hidden rounded-md">
+          <div className="border-primary-30 group/item listItem fade-slide-in cursor-pointer overflow-hidden rounded-md transition-colors">
             <div className="nft-img w-full overflow-hidden">
               <Image
-                className="w-full transition-all group-hover/item:scale-110"
-                width="100"
-                height="200"
+                className="h-full w-full object-cover transition-all group-hover/item:scale-110"
+                width="852"
+                height="845"
                 alt="NFT"
                 src={img_url}
                 quality={100}
@@ -153,7 +148,7 @@ export const NFTModal = ({
                 <p className="text-sm font-semibold">{name}</p>
               </div>
 
-              {renderStyle === "list-style" && (
+              {renderStyle.includes("list-style") && (
                 <>
                   <div>-</div>
                   <div>-</div>
@@ -207,6 +202,7 @@ export const NFTModal = ({
                     : "Connect Wallet"}
                 </button>
               </Flex>
+              <MintRegisterModal />
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">
@@ -305,6 +301,12 @@ export const NFTModal = ({
           <Dialog.Close>
             <button className="absolute bottom-2 right-4 rounded-md border-primary bg-primary/30 px-2 py-2 text-xs font-medium hover:bg-primary/50 focus-visible:outline-none">
               Cancel
+            </button>
+          </Dialog.Close>
+
+          <Dialog.Close>
+            <button className="absolute right-4 top-4">
+              <Cross1Icon />
             </button>
           </Dialog.Close>
         </Dialog.Content>
