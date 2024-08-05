@@ -45,7 +45,7 @@ export default function TraitsInfo() {
 
   return (
     <div className="bg-primary/10 px-4 pb-28 pt-20">
-      <div className="mx-auto max-w-[1280px]">
+      <div className="fade-slide-in mx-auto max-w-[1280px]">
         <div className="sticky top-[52px] z-10 bg-primary/90 p-5 shadow-md">
           <div className="mb-8">
             <div className="mb-1 flex items-center gap-2 text-2xl text-white">

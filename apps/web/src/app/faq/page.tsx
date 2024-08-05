@@ -4,7 +4,7 @@ import { faqContent } from "./faq-content";
 export default function FAQPage() {
   return (
     <div className="pt-8">
-      <div className="mx-auto max-w-7xl divide-y divide-primary/50 px-4 py-0 sm:px-6  md:py-12 lg:px-8 lg:py-16">
+      <div className="fade-slide-in mx-auto max-w-7xl divide-y divide-primary/50 px-4 py-0 sm:px-6  md:py-12 lg:px-8 lg:py-16">
         {faqContent.map(({ id, title, faqs }) => (
           <div className="pt-8" key={id} id={`${id}`}>
             <h2 className="my-2 block text-3xl font-bold tracking-tight md:my-8">
