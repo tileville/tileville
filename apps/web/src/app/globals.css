@@ -492,6 +492,10 @@ input[type="range"]:focus::-moz-range-thumb {
   animation: fade-slide-in 600ms ease;
 }
 
+.fade-in{
+  animation: fade-in 600ms ease;
+}
+
 /* CSS For Spinner starts here */
 
 .loader {
@@ -695,6 +699,15 @@ input[type="range"]:focus::-moz-range-thumb {
   }
   100% {
     transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
     opacity: 1;
   }
 }
