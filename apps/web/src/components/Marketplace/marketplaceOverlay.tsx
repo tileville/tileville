@@ -3,6 +3,7 @@ import { globalConfigAtom } from "@/contexts/atoms";
 import { useSendEmail } from "@/db/react-query-hooks";
 import { getTime } from "date-fns";
 import { useAtomValue } from "jotai";
+import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface IFormInput {
@@ -61,6 +62,15 @@ export const MarketplaceOverlay = () => {
             </h2>
             <p className="text-xs font-medium text-gray-400">
               We will notify you before 12 hours of event being started.
+            </p>
+            <p className="mt-2 text-xs font-medium text-gray-600">
+              Learn more about TileVille NFTs{" "}
+              <Link
+                href="/faq#tileville-builder-nfts"
+                className="text-primary underline hover:no-underline"
+              >
+                here
+              </Link>{" "}
             </p>
           </div>
 

@@ -137,6 +137,39 @@ export type Database = {
         }
         Relationships: []
       }
+      tileville_builder_nfts: {
+        Row: {
+          created_at: string
+          img_url: string
+          name: string
+          nft_id: number
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          created_at?: string
+          img_url: string
+          name: string
+          nft_id?: number
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          created_at?: string
+          img_url?: string
+          name?: string
+          nft_id?: number
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Relationships: []
+      }
       tileville_competitions: {
         Row: {
           competition_tweet_content: string

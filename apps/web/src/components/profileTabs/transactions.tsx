@@ -51,8 +51,6 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
     selectedFilter
   );
 
-  console.log("transactions", transactions);
-
   return (
     <div className="">
       <div className="flex">

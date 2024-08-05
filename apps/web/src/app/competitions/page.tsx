@@ -14,7 +14,6 @@ export default function Competitions() {
   const [selectedCompetition, setSelectedCompetition] = useState<Competition>(
     {} as Competition
   );
-  console.log("competitions", data);
   //TODO: Error Message UI improvement
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
@@ -31,9 +30,9 @@ export default function Competitions() {
                 <Image
                   src="/image/cards/trophyGolden.png"
                   width={70}
-                  height={70}
+                  height={86}
                   alt="trophy"
-                  className="w-8 md:w-16"
+                  className="h-auto w-8 md:w-16"
                 />
               </div>
             </div>

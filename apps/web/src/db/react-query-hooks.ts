@@ -22,10 +22,16 @@ import {
   getCompetitionByKey,
   isGameAlreadyPlayed,
   fetchGlobalConfig,
+  getAllNFTsEntries,
 } from "./supabase-queries";
-import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
+import {
+  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
+  BLOCKBERRY_API_KEY,
+  BLOCKBERRY_MAINNET_BASE_URL,
+} from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
+import { useLocalStorage } from "react-use";
 
 export const useSendEmail = ({
   onSuccess,
@@ -170,13 +176,31 @@ export const useCompetitionsData = () => {
   );
 };
 
+export const useNFTEntries = ({
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+}) => {
+  return useQuery(
+    ["tileville_builder_nfts", sortOrder, searchTerm, currentPage],
+    () => getAllNFTsEntries({ sortOrder, searchTerm, currentPage }),
+    {}
+  );
+};
 export const useProfileLazyQuery = (walletAddress: string) => {
+  const [authSignature] = useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY);
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () =>
-      fetch(`/api/player_profile?wallet_address=${walletAddress}`).then((res) =>
-        res.json()
-      ),
+      fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
+        headers: {
+          "Auth-Signature": JSON.stringify(authSignature as string | ""),
+        },
+      }).then((res) => res.json()),
   });
 };
 

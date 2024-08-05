@@ -1,5 +1,7 @@
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
+import { verifyMessage } from "../utils";
+import { ACCOUNT_AUTH_MESSAGE } from "@/constants";
 
 async function isProfileExist(wallet_address: string): Promise<boolean> {
   const { data } = await supabase
@@ -15,6 +17,30 @@ async function isProfileExist(wallet_address: string): Promise<boolean> {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const wallet_address = searchParams.get("wallet_address") || "";
+  const authSignature = request.headers.get("Auth-Signature");
+
+  if (!authSignature || !wallet_address) {
+    throw new Error("Authentication failed");
+  }
+
+  try {
+    const authSignatureParsed = JSON.parse(authSignature) as {
+      field: string;
+      scalar: string;
+    };
+    const verificationResult = await verifyMessage(
+      wallet_address,
+      authSignatureParsed,
+      ACCOUNT_AUTH_MESSAGE
+    );
+    if (!verificationResult) {
+      throw new Error(`Signature message verification field`);
+    }
+    console.log("--== signature verification succeedded");
+  } catch (error: any) {
+    throw new Error(`Signature message verification field with error`, error);
+  }
+
   const { data, error } = await supabase
     .from("player_profile")
     .select("*")

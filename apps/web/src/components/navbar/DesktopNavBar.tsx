@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { useMountedState } from "react-use";
+import { useLocalStorage, useMountedState } from "react-use";
 import Image from "next/image";
 import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "../PrimaryButton";
@@ -21,7 +21,11 @@ import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
-import { BUG_REPORT_URL } from "@/constants";
+import {
+  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
+  ACCOUNT_AUTH_MESSAGE,
+  BUG_REPORT_URL,
+} from "@/constants";
 import { anonymousSignIn } from "@/db/supabase-queries";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 // import { addNovuSubscriber } from "@/lib/novu";
@@ -40,6 +44,11 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     "PENDING"
   );
   const isMounted = useMountedState();
+  const [accountAuthSignature, setAccountAuthSignature] = useLocalStorage(
+    ACCOUNT_AUTH_LOCALSTORAGE_KEY,
+    ""
+  );
+
   useMainnetTransactionsStatus(
     pendingTransactions
       .filter(({ network }) => network === "mina:mainnet")
@@ -62,6 +71,19 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
 
   useEffect(() => {
     if (networkStore.walletConnected && isFetched) {
+      if (!accountAuthSignature) {
+        (window as any).mina
+          ?.signMessage({
+            message: ACCOUNT_AUTH_MESSAGE,
+          })
+          .then((signResult: { signature: any }) => {
+            const signature = signResult.signature;
+            setAccountAuthSignature(signature);
+          })
+          .catch((error: any) => {
+            console.log("failed to set signature", error);
+          });
+      }
       phClient.identify(networkStore.address, { username: data?.username });
       // This is not working. debug this.
       // addNovuSubscriber(networkStore.address!, {
@@ -106,7 +128,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black backdrop-blur-sm">
+    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pb-1 pt-2 text-black backdrop-blur-md">
       <div className="flex w-full items-start justify-between">
         <div className="flex items-center gap-3">
           {!isHideBackBtn && (

@@ -95,6 +95,9 @@ importers:
       luxon:
         specifier: ^3.4.4
         version: 3.4.4
+      mina-signer:
+        specifier: ^3.0.7
+        version: 3.0.7
       next:
         specifier: 14.1.4
         version: 14.1.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.3.1)(react@18.3.1)
@@ -9287,6 +9290,13 @@ packages:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
     dev: true
+
+  /mina-signer@3.0.7:
+    resolution: {integrity: sha512-7eYp/6WWj2VzJjvfC8dNeGMud/brdBrzkUsCdysFFXnfV2/FVpVhAGCMfaS6hs0HJtS4+eplmiD2hXfshQS8CQ==}
+    dependencies:
+      blakejs: 1.2.1
+      js-sha256: 0.9.0
+    dev: false
 
   /minimalistic-assert@1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}

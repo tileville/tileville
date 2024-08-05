@@ -51,6 +51,8 @@ export const CompetitionCard = ({
           alt="competition poster url"
           fill
           className="h-full w-full object-cover object-left transition-transform group-hover:scale-110"
+          sizes="(max-width: 1600px) 100%"
+          priority={false}
         />
       </div>
       <div className=" col-span-6 flex flex-col py-4 ps-1 md:col-span-5">
