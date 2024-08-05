@@ -217,7 +217,7 @@ export default function Marketplace() {
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         </div>
-        {renderStyle === "list-style" && (
+        {renderStyle === toggleGroupOptions[2].gridApplyClass && (
           <div className="list-header">
             <div className="nft-item">Item</div>
             <div className="Last-sold">Last Sold</div>

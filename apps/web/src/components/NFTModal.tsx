@@ -148,7 +148,7 @@ export const NFTModal = ({
                 <p className="text-sm font-semibold">{name}</p>
               </div>
 
-              {renderStyle === "list-style" && (
+              {renderStyle.includes("list-style") && (
                 <>
                   <div>-</div>
                   <div>-</div>
