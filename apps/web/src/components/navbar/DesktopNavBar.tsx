@@ -91,7 +91,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
       //   email: data?.email || "",
       //   fullname: data?.fullname || "",
       // });
-      anonymousSignIn({ wallet_address: networkStore.address! })
+      anonymousSignIn()
         .then(() => {
           console.log("anonymous login done");
         })
