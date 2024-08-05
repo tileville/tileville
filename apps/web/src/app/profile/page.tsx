@@ -154,7 +154,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="px-4 pb-16 pt-32">
+    <div className="px-4 pb-16 pt-8 md:pt-32">
       <div className="mx-auto max-w-[1280px]">
         <div>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -373,10 +373,12 @@ export default function Profile() {
 
             <div className="flex-[0.5 hidden h-full min-h-[100px] w-[1px] bg-black/10 md:block"></div>
 
-            <div>
+            <div className="overflow-auto">
               <h3 className="text-xl font-semibold">Wallet Address</h3>
-              <div className="flex items-center gap-2">
-                <p>{networkStore?.address}</p>
+              <div className="flex items-center gap-2 overflow-auto">
+                <div className="text-sm md:text-base">
+                  {networkStore?.address}
+                </div>
 
                 <button
                   onClick={() => {

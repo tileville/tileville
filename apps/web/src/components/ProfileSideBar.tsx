@@ -27,7 +27,7 @@ export default function ProfileSideBar({
 
   return (
     <div className="p-4 pt-14">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {images.map((img) => {
           return (
             <div

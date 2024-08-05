@@ -3,14 +3,14 @@ import { faqContent } from "./faq-content";
 
 export default function FAQPage() {
   return (
-    <div className="mt-8">
-      <div className="mx-auto max-w-7xl divide-y divide-primary/50 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <div className="pt-8">
+      <div className="mx-auto max-w-7xl divide-y divide-primary/50 px-4 py-0 sm:px-6  md:py-12 lg:px-8 lg:py-16">
         {faqContent.map(({ id, title, faqs }) => (
           <div className="pt-8" key={id} id={`${id}`}>
-            <h2 className="my-8 block text-3xl font-bold tracking-tight">
+            <h2 className="my-2 block text-3xl font-bold tracking-tight md:my-8">
               {title}
             </h2>
-            <div className="mb-2 mt-8">
+            <div className="mb-2 mt-2 md:mt-8">
               <dl className="divide-y divide-primary/30">
                 {faqs.map(({ question, answer, id }) => (
                   <div

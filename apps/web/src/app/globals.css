@@ -222,9 +222,10 @@ button {
   }
 }
 
+
 .sideBarProfile {
   height: 100%;
-  width: 460px;
+  width: 300px;
   background: linear-gradient(
     hsl(var(--primary) / 0.3),
     hsl(var(--primary-foreground))
@@ -240,6 +241,12 @@ button {
   max-height: 100vh;
   z-index: 99;
   transform: translateX(100%);
+}
+
+@media (min-width: 768px) {
+  .sideBarProfile {
+    width: 460px;
+  }
 }
 
 .sideBarProfile.sideBarProfileOpen {
