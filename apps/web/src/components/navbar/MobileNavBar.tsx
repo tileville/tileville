@@ -1,13 +1,20 @@
 import {
   Cross1Icon,
   DiscordLogoIcon,
+  FaceIcon,
   HamburgerMenuIcon,
+  StarFilledIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { MediaPlayer } from "../MediaPlayer/page";
-import { BUG_REPORT_URL } from "@/constants";
+import {
+  BUG_REPORT_URL,
+  FEEDBACK_FORM_URL,
+  GAME_ROADMAP_URL,
+  GITHUB_URL,
+} from "@/constants";
 
 export const MobileNavBar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,7 +30,7 @@ export const MobileNavBar = () => {
       </button>
 
       <nav
-        className={`absolute z-30 h-full min-h-screen bg-white  transition-transform ${
+        className={`absolute z-30 flex h-full min-h-screen  flex-col justify-between bg-white transition-transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -87,6 +94,49 @@ export const MobileNavBar = () => {
             </Link>
           </li>
         </ul>
+
+        <div className="flex flex-col gap-1 p-2">
+          <div className="flex items-center gap-4">
+            <a
+              href={GAME_ROADMAP_URL}
+              target="_blank"
+              className="flex items-center gap-2 text-xs underline"
+            >
+              <span>Game roadmap</span>
+            </a>
+
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              className="flex items-center gap-1 text-xs underline"
+            >
+              <span>Star us on github</span>
+              <StarFilledIcon />
+            </a>
+
+            <a
+              href={FEEDBACK_FORM_URL}
+              target="_blank"
+              className="flex items-center gap-1 text-xs underline"
+            >
+              <span>Share Feedback</span>
+              <FaceIcon />
+            </a>
+          </div>
+
+          <div className="text-sm">
+            <span>
+              TileVille was inspired by Six Sided Streets made by{" "}
+              <a
+                target="_blank"
+                href="https://csklimowski.itch.io/"
+                className="underline"
+              >
+                Chris Klimowski
+              </a>
+            </span>
+          </div>
+        </div>
 
         <button
           onClick={() => {

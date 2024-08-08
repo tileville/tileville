@@ -37,7 +37,9 @@ export default function RootLayout({
             </div>
           </PHProvider>
         </Theme>
-        <Footer />
+        <div className="hidden md:block">
+          <Footer />
+        </div>
       </body>
     </html>
   );
