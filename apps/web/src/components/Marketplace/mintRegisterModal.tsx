@@ -12,7 +12,12 @@ interface IFormInput {
   name: string;
   email: string;
 }
-export const MintRegisterModal = () => {
+
+export const MintRegisterModal = ({
+  triggerBtnClasses,
+}: {
+  triggerBtnClasses: string;
+}) => {
   const globalConfig = useAtomValue(globalConfigAtom);
   const emailSentMutation = useSendEmail({
     onSuccess: () => {
@@ -47,9 +52,7 @@ export const MintRegisterModal = () => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <button className="cursor-pointer text-xs font-semibold text-primary underline hover:no-underline">
-          Register for the event
-        </button>
+        <button className={triggerBtnClasses}>Register for the event</button>
       </Dialog.Trigger>
 
       <Dialog.Content className="relative !m-0 !max-w-[480px] !rounded-md !p-0">

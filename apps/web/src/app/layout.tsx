@@ -30,7 +30,7 @@ export default function RootLayout({
           radius="large"
         >
           <PHProvider>
-            <div className="gradient-bg min-h-screen">
+            <div className="gradient-bg min-h-screen !bg-fixed">
               <ClientLayout>
                 <div className="">{children}</div>
               </ClientLayout>
