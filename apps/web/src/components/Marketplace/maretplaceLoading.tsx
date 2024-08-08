@@ -8,14 +8,14 @@ export const MarketplaceLoading = () => {
       {initialArray.map((arr, index) => {
         return (
           <div className="border-primary-30 rounded-md" key={index}>
-            <Skeleton className="h-[200px] w-full"></Skeleton>
-            <div className="px-2 pt-3">
+            <Skeleton className="aspect-[852/845] h-auto w-full"></Skeleton>
+
+            <div className="px-2 py-3">
               <Skeleton className="font-semibold">124</Skeleton>
               <br />
 
               <Skeleton className="text-primary-50 mt-1">200 MINA</Skeleton>
             </div>
-            <button className="w-full p-2 opacity-0">Connect Wallet</button>
           </div>
         );
       })}

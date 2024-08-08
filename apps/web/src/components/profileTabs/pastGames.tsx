@@ -9,7 +9,6 @@ type PastGamesProps = {
 
 export default function PastGames({ walletAddress }: PastGamesProps) {
   const { data: pastGames, isLoading } = usePastGames(walletAddress);
-  console.log("past games", pastGames);
   return (
     <div className="">
       <Table.Root>

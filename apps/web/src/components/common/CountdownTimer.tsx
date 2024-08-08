@@ -7,10 +7,7 @@ type CountdownTimerProps = {
   className?: string;
 };
 
-export const CountdownTimer = ({
-  initialTime,
-  className,
-}: CountdownTimerProps) => {
+export const useCountdownTimer = (initialTime: number) => {
   const [countDownTime, setCountDownTIme] = useState({
     days: "00",
     hours: "00",
@@ -72,7 +69,14 @@ export const CountdownTimer = ({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialTime]);
+  return { countDownTime };
+};
 
+export const CountdownTimer = ({
+  initialTime,
+  className,
+}: CountdownTimerProps) => {
+  const { countDownTime } = useCountdownTimer(initialTime);
   return (
     <div
       className={clsx(

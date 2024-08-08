@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  /* background-color: #ded6b6; */
-  /* font-family: monospace; */
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -84,6 +79,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 .radix-themes {
@@ -368,7 +367,6 @@ input[type="range"]:focus::-moz-range-thumb {
 .guide-section-content div p:not(:first-child)::first-letter {
   float: left;
   font: 1.7em/1em Morris;
-  /* a little relief for the first letter*/
   text-shadow: 1px 1px 1px black;
   margin: 0 0.5rem;
 }
@@ -494,6 +492,10 @@ input[type="range"]:focus::-moz-range-thumb {
   animation: fade-slide-in 600ms ease;
 }
 
+.fade-in{
+  animation: fade-in 600ms ease;
+}
+
 /* CSS For Spinner starts here */
 
 .loader {
@@ -529,7 +531,6 @@ input[type="range"]:focus::-moz-range-thumb {
 .list-style{
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .list-style .listItem{
@@ -537,6 +538,10 @@ input[type="range"]:focus::-moz-range-thumb {
   grid-template-columns: repeat(24, minmax(0, 1fr));
   align-items: center;
   padding: 12px;
+}
+
+.list-style .listItem:hover{
+  background-color: hsl(var(--primary) / 0.1);
 }
 
 .list-header{
@@ -694,6 +699,15 @@ input[type="range"]:focus::-moz-range-thumb {
   }
   100% {
     transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
     opacity: 1;
   }
 }

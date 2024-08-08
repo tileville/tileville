@@ -153,10 +153,8 @@ export default function Profile() {
     );
   }
 
-  console.log(profileData);
-
   return (
-    <div className="p-4 pt-40">
+    <div className="fade-slide-in p-4 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div>
           <div className="flex items-center justify-between gap-3">

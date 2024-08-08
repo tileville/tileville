@@ -1,32 +1,31 @@
 import { AppSupabaseClient, Table } from "@/types";
-import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
+import { supabaseUserClientComponentClient as supabase } from "@/supabase-clients/supabaseUserClientComponentClient";
 import { TransactionLog } from "@/lib/types";
-import { isMockEnv } from "@/constants";
+import { isMockEnv, NFT_PAGE_SIZE } from "@/constants";
 import { mockCompetition } from "./mock-data";
 
 type PlayerProfile = {
   username: string;
 };
 
-async function isProfileExist(
-  supabase: AppSupabaseClient,
-  wallet_address: string
-): Promise<boolean> {
-  const { data } = await supabase
-    .from("player_profile")
-    .select("wallet_address")
-    .eq("wallet_address", wallet_address)
-    .single();
+// async function isProfileExist(
+//   supabase: AppSupabaseClient,
+//   wallet_address: string
+// ): Promise<boolean> {
+//   const { data } = await supabase
+//     .from("player_profile")
+//     .select("wallet_address")
+//     .eq("wallet_address", wallet_address)
+//     .single();
 
-  if (data) return true;
-  return false;
-}
+//   if (data) return true;
+//   return false;
+// }
 
 export async function isUsernameExist(
   username: string,
   userId?: number
 ): Promise<boolean> {
-  const supabase = supabaseUserClientComponentClient;
   let query = supabase
     .from("player_profile")
     .select("id")
@@ -60,7 +59,6 @@ export const getAllCompetitionsEntries = async (
     .from("tileville_competitions")
     .select("*")
     .order("priority");
-  console.log("competition data", data);
   const formattedData = data ?? [];
 
   if (isMockEnv) {
@@ -153,7 +151,6 @@ export const getAllCompetitionsNames = async (
 export const addTransactionLog = async (
   transaction: TransactionLog
 ): Promise<Table<"transaction_logs">> => {
-  const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
     .from("transaction_logs")
     .insert(transaction)
@@ -170,8 +167,6 @@ export const updateTransactionLog = async (
   txn_hash: string,
   update_payload: { txn_status: string }
 ): Promise<Table<"transaction_logs">> => {
-  const supabase = supabaseUserClientComponentClient;
-
   const { data, error } = await supabase
     .from("transaction_logs")
     .update(update_payload)
@@ -188,8 +183,6 @@ export const fetchTransactions = async (
   wallet_address: string,
   txn_status: string
 ): Promise<Array<Table<"transaction_logs">>> => {
-  const supabase = supabaseUserClientComponentClient;
-
   const { data, error } = await supabase
     .from("transaction_logs")
     .select("*")
@@ -207,7 +200,6 @@ export const fetchTransactionLogById = async (
   wallet_address: string,
   id: number
 ): Promise<Table<"transaction_logs">> => {
-  const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
     .from("transaction_logs")
     .select("*")
@@ -221,7 +213,6 @@ export const fetchTransactionLogById = async (
 export const getFilteredLeaderboardEntries = async (
   competition_key: string
 ): Promise<Array<Table<"game_scores">>> => {
-  const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
     .from("game_scores")
     .select("*")
@@ -238,7 +229,6 @@ export const getFilteredLeaderboardEntries = async (
 export const getUsername = async (
   wallet_address: string
 ): Promise<PlayerProfile[]> => {
-  const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
     .from("player_profile")
     .select("username")
@@ -299,8 +289,6 @@ export const getFilteredTransactionByStatus = async (
 export const getPastGames = async (
   wallet_address: string
 ): Promise<Array<Table<"game_scores">>> => {
-  const supabase = supabaseUserClientComponentClient;
-
   const { data, error } = await supabase
     .from("game_scores")
     .select("*")
@@ -308,7 +296,6 @@ export const getPastGames = async (
     .order("created_at", { ascending: false })
     .order("score", { ascending: false });
 
-  console.log("past games data", data);
   if (error) {
     throw error;
   }
@@ -347,7 +334,7 @@ export const getActiveGames = async (
   const activeGames = (gameTxnLogs ?? []).filter(
     ({ id }) => !existingGameIds.includes(id)
   );
-  console.log({ gameTxnLogs, gameScoreIds });
+  // console.log({ gameTxnLogs, gameScoreIds });
   return activeGames;
 };
 
@@ -370,16 +357,10 @@ export const getCompetitionByKey = async (
   return data;
 };
 
-export const anonymousSignIn = async ({
-  wallet_address,
-}: {
-  wallet_address: string;
-}) => {
-  const supabase = supabaseUserClientComponentClient;
+export const anonymousSignIn = async () => {
   const { data, error } = await supabase.auth.signInAnonymously();
   if (error) {
     console.log("sign in error", error);
-    // throw error;
   }
   console.log("anonymous sign in succeeded");
   return data;
@@ -388,7 +369,6 @@ export const anonymousSignIn = async ({
 export const isGameAlreadyPlayed = async (
   game_id: number
 ): Promise<boolean> => {
-  const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
     .from("game_scores")
     .select("id")
@@ -405,7 +385,6 @@ export const isGameAlreadyPlayed = async (
 export const fetchGlobalConfig = async (
   config_name: string
 ): Promise<Table<"global_config">> => {
-  const supabase = supabaseUserClientComponentClient;
   const { data, error } = await supabase
     .from("global_config")
     .select("*")
@@ -418,14 +397,27 @@ export const fetchGlobalConfig = async (
   return data;
 };
 
-export const getAllNFTsEntries = async (
-  supabase: AppSupabaseClient,
-  sortOrder: "asc" | "desc" = "desc",
-  searchTerm = ""
-): Promise<Array<Table<"tileville_builder_nfts">>> => {
+type NFTEntriesResponse = {
+  nfts: Array<Table<"tileville_builder_nfts">>;
+  count: number;
+};
+
+export const getAllNFTsEntries = async ({
+  sortOrder,
+  searchTerm,
+  currentPage,
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+}): Promise<NFTEntriesResponse> => {
+  const rangeStart = (currentPage - 1) * NFT_PAGE_SIZE;
+  const rangeEnd = rangeStart + NFT_PAGE_SIZE - 1;
+
   let query = supabase
     .from("tileville_builder_nfts")
-    .select("*")
+    .select("*", { count: "exact" })
+    .range(rangeStart, rangeEnd)
     .order("price", { ascending: sortOrder === "asc" });
 
   if (searchTerm) {
@@ -441,14 +433,17 @@ export const getAllNFTsEntries = async (
     }
   }
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) {
     console.error("Error fetching NFT entries:", error);
     throw error;
   }
 
-  return data as Array<Table<"tileville_builder_nfts">>;
+  return {
+    nfts: data as Array<Table<"tileville_builder_nfts">>,
+    count: count ?? 0,
+  };
 };
 
 export const addNFTTransactionHash = async ({

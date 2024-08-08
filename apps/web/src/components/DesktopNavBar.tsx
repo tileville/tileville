@@ -104,7 +104,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
       //   email: data?.email || "",
       //   fullname: data?.fullname || "",
       // });
-      anonymousSignIn({ wallet_address: networkStore.address! })
+      anonymousSignIn()
         .then(() => {
           console.log("anonymous login done");
         })
@@ -141,7 +141,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black backdrop-blur-sm">
+    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pb-1 pt-2 text-black backdrop-blur-md">
       <div className="flex w-full items-start justify-between">
         <div className="flex items-center gap-3">
           {!isHideBackBtn && (

@@ -177,28 +177,22 @@ export const useCompetitionsData = () => {
   );
 };
 
-export const useNFTEntries = (
-  sortOrder: "asc" | "desc" = "desc",
-  searchTerm = ""
-) => {
+export const useNFTEntries = ({
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+}) => {
   return useQuery(
-    ["tileville_builder_nfts", sortOrder, searchTerm],
-    () =>
-      getAllNFTsEntries(
-        supabaseUserClientComponentClient,
-        sortOrder,
-        searchTerm
-      ),
+    ["tileville_builder_nfts", sortOrder, searchTerm, currentPage],
+    () => getAllNFTsEntries({ sortOrder, searchTerm, currentPage }),
     {}
   );
 };
 export const useProfileLazyQuery = (walletAddress: string) => {
-  // const {
-  //   accountAuthSignature = "",
-  //   deleteSignature,
-  //   setSignatureFn,
-  // } = useAuthSignature();
-
   const [authSignature] = useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY);
   return useQuery({
     queryKey: ["user_profile", walletAddress],
@@ -209,34 +203,15 @@ export const useProfileLazyQuery = (walletAddress: string) => {
       }
       return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
         headers: {
-          "Auth-Signature": authSignature as string,
+          "Auth-Signature": JSON.stringify(authSignature as string | ""),
         },
       })
         .then((res) => res.json())
-        .then((res) => {
-          if (!res.success) {
-            toast(`Signature verification failed. Please authenticate again`);
-          }
-          return res;
-        })
         .catch((e) => {
-          console.log("error message", e);
+          console.error(e);
         });
     },
   });
-};
-
-export const useLeaderboardEntries = (competition_key: string) => {
-  return useQuery(
-    ["tileville_competition_scores", competition_key],
-    async () =>
-      fetch(`/api/leaderboard?competition_key=${competition_key}`).then((res) =>
-        res.json()
-      ),
-    {
-      enabled: !!competition_key,
-    }
-  );
 };
 
 export const useCompetitionsName = () => {
