@@ -204,6 +204,7 @@ export const useProfileLazyQuery = (walletAddress: string) => {
       return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
         headers: {
           "Auth-Signature": JSON.stringify(authSignature as string | ""),
+          "Wallet-Address": walletAddress,
         },
       })
         .then((res) => res.json())

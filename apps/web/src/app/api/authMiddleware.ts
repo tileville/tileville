@@ -9,8 +9,7 @@ type NextApiHandler = (
 export function withAuth(handler: NextApiHandler) {
   return async (req: NextRequest) => {
     try {
-      const { searchParams } = new URL(req.url);
-      const wallet_address = searchParams.get("wallet_address") || "";
+      const wallet_address = req.headers.get("Wallet-Address") || "";
       const authSignature = req.headers.get("Auth-Signature");
 
       console.log("===18", { wallet_address, authSignature });

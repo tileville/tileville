@@ -15,10 +15,7 @@ import {
   GAME_ENTRY_FEE_KEY,
 } from "@/constants";
 import toast from "react-hot-toast";
-import {
-  addNFTTransactionHash,
-  addTransactionLog,
-} from "@/db/supabase-queries";
+import { addTransactionLog } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
@@ -42,7 +39,6 @@ export interface NetworkState {
   setAuthSignature: () => Promise<boolean>;
 }
 
-let count = 1;
 export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
   immer((set) => {
     // const [accountAuthSignature, setSignature, deleteSignature] =
@@ -118,7 +114,6 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
         if (soft) {
           if (localStorage.minaAdderess) {
             this.onWalletConnected(localStorage.minaAdderess);
-            return this.onWalletConnected(localStorage.minaAdderess);
           }
         } else {
           const accounts = await (window as any).mina.requestAccounts();
@@ -148,7 +143,6 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
         });
       },
       setAuthSignature() {
-        console.log("calling autg signature", count + 1);
         return (window as any).mina
           ?.signMessage({
             message: ACCOUNT_AUTH_MESSAGE,
@@ -321,9 +315,6 @@ export const usePayNFTMintFee = () => {
     try {
       if (txn_hash) {
         console.log("response hash", txn_hash);
-        const response = await addNFTTransactionHash({ nft_id, txn_hash });
-        console.log("Add nft transaction log response", response);
-        return { id: nft_id };
       } else {
         console.log("toast error");
       }

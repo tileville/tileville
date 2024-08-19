@@ -127,8 +127,8 @@ export const NFTModal = ({
       return "text-primary";
     }
   };
-  const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
-  // const isMintingEnabled = true;
+  // const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
+  const isMintingDisabled = false;
 
   return (
     <>
