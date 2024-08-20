@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createFileFromImageUrl, fetchNFTImageUrl } from "./utils";
+import { fetchNFTImageUrl } from "./utils";
 import { withAuth } from "../authMiddleware";
 import {
   BLOCKBERRY_API_KEY,
@@ -9,6 +9,9 @@ import {
 import { error } from "console";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { mintNFT, ProofOfNFT } from "./minanft-call";
+import { CHAIN_NAME, MINANFT_CONTRACT_ADDRESS } from "./constants";
+import { blockchain } from "minanft";
+import { pinFile, createFileFromImageUrl } from "./server-utils";
 
 const postHandler = async (request: NextRequest) => {
   const payload = await request.json();
@@ -23,18 +26,18 @@ const postHandler = async (request: NextRequest) => {
     // Add log
     // add transaction status
     //TODO: Check transaction status
-    // const response = await fetch(
-    //   `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
-    //   {
-    //     headers: {
-    //       "x-api-key": BLOCKBERRY_API_KEY,
-    //     },
-    //   }
-    // );
+    const response = await fetch(
+      `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+      {
+        headers: {
+          "x-api-key": BLOCKBERRY_API_KEY,
+        },
+      }
+    );
 
-    // const jsonResponse = await response.json();
+    const jsonResponse = await response.json();
 
-    // console.log({ jsonResponse });
+    console.log({ jsonResponse });
 
     // check nft_id
     // check if nft is already minted or not
@@ -80,16 +83,33 @@ const postHandler = async (request: NextRequest) => {
         isPublic: true,
       })
     );
-    const response1 = await mintNFT({
-      name,
-      image: nft_image,
-      collection: "Tileville",
-      description: NFT_DESCRIPTION,
-      price: 0,
-      owner_address: wallet_address,
-      keys: modified_traits,
+
+    const ipfs = await pinFile({
+      file: nft_image,
+      keyvalues: {
+        name,
+        owner: wallet_address,
+        contractAddress: MINANFT_CONTRACT_ADDRESS,
+        chain: CHAIN_NAME,
+      },
     });
-    return Response.json({ success: true }, { status: 200 });
+
+    console.log({ ipfs });
+
+    return Response.json(
+      {
+        name,
+        image_signed_url: image_url,
+        collection: "Tileville",
+        description: NFT_DESCRIPTION,
+        price: 0,
+        owner_address: wallet_address,
+        keys: modified_traits,
+        ipfs,
+        nft_id,
+      },
+      { status: 200 }
+    );
   } catch (error) {}
   // let res = {};
   // if (isExist) {

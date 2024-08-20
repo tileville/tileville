@@ -1,88 +1,8 @@
-"use server";
-
 import axios from "axios";
 import { CHAIN_NAME, NFT_BUCKET_NAME } from "./constants";
 import type { Mina } from "o1js";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
-import { Blob } from "buffer";
 
-export async function calculateSHA512(file: File): Promise<string> {
-  const readFileAsArrayBuffer = (file: File) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(file);
-    });
-  };
-
-  const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
-    const binary = String.fromCharCode(...new Uint8Array(buffer));
-    return window.btoa(binary);
-  };
-
-  try {
-    const arrayBuffer = await readFileAsArrayBuffer(file);
-
-    const hashBuffer = await crypto.subtle.digest(
-      "SHA-512",
-      arrayBuffer as BufferSource
-    );
-
-    const hashBase64 = arrayBufferToBase64(hashBuffer);
-
-    return hashBase64;
-  } catch (error) {
-    console.error("Error calculating SHA-512 hash:", error);
-    throw error;
-  }
-}
-
-export async function pinFile(params: {
-  file: File;
-  keyvalues: { [key: string]: string };
-}): Promise<string | undefined> {
-  const { file, keyvalues } = params;
-  try {
-    const formData = new FormData();
-    const metadata = {
-      name: file.name,
-      keyvalues: {
-        ...keyvalues,
-        mimeType: file.type,
-        size: file.size.toString(),
-        filename: file.name ?? "",
-      },
-    };
-    formData.append("file", file);
-    formData.append("pinataMetadata", JSON.stringify(metadata));
-    formData.append("pinataOptions", JSON.stringify({ cidVersion: 1 }));
-    const endpoint = process.env.NEXT_PUBLIC_IPFS_URL;
-    if (endpoint === undefined) throw new Error("IPFS URL is undefined");
-    const key = process.env.NEXT_PUBLIC_PINATA_JWT;
-    if (key === undefined) throw new Error("IPFS Key is undefined");
-    const headers = {
-      "Content-Type": `multipart/form-data`,
-      Authorization: "Bearer " + key,
-    };
-    console.log("pinFile", { endpoint, key, metadata, headers, formData });
-
-    const response = await axios.post(endpoint, formData, {
-      maxBodyLength: Infinity,
-      headers,
-    });
-    if (response?.data?.IpfsHash) {
-      console.log("pinFile response", response.data);
-      return response.data.IpfsHash;
-    } else {
-      console.error("pinFile error 1", response.data.error);
-      return undefined;
-    }
-  } catch (err) {
-    console.error("pinFile error 2 - catch", err);
-    return undefined;
-  }
-}
 
 export interface ProofOfNFT {
   key: string;
@@ -279,17 +199,6 @@ export async function serializeTransaction(tx: any): string {
   );
   return serializedTransaction;
 }
-
-export async function getAccount(): Promise<string | undefined> {
-  const accounts = await (window as any)?.mina?.requestAccounts();
-  let address: string | undefined = undefined;
-  if (accounts?.code === undefined && accounts?.length > 0) {
-    address = accounts[0];
-    console.log("Address", address);
-  }
-  return address;
-}
-
 export const fetchNFTImageUrl = async (nft_id: number) => {
   try {
     const { data, error } = await supabase.storage
@@ -303,61 +212,6 @@ export const fetchNFTImageUrl = async (nft_id: number) => {
     return data.signedUrl;
   } catch (error: any) {
     console.error("Error fetching image:", error.message);
-    return null;
-  }
-};
-
-class File extends Blob {
-  name;
-  lastModified;
-  constructor(fileBits: any, fileName: string, options: any = {}) {
-    super(fileBits, options);
-    this.name = fileName;
-    this.lastModified = options.lastModified || Date.now();
-  }
-}
-
-export const createFileFromImageUrl = async ({
-  image_url,
-  name,
-}: {
-  image_url: string;
-  name: string;
-}): Promise<File | null> => {
-  try {
-    const response = await fetch(image_url);
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Determine the file type
-    const fileType = "image/png";
-
-    // Create a File-like object
-    // const file = {
-    //   name,
-    //   type: fileType,
-    //   size: buffer.length,
-    //   lastModified: new Date().getTime(),
-    //   buffer: buffer,
-    //   arrayBuffer: () => Promise.resolve(arrayBuffer),
-    //   slice: (start: number, end: number) =>
-    //     new Blob([buffer.slice(start, end)], { type: fileType }),
-    //   stream: () =>
-    //     new ReadableStream({
-    //       start(controller) {
-    //         controller.enqueue(buffer);
-    //         controller.close();
-    //       },
-    //     }),
-    //   text: () => Promise.resolve(buffer.toString("utf-8")),
-    // };
-    const file = new File([buffer], name, {
-      type: fileType,
-      lastModified: new Date().getTime(),
-    });
-    return file;
-  } catch (error) {
-    console.error("Error creating file from URL:", error);
     return null;
   }
 };

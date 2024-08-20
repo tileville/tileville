@@ -19,6 +19,7 @@ import { addTransactionLog } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
+import { mintNFT } from "@/app/api/mint-nft/minanft-call";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
@@ -89,12 +90,12 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
           }
 
           if (isSignatureRequired) {
-            const isSignSuccess = await this.setAuthSignature();
-            if (!isSignSuccess) {
-              toast("You need to authenticate wallet");
-              localStorage.minaAddress = undefined;
-              return;
-            }
+            // const isSignSuccess = await this.setAuthSignature();
+            // if (!isSignSuccess) {
+            //   toast("You need to authenticate wallet");
+            //   localStorage.minaAddress = undefined;
+            //   return;
+            // }
           } else {
             // set((state) => {
             //   state.accountAuthSignature = accountAuthSignature;
@@ -308,7 +309,22 @@ export const usePayNFTMintFee = () => {
       //   memo: `Pay ${nft_price} MINA to mint ${nft_id}`,
       // });
       // txn_hash = (data as SendTransactionResult).hash;
-      txn_hash = "12344u4";
+      txn_hash = "5JuXu8EeYoSSVVbZ2Pj1p96HDpUt9ZqJxQs3t7WUkmcSGDRHm6h8";
+      const nft_payload_response = await fetch(`/api/mint-nft`, {
+        method: "POST",
+        body: JSON.stringify({
+          wallet_address: networkStore.address,
+          nft_id,
+          txn_hash,
+        }),
+        headers: {
+          "Auth-Signature": "abv1",
+        },
+      });
+
+      const nft_payload = await nft_payload_response.json();
+      console.log({ nft_payload });
+      const response = await mintNFT(nft_payload);
     } catch (err: any) {
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }
