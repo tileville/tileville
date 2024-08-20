@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import type { blockchain, MintParams } from "minanft";
 import {
@@ -8,14 +8,13 @@ import {
   sendTransaction,
 } from "./utils";
 import type { VerificationKey } from "o1js";
-import { CHAIN_NAME } from "./constants";
+import { CHAIN_NAME, MINTER_PUBLIC_KEY } from "./constants";
 
 export interface ProofOfNFT {
   key: string;
   value: string;
-  isPublic: boolean;
+  isPublic?: boolean;
 }
-
 
 export async function mintNFT(params: {
   name: string;
@@ -24,28 +23,11 @@ export async function mintNFT(params: {
   description: string;
   price: number;
   keys: ProofOfNFT[];
-  developer: string;
-  repo: string;
+  owner_address: string;
 }) {
-  console.time("ready to sign");
-  const { name, image, price, collection, description, keys, developer, repo } =
+  console.log("ready to sign");
+  const { name, image, price, collection, description, keys, owner_address } =
     params;
-
-  const owner = await getAccount();
-  if (owner === undefined) {
-    console.error("Owner address is undefined");
-    return;
-  }
-
-  if (name === undefined || name === "") {
-    console.error("NFT name is undefined");
-    return;
-  }
-
-  if (image === undefined) {
-    console.error("Image is undefined");
-    return;
-  }
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
   if (contractAddress === undefined) {
@@ -59,15 +41,13 @@ export async function mintNFT(params: {
     file: image,
     keyvalues: {
       name,
-      owner,
+      owner: owner_address,
       contractAddress,
       chain,
-      developer,
-      repo,
     },
   });
 
-  console.time("imported o1js");
+  console.log("imported o1js");
   const {
     Field,
     PrivateKey,
@@ -79,8 +59,8 @@ export async function mintNFT(params: {
     UInt32,
     VerificationKey,
   } = await import("o1js");
-  console.timeEnd("imported o1js");
-  console.time("imported minanft");
+  console.log("imported o1js 62");
+  console.log("imported minanft");
   const {
     MinaNFT,
     NameContractV2,
@@ -95,8 +75,8 @@ export async function mintNFT(params: {
     serializeFields,
     MintParams,
   } = await import("minanft");
-  console.timeEnd("imported minanft");
-  console.time("prepared data");
+  console.log("imported minanft 78");
+  console.log("prepared data");
   if (contractAddress !== MINANFT_NAME_SERVICE_V2) {
     console.error(
       "Contract address is not the same as MINANFT_NAME_SERVICE_V2"
@@ -109,9 +89,9 @@ export async function mintNFT(params: {
   const nftPrivateKey = PrivateKey.random();
   const address = nftPrivateKey.toPublicKey();
   const net = await initBlockchain(chain);
-  const sender = PublicKey.fromBase58(owner);
+  const sender = PublicKey.fromBase58(MINTER_PUBLIC_KEY);
+  const owner_public_key = PublicKey.fromBase58(owner_address);
   const pinataJWT = process.env.NEXT_PUBLIC_PINATA_JWT!;
-  const arweaveKey = undefined;
   const jwt = process.env.NEXT_PUBLIC_MINANFT_JWT!;
   if (jwt === undefined) {
     console.error("JWT is undefined");
@@ -120,7 +100,7 @@ export async function mintNFT(params: {
   const minanft = new api(jwt);
   const reservedPromise = minanft.reserveName({
     name,
-    publicKey: owner,
+    publicKey: owner_address,
     chain: CHAIN_NAME,
     contract: contractAddress,
     version: "v2",
@@ -155,9 +135,7 @@ export async function mintNFT(params: {
     nft.update({ key, value, isPrivate: isPublic === false });
   }
 
-  nft.update({ key: "rarity", value: "70%" });
-
-  console.time("calculated sha3_512");
+  console.log("calculated sha3_512");
   const sha3_512 = await calculateSHA512(image);
   console.timeEnd("calculated sha3_512");
   console.log("image sha3_512", sha3_512);
@@ -240,7 +218,7 @@ export async function mintNFT(params: {
   const mintParams: MintParams = {
     name: MinaNFT.stringToField(nft.name!),
     address,
-    owner: sender,
+    owner: owner_public_key,
     price: UInt64.from(BigInt(price * 1e9)),
     fee: UInt64.from(BigInt((reserved.price as any)?.price * 1_000_000_000)),
     feeMaster: wallet,
@@ -249,7 +227,7 @@ export async function mintNFT(params: {
     expiry,
     metadataParams: {
       metadata: nft.metadataRoot,
-      storage: nft.storage!,
+      storage: nft.storage,
     },
   };
   const tx = await Mina.transaction({ sender, fee, memo }, async () => {

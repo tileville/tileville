@@ -1,8 +1,10 @@
-"use client";
+"use server";
+
 import axios from "axios";
 import { CHAIN_NAME, NFT_BUCKET_NAME } from "./constants";
 import type { Mina } from "o1js";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
+import { Blob } from "buffer";
 
 export async function calculateSHA512(file: File): Promise<string> {
   const readFileAsArrayBuffer = (file: File) => {
@@ -249,7 +251,8 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function serializeTransaction(tx: any): string {
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function serializeTransaction(tx: any): string {
   const length = tx.transaction.accountUpdates.length;
   const blindingValues = [];
   for (let i = 0; i < length; i++) {
@@ -292,12 +295,69 @@ export const fetchNFTImageUrl = async (nft_id: number) => {
     const { data, error } = await supabase.storage
       .from(NFT_BUCKET_NAME)
       .createSignedUrl(`${nft_id}.png`, 180); // 60 seconds expiry time
+
+    console.log("--- 296--", error);
     if (error) {
       throw error;
     }
     return data.signedUrl;
   } catch (error: any) {
     console.error("Error fetching image:", error.message);
+    return null;
+  }
+};
+
+class File extends Blob {
+  name;
+  lastModified;
+  constructor(fileBits: any, fileName: string, options: any = {}) {
+    super(fileBits, options);
+    this.name = fileName;
+    this.lastModified = options.lastModified || Date.now();
+  }
+}
+
+export const createFileFromImageUrl = async ({
+  image_url,
+  name,
+}: {
+  image_url: string;
+  name: string;
+}): Promise<File | null> => {
+  try {
+    const response = await fetch(image_url);
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Determine the file type
+    const fileType = "image/png";
+
+    // Create a File-like object
+    // const file = {
+    //   name,
+    //   type: fileType,
+    //   size: buffer.length,
+    //   lastModified: new Date().getTime(),
+    //   buffer: buffer,
+    //   arrayBuffer: () => Promise.resolve(arrayBuffer),
+    //   slice: (start: number, end: number) =>
+    //     new Blob([buffer.slice(start, end)], { type: fileType }),
+    //   stream: () =>
+    //     new ReadableStream({
+    //       start(controller) {
+    //         controller.enqueue(buffer);
+    //         controller.close();
+    //       },
+    //     }),
+    //   text: () => Promise.resolve(buffer.toString("utf-8")),
+    // };
+    const file = new File([buffer], name, {
+      type: fileType,
+      lastModified: new Date().getTime(),
+    });
+    return file;
+  } catch (error) {
+    console.error("Error creating file from URL:", error);
     return null;
   }
 };
