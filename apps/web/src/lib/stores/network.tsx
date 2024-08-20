@@ -291,7 +291,7 @@ export const usePayNFTMintFee = () => {
   }: {
     nft_id: number;
     nft_price: number;
-  }): Promise<{ id: number } | null | undefined> => {
+  }): Promise<any> => {
     let txn_hash;
     if (!networkStore.address) {
       networkStore.connectWallet(false);
@@ -299,7 +299,7 @@ export const usePayNFTMintFee = () => {
     }
 
     //TODO: remove it after testing
-    nft_price = 0.1;
+    // nft_price = 0.1;
     try {
       // const data: SendTransactionResult | ProviderError = await (
       //   window as any
@@ -325,6 +325,7 @@ export const usePayNFTMintFee = () => {
       const nft_payload = await nft_payload_response.json();
       console.log({ nft_payload });
       const response = await mintNFT(nft_payload);
+      return response;
     } catch (err: any) {
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }

@@ -1,4 +1,7 @@
+"use server";
 import axios from "axios";
+import { supabaseServiceClient as supabase } from "@/db/config/server";
+import { NFT_BUCKET_NAME } from "./constants";
 
 export async function pinFile(params: {
   file: File;
@@ -46,35 +49,20 @@ export async function pinFile(params: {
   }
 }
 
-class File extends Blob {
-  name;
-  lastModified;
-  constructor(fileBits: any, fileName: string, options: any = {}) {
-    super(fileBits, options);
-    this.name = fileName;
-    this.lastModified = options.lastModified || Date.now();
-  }
-}
 
-export const createFileFromImageUrl = async ({
-  image_url,
-  name,
-}: {
-  image_url: string;
-  name: string;
-}): Promise<File | null> => {
+
+export const fetchNFTImageUrl = async (nft_id: number) => {
   try {
-    const response = await fetch(image_url);
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const fileType = "image/png";
-    const file = new File([buffer], name, {
-      type: fileType,
-      lastModified: new Date().getTime(),
-    });
-    return file;
-  } catch (error) {
-    console.error("Error creating file from URL:", error);
+    const { data, error } = await supabase.storage
+      .from(NFT_BUCKET_NAME)
+      .createSignedUrl(`${nft_id}.png`, 180); // 60 seconds expiry time
+
+    if (error) {
+      throw error;
+    }
+    return data.signedUrl;
+  } catch (error: any) {
+    console.error("Error fetching image:", error.message);
     return null;
   }
 };

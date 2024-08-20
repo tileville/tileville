@@ -99,7 +99,8 @@ export const NFTModal = ({
     //TODO: Handle loading state for mint button
     setisLoading(true);
     try {
-      await payNFTMintFees({ nft_id: nftID, nft_price: nftPrice });
+      const response = await payNFTMintFees({ nft_id: nftID, nft_price: nftPrice });
+      
       setisLoading(false);
     } catch (error) {
       //TODO: Handle error with proper toast

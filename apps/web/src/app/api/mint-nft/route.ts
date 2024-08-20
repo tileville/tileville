@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { fetchNFTImageUrl } from "./utils";
+import { fetchNFTImageUrl } from "./server-utils";
 import { withAuth } from "../authMiddleware";
 import {
   BLOCKBERRY_API_KEY,
@@ -8,10 +8,10 @@ import {
 } from "@/constants";
 import { error } from "console";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
-import { mintNFT, ProofOfNFT } from "./minanft-call";
+import { ProofOfNFT } from "./minanft-call";
 import { CHAIN_NAME, MINANFT_CONTRACT_ADDRESS } from "./constants";
-import { blockchain } from "minanft";
-import { pinFile, createFileFromImageUrl } from "./server-utils";
+import { pinFile } from "./server-utils";
+import { createFileFromImageUrl } from "./common-utils";
 
 const postHandler = async (request: NextRequest) => {
   const payload = await request.json();
@@ -84,6 +84,8 @@ const postHandler = async (request: NextRequest) => {
       })
     );
 
+    console.log("=== wallet  address ===", wallet_address);
+
     const ipfs = await pinFile({
       file: nft_image,
       keyvalues: {
@@ -91,6 +93,8 @@ const postHandler = async (request: NextRequest) => {
         owner: wallet_address,
         contractAddress: MINANFT_CONTRACT_ADDRESS,
         chain: CHAIN_NAME,
+        developer: "Tileville",
+        repo: "tileville",
       },
     });
 
@@ -111,29 +115,6 @@ const postHandler = async (request: NextRequest) => {
       { status: 200 }
     );
   } catch (error) {}
-  // let res = {};
-  // if (isExist) {
-  //   const { data, error } = await supabase
-  //     .from("player_profile")
-  //     .update(other_field)
-  //     .eq("wallet_address", wallet_address)
-  //     .single();
-  //   if (error) {
-  //     throw error;
-  //   }
-  //   res = data;
-  // } else {
-  //   const { data, error } = await supabase
-  //     .from("player_profile")
-  //     .insert(payload)
-  //     .select("*")
-  //     .single();
-  //   if (error) {
-  //     throw error;
-  //   }
-  //   res = data;
-  // }
-  // return Response.json(res);
   console.error(error);
   return Response.json({ success: false }, { status: 500 });
 };
