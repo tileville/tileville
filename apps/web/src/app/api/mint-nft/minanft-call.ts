@@ -98,7 +98,6 @@ export async function mintNFT(params: MintNFTParams) {
     version: "v2",
     developer: "Tileville",
     repo: "tileville",
-    key: RESERVED_PRICE_REDUCE_KEY,
   } as any);
 
   const nft = new RollupNFT({
@@ -264,8 +263,10 @@ export async function mintNFT(params: MintNFTParams) {
     contractAddress,
     name,
   });
-  console.timeEnd("sent transaction");
-  console.log("Sent transaction", sentTx);
+
+  if (sentTx.hash.toLocaleLowerCase().includes("error")) {
+    return { success: false, message: sentTx.hash };
+  }
   return { success: true, txHash: sentTx.hash };
 }
 

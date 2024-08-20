@@ -11,7 +11,7 @@ import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
 import { CountdownTimer } from "./common/CountdownTimer";
-import { getTime, isFuture } from "date-fns";
+import { getTime } from "date-fns";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
@@ -40,6 +40,13 @@ interface GlobalConfig {
   id: number;
   name: string | null;
 }
+
+const INITIAL_MINT_RESPONSE = {
+  state: "idle",
+  success: false,
+  message: "",
+  txHash: "",
+};
 
 export const NFTModal = ({
   traits,
@@ -72,6 +79,7 @@ export const NFTModal = ({
   const rarityData = configValues?.traits_rarity_counts;
   const totalNFTCount = parseInt(configValues?.total_nft_count || "0", 10);
   const globalConfig = useAtomValue(globalConfigAtom);
+  const [nftMintResponse, setNftMintResponse] = useState(INITIAL_MINT_RESPONSE);
 
   const networkStore = useNetworkStore();
   const { payNFTMintFees } = usePayNFTMintFee();
@@ -96,11 +104,18 @@ export const NFTModal = ({
   const parsedTraits = parseTraits(traits);
 
   const handleMint = async () => {
+    setNftMintResponse(INITIAL_MINT_RESPONSE);
     //TODO: Handle loading state for mint button
     setisLoading(true);
     try {
-      const response = await payNFTMintFees({ nft_id: nftID, nft_price: nftPrice });
-      
+      const response = await payNFTMintFees({
+        nft_id: nftID,
+        nft_price: nftPrice,
+      });
+      setNftMintResponse({ state: "active", ...response });
+      if (response.success) {
+      }
+
       setisLoading(false);
     } catch (error) {
       //TODO: Handle error with proper toast
@@ -223,6 +238,22 @@ export const NFTModal = ({
                   "cursor-pointer text-xs font-semibold text-primary underline hover:no-underline focus-visible:outline-none"
                 }
               />
+              {nftMintResponse.state === "active" &&
+                nftMintResponse.success && (
+                  <p>
+                    NFT minted successfully. You can check your new nft on{" "}
+                    <a
+                      target="_blank"
+                      href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                    >
+                      minanft
+                    </a>
+                  </p>
+                )}
+              {nftMintResponse.state === "active" &&
+                !nftMintResponse.success && (
+                  <p>NFT mint failed {nftMintResponse.message}</p>
+                )}
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">
