@@ -169,10 +169,14 @@ export default function Marketplace() {
                 <Tooltip.Trigger asChild>
                   <Link
                     href="/traits-info"
-                    className="flex h-10 items-center justify-center gap-2 rounded-md border border-primary bg-primary px-3 text-white hover:bg-primary/90 hover:opacity-80"
+                    className="flex h-10 items-center justify-center gap-2 rounded-md border border-green-950 bg-green-950  px-3 font-semibold uppercase text-white hover:opacity-90"
                   >
                     <span>Traits Info</span>
-                    <InfoCircledIcon className="text-white" />
+                    <InfoCircledIcon
+                      className="text-white"
+                      width={18}
+                      height={18}
+                    />
                   </Link>
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
