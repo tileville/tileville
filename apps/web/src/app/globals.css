@@ -102,6 +102,10 @@ button {
   font-family: inherit;
 }
 
+button:focus-visible{
+  outline: none;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
