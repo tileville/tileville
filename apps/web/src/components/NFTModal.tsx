@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import { getTime, isFuture } from "date-fns";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
+import { Spinner } from "./common/Spinner";
 
 type Trait = {
   key: string;
@@ -62,6 +63,7 @@ export const NFTModal = ({
   txnHash: string | null;
 }) => {
   // Function to parse traits
+  const [isLoading, setisLoading] = useState(false);
   const configData: UseQueryResult<void | GlobalConfig, unknown> =
     useGlobalConfig("config_v1");
   const configValues = configData.data?.config_values as
@@ -95,9 +97,10 @@ export const NFTModal = ({
 
   const handleMint = async () => {
     //TODO: Handle loading state for mint button
-
+    setisLoading(true);
     try {
       await payNFTMintFees({ nft_id: nftID, nft_price: nftPrice });
+      setisLoading(false);
     } catch (error) {
       //TODO: Handle error with proper toast
     }
@@ -181,7 +184,9 @@ export const NFTModal = ({
               />
             </div>
             <div className="bg-primary/30 px-4 py-8">
-              <h1 className="text-2xl font-semibold leading-4">{name}</h1>
+              <Dialog.Title className="!mb-0 text-2xl font-semibold leading-4">
+                {name}
+              </Dialog.Title>
               <div className="my-3">
                 Price:{" "}
                 <span>
@@ -195,15 +200,21 @@ export const NFTModal = ({
                   />
                 )}
                 <button
-                  className="h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
+                  className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
                   onClick={handleMint}
-                  disabled={isMintingDisabled}
+                  disabled={isMintingDisabled || isLoading}
                 >
                   {!!networkStore.address
                     ? isMintingDisabled
                       ? `MINTING STARTS SOON`
                       : "MINT"
                     : "Connect Wallet"}
+
+                  {isLoading && (
+                    <span className="absolute right-1/2 top-[5px] w-5 translate-x-14">
+                      <Spinner />
+                    </span>
+                  )}
                 </button>
               </Flex>
               <MintRegisterModal
