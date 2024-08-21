@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
@@ -24,6 +24,7 @@ import { globalConfigAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
 import toast from "react-hot-toast";
+import { useSessionStorage } from "react-use";
 
 type Trait = {
   key: string;
@@ -57,6 +58,8 @@ const INITIAL_MINT_RESPONSE = {
   txHash: "",
 };
 
+let nft_id_session_storage: number | null = null;
+
 export const NFTModal = ({
   traits,
   img_url,
@@ -79,7 +82,8 @@ export const NFTModal = ({
   txnHash: string | null;
 }) => {
   // Function to parse traits
-  const [isLoading, setisLoading] = useState(false);
+  const [payMintFeesLoading, setPayMintFeesLoading] = useState(false);
+  const [mintLoading, setMintLoading] = useState(false);
   const configData: UseQueryResult<void | GlobalConfig, unknown> =
     useGlobalConfig("config_v1");
   const configValues = configData.data?.config_values as
@@ -90,6 +94,15 @@ export const NFTModal = ({
   const globalConfig = useAtomValue(globalConfigAtom);
   const [nftMintResponse, setNftMintResponse] = useState(INITIAL_MINT_RESPONSE);
   const [mintTxnHash, setMintTxnHash] = useState("");
+  const [latestNftMintTxnHash] = useSessionStorage(
+    "NFT_MINT_TXN_HASH_LATEST",
+    ""
+  );
+
+  useEffect(() => {
+    setMintTxnHash(latestNftMintTxnHash.split("_")[1]);
+    nft_id_session_storage = +latestNftMintTxnHash.split("_")[0];
+  }, [latestNftMintTxnHash]);
 
   const networkStore = useNetworkStore();
   const { payNFTMintFees, mintNft } = usePayNFTMintFee();
@@ -117,7 +130,7 @@ export const NFTModal = ({
   const handlePayMintFees = async () => {
     setNftMintResponse(INITIAL_MINT_RESPONSE);
     //TODO: Handle loading state for mint button
-    setisLoading(true);
+    setPayMintFeesLoading(true);
     try {
       const response = await payNFTMintFees({
         nft_id: nftID,
@@ -128,22 +141,20 @@ export const NFTModal = ({
         setMintTxnHash(response.txn_hash);
       }
 
-      setNftMintResponse({ state: "active", ...response });
-
       console.log("response 119", response);
       console.log("nft mint response state 120", nftMintResponse);
       if (response.success) {
       }
-      setisLoading(false);
+      setPayMintFeesLoading(false);
     } catch (error) {
       //TODO: Handle error with proper toast
-      setisLoading(false);
+      setPayMintFeesLoading(false);
     }
   };
 
   const handleMint = async () => {
     //TODO: Handle loading state for mint button
-    setisLoading(true);
+    setMintLoading(true);
 
     try {
       const txnResponse = await fetch(
@@ -179,10 +190,10 @@ export const NFTModal = ({
       console.log("nft mint response state 120", nftMintResponse);
       if (response.success) {
       }
-      setisLoading(false);
+      setMintLoading(false);
     } catch (error) {
       //TODO: Handle error with proper toast
-      setisLoading(false);
+      setMintLoading(false);
     }
   };
 
@@ -282,7 +293,7 @@ export const NFTModal = ({
                 <button
                   className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
                   onClick={handlePayMintFees}
-                  disabled={isMintingDisabled || isLoading}
+                  disabled={isMintingDisabled || payMintFeesLoading}
                 >
                   {!!networkStore.address
                     ? isMintingDisabled
@@ -290,13 +301,26 @@ export const NFTModal = ({
                       : "PAY MINT FEE"
                     : "Connect Wallet"}
 
-                  {isLoading && (
+                  {payMintFeesLoading && (
                     <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
                       <Spinner />
                     </span>
                   )}
                 </button>
-                {mintTxnHash && <button onClick={handleMint}>MINT NFT</button>}
+                {(mintTxnHash || nft_id_session_storage === nftID) && (
+                  <button
+                    className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
+                    onClick={handleMint}
+                    disabled={isMintingDisabled || mintLoading}
+                  >
+                    {mintLoading && (
+                      <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
+                        <Spinner />
+                      </span>
+                    )}
+                    MINT NFT
+                  </button>
+                )}
               </Flex>
               <MintRegisterModal
                 triggerBtnClasses={
@@ -305,7 +329,7 @@ export const NFTModal = ({
               />
               {nftMintResponse.state === "active" &&
                 nftMintResponse.success && (
-                  <>
+                  <div className="hidden">
                     {toast.success(
                       (t) => (
                         <>
@@ -328,17 +352,7 @@ export const NFTModal = ({
                       ),
                       { id: "mint-success" }
                     )}
-
-                    <p>
-                      NFT minted successfully. You can check your new nft on{" "}
-                      <a
-                        target="_blank"
-                        href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
-                      >
-                        minanft
-                      </a>
-                    </p>
-                  </>
+                  </div>
                 )}
               <div className="hidden">
                 {nftMintResponse.state === "active" &&
