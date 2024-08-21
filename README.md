@@ -6,7 +6,7 @@
 
 # TileVille: Strategic City Development Game
 
-## Welcome to TileVille an experimental and progressive Mina Protocol wallet!
+## Welcome to TileVille an experimental and progressive Mina Protocol Game!
 
 </div>
 
@@ -19,7 +19,7 @@
 
 ### Installation 💻
 
-Make sure you're on the right Node.js version, and you got pnpm installed.
+Make sure you're on the right Node.js version >= 18, and you got pnpm installed.
 
 ```shell
 $ nvm use
