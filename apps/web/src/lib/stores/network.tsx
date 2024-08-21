@@ -284,6 +284,10 @@ export const useParticipationFee = () => {
 
 export const usePayNFTMintFee = () => {
   const networkStore = useNetworkStore();
+  const [, setLatestNftMintTxnHash] = useSessionStorage(
+    "NFT_MINT_TXN_HASH_LATEST",
+    ""
+  );
 
   const payNFTMintFees = async ({
     nft_id,
@@ -299,7 +303,7 @@ export const usePayNFTMintFee = () => {
     }
 
     //TODO: remove it after testing
-    nft_price = 0.1;
+    // nft_price = 0.1;
     try {
       const data: SendTransactionResult | ProviderError = await (
         window as any
@@ -314,7 +318,28 @@ export const usePayNFTMintFee = () => {
       // txn_hash = "5JuXu8EeYoSSVVbZ2Pj1p96HDpUt9ZqJxQs3t7WUkmcSGDRHm6h8";
       // Mainnet hash
       // txn_hash = "5JuE21RrRZnCmqai1ygTGbcW5pnShB9U9NDGYm5L37vjyTvYJ7TS";
-      
+
+      setLatestNftMintTxnHash(`${nft_id}_${txn_hash}`);
+
+      return { success: true, txn_hash };
+    } catch (err: any) {
+      toast(`Txn failed with error ${err.toString()}. report a bug`);
+      return { success: false, error: err };
+    }
+  };
+
+  const mintNft = async ({
+    nft_id,
+    txn_hash,
+  }: {
+    nft_id: number;
+    txn_hash: string;
+  }) => {
+    if (!networkStore.address) {
+      networkStore.connectWallet(false);
+      return null;
+    }
+    try {
       const nft_payload_response = await fetch(`/api/mint-nft`, {
         method: "POST",
         body: JSON.stringify({
@@ -329,22 +354,15 @@ export const usePayNFTMintFee = () => {
 
       const nft_payload = await nft_payload_response.json();
       console.log({ nft_payload });
+      if (nft_payload.success === false) {
+        return nft_payload;
+      }
       const response = await mintNFT(nft_payload);
       return response;
-    } catch (err: any) {
-      toast(`Txn failed with error ${err.toString()}. report a bug`);
-    }
-    try {
-      if (txn_hash) {
-        console.log("response hash", txn_hash);
-      } else {
-        console.log("toast error");
-      }
-    } catch (err: any) {
-      toast("Failed to pay nft mint fees😭");
-      return null;
+    } catch (error: any) {
+      toast(`Txn failed with error ${error.toString()}. report a bug`);
     }
   };
 
-  return { payNFTMintFees };
+  return { payNFTMintFees, mintNft };
 };

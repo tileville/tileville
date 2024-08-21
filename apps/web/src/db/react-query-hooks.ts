@@ -310,6 +310,29 @@ export const useMainnetTransactionStatus = (
   );
 };
 
+export const useMainnetTransactionStatusForMint = (txn_hash: string) => {
+  return useQuery(
+    ["transaction_status_mint_mainnet", txn_hash],
+    () =>
+      fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .catch((error) => {
+          return { success: false, error };
+        }),
+    {
+      enabled: !!txn_hash,
+      retry: 5,
+    }
+  );
+};
+
 export const useTransactionLogById = (wallet_address: string, id: number) => {
   return useQuery(
     ["transaction_log_by_id", wallet_address, id],

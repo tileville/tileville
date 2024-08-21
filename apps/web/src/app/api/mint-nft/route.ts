@@ -41,12 +41,24 @@ const postHandler = async (request: NextRequest) => {
     try {
       const jsonResponse = await response.json();
       console.log({ jsonResponse });
-      if (jsonResponse.blockConfirmationsCount < 1) {
+      if (
+        (jsonResponse.blockConfirmationsCount < 1 ||
+          jsonResponse.txStatus === "pending") &&
+        jsonResponse.txn_status !== "applied"
+      ) {
         return Response.json({
           success: false,
           code: ERROR_CODES.TXN_PENDING,
           message:
             "Transaction pending. Please try the operation after some time!",
+        });
+      }
+
+      if (jsonResponse.failureReason !== null) {
+        return Response.json({
+          success: false,
+          code: ERROR_CODES.TXN_FAILED,
+          message: `Transaction failed because of ${jsonResponse.failureReason}. If you see this message and your transaction succeeded, please report a bug!`,
         });
       }
     } catch (error) {
@@ -131,6 +143,7 @@ const postHandler = async (request: NextRequest) => {
         keys: modified_traits,
         ipfs,
         nft_id,
+        success: true,
       },
       { status: 200 }
     );

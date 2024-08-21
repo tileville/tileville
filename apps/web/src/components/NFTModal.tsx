@@ -6,8 +6,15 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
 import { useNetworkStore, usePayNFTMintFee } from "@/lib/stores/network";
-import { ATTRIBUTES_DATA } from "@/constants";
-import { useGlobalConfig } from "@/db/react-query-hooks";
+import {
+  ATTRIBUTES_DATA,
+  BLOCKBERRY_API_KEY,
+  BLOCKBERRY_MAINNET_BASE_URL,
+} from "@/constants";
+import {
+  useGlobalConfig,
+  useMainnetTransactionStatusForMint,
+} from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
 import { CountdownTimer } from "./common/CountdownTimer";
@@ -82,9 +89,11 @@ export const NFTModal = ({
   const totalNFTCount = parseInt(configValues?.total_nft_count || "0", 10);
   const globalConfig = useAtomValue(globalConfigAtom);
   const [nftMintResponse, setNftMintResponse] = useState(INITIAL_MINT_RESPONSE);
+  const [mintTxnHash, setMintTxnHash] = useState("");
 
   const networkStore = useNetworkStore();
-  const { payNFTMintFees } = usePayNFTMintFee();
+  const { payNFTMintFees, mintNft } = usePayNFTMintFee();
+
   const parseTraits = (traits: Json): Trait[] => {
     if (Array.isArray(traits)) {
       return traits.filter(
@@ -105,7 +114,7 @@ export const NFTModal = ({
 
   const parsedTraits = parseTraits(traits);
 
-  const handleMint = async () => {
+  const handlePayMintFees = async () => {
     setNftMintResponse(INITIAL_MINT_RESPONSE);
     //TODO: Handle loading state for mint button
     setisLoading(true);
@@ -114,6 +123,55 @@ export const NFTModal = ({
         nft_id: nftID,
         nft_price: nftPrice,
       });
+
+      if (response.success && response.txn_hash) {
+        setMintTxnHash(response.txn_hash);
+      }
+
+      setNftMintResponse({ state: "active", ...response });
+
+      console.log("response 119", response);
+      console.log("nft mint response state 120", nftMintResponse);
+      if (response.success) {
+      }
+      setisLoading(false);
+    } catch (error) {
+      //TODO: Handle error with proper toast
+      setisLoading(false);
+    }
+  };
+
+  const handleMint = async () => {
+    //TODO: Handle loading state for mint button
+    setisLoading(true);
+
+    try {
+      const txnResponse = await fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${mintTxnHash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      );
+      const txnStatusJson = await txnResponse.json();
+      if (txnStatusJson.blockConfirmationsCount < 1) {
+        toast("Please wait for the mint fee transaction to confirm");
+        return;
+      }
+    } catch (err) {
+      toast("Failed to check txn status for mint fees");
+      return;
+    }
+    try {
+      const response = await mintNft({
+        nft_id: nftID,
+        txn_hash: mintTxnHash,
+      });
+
+      if (response.success && response.txn_hash) {
+        setMintTxnHash(response.txn_hash);
+      }
 
       setNftMintResponse({ state: "active", ...response });
 
@@ -223,13 +281,13 @@ export const NFTModal = ({
                 )}
                 <button
                   className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
-                  onClick={handleMint}
+                  onClick={handlePayMintFees}
                   disabled={isMintingDisabled || isLoading}
                 >
                   {!!networkStore.address
                     ? isMintingDisabled
                       ? `MINTING STARTS SOON`
-                      : "MINT"
+                      : "PAY MINT FEE"
                     : "Connect Wallet"}
 
                   {isLoading && (
@@ -238,6 +296,7 @@ export const NFTModal = ({
                     </span>
                   )}
                 </button>
+                {mintTxnHash && <button onClick={handleMint}>MINT NFT</button>}
               </Flex>
               <MintRegisterModal
                 triggerBtnClasses={
