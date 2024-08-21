@@ -94,7 +94,6 @@ Thanks goes to these wonderful people 😊
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/satyambnsal"><img src="https://avatars.githubusercontent.com/u/13951843?v=4?s=100" width="100px;" alt="Satyam Bansal"/><br /><sub><b>Satyam Bansal</b></sub></a><br /><a href="https://github.com/tileville/tileville/commits?author=satyambnsal" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/yassmittal"><img src="https://avatars.githubusercontent.com/u/112745526?v=4?s=100" width="100px;" alt="Yash Mittal"/><br /><sub><b>Yash Mittal</b></sub></a><br /><a href="https://github.com/tileville/tileville/commits?author=yassmittal" title="Code">💻</a></td>
-      
     </tr>
   </tbody>
 </table>
