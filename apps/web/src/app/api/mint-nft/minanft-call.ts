@@ -127,7 +127,7 @@ export async function mintNFT(params: MintNFTParams) {
   const sha3_512 = await calculateSHA512(image as File);
   const reserved = await reservedPromise;
 
-  console.log("Reserved name", reserved);
+  // console.log("Reserved name", reserved);
   if (
     reserved === undefined ||
     reserved.isReserved !== true ||

@@ -16,6 +16,7 @@ import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
+import toast from "react-hot-toast";
 
 type Trait = {
   key: string;
@@ -45,6 +46,7 @@ const INITIAL_MINT_RESPONSE = {
   state: "idle",
   success: false,
   message: "",
+  reason: "",
   txHash: "",
 };
 
@@ -112,13 +114,17 @@ export const NFTModal = ({
         nft_id: nftID,
         nft_price: nftPrice,
       });
+
       setNftMintResponse({ state: "active", ...response });
+
+      console.log("response 119", response);
+      console.log("nft mint response state 120", nftMintResponse);
       if (response.success) {
       }
-
       setisLoading(false);
     } catch (error) {
       //TODO: Handle error with proper toast
+      setisLoading(false);
     }
   };
 
@@ -227,7 +233,7 @@ export const NFTModal = ({
                     : "Connect Wallet"}
 
                   {isLoading && (
-                    <span className="absolute right-1/2 top-[5px] w-5 translate-x-14">
+                    <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
                       <Spinner />
                     </span>
                   )}
@@ -240,20 +246,79 @@ export const NFTModal = ({
               />
               {nftMintResponse.state === "active" &&
                 nftMintResponse.success && (
-                  <p>
-                    NFT minted successfully. You can check your new nft on{" "}
-                    <a
-                      target="_blank"
-                      href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
-                    >
-                      minanft
-                    </a>
-                  </p>
+                  <>
+                    {toast.success(
+                      (t) => (
+                        <>
+                          <p>
+                            NFT minted successfully. You can check your new nft
+                            on{" "}
+                            <Link
+                              target="_blank"
+                              href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                              className="font-semibold text-primary underline hover:no-underline"
+                            >
+                              minanft
+                            </Link>
+                          </p>
+
+                          <button onClick={() => toast.dismiss(t.id)}>
+                            <Cross1Icon />
+                          </button>
+                        </>
+                      ),
+                      { id: "mint-success" }
+                    )}
+
+                    <p>
+                      NFT minted successfully. You can check your new nft on{" "}
+                      <a
+                        target="_blank"
+                        href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                      >
+                        minanft
+                      </a>
+                    </p>
+                  </>
                 )}
-              {nftMintResponse.state === "active" &&
-                !nftMintResponse.success && (
-                  <p>NFT mint failed {nftMintResponse.message}</p>
-                )}
+              <div className="hidden">
+                {nftMintResponse.state === "active" &&
+                  !nftMintResponse.success &&
+                  toast.custom(
+                    (t) => (
+                      <div
+                        className={`${
+                          t.visible ? "animate-enter" : "animate-leave"
+                        } pointer-events-auto flex w-full max-w-xs rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
+                      >
+                        <div className="w-0 flex-1 p-4">
+                          <div className="flex items-start">
+                            <div className="ml-3 flex-1">
+                              <p className="text-sm font-medium text-red-700">
+                                NFT mint failed 😭
+                              </p>
+                              <p className="mt-1 text-sm text-gray-500">
+                                {nftMintResponse.message}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => toast.dismiss(t.id)}
+                            className="flex w-full items-center justify-center rounded-none rounded-r-lg border border-transparent p-4 text-sm font-medium text-red-600 hover:text-red-500 focus:outline-none"
+                          >
+                            <Cross1Icon />
+                          </button>
+                        </div>
+                      </div>
+                    ),
+                    {
+                      id: "nft-mint-failed",
+                    }
+                  )}
+              </div>
+
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">
