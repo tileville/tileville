@@ -41,5 +41,6 @@ module.exports = withSentryConfig(nextConfig, {
   org: 'satyam-bansal',
   project: 'tileville',
   authToken: process.env.SENTRY_AUTH_TOKEN || "",
-  silent: false
+  silent: false,
+  telemetry: false
 })

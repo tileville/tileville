@@ -32,6 +32,7 @@ import {
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { useLocalStorage } from "react-use";
+// import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 export const useSendEmail = ({
   onSuccess,
@@ -195,12 +196,35 @@ export const useProfileLazyQuery = (walletAddress: string) => {
   const [authSignature] = useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY);
   return useQuery({
     queryKey: ["user_profile", walletAddress],
-    queryFn: async () =>
-      fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
+    queryFn: async () => {
+      if (!authSignature) {
+        console.warn("Auth signature missing in storage");
+        return;
+      }
+      return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
         headers: {
           "Auth-Signature": JSON.stringify(authSignature as string | ""),
+          "Wallet-Address": walletAddress,
         },
-      }).then((res) => res.json()),
+      })
+        .then((res) => res.json())
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+  });
+};
+
+export const useLeaderboardEntries = (competition_key: string) => {
+  return useQuery({
+    queryKey: ["leaderboard_entries", competition_key],
+    queryFn: async () => {
+      return fetch(`/api/leaderboard?competition_key=${competition_key}`, {})
+        .then((res) => res.json())
+        .catch((e) => {
+          console.error(e);
+        });
+    },
   });
 };
 
@@ -281,6 +305,29 @@ export const useMainnetTransactionStatus = (
         }),
     {
       enabled: !!txn_hash && txn_status === "PENDING",
+      retry: 5,
+    }
+  );
+};
+
+export const useMainnetTransactionStatusForMint = (txn_hash: string) => {
+  return useQuery(
+    ["transaction_status_mint_mainnet", txn_hash],
+    () =>
+      fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .catch((error) => {
+          return { success: false, error };
+        }),
+    {
+      enabled: !!txn_hash,
       retry: 5,
     }
   );

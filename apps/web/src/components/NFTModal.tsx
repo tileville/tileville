@@ -1,20 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
-import { useNetworkStore } from "@/lib/stores/network";
-import { ATTRIBUTES_DATA } from "@/constants";
-import { useGlobalConfig } from "@/db/react-query-hooks";
+import { useNetworkStore, usePayNFTMintFee } from "@/lib/stores/network";
+import {
+  ATTRIBUTES_DATA,
+  BLOCKBERRY_API_KEY,
+  BLOCKBERRY_MAINNET_BASE_URL,
+} from "@/constants";
+import {
+  useGlobalConfig,
+  useMainnetTransactionStatusForMint,
+} from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
 import { CountdownTimer } from "./common/CountdownTimer";
-import { getTime, isFuture } from "date-fns";
+import { getTime } from "date-fns";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
+import { Spinner } from "./common/Spinner";
+import toast from "react-hot-toast";
 
 type Trait = {
   key: string;
@@ -40,6 +49,14 @@ interface GlobalConfig {
   name: string | null;
 }
 
+const INITIAL_MINT_RESPONSE = {
+  state: "idle",
+  success: false,
+  message: "",
+  reason: "",
+  txHash: "",
+};
+
 export const NFTModal = ({
   traits,
   img_url,
@@ -47,6 +64,9 @@ export const NFTModal = ({
   name,
   nftPrice,
   renderStyle,
+  ownerAddress,
+  txnHash,
+  nftID,
 }: {
   traits: Json;
   img_url: string;
@@ -55,8 +75,11 @@ export const NFTModal = ({
   nftID: number;
   nftPrice: number;
   renderStyle: string;
+  ownerAddress: string | null;
+  txnHash: string | null;
 }) => {
   // Function to parse traits
+  const [isLoading, setisLoading] = useState(false);
   const configData: UseQueryResult<void | GlobalConfig, unknown> =
     useGlobalConfig("config_v1");
   const configValues = configData.data?.config_values as
@@ -65,8 +88,12 @@ export const NFTModal = ({
   const rarityData = configValues?.traits_rarity_counts;
   const totalNFTCount = parseInt(configValues?.total_nft_count || "0", 10);
   const globalConfig = useAtomValue(globalConfigAtom);
+  const [nftMintResponse, setNftMintResponse] = useState(INITIAL_MINT_RESPONSE);
+  const [mintTxnHash, setMintTxnHash] = useState("");
 
   const networkStore = useNetworkStore();
+  const { payNFTMintFees, mintNft } = usePayNFTMintFee();
+
   const parseTraits = (traits: Json): Trait[] => {
     if (Array.isArray(traits)) {
       return traits.filter(
@@ -87,15 +114,75 @@ export const NFTModal = ({
 
   const parsedTraits = parseTraits(traits);
 
-  const handlePayParticipationFess = () => {
-    if (!networkStore.address) {
-      try {
-        networkStore.connectWallet(false);
-      } catch (error) {
-        console.error(`Failed to connect with wallet`, error);
-      } finally {
+  const handlePayMintFees = async () => {
+    setNftMintResponse(INITIAL_MINT_RESPONSE);
+    //TODO: Handle loading state for mint button
+    setisLoading(true);
+    try {
+      const response = await payNFTMintFees({
+        nft_id: nftID,
+        nft_price: nftPrice,
+      });
+
+      if (response.success && response.txn_hash) {
+        setMintTxnHash(response.txn_hash);
+      }
+
+      setNftMintResponse({ state: "active", ...response });
+
+      console.log("response 119", response);
+      console.log("nft mint response state 120", nftMintResponse);
+      if (response.success) {
+      }
+      setisLoading(false);
+    } catch (error) {
+      //TODO: Handle error with proper toast
+      setisLoading(false);
+    }
+  };
+
+  const handleMint = async () => {
+    //TODO: Handle loading state for mint button
+    setisLoading(true);
+
+    try {
+      const txnResponse = await fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${mintTxnHash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      );
+      const txnStatusJson = await txnResponse.json();
+      if (txnStatusJson.blockConfirmationsCount < 1) {
+        toast("Please wait for the mint fee transaction to confirm");
         return;
       }
+    } catch (err) {
+      toast("Failed to check txn status for mint fees");
+      return;
+    }
+    try {
+      const response = await mintNft({
+        nft_id: nftID,
+        txn_hash: mintTxnHash,
+      });
+
+      if (response.success && response.txn_hash) {
+        setMintTxnHash(response.txn_hash);
+      }
+
+      setNftMintResponse({ state: "active", ...response });
+
+      console.log("response 119", response);
+      console.log("nft mint response state 120", nftMintResponse);
+      if (response.success) {
+      }
+      setisLoading(false);
+    } catch (error) {
+      //TODO: Handle error with proper toast
+      setisLoading(false);
     }
   };
 
@@ -123,8 +210,8 @@ export const NFTModal = ({
       return "text-primary";
     }
   };
-  const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
-  // const isMintingEnabled = true;
+  // const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
+  const isMintingDisabled = false;
 
   return (
     <>
@@ -177,7 +264,9 @@ export const NFTModal = ({
               />
             </div>
             <div className="bg-primary/30 px-4 py-8">
-              <h1 className="text-2xl font-semibold leading-4">{name}</h1>
+              <Dialog.Title className="!mb-0 text-2xl font-semibold leading-4">
+                {name}
+              </Dialog.Title>
               <div className="my-3">
                 Price:{" "}
                 <span>
@@ -191,22 +280,104 @@ export const NFTModal = ({
                   />
                 )}
                 <button
-                  className="h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
-                  onClick={handlePayParticipationFess}
-                  disabled={isMintingDisabled}
+                  className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
+                  onClick={handlePayMintFees}
+                  disabled={isMintingDisabled || isLoading}
                 >
                   {!!networkStore.address
                     ? isMintingDisabled
                       ? `MINTING STARTS SOON`
-                      : "MINT"
+                      : "PAY MINT FEE"
                     : "Connect Wallet"}
+
+                  {isLoading && (
+                    <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
+                      <Spinner />
+                    </span>
+                  )}
                 </button>
+                {mintTxnHash && <button onClick={handleMint}>MINT NFT</button>}
               </Flex>
               <MintRegisterModal
                 triggerBtnClasses={
                   "cursor-pointer text-xs font-semibold text-primary underline hover:no-underline focus-visible:outline-none"
                 }
               />
+              {nftMintResponse.state === "active" &&
+                nftMintResponse.success && (
+                  <>
+                    {toast.success(
+                      (t) => (
+                        <>
+                          <p>
+                            NFT minted successfully. You can check your new nft
+                            on{" "}
+                            <Link
+                              target="_blank"
+                              href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                              className="font-semibold text-primary underline hover:no-underline"
+                            >
+                              minanft
+                            </Link>
+                          </p>
+
+                          <button onClick={() => toast.dismiss(t.id)}>
+                            <Cross1Icon />
+                          </button>
+                        </>
+                      ),
+                      { id: "mint-success" }
+                    )}
+
+                    <p>
+                      NFT minted successfully. You can check your new nft on{" "}
+                      <a
+                        target="_blank"
+                        href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                      >
+                        minanft
+                      </a>
+                    </p>
+                  </>
+                )}
+              <div className="hidden">
+                {nftMintResponse.state === "active" &&
+                  !nftMintResponse.success &&
+                  toast.custom(
+                    (t) => (
+                      <div
+                        className={`${
+                          t.visible ? "animate-enter" : "animate-leave"
+                        } pointer-events-auto flex w-full max-w-xs rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
+                      >
+                        <div className="w-0 flex-1 p-4">
+                          <div className="flex items-start">
+                            <div className="ml-3 flex-1">
+                              <p className="text-sm font-medium text-red-700">
+                                NFT mint failed 😭
+                              </p>
+                              <p className="mt-1 text-sm text-gray-500">
+                                {nftMintResponse.message}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => toast.dismiss(t.id)}
+                            className="flex w-full items-center justify-center rounded-none rounded-r-lg border border-transparent p-4 text-sm font-medium text-red-600 hover:text-red-500 focus:outline-none"
+                          >
+                            <Cross1Icon />
+                          </button>
+                        </div>
+                      </div>
+                    ),
+                    {
+                      id: "nft-mint-failed",
+                    }
+                  )}
+              </div>
+
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">

@@ -1,5 +1,3 @@
-// "use client";
-
 import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
@@ -8,6 +6,7 @@ import { Theme } from "@radix-ui/themes";
 import { Footer } from "@/components/Footer";
 import { ClientLayout } from "./ClientLayout";
 import { PHProvider } from "./providers";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "TileVille",
@@ -38,6 +37,7 @@ export default function RootLayout({
           </PHProvider>
         </Theme>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

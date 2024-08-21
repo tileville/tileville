@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DesktopNavBar } from "@/components/DesktopNavBar";
 import { Provider as JotaiProvider } from "jotai";
@@ -22,7 +21,6 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
           <DesktopNavBar autoConnect={true} />
           {children}
         </QueryClientProvider>
-        <Toaster />
       </JotaiProvider>
     </>
   );
