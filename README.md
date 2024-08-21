@@ -48,7 +48,7 @@ $ pnpm build
 
 ## Structure 🏗️
 
-This is a monorepo for all the Pallad-related code.
+This is a monorepo for all the TileVille-related code.
 
 - `apps`
   - `web` - Browser extension app.
