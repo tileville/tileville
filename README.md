@@ -46,25 +46,6 @@ Build all the modules in repo:
 $ pnpm build
 ```
 
-## Structure 🏗️
-
-This is a monorepo for all the TileVille-related code.
-
-- `apps`
-  - `web` - Browser extension app.
-- `packages/chain`
-
-  - `_template` - Template to follow for new packages in this repo.
-  - `common` - Common configuration for packages (tsup and vitest).
-  - `features` - Wallet features, views, and UI components.
-  - `key-management` - Blockchain agnostic key management.
-  - `mina-core` - Core Mina Package SDK.
-  - `offchain-data` - Client for fetching off-chain data like fiat price.
-  - `persistence` - Persistence logic for wallet related data.
-  - `util` - Shared util functions for other packages.
-  - `vault` - Credentials storage.
-  - `web-provider` - Web provider to consume wallet interfaces in browser context.
-
 ## Development 🛠️
 
 Set up the dev server of web:
