@@ -299,17 +299,22 @@ export const usePayNFTMintFee = () => {
     }
 
     //TODO: remove it after testing
-    // nft_price = 0.1;
+    nft_price = 0.1;
     try {
-      // const data: SendTransactionResult | ProviderError = await (
-      //   window as any
-      // )?.mina?.sendPayment({
-      //   amount: nft_price,
-      //   to: DEFAULT_TRASURY_ADDRESS,
-      //   memo: `Pay ${nft_price} MINA to mint ${nft_id}`,
-      // });
-      // txn_hash = (data as SendTransactionResult).hash;
-      txn_hash = "5JuXu8EeYoSSVVbZ2Pj1p96HDpUt9ZqJxQs3t7WUkmcSGDRHm6h8";
+      const data: SendTransactionResult | ProviderError = await (
+        window as any
+      )?.mina?.sendPayment({
+        amount: nft_price,
+        to: DEFAULT_TRASURY_ADDRESS,
+        memo: `Pay ${nft_price} MINA to mint ${nft_id}`,
+      });
+      txn_hash = (data as SendTransactionResult).hash;
+      //TODO: Remove this in production
+      // Devnet hash
+      // txn_hash = "5JuXu8EeYoSSVVbZ2Pj1p96HDpUt9ZqJxQs3t7WUkmcSGDRHm6h8";
+      // Mainnet hash
+      // txn_hash = "5JuE21RrRZnCmqai1ygTGbcW5pnShB9U9NDGYm5L37vjyTvYJ7TS";
+      
       const nft_payload_response = await fetch(`/api/mint-nft`, {
         method: "POST",
         body: JSON.stringify({

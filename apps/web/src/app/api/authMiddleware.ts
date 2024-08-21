@@ -12,7 +12,7 @@ export function withAuth(handler: NextApiHandler) {
       const wallet_address = req.headers.get("Wallet-Address") || "";
       const authSignature = req.headers.get("Auth-Signature");
 
-      console.log("===18", { wallet_address, authSignature });
+      // console.log("===18", { wallet_address, authSignature });
       if (!authSignature) {
         return Response.json(
           {

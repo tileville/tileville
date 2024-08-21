@@ -1,3 +1,5 @@
+"use server";
+
 import { NextRequest } from "next/server";
 import { fetchNFTImageUrl } from "./server-utils";
 import { withAuth } from "../authMiddleware";
@@ -12,6 +14,7 @@ import { ProofOfNFT } from "./minanft-call";
 import { CHAIN_NAME, MINANFT_CONTRACT_ADDRESS } from "./constants";
 import { pinFile } from "./server-utils";
 import { createFileFromImageUrl } from "./common-utils";
+import { ERROR_CODES } from "@/constants/errorCodes";
 
 const postHandler = async (request: NextRequest) => {
   const payload = await request.json();
@@ -35,9 +38,26 @@ const postHandler = async (request: NextRequest) => {
       }
     );
 
-    const jsonResponse = await response.json();
-
-    console.log({ jsonResponse });
+    try {
+      const jsonResponse = await response.json();
+      console.log({ jsonResponse });
+      if (jsonResponse.blockConfirmationsCount < 1) {
+        return Response.json({
+          success: false,
+          code: ERROR_CODES.TXN_PENDING,
+          message:
+            "Transaction pending. Please try the operation after some time!",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return Response.json({
+        success: false,
+        code: ERROR_CODES.TXN_FAILED,
+        message:
+          "Transaction failed. If you see this message and your transaction succeeded, please report a bug!",
+      });
+    }
 
     // check nft_id
     // check if nft is already minted or not

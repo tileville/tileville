@@ -13,7 +13,7 @@ async function isProfileExist(wallet_address: string): Promise<boolean> {
   return false;
 }
 
-export const getHandler = async (request: NextRequest) => {
+const getHandler = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
   const wallet_address = searchParams.get("wallet_address") || "";
 

@@ -42,12 +42,6 @@ export async function sendTransaction(params: {
     mintParams,
     name,
   } = params;
-  console.log("sendTransaction", {
-    serializedTransaction,
-    signedData,
-    contractAddress,
-    mintParams,
-  });
 
   const args = JSON.stringify({
     contractAddress,
@@ -72,9 +66,8 @@ export async function sendTransaction(params: {
     mode: "async",
   });
 
-  console.log(`zkCloudWorker answer:`, answer);
+  // console.log(`zkCloudWorker answer:`, answer);
   const jobId = answer.jobId;
-  console.log(`jobId:`, jobId);
   let result;
   while (result === undefined && answer.jobStatus !== "failed") {
     await sleep(5000);
@@ -82,7 +75,7 @@ export async function sendTransaction(params: {
       command: "jobResult",
       jobId,
     });
-    console.log(`jobResult api call result:`, answer);
+    // console.log(`jobResult api call result:`, answer);
     result = answer.result;
     if (result !== undefined) console.log(`jobResult result:`, result);
   }
@@ -102,7 +95,7 @@ export async function prepareTransaction(params: SimpleMintNFT): Promise<{
   mintParams?: string;
 }> {
   const { contractAddress } = params;
-  console.log("sendSimpleMintCommand", params);
+  // console.log("sendSimpleMintCommand", params);
 
   const args = JSON.stringify({
     contractAddress,
@@ -121,7 +114,7 @@ export async function prepareTransaction(params: SimpleMintNFT): Promise<{
 
   console.log(`zkCloudWorker answer:`, answer);
   const jobId = answer.jobId;
-  console.log(`jobId:`, jobId);
+  // console.log(`jobId:`, jobId);
   let result;
   while (result === undefined && answer.jobStatus !== "failed") {
     await sleep(5000);

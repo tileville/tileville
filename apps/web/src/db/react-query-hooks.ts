@@ -215,6 +215,19 @@ export const useProfileLazyQuery = (walletAddress: string) => {
   });
 };
 
+export const useLeaderboardEntries = (competition_key: string) => {
+  return useQuery({
+    queryKey: ["leaderboard_entries", competition_key],
+    queryFn: async () => {
+      return fetch(`/api/leaderboard?competition_key=${competition_key}`, {})
+        .then((res) => res.json())
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+  });
+};
+
 export const useCompetitionsName = () => {
   return useQuery(
     ["tileville_competitions_name"],
