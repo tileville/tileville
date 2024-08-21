@@ -316,6 +316,7 @@ export const usePayNFTMintFee = () => {
       //TODO: Remove this in production
       // Devnet hash
       // txn_hash = "5JuXu8EeYoSSVVbZ2Pj1p96HDpUt9ZqJxQs3t7WUkmcSGDRHm6h8";
+
       // Mainnet hash
       // txn_hash = "5JuE21RrRZnCmqai1ygTGbcW5pnShB9U9NDGYm5L37vjyTvYJ7TS";
 
