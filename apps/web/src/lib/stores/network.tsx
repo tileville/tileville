@@ -20,6 +20,9 @@ import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
 import { mintNFT } from "@/app/api/mint-nft/minanft-call";
+import { useSetAtom } from "jotai";
+import { mintProgressAtom } from "@/contexts/atoms";
+import { useMintNFT } from "@/hooks/useMintNFT";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
@@ -284,58 +287,10 @@ export const useParticipationFee = () => {
 
 export const usePayNFTMintFee = () => {
   const networkStore = useNetworkStore();
-  const [, setLatestNftMintTxnHash] = useSessionStorage(
-    "NFT_MINT_TXN_HASH_LATEST",
-    ""
-  );
+  const setMintProgress = useSetAtom(mintProgressAtom);
+  const { mintMINANFTHelper } = useMintNFT();
 
-  const payNFTMintFees = async ({
-    nft_id,
-    nft_price,
-  }: {
-    nft_id: number;
-    nft_price: number;
-  }): Promise<any> => {
-    let txn_hash;
-    if (!networkStore.address) {
-      networkStore.connectWallet(false);
-      return null;
-    }
-
-    //TODO: remove it after testing
-    // nft_price = 0.1;
-    try {
-      const data: SendTransactionResult | ProviderError = await (
-        window as any
-      )?.mina?.sendPayment({
-        amount: nft_price,
-        to: DEFAULT_TRASURY_ADDRESS,
-        memo: `Pay ${nft_price} MINA to mint ${nft_id}`,
-      });
-      txn_hash = (data as SendTransactionResult).hash;
-      //TODO: Remove this in production
-      // Devnet hash
-      // txn_hash = "5JuXu8EeYoSSVVbZ2Pj1p96HDpUt9ZqJxQs3t7WUkmcSGDRHm6h8";
-
-      // Mainnet hash
-      // txn_hash = "5JuE21RrRZnCmqai1ygTGbcW5pnShB9U9NDGYm5L37vjyTvYJ7TS";
-
-      setLatestNftMintTxnHash(`${nft_id}_${txn_hash}`);
-
-      return { success: true, txn_hash };
-    } catch (err: any) {
-      toast(`Txn failed with error ${err.toString()}. report a bug`);
-      return { success: false, error: err };
-    }
-  };
-
-  const mintNft = async ({
-    nft_id,
-    txn_hash,
-  }: {
-    nft_id: number;
-    txn_hash: string;
-  }) => {
+  const mintNft = async ({ nft_id }: { nft_id: number }) => {
     if (!networkStore.address) {
       networkStore.connectWallet(false);
       return null;
@@ -346,7 +301,6 @@ export const usePayNFTMintFee = () => {
         body: JSON.stringify({
           wallet_address: networkStore.address,
           nft_id,
-          txn_hash,
         }),
         headers: {
           "Auth-Signature": "abv1",
@@ -358,12 +312,13 @@ export const usePayNFTMintFee = () => {
       if (nft_payload.success === false) {
         return nft_payload;
       }
-      const response = await mintNFT(nft_payload);
+      setMintProgress({ step: 1, message: "NFT Image uploaded to IPFS" });
+      const response = await mintMINANFTHelper(nft_payload);
       return response;
     } catch (error: any) {
       toast(`Txn failed with error ${error.toString()}. report a bug`);
     }
   };
 
-  return { payNFTMintFees, mintNft };
+  return { mintNft };
 };

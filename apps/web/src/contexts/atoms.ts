@@ -14,3 +14,8 @@ export const gameplayDisallowTypeAtom = atom<DisallowType>(
 export const globalConfigAtom = atom<{ [key: string]: any }>(
   GLOBAL_CONFIG_DEFAULT
 );
+
+export const mintProgressAtom = atom<{ step: number; message: string }>({
+  step: 0,
+  message: "YET_TO_START",
+});
