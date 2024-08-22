@@ -9,6 +9,7 @@ import { useNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import Link from "next/link";
 import { Pagination } from "@/components/common/Pagination";
+import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
 const toggleGroupOptions = [
   {
@@ -67,6 +68,8 @@ export default function Marketplace() {
   const [renderStyle, setRenderStyle] = useState(
     toggleGroupOptions[0].gridApplyClass
   );
+  const {response} = useFetchNFTSAlgolia()
+  
 
   //TODO: Remove active search term. there should be only one search state variablle
   const { data, isLoading, isError, error } = useNFTEntries({
