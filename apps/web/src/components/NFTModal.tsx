@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import Image from "next/image";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
+import toast from "react-hot-toast";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
 import { useNetworkStore, usePayNFTMintFee } from "@/lib/stores/network";
 import { ATTRIBUTES_DATA } from "@/constants";
@@ -12,12 +13,13 @@ import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { getTime } from "date-fns";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
-import toast from "react-hot-toast";
-
+import { StepProgressBar } from "./ProgressBar";
+import { useMintNFT } from "@/hooks/useMintNFT";
+// import ProgressBar from "@/components/ProgressBar";
 type Trait = {
   key: string;
   value: string | number;
@@ -85,6 +87,9 @@ export const NFTModal = ({
 
   const networkStore = useNetworkStore();
   const { mintNft } = usePayNFTMintFee();
+  const setMintProgress = useSetAtom(mintProgressAtom);
+  const [error, setError] = useState<string | null>(null);
+  const { mintMINANFTHelper } = useMintNFT();
 
   const parseTraits = (traits: Json): Trait[] => {
     if (Array.isArray(traits)) {
@@ -108,6 +113,12 @@ export const NFTModal = ({
 
   const handleMint = async () => {
     setMintLoading(true);
+    setError(null);
+
+    setMintProgress({
+      step: 1,
+      message: "Mint Started",
+    });
 
     try {
       const response = await mintNft({
@@ -118,6 +129,7 @@ export const NFTModal = ({
         setMintTxnHash(response.txn_hash);
       }
 
+      // setMintProgress({ step: 6, message: "NFT Minted Successfully" });
       setNftMintResponse({ state: "active", ...response });
 
       console.log("response 119", response);
@@ -125,8 +137,25 @@ export const NFTModal = ({
       if (response.success) {
       }
       setMintLoading(false);
-    } catch (error) {
-      //TODO: Handle error with proper toast
+    } catch (err) {
+      console.error("Minting error:", err);
+
+      let errorMessage: string;
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      } else {
+        errorMessage = "An unknown error occurred during minting";
+      }
+
+      setError(errorMessage);
+      setMintProgress((prev) => ({
+        ...prev,
+        message: errorMessage,
+      }));
+    } finally {
       setMintLoading(false);
     }
   };
@@ -242,6 +271,16 @@ export const NFTModal = ({
                       : "MINT NFT"
                     : "Connect Wallet"}
                 </button>
+
+                {mintProgress.step > 0 && (
+                  <div className="mt-4">
+                    <StepProgressBar
+                      currentStep={mintProgress.step}
+                      message={mintProgress.message}
+                      error={error}
+                    />
+                  </div>
+                )}
               </Flex>
               <MintRegisterModal
                 triggerBtnClasses={

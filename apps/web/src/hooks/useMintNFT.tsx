@@ -86,7 +86,7 @@ export function useMintNFT() {
     }
 
     setMintProgress({
-      step: 2,
+      step: 3,
       message: "Loaded O1JS and MINANFT Environment",
     });
 
@@ -155,7 +155,7 @@ export function useMintNFT() {
     }
 
     setMintProgress({
-      step: 3,
+      step: 4,
       message: "NFT Name reserved",
     });
 
@@ -173,7 +173,7 @@ export function useMintNFT() {
     const imageData = new FileData({
       fileRoot: Field(0),
       height: 0,
-      filename: image.name.substring(0, 30),
+      filename: image!.name.substring(0, 30),
       size: image!.size,
       mimeType: image!.type.substring(0, 30),
       sha3_512,
@@ -266,7 +266,7 @@ export function useMintNFT() {
     console.log("Transaction result", txResult);
     console.time("sent transaction");
     setMintProgress({
-      step: 4,
+      step: 5,
       message: "Transaction Sent!",
     });
     const signedData = txResult?.signedData;
@@ -283,7 +283,7 @@ export function useMintNFT() {
       name,
     });
     setMintProgress({
-      step: 5,
+      step: 6,
       message: "NFT Minted",
     });
 

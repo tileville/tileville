@@ -17,5 +17,5 @@ export const globalConfigAtom = atom<{ [key: string]: any }>(
 
 export const mintProgressAtom = atom<{ step: number; message: string }>({
   step: 0,
-  message: "YET_TO_START",
+  message: "Mint Started",
 });

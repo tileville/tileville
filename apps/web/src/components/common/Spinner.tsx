@@ -1,3 +1,3 @@
-export const Spinner = () => {
-  return <span className="loader"></span>;
+export const Spinner = ({ className }: { className?: string }) => {
+  return <span className={`${className} loader`}></span>;
 };

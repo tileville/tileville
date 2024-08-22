@@ -19,7 +19,7 @@ import { addTransactionLog } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
-import { mintNFT } from "@/app/api/mint-nft/minanft-call";
+// import { mintNFT } from "@/app/api/mint-nft/minanft-call";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintNFT } from "@/hooks/useMintNFT";
@@ -312,7 +312,7 @@ export const usePayNFTMintFee = () => {
       if (nft_payload.success === false) {
         return nft_payload;
       }
-      setMintProgress({ step: 1, message: "NFT Image uploaded to IPFS" });
+      setMintProgress({ step: 2, message: "NFT Image uploaded to IPFS" });
       const response = await mintMINANFTHelper(nft_payload);
       return response;
     } catch (error: any) {
