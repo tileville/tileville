@@ -3,7 +3,7 @@ import {
   ACCOUNT_AUTH_MESSAGE,
 } from "@/constants";
 import { useNetworkStore } from "@/lib/stores/network";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useLocalStorage } from "react-use";
 

@@ -15,7 +15,7 @@ const toggleGroupOptions = [
   {
     iconSrc: "/icons/gridFour.svg",
     gridApplyClass:
-      "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4",
+      "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
     id: 0,
   },
 
@@ -76,8 +76,7 @@ export default function Marketplace() {
     currentPage,
   });
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
-  console.log({mintNFTHitsResponse})
-
+  console.log({ mintNFTHitsResponse });
 
   const handleSearchAction = useCallback(() => {
     setActiveSearchTerm(searchTerm);
@@ -232,6 +231,7 @@ export default function Marketplace() {
             <div>Owner</div>
             <div>Listed Time</div>
             <div>Listed Price</div>
+            <div>MINTED</div>
           </div>
         )}
 
@@ -263,7 +263,9 @@ export default function Marketplace() {
                       nftPrice={nft.price}
                       renderStyle={renderStyle}
                       ownerAddress={nft.owner_address}
-                      algoliaHitData = {mintNFTHitsResponse.find(({name}) => name === nft.name)}
+                      algoliaHitData={mintNFTHitsResponse.find(
+                        ({ name }) => name === nft.name
+                      )}
                       // txnHash={nft.txn_hash}
                     />
                   );

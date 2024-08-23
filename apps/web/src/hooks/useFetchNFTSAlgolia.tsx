@@ -1,5 +1,5 @@
 "use client";
-import { CHAIN_NAME } from "@/app/api/mint-nft/constants";
+// import { CHAIN_NAME } from "@/app/api/mint-nft/constants";
 import algoliasearch from "algoliasearch";
 import { useEffect, useState } from "react";
 

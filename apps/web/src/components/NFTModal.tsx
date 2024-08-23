@@ -18,9 +18,13 @@ import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
 import { StepProgressBar } from "./ProgressBar";
-import { useMintNFT } from "@/hooks/useMintNFT";
+// import { useMintNFT } from "@/hooks/useMintNFT";
 import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
-import { getMINANFTLink, getMINAScanAccountLink } from "@/lib/helpers";
+import {
+  formatAddress,
+  getMINANFTLink,
+  getMINAScanAccountLink,
+} from "@/lib/helpers";
 // import ProgressBar from "@/components/ProgressBar";
 type Trait = {
   key: string;
@@ -205,7 +209,7 @@ export const NFTModal = ({
     <>
       <Dialog.Root>
         <Dialog.Trigger>
-          <div className="border-primary-30 group/item listItem fade-slide-in cursor-pointer overflow-hidden rounded-md transition-colors">
+          <div className="border-primary-30 group/item listItem fade-slide-in relative cursor-pointer overflow-hidden rounded-md transition-colors">
             <div className="nft-img w-full overflow-hidden">
               <Image
                 className="h-full w-full object-cover transition-all group-hover/item:scale-110"
@@ -231,11 +235,17 @@ export const NFTModal = ({
                 </>
               )}
 
-              <div className="font-semibold">
-                {nftPrice}
-                <span className="text-primary-50"> MINA</span>
+              <div className="mt-1 flex items-center justify-between">
+                <div className="font-semibold">
+                  {nftPrice}
+                  <span className="text-primary-50"> MINA</span>
+                </div>
               </div>
-              {algoliaHitData && <p>Already Minted</p>}
+              {algoliaHitData && (
+                <div className="mt-1 rounded-md bg-primary/30 p-1 text-center text-sm">
+                  Already Minted
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Trigger>
@@ -291,22 +301,28 @@ export const NFTModal = ({
                 </button>
 
                 {!!algoliaHitData && (
-                  <div>
-                    <a
+                  <div className="flex justify-between gap-1 text-sm">
+                    <Link
                       target="_blank"
                       href={getMINAScanAccountLink(algoliaHitData.owner)}
+                      className="font-semibold text-primary underline hover:no-underline"
                     >
-                      Owned by {algoliaHitData.owner}
-                    </a>
-                    <a target="_blank" href={algoliaHitData.external_url}>
+                      Owned by {formatAddress(algoliaHitData.owner)}
+                    </Link>
+                    <Link
+                      target="_blank"
+                      href={algoliaHitData.external_url}
+                      className="font-semibold text-primary underline hover:no-underline"
+                    >
                       See on MinaScan
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       target="_blank"
                       href={getMINANFTLink(algoliaHitData.hash)}
+                      className="font-semibold text-primary underline hover:no-underline"
                     >
                       See on minanft.io
-                    </a>
+                    </Link>
                   </div>
                 )}
 
@@ -319,6 +335,20 @@ export const NFTModal = ({
                     />
                   </div>
                 )}
+
+                {nftMintResponse.state === "active" &&
+                  nftMintResponse.success && (
+                    <p className="text-sm">
+                      NFT minted successfully🎉. You can check your new nft on{" "}
+                      <Link
+                        target="_blank"
+                        href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                        className="font-semibold text-primary underline hover:no-underline"
+                      >
+                        minanft
+                      </Link>
+                    </p>
+                  )}
               </Flex>
               <MintRegisterModal
                 triggerBtnClasses={
@@ -329,26 +359,21 @@ export const NFTModal = ({
                 nftMintResponse.success && (
                   <div className="hidden">
                     {toast.success(
-                      (t) => (
-                        <>
-                          <p>
-                            NFT minted successfully. You can check your new nft
-                            on{" "}
-                            <Link
-                              target="_blank"
-                              href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
-                              className="font-semibold text-primary underline hover:no-underline"
-                            >
-                              minanft
-                            </Link>
-                          </p>
-
-                          <button onClick={() => toast.dismiss(t.id)}>
-                            <Cross1Icon />
-                          </button>
-                        </>
-                      ),
-                      { id: "mint-success" }
+                      <>
+                        <p>
+                          NFT minted successfully. You can check your new nft on{" "}
+                          <Link
+                            target="_blank"
+                            href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                            className="font-semibold text-primary underline hover:no-underline"
+                          >
+                            minanft
+                          </Link>
+                        </p>
+                      </>,
+                      {
+                        id: "mint-success-toast",
+                      }
                     )}
                   </div>
                 )}
