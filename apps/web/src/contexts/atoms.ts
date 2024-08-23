@@ -1,4 +1,5 @@
 import { GLOBAL_CONFIG_DEFAULT } from "@/constants";
+import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
 import { atom } from "jotai";
 
 type DisallowType =
@@ -19,3 +20,5 @@ export const mintProgressAtom = atom<{ step: number; message: string }>({
   step: 0,
   message: "Mint Started",
 });
+
+export const algoliaHitsResponseAtom = atom<AlgoliaHitResponse[]>([]);

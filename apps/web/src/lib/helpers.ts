@@ -16,17 +16,17 @@ export function formatTimestampToReadableDate(timestamp: string): string {
   const date = new Date(timestamp);
 
   const options: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
   };
 
-  return date.toLocaleDateString('en-US', options);
+  return date.toLocaleDateString("en-US", options);
 }
 
 export function formatTimestampToReadableAge(timestamp: string): string {
@@ -46,10 +46,22 @@ export function formatTimestampToReadableAge(timestamp: string): string {
   const diffInHours = Math.floor(diffInMinutes / 60);
   if (diffInHours < 24) {
     const minutes = diffInMinutes % 60;
-    return minutes === 0 ? `${diffInHours} hours` : `${diffInHours} hours ${minutes} minutes`;
+    return minutes === 0
+      ? `${diffInHours} hours`
+      : `${diffInHours} hours ${minutes} minutes`;
   }
 
   const diffInDays = Math.floor(diffInHours / 24);
   const hours = diffInHours % 24;
-  return hours === 0 ? `${diffInDays} days` : `${diffInDays} days ${hours} hours`;
+  return hours === 0
+    ? `${diffInDays} days`
+    : `${diffInDays} days ${hours} hours`;
 }
+
+export const getMinaScanLink = (txnHash: string) =>
+  `https://minascan.io/mainnet/tx/${txnHash}?type=zk-tx`;
+export const getMINANFTLink = (txnHash: string) =>
+  `https://minanft.io/explore?query=${txnHash}`;
+
+export const getMINAScanAccountLink = (address: string) =>
+  `https://minascan.io/mainnet/account/${address}`;

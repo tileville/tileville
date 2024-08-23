@@ -68,7 +68,6 @@ export default function Marketplace() {
   const [renderStyle, setRenderStyle] = useState(
     toggleGroupOptions[0].gridApplyClass
   );
-  const { response } = useFetchNFTSAlgolia();
 
   //TODO: Remove active search term. there should be only one search state variablle
   const { data, isLoading, isError, error } = useNFTEntries({
@@ -76,6 +75,9 @@ export default function Marketplace() {
     searchTerm: activeSearchTerm,
     currentPage,
   });
+  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
+  console.log({mintNFTHitsResponse})
+
 
   const handleSearchAction = useCallback(() => {
     setActiveSearchTerm(searchTerm);
@@ -261,6 +263,7 @@ export default function Marketplace() {
                       nftPrice={nft.price}
                       renderStyle={renderStyle}
                       ownerAddress={nft.owner_address}
+                      algoliaHitData = {mintNFTHitsResponse.find(({name}) => name === nft.name)}
                       // txnHash={nft.txn_hash}
                     />
                   );

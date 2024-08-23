@@ -7,18 +7,20 @@ import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
 import { useNetworkStore, usePayNFTMintFee } from "@/lib/stores/network";
-import { ATTRIBUTES_DATA } from "@/constants";
+import { ATTRIBUTES_DATA, isMockEnv } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
 import { CountdownTimer } from "./common/CountdownTimer";
-import { getTime } from "date-fns";
+import { getTime, isFuture } from "date-fns";
 import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
 import { StepProgressBar } from "./ProgressBar";
 import { useMintNFT } from "@/hooks/useMintNFT";
+import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
+import { getMINANFTLink, getMINAScanAccountLink } from "@/lib/helpers";
 // import ProgressBar from "@/components/ProgressBar";
 type Trait = {
   key: string;
@@ -60,6 +62,7 @@ export const NFTModal = ({
   nftPrice,
   renderStyle,
   nftID,
+  algoliaHitData,
 }: {
   traits: Json;
   img_url: string;
@@ -69,9 +72,9 @@ export const NFTModal = ({
   nftPrice: number;
   renderStyle: string;
   ownerAddress: string | null;
+  algoliaHitData: AlgoliaHitResponse | undefined;
 }) => {
   // Function to parse traits
-  const [payMintFeesLoading, setPayMintFeesLoading] = useState(false);
   const [mintLoading, setMintLoading] = useState(false);
   const configData: UseQueryResult<void | GlobalConfig, unknown> =
     useGlobalConfig("config_v1");
@@ -89,7 +92,6 @@ export const NFTModal = ({
   const { mintNft } = usePayNFTMintFee();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
-  const { mintMINANFTHelper } = useMintNFT();
 
   const parseTraits = (traits: Json): Trait[] => {
     if (Array.isArray(traits)) {
@@ -193,10 +195,12 @@ export const NFTModal = ({
       return "text-primary";
     }
   };
-  // const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
-  const isMintingDisabled = false;
 
-  console.log("mint progress", mintProgress);
+  const isMintingDisabled = isMockEnv
+    ? false
+    : isFuture(globalConfig.nft_mint_start_date);
+
+  console.log("mint progress", mintProgress, algoliaHitData);
   return (
     <>
       <Dialog.Root>
@@ -231,6 +235,7 @@ export const NFTModal = ({
                 {nftPrice}
                 <span className="text-primary-50"> MINA</span>
               </div>
+              {algoliaHitData && <p>Already Minted</p>}
             </div>
           </div>
         </Dialog.Trigger>
@@ -267,7 +272,9 @@ export const NFTModal = ({
                 <button
                   className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
                   onClick={() => handleMint(nftID)}
-                  disabled={isMintingDisabled || mintLoading}
+                  disabled={
+                    isMintingDisabled || mintLoading || !!algoliaHitData
+                  }
                 >
                   {mintLoading && (
                     <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
@@ -277,9 +284,31 @@ export const NFTModal = ({
                   {!!networkStore.address
                     ? isMintingDisabled
                       ? `MINTING STARTS SOON`
+                      : !!algoliaHitData
+                      ? "ALREADY MINTED"
                       : "MINT NFT"
                     : "Connect Wallet"}
                 </button>
+
+                {!!algoliaHitData && (
+                  <div>
+                    <a
+                      target="_blank"
+                      href={getMINAScanAccountLink(algoliaHitData.owner)}
+                    >
+                      Owned by {algoliaHitData.owner}
+                    </a>
+                    <a target="_blank" href={algoliaHitData.external_url}>
+                      See on MinaScan
+                    </a>
+                    <a
+                      target="_blank"
+                      href={getMINANFTLink(algoliaHitData.hash)}
+                    >
+                      See on minanft.io
+                    </a>
+                  </div>
+                )}
 
                 {mintProgress.step > 0 && (
                   <div className="mt-4">
