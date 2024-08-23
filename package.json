@@ -2,7 +2,6 @@
   "name": "tileville",
   "private": true,
   "scripts": {
-    "build-protokit": "./build_protokit.sh",
     "build": "turbo run build",
     "dev": "turbo run dev --env-mode=loose",
     "start-server": "turbo run start-server",
