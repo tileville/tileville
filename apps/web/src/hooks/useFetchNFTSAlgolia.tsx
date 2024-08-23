@@ -98,7 +98,7 @@ export const useFetchNFTSAlgolia = (options: FetchOptions) => {
       ...(options.owner ? { owner: options.owner } : {}),
     })
       .then((resp: any) => {
-        console.log("Algolia response", resp);
+        // console.log("Algolia response", resp);
         const hits: AlgoliaHitResponse[] = resp.hits;
         setResponse(hits);
       })
@@ -106,6 +106,7 @@ export const useFetchNFTSAlgolia = (options: FetchOptions) => {
         console.log("algolia error", error);
         setResponse([]);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { mintNFTHitsResponse: response, searchJobs };

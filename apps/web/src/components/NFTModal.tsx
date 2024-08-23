@@ -18,7 +18,6 @@ import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
 import { StepProgressBar } from "./ProgressBar";
-// import { useMintNFT } from "@/hooks/useMintNFT";
 import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
 import {
   formatAddress,
@@ -56,6 +55,24 @@ const INITIAL_MINT_RESPONSE = {
   message: "",
   reason: "",
   txHash: "",
+};
+
+const parseTraits = (traits: Json): Trait[] => {
+  if (Array.isArray(traits)) {
+    return traits.filter(
+      (trait): trait is Trait =>
+        typeof trait === "object" &&
+        trait !== null &&
+        "key" in trait &&
+        "value" in trait
+    );
+  } else if (typeof traits === "object" && traits !== null) {
+    return Object.entries(traits).map(([key, value]) => ({
+      key,
+      value: String(value),
+    }));
+  }
+  return [];
 };
 
 export const NFTModal = ({
@@ -97,30 +114,11 @@ export const NFTModal = ({
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
 
-  const parseTraits = (traits: Json): Trait[] => {
-    if (Array.isArray(traits)) {
-      return traits.filter(
-        (trait): trait is Trait =>
-          typeof trait === "object" &&
-          trait !== null &&
-          "key" in trait &&
-          "value" in trait
-      );
-    } else if (typeof traits === "object" && traits !== null) {
-      return Object.entries(traits).map(([key, value]) => ({
-        key,
-        value: String(value),
-      }));
-    }
-    return [];
-  };
-
   const parsedTraits = parseTraits(traits);
 
   const handleMint = async (nft_id: number) => {
     setMintLoading(true);
     setError(null);
-
     setMintProgress({
       step: 1,
       message: "Uploading image",
@@ -134,12 +132,7 @@ export const NFTModal = ({
       if (response.success && response.txn_hash) {
         setMintTxnHash(response.txn_hash);
       }
-
-      // setMintProgress({ step: 6, message: "NFT Minted Successfully" });
       setNftMintResponse({ state: "active", ...response });
-
-      console.log("response 135", response);
-      console.log("nft mint response state 136", nftMintResponse);
       if (response.success) {
       }
       setMintLoading(false);
@@ -398,7 +391,7 @@ export const NFTModal = ({
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">
-                  {parsedTraits.map((trait, index) => {
+                  {parsedTraits.map((trait) => {
                     const traitCount =
                       rarityData?.[trait.key]?.[trait.value as string] ?? 0;
                     const rarityPercentage = getRarityPercentage(
@@ -409,7 +402,7 @@ export const NFTModal = ({
                     const textColor = getRarityColor(rarityPercentage);
                     return (
                       <li
-                        key={index}
+                        key={trait.key}
                         className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
                       >
                         <div className="flex items-center gap-2">

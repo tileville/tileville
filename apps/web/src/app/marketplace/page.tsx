@@ -76,7 +76,6 @@ export default function Marketplace() {
     currentPage,
   });
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
-  console.log({ mintNFTHitsResponse });
 
   const handleSearchAction = useCallback(() => {
     setActiveSearchTerm(searchTerm);
@@ -266,7 +265,6 @@ export default function Marketplace() {
                       algoliaHitData={mintNFTHitsResponse.find(
                         ({ name }) => name === nft.name
                       )}
-                      // txnHash={nft.txn_hash}
                     />
                   );
                 })}
