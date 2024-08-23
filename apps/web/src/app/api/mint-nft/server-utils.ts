@@ -49,14 +49,11 @@ export async function pinFile(params: {
   }
 }
 
-
-
 export const fetchNFTImageUrl = async (nft_id: number) => {
   try {
     const { data, error } = await supabase.storage
       .from(NFT_BUCKET_NAME)
-      .createSignedUrl(`${nft_id}.png`, 180); // 60 seconds expiry time
-
+      .createSignedUrl(`${nft_id + 1}.png`, 180); // 60 seconds expiry time
     if (error) {
       throw error;
     }

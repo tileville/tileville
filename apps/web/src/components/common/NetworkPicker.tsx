@@ -119,13 +119,7 @@ export default function NetworkPicker() {
                 onClick={() => switchNetwork(network)}
               >
                 <Image
-                  src={
-                    network.chainId === "zeko"
-                      ? zekoLogo
-                      : network.chainId === "berkeley"
-                      ? berkleyLogo
-                      : minaLogo
-                  }
+                  src={minaLogo}
                   className={
                     "group-hover:border-left-accent rounded-[5px] border border-foreground"
                   }

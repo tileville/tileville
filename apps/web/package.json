@@ -34,6 +34,7 @@
     "@supabase/supabase-js": "^2.39.0",
     "@tanstack/react-query": "^4.24.10",
     "@types/uuid": "^10.0.0",
+    "algoliasearch": "^4.24.0",
     "axios": "^1.7.3",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",

@@ -9,6 +9,7 @@ import { useNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import Link from "next/link";
 import { Pagination } from "@/components/common/Pagination";
+import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
 const toggleGroupOptions = [
   {
@@ -74,6 +75,7 @@ export default function Marketplace() {
     searchTerm: activeSearchTerm,
     currentPage,
   });
+  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
 
   const handleSearchAction = useCallback(() => {
     setActiveSearchTerm(searchTerm);
@@ -259,7 +261,9 @@ export default function Marketplace() {
                       nftPrice={nft.price}
                       renderStyle={renderStyle}
                       ownerAddress={nft.owner_address}
-                      txnHash={nft.txn_hash}
+                      algoliaHitData={mintNFTHitsResponse.find(
+                        ({ name }) => name === nft.name
+                      )}
                     />
                   );
                 })}
