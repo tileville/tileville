@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
@@ -113,6 +113,44 @@ export const NFTModal = ({
   const { mintNft } = usePayNFTMintFee();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (nftMintResponse.state === "active") {
+      if (nftMintResponse.success) {
+        toast.success(
+          <>
+            <p>
+              NFT minted successfully. You can check your new nft on{" "}
+              <Link
+                target="_blank"
+                href={getMINANFTLink(nftMintResponse.txHash)}
+                className="font-semibold text-primary underline hover:no-underline"
+              >
+                minanft
+              </Link>
+            </p>
+          </>,
+          {
+            id: "mint-success-toast",
+          }
+        );
+      } else {
+        toast.error(
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium text-red-700">
+              NFT mint failed 😭
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              {nftMintResponse.message}
+            </p>
+          </div>,
+          {
+            id: "mint-error-toast",
+          }
+        );
+      }
+    }
+  }, [nftMintResponse]);
 
   const parsedTraits = parseTraits(traits);
 
@@ -335,7 +373,7 @@ export const NFTModal = ({
                       NFT minted successfully🎉. You can check your new nft on{" "}
                       <Link
                         target="_blank"
-                        href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
+                        href={getMINANFTLink(nftMintResponse.txHash)}
                         className="font-semibold text-primary underline hover:no-underline"
                       >
                         minanft
@@ -348,46 +386,6 @@ export const NFTModal = ({
                   "cursor-pointer text-xs font-semibold text-primary underline hover:no-underline focus-visible:outline-none"
                 }
               />
-              {nftMintResponse.state === "active" &&
-                nftMintResponse.success && (
-                  <div className="hidden">
-                    {toast.success(
-                      <>
-                        <p>
-                          NFT minted successfully. You can check your new nft on{" "}
-                          <Link
-                            target="_blank"
-                            href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
-                            className="font-semibold text-primary underline hover:no-underline"
-                          >
-                            minanft
-                          </Link>
-                        </p>
-                      </>,
-                      {
-                        id: "mint-success-toast",
-                      }
-                    )}
-                  </div>
-                )}
-              <div className="hidden">
-                {nftMintResponse.state === "active" &&
-                  !nftMintResponse.success &&
-                  toast.error(
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm font-medium text-red-700">
-                        NFT mint failed 😭
-                      </p>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {nftMintResponse.message}
-                      </p>
-                    </div>,
-                    {
-                      id: "mint-error-toast",
-                    }
-                  )}
-              </div>
-
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">

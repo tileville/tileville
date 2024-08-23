@@ -42,18 +42,6 @@ const options = [
     text: "Price: Low to High",
     id: 1,
   },
-  // {
-  //   text: "Recently Listed",
-  //   id: 2,
-  // },
-  // {
-  //   text: "Common to Rare",
-  //   id: 3,
-  // },
-  // {
-  //   text: "Rare to Common",
-  //   id: 4,
-  // },
 ];
 
 export default function Marketplace() {
