@@ -3,7 +3,8 @@ const { withSentryConfig } = require('@sentry/nextjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['oqymtqolwjujkayjyxdt.supabase.co'],
+    domains: ['oqymtqolwjujkayjyxdt.supabase.co' , 'gateway.pinata.cloud'],
+
   },
   reactStrictMode: true,
   output: "standalone",

@@ -154,7 +154,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="fade-slide-in p-4 pt-40">
+    <div className="fade-slide-in p-4 pb-24 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div>
           <div className="flex items-center justify-between gap-3">

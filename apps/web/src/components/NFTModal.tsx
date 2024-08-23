@@ -24,6 +24,7 @@ import {
   getMINANFTLink,
   getMINAScanAccountLink,
 } from "@/lib/helpers";
+import clsx from "clsx";
 // import ProgressBar from "@/components/ProgressBar";
 type Trait = {
   key: string;
@@ -311,7 +312,17 @@ export const NFTModal = ({
                 )}
 
                 <button
-                  className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
+                  className={clsx({
+                    "relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80":
+                      true,
+                    "bg-black disabled:bg-black disabled:hover:bg-black":
+                      !!algoliaHitData,
+                  })}
+                  // className={`${
+                  //   !!algoliaHitData
+                  //     ? "bg-black disabled:bg-black disabled:hover:bg-black"
+                  //     : "bg-primary"
+                  // } relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80`}
                   onClick={() => handleMint(nftID)}
                   disabled={
                     isMintingDisabled || mintLoading || !!algoliaHitData
@@ -333,13 +344,17 @@ export const NFTModal = ({
 
                 {!!algoliaHitData && (
                   <div className="flex justify-between gap-1 text-sm">
-                    <Link
-                      target="_blank"
-                      href={getMINAScanAccountLink(algoliaHitData.owner)}
-                      className="font-semibold text-primary underline hover:no-underline"
-                    >
-                      Owned by {formatAddress(algoliaHitData.owner)}
-                    </Link>
+                    <p className="font-semibold text-primary">
+                      Owned by{" "}
+                      <Link
+                        target="_blank"
+                        href={getMINAScanAccountLink(algoliaHitData.owner)}
+                        className="underline hover:no-underline"
+                      >
+                        {formatAddress(algoliaHitData.owner)}
+                      </Link>
+                    </p>
+
                     <Link
                       target="_blank"
                       href={algoliaHitData.external_url}
