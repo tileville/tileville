@@ -312,7 +312,10 @@ export const usePayNFTMintFee = () => {
       if (nft_payload.success === false) {
         return nft_payload;
       }
-      setMintProgress({ step: 2, message: "NFT Image uploaded to IPFS" });
+      setMintProgress({
+        step: 2,
+        message: "Loading O1JS and MINANFT Environment",
+      });
       const response = await mintMINANFTHelper(nft_payload);
       return response;
     } catch (error: any) {

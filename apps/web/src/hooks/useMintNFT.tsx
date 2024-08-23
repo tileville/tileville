@@ -87,7 +87,7 @@ export function useMintNFT() {
 
     setMintProgress({
       step: 3,
-      message: "Loaded O1JS and MINANFT Environment",
+      message: "Checking if the name is reserved or not",
     });
 
     const nftPrivateKey = PrivateKey.random();
@@ -156,7 +156,7 @@ export function useMintNFT() {
 
     setMintProgress({
       step: 4,
-      message: "NFT Name reserved",
+      message: "Sending transaction",
     });
 
     const signature = Signature.fromBase58(reserved.signature);
@@ -262,12 +262,32 @@ export function useMintNFT() {
     };
     console.timeEnd("prepared tx");
     console.timeEnd("ready to sign");
-    const txResult = await (window as any).mina?.sendTransaction(payload);
+    let txResult;
+    function isErrorWithCode(error: unknown): error is { code: number } {
+      return typeof error === "object" && error !== null && "code" in error;
+    }
+    try {
+      txResult = await (window as any).mina?.sendTransaction(payload);
+    } catch (error: unknown) {
+      if (isErrorWithCode(error) && error.code === 1002) {
+        console.log("transaction error 273", error);
+        return {
+          success: false,
+          message: "You cancelled the transaction! Please try again",
+        };
+      }
+      // Handle other types of errors
+      console.error("An unexpected error occurred:", error);
+      return {
+        success: false,
+        message: "An unexpected error occurred",
+      };
+    }
     console.log("Transaction result", txResult);
     console.time("sent transaction");
     setMintProgress({
       step: 5,
-      message: "Transaction Sent!",
+      message: "Minting NFT",
     });
     const signedData = txResult?.signedData;
     if (signedData === undefined) {

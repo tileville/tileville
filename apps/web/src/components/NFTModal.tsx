@@ -111,18 +111,18 @@ export const NFTModal = ({
 
   const parsedTraits = parseTraits(traits);
 
-  const handleMint = async () => {
+  const handleMint = async (nft_id: number) => {
     setMintLoading(true);
     setError(null);
 
     setMintProgress({
       step: 1,
-      message: "Mint Started",
+      message: "Uploading image",
     });
 
     try {
       const response = await mintNft({
-        nft_id: nftID,
+        nft_id,
       });
 
       if (response.success && response.txn_hash) {
@@ -132,11 +132,20 @@ export const NFTModal = ({
       // setMintProgress({ step: 6, message: "NFT Minted Successfully" });
       setNftMintResponse({ state: "active", ...response });
 
-      console.log("response 119", response);
-      console.log("nft mint response state 120", nftMintResponse);
+      console.log("response 135", response);
+      console.log("nft mint response state 136", nftMintResponse);
       if (response.success) {
       }
       setMintLoading(false);
+
+      if (!response.success) {
+        setError(response.message);
+
+        setMintProgress((prev) => ({
+          ...prev,
+          message: response.message,
+        }));
+      }
     } catch (err) {
       console.error("Minting error:", err);
 
@@ -257,7 +266,7 @@ export const NFTModal = ({
 
                 <button
                   className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
-                  onClick={handleMint}
+                  onClick={() => handleMint(nftID)}
                   disabled={isMintingDisabled || mintLoading}
                 >
                   {mintLoading && (
@@ -317,37 +326,17 @@ export const NFTModal = ({
               <div className="hidden">
                 {nftMintResponse.state === "active" &&
                   !nftMintResponse.success &&
-                  toast.custom(
-                    (t) => (
-                      <div
-                        className={`${
-                          t.visible ? "animate-enter" : "animate-leave"
-                        } pointer-events-auto flex w-full max-w-xs rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
-                      >
-                        <div className="w-0 flex-1 p-4">
-                          <div className="flex items-start">
-                            <div className="ml-3 flex-1">
-                              <p className="text-sm font-medium text-red-700">
-                                NFT mint failed 😭
-                              </p>
-                              <p className="mt-1 text-sm text-gray-500">
-                                {nftMintResponse.message}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <button
-                            onClick={() => toast.dismiss(t.id)}
-                            className="flex w-full items-center justify-center rounded-none rounded-r-lg border border-transparent p-4 text-sm font-medium text-red-600 hover:text-red-500 focus:outline-none"
-                          >
-                            <Cross1Icon />
-                          </button>
-                        </div>
-                      </div>
-                    ),
+                  toast.error(
+                    <div className="flex flex-col gap-1">
+                      <p className="text-sm font-medium text-red-700">
+                        NFT mint failed 😭
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {nftMintResponse.message}
+                      </p>
+                    </div>,
                     {
-                      id: "nft-mint-failed",
+                      id: "mint-error-toast",
                     }
                   )}
               </div>
