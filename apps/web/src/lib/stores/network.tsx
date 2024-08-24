@@ -7,11 +7,10 @@ import {
   ProviderError,
 } from "@aurowallet/mina-provider";
 import { NETWORKS, Network } from "@/constants/network";
-import { useLocalStorage, useSessionStorage } from "react-use";
+import { useSessionStorage } from "react-use";
 import {
   ACCOUNT_AUTH_LOCALSTORAGE_KEY,
   ACCOUNT_AUTH_MESSAGE,
-  DEFAULT_TRASURY_ADDRESS,
   GAME_ENTRY_FEE_KEY,
 } from "@/constants";
 import toast from "react-hot-toast";

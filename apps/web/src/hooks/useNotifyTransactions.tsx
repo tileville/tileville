@@ -85,7 +85,7 @@ export const useNotifyTransactions = () => {
               s: tx.signature.s,
             }),
             isMessage: false,
-          }),
+          } as any),
           status,
           statusMessage,
         };

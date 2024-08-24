@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
@@ -19,7 +19,12 @@ import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
 import { StepProgressBar } from "./ProgressBar";
 import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
-import { getMINANFTLink, getMINAScanAccountLink } from "@/lib/helpers";
+import {
+  formatAddress,
+  getMINANFTLink,
+  getMINAScanAccountLink,
+} from "@/lib/helpers";
+import clsx from "clsx";
 // import ProgressBar from "@/components/ProgressBar";
 type Trait = {
   key: string;
@@ -110,9 +115,57 @@ export const NFTModal = ({
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (nftMintResponse.state === "active") {
+      if (nftMintResponse.success) {
+        toast.success(
+          <>
+            <p>
+              NFT minted successfully. You can check your new nft on{" "}
+              <Link
+                target="_blank"
+                href={getMINANFTLink(nftMintResponse.txHash)}
+                className="font-semibold text-primary underline hover:no-underline"
+              >
+                minanft
+              </Link>
+            </p>
+          </>,
+          {
+            id: "mint-success-toast",
+          }
+        );
+      } else {
+        toast.error(
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium text-red-700">
+              NFT mint failed 😭
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              {nftMintResponse.message}
+            </p>
+          </div>,
+          {
+            id: "mint-error-toast",
+          }
+        );
+      }
+    }
+  }, [nftMintResponse]);
+
   const parsedTraits = parseTraits(traits);
 
   const handleMint = async (nft_id: number) => {
+    if (!networkStore.address) {
+      try {
+        networkStore.connectWallet(false);
+      } catch (error) {
+        console.error(`Failed to connect with wallet`, error);
+      } finally {
+        return;
+      }
+    }
+
     setMintLoading(true);
     setError(null);
     setMintProgress({
@@ -193,12 +246,12 @@ export const NFTModal = ({
     ? false
     : isFuture(globalConfig.nft_mint_start_date);
 
-  console.log("mint progress", mintProgress, algoliaHitData);
+  // console.log("mint progress", mintProgress, algoliaHitData);
   return (
     <>
       <Dialog.Root>
         <Dialog.Trigger>
-          <div className="border-primary-30 group/item listItem fade-slide-in cursor-pointer overflow-hidden rounded-md transition-colors">
+          <div className="border-primary-30 group/item listItem fade-slide-in relative cursor-pointer overflow-hidden rounded-md transition-colors">
             <div className="nft-img w-full overflow-hidden">
               <Image
                 className="h-full w-full object-cover transition-all group-hover/item:scale-110"
@@ -224,11 +277,17 @@ export const NFTModal = ({
                 </>
               )}
 
-              <div className="font-semibold">
-                {nftPrice}
-                <span className="text-primary-50"> MINA</span>
+              <div className="mt-1 flex items-center justify-between">
+                <div className="font-semibold">
+                  {nftPrice}
+                  <span className="text-primary-50"> MINA</span>
+                </div>
               </div>
-              {algoliaHitData && <p>Already Minted</p>}
+              {algoliaHitData && (
+                <div className="mt-1 rounded-md bg-primary/30 p-1 text-center text-sm">
+                  Already Minted
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Trigger>
@@ -263,7 +322,14 @@ export const NFTModal = ({
                 )}
 
                 <button
-                  className="relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
+                  className={clsx({
+                    "relative h-10 rounded-md border-primary  px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed ":
+                      true,
+                    "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
+                      !!algoliaHitData,
+                    "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
+                      !algoliaHitData,
+                  })}
                   onClick={() => handleMint(nftID)}
                   disabled={
                     isMintingDisabled || mintLoading || !!algoliaHitData
@@ -284,22 +350,32 @@ export const NFTModal = ({
                 </button>
 
                 {!!algoliaHitData && (
-                  <div>
-                    <a
+                  <div className="flex justify-between gap-1 text-sm">
+                    <p className="font-semibold text-primary">
+                      Owned by{" "}
+                      <Link
+                        target="_blank"
+                        href={getMINAScanAccountLink(algoliaHitData.owner)}
+                        className="underline hover:no-underline"
+                      >
+                        {formatAddress(algoliaHitData.owner)}
+                      </Link>
+                    </p>
+
+                    <Link
                       target="_blank"
-                      href={getMINAScanAccountLink(algoliaHitData.owner)}
+                      href={algoliaHitData.external_url}
+                      className="font-semibold text-primary underline hover:no-underline"
                     >
-                      Owned by {algoliaHitData.owner}
-                    </a>
-                    <a target="_blank" href={algoliaHitData.external_url}>
                       See on MinaScan
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       target="_blank"
                       href={getMINANFTLink(algoliaHitData.hash)}
+                      className="font-semibold text-primary underline hover:no-underline"
                     >
                       See on minanft.io
-                    </a>
+                    </Link>
                   </div>
                 )}
 
@@ -312,57 +388,26 @@ export const NFTModal = ({
                     />
                   </div>
                 )}
+
+                {nftMintResponse.state === "active" &&
+                  nftMintResponse.success && (
+                    <p className="text-sm">
+                      NFT minted successfully🎉. You can check your new nft on{" "}
+                      <Link
+                        target="_blank"
+                        href={getMINANFTLink(nftMintResponse.txHash)}
+                        className="font-semibold text-primary underline hover:no-underline"
+                      >
+                        minanft
+                      </Link>
+                    </p>
+                  )}
               </Flex>
               <MintRegisterModal
                 triggerBtnClasses={
                   "cursor-pointer text-xs font-semibold text-primary underline hover:no-underline focus-visible:outline-none"
                 }
               />
-              {nftMintResponse.state === "active" &&
-                nftMintResponse.success && (
-                  <div className="hidden">
-                    {toast.success(
-                      (t) => (
-                        <>
-                          <p>
-                            NFT minted successfully. You can check your new nft
-                            on{" "}
-                            <Link
-                              target="_blank"
-                              href={`https://testnet.minanft.io/explore?query=${nftMintResponse.txHash}`}
-                              className="font-semibold text-primary underline hover:no-underline"
-                            >
-                              minanft
-                            </Link>
-                          </p>
-
-                          <button onClick={() => toast.dismiss(t.id)}>
-                            <Cross1Icon />
-                          </button>
-                        </>
-                      ),
-                      { id: "mint-success" }
-                    )}
-                  </div>
-                )}
-              <div className="hidden">
-                {nftMintResponse.state === "active" &&
-                  !nftMintResponse.success &&
-                  toast.error(
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm font-medium text-red-700">
-                        NFT mint failed 😭
-                      </p>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {nftMintResponse.message}
-                      </p>
-                    </div>,
-                    {
-                      id: "mint-error-toast",
-                    }
-                  )}
-              </div>
-
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">

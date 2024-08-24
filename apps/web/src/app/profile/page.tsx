@@ -121,11 +121,11 @@ export default function Profile() {
   const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
     try {
       await navigator.clipboard.writeText(toCopyContent);
-      toast(<>{copiedType} copied to clipboard!</>, {
+      toast.success(<>{copiedType} copied to clipboard!</>, {
         duration: 2000,
       });
     } catch (err) {
-      toast(<>Error copying {copiedType}! Please Try Again</>, {
+      toast.error(<>Error copying {copiedType}! Please Try Again</>, {
         duration: 2000,
       });
     }
@@ -154,7 +154,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="fade-slide-in p-4 pt-40">
+    <div className="fade-slide-in p-4 pb-24 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div>
           <div className="flex items-center justify-between gap-3">

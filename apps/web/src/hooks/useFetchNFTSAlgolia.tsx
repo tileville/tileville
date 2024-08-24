@@ -1,5 +1,6 @@
 "use client";
 import { CHAIN_NAME } from "@/app/api/mint-nft/constants";
+// import { CHAIN_NAME } from "@/app/api/mint-nft/constants";
 import algoliasearch from "algoliasearch";
 import { useEffect, useState } from "react";
 
@@ -8,7 +9,7 @@ const client = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_KEY || ""
 );
 
-const index = client.initIndex("mainnet");
+const index = client.initIndex(CHAIN_NAME);
 
 interface SearchParams {
   query: string;

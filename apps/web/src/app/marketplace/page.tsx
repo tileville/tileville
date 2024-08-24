@@ -15,7 +15,7 @@ const toggleGroupOptions = [
   {
     iconSrc: "/icons/gridFour.svg",
     gridApplyClass:
-      "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4",
+      "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
     id: 0,
   },
 
@@ -42,18 +42,6 @@ const options = [
     text: "Price: Low to High",
     id: 1,
   },
-  // {
-  //   text: "Recently Listed",
-  //   id: 2,
-  // },
-  // {
-  //   text: "Common to Rare",
-  //   id: 3,
-  // },
-  // {
-  //   text: "Rare to Common",
-  //   id: 4,
-  // },
 ];
 
 export default function Marketplace() {
@@ -230,6 +218,7 @@ export default function Marketplace() {
             <div>Owner</div>
             <div>Listed Time</div>
             <div>Listed Price</div>
+            <div>MINTED</div>
           </div>
         )}
 

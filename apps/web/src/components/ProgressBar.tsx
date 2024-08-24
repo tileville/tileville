@@ -49,7 +49,7 @@ export const StepProgressBar = ({
         ))}
       </div>
       <div
-        className={`mt-4 text-center text-sm font-medium ${
+        className={`mt-2 text-center text-sm font-medium ${
           error ? "text-red-500" : "text-black"
         }`}
       >
