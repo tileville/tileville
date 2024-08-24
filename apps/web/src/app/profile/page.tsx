@@ -121,11 +121,11 @@ export default function Profile() {
   const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
     try {
       await navigator.clipboard.writeText(toCopyContent);
-      toast(<>{copiedType} copied to clipboard!</>, {
+      toast.success(<>{copiedType} copied to clipboard!</>, {
         duration: 2000,
       });
     } catch (err) {
-      toast(<>Error copying {copiedType}! Please Try Again</>, {
+      toast.error(<>Error copying {copiedType}! Please Try Again</>, {
         duration: 2000,
       });
     }

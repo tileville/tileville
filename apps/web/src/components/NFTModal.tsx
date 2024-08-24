@@ -156,6 +156,16 @@ export const NFTModal = ({
   const parsedTraits = parseTraits(traits);
 
   const handleMint = async (nft_id: number) => {
+    if (!networkStore.address) {
+      try {
+        networkStore.connectWallet(false);
+      } catch (error) {
+        console.error(`Failed to connect with wallet`, error);
+      } finally {
+        return;
+      }
+    }
+
     setMintLoading(true);
     setError(null);
     setMintProgress({
@@ -236,7 +246,7 @@ export const NFTModal = ({
     ? false
     : isFuture(globalConfig.nft_mint_start_date);
 
-  console.log("mint progress", mintProgress, algoliaHitData);
+  // console.log("mint progress", mintProgress, algoliaHitData);
   return (
     <>
       <Dialog.Root>
@@ -313,16 +323,13 @@ export const NFTModal = ({
 
                 <button
                   className={clsx({
-                    "relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80":
+                    "relative h-10 rounded-md border-primary  px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed ":
                       true,
-                    "bg-black disabled:bg-black disabled:hover:bg-black":
+                    "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
                       !!algoliaHitData,
+                    "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
+                      !algoliaHitData,
                   })}
-                  // className={`${
-                  //   !!algoliaHitData
-                  //     ? "bg-black disabled:bg-black disabled:hover:bg-black"
-                  //     : "bg-primary"
-                  // } relative h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80`}
                   onClick={() => handleMint(nftID)}
                   disabled={
                     isMintingDisabled || mintLoading || !!algoliaHitData
