@@ -144,6 +144,9 @@ export const NFTModal = ({
             <p className="mt-1 text-sm text-gray-500">
               {nftMintResponse.message}
             </p>
+            {nftMintResponse.reason && (
+              <p className="text-xs text-gray-500">{nftMintResponse.reason}</p>
+            )}
           </div>,
           {
             id: "mint-error-toast",
@@ -169,14 +172,18 @@ export const NFTModal = ({
     setMintLoading(true);
     setError(null);
     setMintProgress({
-      step: 1,
-      message: "Uploading image",
+      [nftID]: {
+        step: 1,
+        message: "Uploading image to IPFS",
+      },
     });
 
     try {
       const response = await mintNft({
         nft_id,
       });
+
+      console.log("186 response", response);
 
       if (response.success && response.txn_hash) {
         setMintTxnHash(response.txn_hash);
@@ -191,8 +198,13 @@ export const NFTModal = ({
 
         setMintProgress((prev) => ({
           ...prev,
-          message: response.message,
+          [nft_id]: {
+            ...prev[nft_id], // Keep the previous step (if needed) or other properties
+            message: response.message, // Update the message only
+          },
         }));
+
+        console.log("MINT PROgress", mintProgress);
       }
     } catch (err) {
       console.error("Minting error:", err);
@@ -288,6 +300,18 @@ export const NFTModal = ({
                   Already Minted
                 </div>
               )}
+
+              {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
+                <div className="text-center">
+                  <Link
+                    target="_blank"
+                    href={getMINANFTLink(algoliaHitData.hash)}
+                    className="text-sm font-semibold text-primary underline hover:no-underline"
+                  >
+                    Buy on minanft
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Trigger>
@@ -349,6 +373,18 @@ export const NFTModal = ({
                     : "Connect Wallet"}
                 </button>
 
+                {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
+                  <div className="text-right">
+                    <Link
+                      target="_blank"
+                      href={getMINANFTLink(algoliaHitData.hash)}
+                      className="relative h-10 rounded-md border-primary  bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
+                    >
+                      Buy on minanft
+                    </Link>
+                  </div>
+                )}
+
                 {!!algoliaHitData && (
                   <div className="flex justify-between gap-1 text-sm">
                     <p className="font-semibold text-primary">
@@ -379,11 +415,11 @@ export const NFTModal = ({
                   </div>
                 )}
 
-                {mintProgress.step > 0 && (
+                {mintProgress[nftID]?.step > 0 && (
                   <div className="mt-4">
                     <StepProgressBar
-                      currentStep={mintProgress.step}
-                      message={mintProgress.message}
+                      currentStep={mintProgress[nftID]?.step || 1}
+                      message={mintProgress[nftID]?.message || ""}
                       error={error}
                     />
                   </div>
@@ -503,12 +539,6 @@ export const NFTModal = ({
               </div>
             </div>
           </div>
-          <Dialog.Close>
-            <button className="absolute bottom-2 right-4 rounded-md border-primary bg-primary/30 px-2 py-2 text-xs font-medium hover:bg-primary/50 focus-visible:outline-none">
-              Cancel
-            </button>
-          </Dialog.Close>
-
           <Dialog.Close>
             <button className="absolute right-4 top-4">
               <Cross1Icon />

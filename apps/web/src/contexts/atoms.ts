@@ -16,9 +16,8 @@ export const globalConfigAtom = atom<{ [key: string]: any }>(
   GLOBAL_CONFIG_DEFAULT
 );
 
-export const mintProgressAtom = atom<{ step: number; message: string }>({
-  step: 0,
-  message: "Mint Started",
-});
+export const mintProgressAtom = atom<{
+  [key: number]: { step: number; message: string };
+}>({});
 
 export const algoliaHitsResponseAtom = atom<AlgoliaHitResponse[]>([]);

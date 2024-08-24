@@ -54,7 +54,7 @@ export function useMintNFT() {
 
     const owner = await getAccount();
     if (!owner) {
-      return { sucess: false, message: "No account found" };
+      return { success: false, message: "No account found" };
     }
 
     const { Field, PrivateKey, PublicKey, UInt64, Mina, Signature, UInt32 } =
@@ -80,14 +80,16 @@ export function useMintNFT() {
         "Contract address is not the same as MINANFT_NAME_SERVICE_V2"
       );
       return {
-        sucess: false,
+        success: false,
         message: "Contract address is not the same as MINANFT_NAME_SERVICE_V2",
       };
     }
 
     setMintProgress({
-      step: 3,
-      message: "Checking if the name is reserved or not",
+      [nft_id]: {
+        step: 3,
+        message: "Checking if the name is reserved or not",
+      },
     });
 
     const nftPrivateKey = PrivateKey.random();
@@ -136,7 +138,7 @@ export function useMintNFT() {
     const sha3_512 = await calculateSHA512(image as File);
     const reserved = await reservedPromise;
 
-    // console.log("Reserved name", reserved);
+    console.log("Reserved name", reserved);
     if (
       reserved === undefined ||
       reserved.isReserved !== true ||
@@ -155,8 +157,10 @@ export function useMintNFT() {
     }
 
     setMintProgress({
-      step: 4,
-      message: "Sending transaction",
+      [nft_id]: {
+        step: 4,
+        message: "Sending transaction",
+      },
     });
 
     const signature = Signature.fromBase58(reserved.signature);
@@ -238,14 +242,26 @@ export function useMintNFT() {
         storage: nft.storage,
       },
     };
-    console.log("mint params", mintParams);
+    console.log("mint params 245", mintParams);
     let tx: any;
     try {
       tx = await Mina.transaction({ sender, fee, memo }, async () => {
         await zkApp.mint(mintParams);
       });
-    } catch (err) {
-      console.log("transaction sign error", err);
+      console.log("MINT Transaction done");
+    } catch (error: any) {
+      if (error) {
+        console.log("transaction error 273", error);
+        return {
+          success: false,
+          message: "Transaction failed! Please try again",
+        };
+      }
+
+      return {
+        success: false,
+        message: "An unexpected error occurred",
+      };
     }
     console.log("mint transaction", tx);
     tx.sign([nftPrivateKey]);
@@ -286,8 +302,10 @@ export function useMintNFT() {
     console.log("Transaction result", txResult);
     console.time("sent transaction");
     setMintProgress({
-      step: 5,
-      message: "Minting NFT",
+      [nft_id]: {
+        step: 5,
+        message: "Waiting for Transaction Confirmation...",
+      },
     });
     const signedData = txResult?.signedData;
     if (signedData === undefined) {
@@ -303,8 +321,10 @@ export function useMintNFT() {
       name,
     });
     setMintProgress({
-      step: 6,
-      message: "NFT Minted",
+      [nft_id]: {
+        step: 6,
+        message: "Transaction confirmed and NFT Minted successfully.",
+      },
     });
 
     if (sentTx.hash.toLocaleLowerCase().includes("error")) {
