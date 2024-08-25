@@ -273,6 +273,8 @@ export const NFTModal = ({
                 src={img_url}
                 quality={100}
                 priority={false}
+                placeholder="blur"
+                blurDataURL="/img/load/load.png"
               />
             </div>
 
@@ -307,6 +309,7 @@ export const NFTModal = ({
                     target="_blank"
                     href={getMINANFTLink(algoliaHitData.hash)}
                     className="text-sm font-semibold text-primary underline hover:no-underline"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     Buy on minanft
                   </Link>
@@ -326,6 +329,8 @@ export const NFTModal = ({
                 alt="img"
                 className="h-full object-cover"
                 priority={false}
+                placeholder="blur"
+                blurDataURL="/img/load/load.png"
               />
             </div>
             <div className="bg-primary/30 px-4 py-8">
