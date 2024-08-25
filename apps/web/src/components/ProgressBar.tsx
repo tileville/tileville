@@ -12,11 +12,11 @@ export const StepProgressBar = ({
 }) => {
   const steps = [
     { step: 1, label: "Start" },
-    { step: 2, label: "Upload Image" },
+    { step: 2, label: "IPFS" },
     { step: 3, label: "Load Environment" },
     { step: 4, label: "Reserve Name" },
-    { step: 5, label: "Send Transaction" },
-    { step: 6, label: "Mint NFT" },
+    { step: 5, label: "Sent Transaction" },
+    { step: 6, label: "NFT Minted" },
   ];
 
   return (

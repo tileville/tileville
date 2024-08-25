@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import {
   useFetchNFTSAlgolia,
   AlgoliaHitResponse,
@@ -26,6 +26,7 @@ export default function DigitalCollection() {
   const { address } = useNetworkStore();
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({ owner: address });
 
+  console.log("algolia response", mintNFTHitsResponse);
   return (
     <>
       {mintNFTHitsResponse && mintNFTHitsResponse.length > 0 ? (
@@ -43,6 +44,8 @@ export default function DigitalCollection() {
                       src={nft.image}
                       quality={100}
                       priority={false}
+                      placeholder="blur"
+                      blurDataURL="/img/load/load.png"
                     />
                   </div>
                   <div className="nft-content px-2 py-3">
@@ -63,6 +66,8 @@ export default function DigitalCollection() {
                       alt="img"
                       className="h-full object-cover"
                       priority={false}
+                      placeholder="blur"
+                      blurDataURL="/img/load/load.png"
                     />
                   </div>
                   <div className="bg-primary/30 px-4 py-8">

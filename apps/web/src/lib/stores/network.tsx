@@ -312,8 +312,10 @@ export const usePayNFTMintFee = () => {
         return nft_payload;
       }
       setMintProgress({
-        step: 2,
-        message: "Loading O1JS and MINANFT Environment",
+        [nft_id]: {
+          step: 2,
+          message: "Loading O1JS and MINANFT Environment",
+        },
       });
       const response = await mintMINANFTHelper(nft_payload);
       return response;
