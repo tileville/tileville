@@ -26,6 +26,8 @@ import {
 } from "@/lib/helpers";
 import clsx from "clsx";
 import { useMinaBalancesStore } from "@/lib/stores/minaBalances";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
+import { MAINNET_NETWORK } from "@/constants/network";
 // import ProgressBar from "@/components/ProgressBar";
 type Trait = {
   key: string;
@@ -116,6 +118,7 @@ export const NFTModal = ({
   const { mintNft } = usePayNFTMintFee();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
+  const { switchNetwork } = useSwitchNetwork();
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
@@ -161,6 +164,10 @@ export const NFTModal = ({
   const parsedTraits = parseTraits(traits);
 
   const handleMint = async (nft_id: number) => {
+    if (networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
+      await switchNetwork(MAINNET_NETWORK);
+      return;
+    }
     if (!networkStore.address) {
       try {
         networkStore.connectWallet(false);
@@ -260,7 +267,7 @@ export const NFTModal = ({
     return networkStore.address &&
       minaBalancesStore.balances[networkStore.address] &&
       Number(minaBalancesStore.balances[networkStore.address] ?? 0n) / 10 ** 9 >
-        price + 1.1
+        price + 0.1
       ? true
       : false;
   };
