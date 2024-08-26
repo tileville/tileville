@@ -3,7 +3,7 @@ import { FaceIcon, StarFilledIcon } from "@radix-ui/react-icons";
 
 export const Footer = () => {
   return (
-    <footer className="fixed bottom-0 right-0  w-full rounded-md ps-2 pt-2 backdrop-blur-md">
+    <footer className="fixed bottom-0 right-0  rounded-md ps-2 pt-2 backdrop-blur-md">
       <div className="flex items-center justify-end gap-4 p-2">
         <a
           href={GAME_ROADMAP_URL}
