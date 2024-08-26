@@ -29,7 +29,7 @@ import { useMinaBalancesStore } from "@/lib/stores/minaBalances";
 import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 import { MAINNET_NETWORK } from "@/constants/network";
 import { useLocalStorage } from "react-use";
-// import ProgressBar from "@/components/ProgressBar";
+
 type Trait = {
   key: string;
   value: string | number;
@@ -252,8 +252,7 @@ export const NFTModal = ({
   };
 
   const getRarityPercentage = (count: number, total: number) => {
-    const result = Math.ceil((count / total) * 100);
-    return result;
+    return Math.ceil((count / total) * 100);
   };
 
   const getRarityBackgroundColor = (percentage: number) => {
@@ -331,7 +330,7 @@ export const NFTModal = ({
                 <>
                   <div>-</div>
                   <div>
-                    {algoliaHitData && (
+                    {algoliaHitData ? (
                       <Link
                         target="_blank"
                         href={getMINAScanAccountLink(algoliaHitData?.owner)}
@@ -342,13 +341,15 @@ export const NFTModal = ({
                       >
                         {formatAddress(algoliaHitData?.owner)}
                       </Link>
+                    ) : (
+                      "-"
                     )}
                   </div>
                   <div>{date}</div>
                 </>
               )}
 
-              <div className="mt-1 flex items-center justify-center">
+              <div className="nft-price mt-1 flex items-center">
                 <div className="font-semibold">
                   {nftPrice}
                   <span className="text-primary-50"> MINA</span>

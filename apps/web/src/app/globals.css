@@ -593,6 +593,9 @@ input[type="range"]:focus::-moz-range-thumb {
   gap: 1rem;
 }
 
+.list-style .nft-price{
+  justify-content: center;
+}
 .nft-item{
   grid-column: span 5 / span 5;
 }
