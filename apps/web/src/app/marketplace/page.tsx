@@ -2,7 +2,7 @@
 import { InfoCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
 import { NFTModal } from "@/components/NFTModal";
 import { useNFTEntries } from "@/db/react-query-hooks";
@@ -18,14 +18,12 @@ const toggleGroupOptions = [
       "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
     id: 0,
   },
-
   {
     iconSrc: "/icons/gridEight.svg",
     gridApplyClass:
       "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2",
     id: 1,
   },
-
   {
     iconSrc: "/icons/listThree.svg",
     gridApplyClass: "list-style gap-2",
@@ -57,7 +55,6 @@ export default function Marketplace() {
     toggleGroupOptions[0].gridApplyClass
   );
 
-  //TODO: Remove active search term. there should be only one search state variablle
   const { data, isLoading, isError, error } = useNFTEntries({
     sortOrder,
     searchTerm: activeSearchTerm,
@@ -65,25 +62,27 @@ export default function Marketplace() {
   });
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
 
-  const handleSearchAction = useCallback(() => {
-    setActiveSearchTerm(searchTerm);
-    setCurrentPage(1); // Reset to first page when searching
-  }, [searchTerm, setActiveSearchTerm, setCurrentPage]);
+  const debouncedSearch = useMemo(() => {
+    let timeoutId: NodeJS.Timeout;
+    return (term: string) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setActiveSearchTerm(term);
+        setCurrentPage(1);
+      }, 300);
+    };
+  }, []); // Empty dependency array as this function doesn't depend on any props or state
 
-  const handleSearch = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "Enter") {
-        handleSearchAction();
-      }
+  useEffect(() => {
+    debouncedSearch(searchTerm);
+  }, [searchTerm, debouncedSearch]);
+
+  const handleSearchInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(event.target.value);
     },
-    [handleSearchAction]
+    []
   );
-
-  const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchTerm(event.target.value);
-  };
 
   const handleSortChange = (selectedOption: string) => {
     setSelectedItem(selectedOption);
@@ -142,15 +141,7 @@ export default function Marketplace() {
               placeholder="Search items"
               value={searchTerm}
               onChange={handleSearchInputChange}
-              onKeyPress={handleSearch}
             />
-
-            <button
-              className="absolute right-0 top-0 rounded-r-md bg-primary px-3 py-2 text-white hover:bg-primary/80"
-              onClick={handleSearchAction}
-            >
-              Search
-            </button>
           </div>
 
           <div>
@@ -225,7 +216,7 @@ export default function Marketplace() {
         <div className="">
           {data?.nfts.length === 0 ? (
             <div className="py-36 text-center">
-              <h2 className="font-3xl text-center font-semibold">
+              <h2 className="text-center text-3xl font-semibold">
                 No Results Found
               </h2>
             </div>
