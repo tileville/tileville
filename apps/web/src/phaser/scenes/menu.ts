@@ -157,7 +157,7 @@ export class MenuScene extends Scene {
       this.menu.add(playButton);
     }
 
-    const howToPlayButton = this.add.image(100, 700, "how-to-play-button");
+    const howToPlayButton = this.add.image(100, 600, "how-to-play-button");
     howToPlayButton.setOrigin(0.5);
 
     howToPlayButton.setInteractive({ useHandCursor: true });
