@@ -165,7 +165,7 @@ export const NFTModal = ({
 
   const parsedTraits = parseTraits(traits);
 
-  let isMintingDisabled;
+  let isMintingDisabled: boolean;
   if (isMockEnv) {
     isMintingDisabled = false;
   } else if (mintKey) {
