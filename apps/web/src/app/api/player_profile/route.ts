@@ -62,4 +62,5 @@ export async function POST(request: NextRequest) {
   return Response.json(res);
 }
 
-export const GET = withAuth(getHandler);
+// export const GET = withAuth(getHandler);
+export const GET = getHandler;
