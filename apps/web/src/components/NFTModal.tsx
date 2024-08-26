@@ -25,6 +25,9 @@ import {
   getMINAScanAccountLink,
 } from "@/lib/helpers";
 import clsx from "clsx";
+import { useMinaBalancesStore } from "@/lib/stores/minaBalances";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
+import { MAINNET_NETWORK } from "@/constants/network";
 // import ProgressBar from "@/components/ProgressBar";
 type Trait = {
   key: string;
@@ -109,11 +112,13 @@ export const NFTModal = ({
   const [nftMintResponse, setNftMintResponse] = useState(INITIAL_MINT_RESPONSE);
   const [mintTxnHash, setMintTxnHash] = useState("");
   const mintProgress = useAtomValue(mintProgressAtom);
+  const minaBalancesStore = useMinaBalancesStore();
 
   const networkStore = useNetworkStore();
   const { mintNft } = usePayNFTMintFee();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
+  const { switchNetwork } = useSwitchNetwork();
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
@@ -159,6 +164,10 @@ export const NFTModal = ({
   const parsedTraits = parseTraits(traits);
 
   const handleMint = async (nft_id: number) => {
+    if (networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
+      await switchNetwork(MAINNET_NETWORK);
+      return;
+    }
     if (!networkStore.address) {
       try {
         networkStore.connectWallet(false);
@@ -254,6 +263,28 @@ export const NFTModal = ({
     }
   };
 
+  const isSufficientBalance = (price: number) => {
+    return networkStore.address &&
+      minaBalancesStore.balances[networkStore.address] &&
+      Number(minaBalancesStore.balances[networkStore.address] ?? 0n) / 10 ** 9 >
+        price + 0.1
+      ? true
+      : false;
+  };
+
+  const getMINTText = (price: number) => {
+    if (!networkStore.address) {
+      return "Connect Wallet";
+    } else if (isMintingDisabled) {
+      return `MINTING STARTS SOON`;
+    } else if (!!algoliaHitData) {
+      return "ALREADY MINTED";
+    } else if (!isSufficientBalance(price)) {
+      return "Insufficient Balance";
+    } else {
+      return "MINT NFT";
+    }
+  };
   const isMintingDisabled = isMockEnv
     ? false
     : isFuture(globalConfig.nft_mint_start_date);
@@ -341,7 +372,7 @@ export const NFTModal = ({
                 Price:{" "}
                 <span>
                   <span className="text-lg font-semibold">{price}</span> MINA
-                </span>{" "}
+                </span>
               </div>
               <Flex direction="column" gap="3" mt="4" justify="center">
                 {isMintingDisabled && (
@@ -361,7 +392,10 @@ export const NFTModal = ({
                   })}
                   onClick={() => handleMint(nftID)}
                   disabled={
-                    isMintingDisabled || mintLoading || !!algoliaHitData
+                    isMintingDisabled ||
+                    mintLoading ||
+                    !!algoliaHitData ||
+                    !isSufficientBalance(Number(price))
                   }
                 >
                   {mintLoading && (
@@ -369,13 +403,7 @@ export const NFTModal = ({
                       <Spinner />
                     </span>
                   )}
-                  {!!networkStore.address
-                    ? isMintingDisabled
-                      ? `MINTING STARTS SOON`
-                      : !!algoliaHitData
-                      ? "ALREADY MINTED"
-                      : "MINT NFT"
-                    : "Connect Wallet"}
+                  {getMINTText(Number(price))}
                 </button>
 
                 {algoliaHitData?.price && +algoliaHitData?.price > 0 && (

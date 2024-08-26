@@ -11,31 +11,12 @@ import zekoLogo from "/public/image/cards/zekoLogo.png";
 import berkleyLogo from "/public/image/cards/berkleyLogo.png";
 import minaLogo from "/public/image/cards/minaLogo.png";
 import Image from "next/image";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 
 export default function NetworkPicker() {
   const [expanded, setExpanded] = useState(false);
   const networkStore = useNetworkStore();
-
-  const switchNetwork = async (network: Network) => {
-    console.log("Switching to network", network);
-    try {
-      try {
-        await (window as any).mina.switchChain({
-          networkID: network.networkID,
-        });
-      } catch (err) {
-        console.log("switch chain err", err);
-      }
-      networkStore.setNetwork(network);
-      setExpanded(false);
-    } catch (e: any) {
-      if (e?.code == 1001) {
-        await (window as any).mina.requestAccounts();
-        await switchNetwork(network);
-      }
-      throw e;
-    }
-  };
+  const { switchNetwork } = useSwitchNetwork();
 
   useEffect(() => {
     if (!walletInstalled()) return;
@@ -116,7 +97,10 @@ export default function NetworkPicker() {
               <div
                 key={network.chainId}
                 className="text-header-menu flex h-full w-full cursor-pointer flex-row items-center gap-2 py-3 pl-2 text-foreground last:rounded-b hover:font-semibold hover:text-black"
-                onClick={() => switchNetwork(network)}
+                onClick={() => {
+                  switchNetwork(network);
+                  setExpanded(false);
+                }}
               >
                 <Image
                   src={minaLogo}
