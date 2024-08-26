@@ -575,10 +575,18 @@ input[type="range"]:focus::-moz-range-thumb {
 
 .list-style .nft-content > div:not(:last-child){
   grid-column: span 4 / span 4;
+  text-align: center;
 }
 .list-style .nft-content > div:last-child{
   grid-column: span 3 / span 3;
   /* text-align: right; */
+}
+
+.list-style .nft-content > div:nth-child(4){
+  grid-column: span 6 / span 6;
+}
+.list-style .nft-content > div:nth-child(2){
+  grid-column: span 2 / span 2;
 }
 
 .list-style .nft-content-info{
@@ -589,12 +597,22 @@ input[type="range"]:focus::-moz-range-thumb {
   grid-column: span 5 / span 5;
 }
 
-.list-header > div:not(:first-child):not(:last-child){
+.list-header > div:not(:first-child){
+  text-align: center;
+}
+
+.list-header > div:not(:first-child):not(:last-child):not(:nth-child(4)):not(:nth-child(2)){
   grid-column: span 4 / span 4;
 }
 .list-header > div:last-child{
   grid-column: span 3 / span 3;
-  /* text-align: right; */
+}
+
+.list-header > div:nth-child(4){
+  grid-column: span 6 / span 6;
+}
+.list-header > div:nth-child(2){
+  grid-column: span 2 / span 2;
 }
 @keyframes mulShdSpin {
   0%,

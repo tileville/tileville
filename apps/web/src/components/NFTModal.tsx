@@ -299,6 +299,9 @@ export const NFTModal = ({
     }
   };
 
+  const date = algoliaHitData
+    ? new Date(algoliaHitData?.time).toUTCString()
+    : "-";
   // console.log("mint progress", mintProgress, algoliaHitData);
   return (
     <>
@@ -327,35 +330,50 @@ export const NFTModal = ({
               {renderStyle.includes("list-style") && (
                 <>
                   <div>-</div>
-                  <div>-</div>
-                  <div>-</div>
+                  <div>
+                    {algoliaHitData && (
+                      <Link
+                        target="_blank"
+                        href={getMINAScanAccountLink(algoliaHitData?.owner)}
+                        className="font-semibold text-primary underline hover:no-underline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        {formatAddress(algoliaHitData?.owner)}
+                      </Link>
+                    )}
+                  </div>
+                  <div>{date}</div>
                 </>
               )}
 
-              <div className="mt-1 flex items-center justify-between">
+              <div className="mt-1 flex items-center justify-center">
                 <div className="font-semibold">
                   {nftPrice}
                   <span className="text-primary-50"> MINA</span>
                 </div>
               </div>
-              {algoliaHitData && (
-                <div className="mt-1 rounded-md bg-primary/30 p-1 text-center text-sm">
-                  Already Minted
-                </div>
-              )}
+              <div className="flex flex-col">
+                {algoliaHitData && (
+                  <div className="mt-1 rounded-md bg-primary/30 p-1 text-center text-sm">
+                    Already Minted
+                  </div>
+                )}
 
-              {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
-                <div className="text-center">
-                  <Link
-                    target="_blank"
-                    href={getMINANFTLink(algoliaHitData.hash)}
-                    className="text-sm font-semibold text-primary underline hover:no-underline"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Buy on minanft
-                  </Link>
-                </div>
-              )}
+                {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
+                  <div className="text-center">
+                    <Link
+                      target="_blank"
+                      href={getMINANFTLink(algoliaHitData.hash)}
+                      className="text-sm font-semibold text-primary underline hover:no-underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Buy on minanft
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Dialog.Trigger>
