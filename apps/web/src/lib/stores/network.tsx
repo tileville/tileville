@@ -22,7 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintNFT } from "@/hooks/useMintNFT";
-import { requestAccounts } from "../helpers";
+import { requestAccounts, requestNetwork } from "../helpers";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
@@ -72,7 +72,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
       async onWalletConnected(address: string | undefined) {
         if (address) {
           localStorage.minaAdderess = address;
-          const network = await (window as any).mina.requestNetwork();
+          const network = await requestNetwork();
           const minaNetwork = NETWORKS.find(
             (x) =>
               (network.chainId != "unknown"

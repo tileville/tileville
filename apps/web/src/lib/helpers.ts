@@ -75,3 +75,13 @@ export async function requestAccounts() {
     return await window.mina?.requestAccounts();
   }
 }
+
+export async function requestNetwork() {
+  if (window.mina?.isPallad) {
+    return await window.mina
+      ?.request({ method: "mina_requestNetwork" })
+      .then((resp) => resp.result);
+  } else {
+    return await (window as any).mina?.requestNetwork();
+  }
+}
