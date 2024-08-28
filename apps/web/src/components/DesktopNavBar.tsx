@@ -83,19 +83,36 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
         }
       }
       if (isSignatureRequired) {
-        (window as any).mina
-          ?.signMessage({
-            message: ACCOUNT_AUTH_MESSAGE,
-          })
-          .then((signResult: any) => {
-            const authSignatureStr = `${signResult.publicKey || ""} ${
-              signResult?.signature?.scalar || ""
-            } ${signResult?.signature?.field || ""}`;
-            setAccountAuthSignature(authSignatureStr);
-          })
-          .catch((error: any) => {
-            console.log("failed to set signature", error);
-          });
+        if (window.mina?.isPallad) {
+          window.mina
+            ?.request({
+              method: "mina_sign",
+              params: { message: "Message to sign" },
+            })
+            .then((result: any) => {
+              const authSignatureStr = `${result.publicKey || ""} ${
+                result?.signature?.scalar || ""
+              } ${result?.signature?.field || ""}`;
+              setAccountAuthSignature(authSignatureStr);
+            })
+            .catch((error: any) => {
+              console.log("failed to set signature", error);
+            });
+        } else {
+          (window as any).mina
+            ?.signMessage({
+              message: ACCOUNT_AUTH_MESSAGE,
+            })
+            .then((signResult: any) => {
+              const authSignatureStr = `${signResult.publicKey || ""} ${
+                signResult?.signature?.scalar || ""
+              } ${signResult?.signature?.field || ""}`;
+              setAccountAuthSignature(authSignatureStr);
+            })
+            .catch((error: any) => {
+              console.log("failed to set signature", error);
+            });
+        }
       }
       phClient.identify(networkStore.address, { username: data?.username });
       // This is not working. debug this.

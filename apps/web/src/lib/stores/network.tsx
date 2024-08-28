@@ -213,7 +213,9 @@ export const useParticipationFee = () => {
     type: "VOUCHER" | "NETWORK" | "FREE";
   }): Promise<{ id: number } | null | undefined> => {
     let hash;
-    let network = networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
+    let network = window.mina?.isPallad
+      ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
+      : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
     let txn_status = "PENDING";
     if (!networkStore.address) {
       networkStore.connectWallet(false);
@@ -241,19 +243,36 @@ export const useParticipationFee = () => {
         txn_status = "CONFIRMED";
         break;
       case "NETWORK":
-        try {
-          const data: SendTransactionResult | ProviderError = await (
-            window as any
-          )?.mina?.sendPayment({
-            amount: participation_fee,
-            to: treasury_address,
-            memo: `Pay ${participation_fee} MINA.`,
-          });
-          hash = (data as SendTransactionResult).hash;
-          txn_status = "PENDING";
-        } catch (err: any) {
-          toast(`Txn failed with error ${err.toString()}. report a bug`);
+        if (window.mina?.isPallad) {
+          try {
+            const data: SendTransactionResult | ProviderError = await (
+              window as any
+            )?.submitTransaction({
+              amount: participation_fee,
+              to: treasury_address,
+              memo: `Pay ${participation_fee} MINA.`,
+            });
+            hash = (data as SendTransactionResult).hash;
+            txn_status = "PENDING";
+          } catch (err: any) {
+            toast(`Txn failed with error ${err.toString()}. report a bug`);
+          }
+        } else {
+          try {
+            const data: SendTransactionResult | ProviderError = await (
+              window as any
+            )?.mina?.sendPayment({
+              amount: participation_fee,
+              to: treasury_address,
+              memo: `Pay ${participation_fee} MINA.`,
+            });
+            hash = (data as SendTransactionResult).hash;
+            txn_status = "PENDING";
+          } catch (err: any) {
+            toast(`Txn failed with error ${err.toString()}. report a bug`);
+          }
         }
+
         break;
       default:
     }

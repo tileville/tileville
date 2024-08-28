@@ -27,14 +27,14 @@ export const useWalletStore = create<WalletState, [["zustand/immer", never]]>(
         throw new Error("Aura wallet not installed");
       }
 
-      const [wallet] = await mina.getAccounts();
+      const [wallet] = await requestAccounts();
       set((state) => {
         state.wallet = wallet;
       });
     },
     async connectWallet() {
       if (typeof mina === "undefined") {
-        throw new Error("Aura wallet not installed");
+        throw new Error("wallet not installed");
       }
       const [wallet] = await requestAccounts();
       set((state) => {
@@ -44,7 +44,7 @@ export const useWalletStore = create<WalletState, [["zustand/immer", never]]>(
 
     observeWalletChange() {
       if (typeof mina === "undefined") {
-        throw new Error("Auro wallet not installed");
+        throw new Error("wallet not installed");
       }
 
       mina.on("accountsChanged", ([wallet]) => {
