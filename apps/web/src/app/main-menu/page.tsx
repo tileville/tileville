@@ -67,9 +67,12 @@ export default function MainMenu() {
   const globalConfig = useAtomValue(globalConfigAtom);
 
   return (
-    <div className="flex min-h-screen flex-col pt-20" tabIndex={0}>
+    <div
+      className="flex min-h-screen flex-col items-center justify-center pt-20"
+      tabIndex={0}
+    >
       <LandingBackground />
-      <div className="z-10 flex w-full flex-col items-center justify-center gap-8 pt-20">
+      <div className="z-10 flex w-full flex-col items-center justify-center gap-8">
         <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
           {buttons.map((button) => (
             <PrimaryButton
