@@ -1,3 +1,4 @@
+import { requestAccounts } from "@/lib/helpers";
 import { PendingTransaction } from "@proto-kit/sequencer";
 // import { MethodIdResolver } from "@proto-kit/module";
 // import { useCallback, useEffect, useMemo } from "react";
@@ -35,7 +36,7 @@ export const useWalletStore = create<WalletState, [["zustand/immer", never]]>(
       if (typeof mina === "undefined") {
         throw new Error("Aura wallet not installed");
       }
-      const [wallet] = await mina.requestAccounts();
+      const [wallet] = await requestAccounts();
       set((state) => {
         state.wallet = wallet;
       });

@@ -22,6 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintNFT } from "@/hooks/useMintNFT";
+import { requestAccounts } from "../helpers";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
@@ -119,7 +120,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
             this.onWalletConnected(localStorage.minaAdderess);
           }
         } else {
-          const accounts = await (window as any).mina.requestAccounts();
+          const accounts = await requestAccounts();
           this.onWalletConnected(accounts[0]);
         }
       },

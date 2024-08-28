@@ -65,3 +65,13 @@ export const getMINANFTLink = (txnHash: string) =>
 
 export const getMINAScanAccountLink = (address: string) =>
   `https://minascan.io/mainnet/account/${address}`;
+
+export async function requestAccounts() {
+  if (window.mina?.isPallad) {
+    return await window.mina
+      ?.request({ method: "mina_accounts" })
+      .then((resp) => resp.result);
+  } else {
+    return await window.mina?.requestAccounts();
+  }
+}

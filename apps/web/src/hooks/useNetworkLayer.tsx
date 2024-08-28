@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { GAME_ENTRY_FEE_KEY, TREASURY_ADDRESS } from "../constants";
 import { Network } from "../types";
 import { useSessionStorage } from "react-use";
+import { requestAccounts } from "@/lib/helpers";
 
 export const useNetworkLayer = () => {
   const { signer, setSigner } = useContext(SignerContext);
@@ -27,7 +28,7 @@ export const useNetworkLayer = () => {
     if (typeof (window as any).mina == "undefined") {
       toast("Please install Auro wallet extension!");
     } else {
-      const accounts = await (window as any).mina.requestAccounts();
+      const accounts = await requestAccounts();
       const network = await (window as any).mina.requestNetwork();
       setSigner(accounts[0]);
       setChain({ chainId: network.chainId, chainName: network.name });

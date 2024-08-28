@@ -16,6 +16,7 @@ import {
 import { createFileFromImageUrl } from "@/app/api/mint-nft/common-utils";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
+import { requestAccounts } from "@/lib/helpers";
 
 export type MintNFTParams = {
   name: string;
@@ -337,7 +338,7 @@ export function useMintNFT() {
 }
 
 export async function getAccount(): Promise<string | undefined> {
-  const accounts = await (window as any)?.mina?.requestAccounts();
+  const accounts = await requestAccounts();
   let address: string | undefined = undefined;
   if (accounts?.code === undefined && accounts?.length > 0) {
     address = accounts[0];
