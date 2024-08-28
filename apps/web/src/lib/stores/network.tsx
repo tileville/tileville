@@ -22,7 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintNFT } from "@/hooks/useMintNFT";
-import { requestAccounts, requestNetwork } from "../helpers";
+import { requestAccounts, requestNetwork, signMessage } from "../helpers";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
@@ -147,10 +147,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
         });
       },
       setAuthSignature() {
-        return (window as any).mina
-          ?.signMessage({
-            message: ACCOUNT_AUTH_MESSAGE,
-          })
+        return signMessage(ACCOUNT_AUTH_MESSAGE)
           .then((signResult: any) => {
             const authSignatureStr = `${signResult.publicKey || ""} ${
               signResult?.signature?.scalar || ""
@@ -243,7 +240,7 @@ export const useParticipationFee = () => {
         txn_status = "CONFIRMED";
         break;
       case "NETWORK":
-        if (window.mina?.isPallad) {
+        if (false) {
           try {
             const data: SendTransactionResult | ProviderError = await (
               window as any

@@ -8,7 +8,7 @@ import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "./PrimaryButton";
 import { MediaPlayer } from "./MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
-import { formatAddress, walletInstalled } from "@/lib/helpers";
+import { formatAddress, signMessage, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
 import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
@@ -83,36 +83,16 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
         }
       }
       if (isSignatureRequired) {
-        if (window.mina?.isPallad) {
-          window.mina
-            ?.request({
-              method: "mina_sign",
-              params: { message: "Message to sign" },
-            })
-            .then((result: any) => {
-              const authSignatureStr = `${result.publicKey || ""} ${
-                result?.signature?.scalar || ""
-              } ${result?.signature?.field || ""}`;
-              setAccountAuthSignature(authSignatureStr);
-            })
-            .catch((error: any) => {
-              console.log("failed to set signature", error);
-            });
-        } else {
-          (window as any).mina
-            ?.signMessage({
-              message: ACCOUNT_AUTH_MESSAGE,
-            })
-            .then((signResult: any) => {
-              const authSignatureStr = `${signResult.publicKey || ""} ${
-                signResult?.signature?.scalar || ""
-              } ${signResult?.signature?.field || ""}`;
-              setAccountAuthSignature(authSignatureStr);
-            })
-            .catch((error: any) => {
-              console.log("failed to set signature", error);
-            });
-        }
+        signMessage(ACCOUNT_AUTH_MESSAGE)
+          .then((signResult: any) => {
+            const authSignatureStr = `${signResult.publicKey || ""} ${
+              signResult?.signature?.scalar || ""
+            } ${signResult?.signature?.field || ""}`;
+            setAccountAuthSignature(authSignatureStr);
+          })
+          .catch((error: any) => {
+            console.log("failed to set signature", error);
+          });
       }
       phClient.identify(networkStore.address, { username: data?.username });
       // This is not working. debug this.

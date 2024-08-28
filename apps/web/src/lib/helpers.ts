@@ -86,3 +86,15 @@ export async function requestNetwork() {
     return await (window as any).mina?.requestNetwork();
   }
 }
+
+export async function signMessage(message: string) {
+  if (window.mina?.isPallad) {
+    return await window.mina
+      ?.request({ method: "mina_sign", params: { message } })
+      .then((resp) => resp.result);
+  } else {
+    return (window as any).mina?.signMessage({
+      message,
+    });
+  }
+}
