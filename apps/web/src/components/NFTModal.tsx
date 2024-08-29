@@ -15,7 +15,6 @@ import { CountdownTimer } from "./common/CountdownTimer";
 import { getTime, isFuture } from "date-fns";
 import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
-import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
 import { StepProgressBar } from "./ProgressBar";
 import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
@@ -501,11 +500,6 @@ export const NFTModal = ({
                     </p>
                   )}
               </Flex>
-              <MintRegisterModal
-                triggerBtnClasses={
-                  "cursor-pointer text-xs font-semibold text-primary underline hover:no-underline focus-visible:outline-none"
-                }
-              />
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">
