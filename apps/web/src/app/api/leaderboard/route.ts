@@ -10,7 +10,8 @@ export async function GET(request: NextRequest) {
       .from("game_scores")
       .select("*")
       .eq("competition_key", competition_key)
-      .order("score", { ascending: false });
+      .order("score", { ascending: false })
+      .order("game_id", { ascending: true });
 
     const wallet_addresses =
       scoreEntries?.map(({ wallet_address }) => wallet_address) || [];
