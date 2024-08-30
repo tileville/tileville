@@ -79,6 +79,30 @@ const parseTraits = (traits: Json): Trait[] => {
   return [];
 };
 
+const getRarityPercentage = (count: number, total: number) => {
+  return Math.ceil((count / total) * 100);
+};
+
+const getRarityColor = (percentage: number) => {
+  if (percentage < 5) {
+    return "text-red-900";
+  } else if (percentage < 20) {
+    return "text-[#a5a51b]";
+  } else {
+    return "text-primary";
+  }
+};
+
+const getRarityBackgroundColor = (percentage: number) => {
+  if (percentage < 5) {
+    return "bg-[red]/10";
+  } else if (percentage < 20) {
+    return "bg-[yellow]/10";
+  } else {
+    return "bg-primary/30";
+  }
+};
+
 export const NFTModal = ({
   traits,
   img_url,
@@ -250,37 +274,18 @@ export const NFTModal = ({
     }
   };
 
-  const getRarityPercentage = (count: number, total: number) => {
-    return Math.ceil((count / total) * 100);
-  };
-
-  const getRarityBackgroundColor = (percentage: number) => {
-    if (percentage < 5) {
-      return "bg-[red]/10";
-    } else if (percentage < 20) {
-      return "bg-[yellow]/10";
-    } else {
-      return "bg-primary/30";
-    }
-  };
-
-  const getRarityColor = (percentage: number) => {
-    if (percentage < 5) {
-      return "text-red-900";
-    } else if (percentage < 20) {
-      return "text-[#a5a51b]";
-    } else {
-      return "text-primary";
-    }
-  };
-
   const isSufficientBalance = (price: number) => {
-    return networkStore.address &&
+    if (!networkStore.address) {
+      return true;
+    } else if (
       minaBalancesStore.balances[networkStore.address] &&
       Number(minaBalancesStore.balances[networkStore.address] ?? 0n) / 10 ** 9 >
         price + 0.1
-      ? true
-      : false;
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const getMINTText = (price: number) => {
@@ -300,7 +305,9 @@ export const NFTModal = ({
   const date = algoliaHitData
     ? new Date(algoliaHitData?.time).toUTCString()
     : "-";
-  // console.log("mint progress", mintProgress, algoliaHitData);
+
+  console.log("mint progress", mintProgress, error);
+
   return (
     <>
       <Dialog.Root>
@@ -374,6 +381,17 @@ export const NFTModal = ({
                   </div>
                 )}
               </div>
+
+              {mintProgress[nftID]?.step > 0 && !error && (
+                <div className="absolute bottom-4 right-4">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <span>MINTING</span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
+                      <Spinner />
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Trigger>
