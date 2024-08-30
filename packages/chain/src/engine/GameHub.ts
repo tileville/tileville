@@ -14,8 +14,8 @@ import {
   GameRecordKey,
   LeaderboardIndex,
   LeaderboardScore,
-} from './types';
-import { ZNAKE_TOKEN_ID } from './constants';
+} from '../types';
+import { ZNAKE_TOKEN_ID } from '../constants';
 
 export interface IScoreable {
   score: UInt64;

@@ -1,5 +1,5 @@
 import { Field, Provable, Struct, Bool, UInt64, Int64 } from 'o1js';
-import { RandomGenerator } from './random';
+import { RandomGenerator } from '../engine/Random';
 import {
   GameInput,
   Position,
@@ -7,7 +7,7 @@ import {
   TileMap,
   TriHex,
   TriHexDeck,
-} from './types';
+} from '../types';
 import {
   GRID_SIZE,
   ShapePatternsId,
@@ -19,8 +19,8 @@ import {
   shapeSet1,
   shapeSet2,
   shapeSet3,
-} from './constants';
-import { Queue } from './utility';
+} from '../constants';
+import { Queue } from '../utility';
 
 export class GameContext extends Struct({
   trihexDeck: TriHexDeck,

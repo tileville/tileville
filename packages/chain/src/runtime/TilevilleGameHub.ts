@@ -5,8 +5,8 @@ import {
   generateTileMapBySeed,
   loadGameContext,
 } from './GameContext';
-import { GameInput, TileMap, TriHexDeck } from './types';
-import { GameHub } from './GameHub';
+import { GameInput, TileMap, TriHexDeck } from '../types';
+import { GameHub } from '../engine/GameHub';
 import { runtimeMethod, runtimeModule } from '@proto-kit/module';
 
 export class GameRecordPublicOutput extends Struct({
@@ -118,7 +118,7 @@ export const GameRecord = ZkProgram({
 export class GameRecordProof extends ZkProgram.Proof(GameRecord) {}
 
 @runtimeModule()
-export class MinapolisGameHub extends GameHub<
+export class TilevilleGameHub extends GameHub<
   undefined,
   GameRecordPublicOutput,
   GameRecordProof
