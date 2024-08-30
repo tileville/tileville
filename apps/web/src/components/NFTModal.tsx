@@ -275,12 +275,17 @@ export const NFTModal = ({
   };
 
   const isSufficientBalance = (price: number) => {
-    return networkStore.address &&
+    if (!networkStore.address) {
+      return true;
+    } else if (
       minaBalancesStore.balances[networkStore.address] &&
       Number(minaBalancesStore.balances[networkStore.address] ?? 0n) / 10 ** 9 >
         price + 0.1
-      ? true
-      : false;
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const getMINTText = (price: number) => {
