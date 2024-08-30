@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { GAME_ENTRY_FEE_KEY, TREASURY_ADDRESS } from "../constants";
 import { Network } from "../types";
 import { useSessionStorage } from "react-use";
-import { requestAccounts, requestNetwork } from "@/lib/helpers";
+import { requestAccounts, requestNetwork, sendPayment } from "@/lib/helpers";
 
 export const useNetworkLayer = () => {
   const { signer, setSigner } = useContext(SignerContext);
@@ -40,21 +40,23 @@ export const useNetworkLayer = () => {
       toast("Please connect your wallet first");
     }
     try {
-      const data: SendTransactionResult | ProviderError = await (
-        window as any
-      )?.mina?.sendPayment({
-        amount: 2,
-        to: TREASURY_ADDRESS,
-        memo: "minapolis game",
-      });
-      const hash = (data as SendTransactionResult).hash;
-      if (hash) {
-        console.log("response hash", hash);
-        setResHash(hash);
-        setIsEntryFeeFaid(true);
-      } else {
-        toast((data as ProviderError).message || "");
-      }
+      // const data: SendTransactionResult | ProviderError = await (
+      //   window as any
+      // )?.mina?.sendPayment({
+      //   amount: 2,
+      //   to: TREASURY_ADDRESS,
+      //   memo: "minapolis game",
+      // });
+      // const hash = (data as SendTransactionResult).hash;
+      // if (hash) {
+      //   console.log("response hash", hash);
+      //   setResHash(hash);
+      //   setIsEntryFeeFaid(true);
+      // } else {
+      //   toast((data as ProviderError).message || "");
+      // }
+      const accounts = await requestAccounts();
+      await sendPayment({ from: accounts[0]?.address || "", amount: 1 });
     } catch (err) {
       toast("Failed to transfer entry fees😭");
     }

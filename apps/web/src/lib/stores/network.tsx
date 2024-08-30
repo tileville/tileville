@@ -22,7 +22,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintNFT } from "@/hooks/useMintNFT";
-import { requestAccounts, requestNetwork, signMessage } from "../helpers";
+import {
+  requestAccounts,
+  requestNetwork,
+  sendPayment,
+  signMessage,
+} from "../helpers";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
@@ -76,7 +81,8 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
           const minaNetwork = NETWORKS.find(
             (x) =>
               (network.chainId != "unknown"
-                ? x.chainId == network.chainId
+                ? x.chainId == network.chainId ||
+                  x.palladNetworkID === network.chainId
                 : x.name == network.name) || x.networkID === network.networkID
           );
           const accountAuthSignature =
@@ -240,35 +246,12 @@ export const useParticipationFee = () => {
         txn_status = "CONFIRMED";
         break;
       case "NETWORK":
-        if (false) {
-          try {
-            const data: SendTransactionResult | ProviderError = await (
-              window as any
-            )?.submitTransaction({
-              amount: participation_fee,
-              to: treasury_address,
-              memo: `Pay ${participation_fee} MINA.`,
-            });
-            hash = (data as SendTransactionResult).hash;
-            txn_status = "PENDING";
-          } catch (err: any) {
-            toast(`Txn failed with error ${err.toString()}. report a bug`);
-          }
-        } else {
-          try {
-            const data: SendTransactionResult | ProviderError = await (
-              window as any
-            )?.mina?.sendPayment({
-              amount: participation_fee,
-              to: treasury_address,
-              memo: `Pay ${participation_fee} MINA.`,
-            });
-            hash = (data as SendTransactionResult).hash;
-            txn_status = "PENDING";
-          } catch (err: any) {
-            toast(`Txn failed with error ${err.toString()}. report a bug`);
-          }
-        }
+        hash = await sendPayment({
+          from: networkStore.address,
+          amount: participation_fee,
+        });
+
+        txn_status = "PENDING";
 
         break;
       default:

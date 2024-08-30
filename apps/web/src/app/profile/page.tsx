@@ -20,6 +20,7 @@ import PastGames from "@/components/profileTabs/pastGames";
 import Transactions from "@/components/profileTabs/transactions";
 import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
+import { getPalladBalance } from "@/lib/helpers";
 
 interface IFormInput {
   firstName: string;
@@ -401,7 +402,7 @@ export default function Profile() {
                     minaBalancesStore.balances[networkStore.address] ?? 0n
                   ) /
                   10 ** 9
-                ).toFixed(2)}{" "}
+                ).toFixed(2)}
                 MINA
               </div>
             </div>
