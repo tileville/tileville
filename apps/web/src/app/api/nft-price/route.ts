@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     return Response.json(
       {
         name,
-        price,
+        price: price - 1,
         success: true,
       },
       { status: 200 }

@@ -15,7 +15,6 @@ import { CountdownTimer } from "./common/CountdownTimer";
 import { getTime, isFuture } from "date-fns";
 import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
-import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
 import { Spinner } from "./common/Spinner";
 import { StepProgressBar } from "./ProgressBar";
 import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
@@ -25,7 +24,11 @@ import {
   getMINAScanAccountLink,
 } from "@/lib/helpers";
 import clsx from "clsx";
-// import ProgressBar from "@/components/ProgressBar";
+import { useMinaBalancesStore } from "@/lib/stores/minaBalances";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
+import { MAINNET_NETWORK } from "@/constants/network";
+import { useLocalStorage } from "react-use";
+
 type Trait = {
   key: string;
   value: string | number;
@@ -109,11 +112,14 @@ export const NFTModal = ({
   const [nftMintResponse, setNftMintResponse] = useState(INITIAL_MINT_RESPONSE);
   const [mintTxnHash, setMintTxnHash] = useState("");
   const mintProgress = useAtomValue(mintProgressAtom);
+  const minaBalancesStore = useMinaBalancesStore();
 
   const networkStore = useNetworkStore();
   const { mintNft } = usePayNFTMintFee();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
+  const { switchNetwork } = useSwitchNetwork();
+  const [mintKey] = useLocalStorage("MINTING_ENABLE", "");
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
@@ -158,7 +164,22 @@ export const NFTModal = ({
 
   const parsedTraits = parseTraits(traits);
 
+  let isMintingDisabled: boolean;
+  if (isMockEnv) {
+    isMintingDisabled = false;
+  } else if (mintKey) {
+    isMintingDisabled = false;
+  } else if (isFuture(globalConfig.nft_mint_start_date)) {
+    isMintingDisabled = true;
+  } else {
+    isMintingDisabled = false;
+  }
+
   const handleMint = async (nft_id: number) => {
+    if (networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
+      await switchNetwork(MAINNET_NETWORK);
+      return;
+    }
     if (!networkStore.address) {
       try {
         networkStore.connectWallet(false);
@@ -230,8 +251,7 @@ export const NFTModal = ({
   };
 
   const getRarityPercentage = (count: number, total: number) => {
-    const result = Math.ceil((count / total) * 100);
-    return result;
+    return Math.ceil((count / total) * 100);
   };
 
   const getRarityBackgroundColor = (percentage: number) => {
@@ -254,10 +274,32 @@ export const NFTModal = ({
     }
   };
 
-  const isMintingDisabled = isMockEnv
-    ? false
-    : isFuture(globalConfig.nft_mint_start_date);
+  const isSufficientBalance = (price: number) => {
+    return networkStore.address &&
+      minaBalancesStore.balances[networkStore.address] &&
+      Number(minaBalancesStore.balances[networkStore.address] ?? 0n) / 10 ** 9 >
+        price + 0.1
+      ? true
+      : false;
+  };
 
+  const getMINTText = (price: number) => {
+    if (isMintingDisabled) {
+      return `MINTING STARTS SOON`;
+    } else if (!networkStore.address) {
+      return "Connect Wallet";
+    } else if (!!algoliaHitData) {
+      return "ALREADY MINTED";
+    } else if (!isSufficientBalance(price)) {
+      return "Insufficient Balance";
+    } else {
+      return "MINT NFT";
+    }
+  };
+
+  const date = algoliaHitData
+    ? new Date(algoliaHitData?.time).toUTCString()
+    : "-";
   // console.log("mint progress", mintProgress, algoliaHitData);
   return (
     <>
@@ -286,35 +328,52 @@ export const NFTModal = ({
               {renderStyle.includes("list-style") && (
                 <>
                   <div>-</div>
-                  <div>-</div>
-                  <div>-</div>
+                  <div>
+                    {algoliaHitData ? (
+                      <Link
+                        target="_blank"
+                        href={getMINAScanAccountLink(algoliaHitData?.owner)}
+                        className="font-semibold text-primary underline hover:no-underline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        {formatAddress(algoliaHitData?.owner)}
+                      </Link>
+                    ) : (
+                      "-"
+                    )}
+                  </div>
+                  <div>{date}</div>
                 </>
               )}
 
-              <div className="mt-1 flex items-center justify-between">
+              <div className="nft-price mt-1 flex items-center">
                 <div className="font-semibold">
                   {nftPrice}
                   <span className="text-primary-50"> MINA</span>
                 </div>
               </div>
-              {algoliaHitData && (
-                <div className="mt-1 rounded-md bg-primary/30 p-1 text-center text-sm">
-                  Already Minted
-                </div>
-              )}
+              <div className="flex flex-col">
+                {algoliaHitData && (
+                  <div className="mt-1 rounded-md bg-primary/30 p-1 text-center text-sm">
+                    Already Minted
+                  </div>
+                )}
 
-              {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
-                <div className="text-center">
-                  <Link
-                    target="_blank"
-                    href={getMINANFTLink(algoliaHitData.hash)}
-                    className="text-sm font-semibold text-primary underline hover:no-underline"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Buy on minanft
-                  </Link>
-                </div>
-              )}
+                {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
+                  <div className="text-center">
+                    <Link
+                      target="_blank"
+                      href={getMINANFTLink(algoliaHitData.hash)}
+                      className="text-sm font-semibold text-primary underline hover:no-underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Buy on minanft
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Dialog.Trigger>
@@ -341,7 +400,7 @@ export const NFTModal = ({
                 Price:{" "}
                 <span>
                   <span className="text-lg font-semibold">{price}</span> MINA
-                </span>{" "}
+                </span>
               </div>
               <Flex direction="column" gap="3" mt="4" justify="center">
                 {isMintingDisabled && (
@@ -361,7 +420,10 @@ export const NFTModal = ({
                   })}
                   onClick={() => handleMint(nftID)}
                   disabled={
-                    isMintingDisabled || mintLoading || !!algoliaHitData
+                    isMintingDisabled ||
+                    mintLoading ||
+                    !!algoliaHitData ||
+                    !isSufficientBalance(Number(price))
                   }
                 >
                   {mintLoading && (
@@ -369,13 +431,7 @@ export const NFTModal = ({
                       <Spinner />
                     </span>
                   )}
-                  {!!networkStore.address
-                    ? isMintingDisabled
-                      ? `MINTING STARTS SOON`
-                      : !!algoliaHitData
-                      ? "ALREADY MINTED"
-                      : "MINT NFT"
-                    : "Connect Wallet"}
+                  {getMINTText(Number(price))}
                 </button>
 
                 {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
@@ -444,11 +500,6 @@ export const NFTModal = ({
                     </p>
                   )}
               </Flex>
-              <MintRegisterModal
-                triggerBtnClasses={
-                  "cursor-pointer text-xs font-semibold text-primary underline hover:no-underline focus-visible:outline-none"
-                }
-              />
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">
