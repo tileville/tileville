@@ -140,6 +140,54 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     setFocusedButtonIndex(index);
   };
 
+  const connectWallet = () => {
+    if (window.mina?.isPallad) {
+      toast(
+        (t) => (
+          <div className="max-w-md">
+            <p className="mb-2 font-bold">
+              Pallad wallet is not supported yet. Please use Auro wallet
+              instead.
+            </p>
+            <ol className="mb-2 list-inside list-decimal text-sm">
+              <li>
+                Open a new tab and go to{" "}
+                <span className="rounded bg-gray-200 px-1 font-mono">
+                  chrome://extensions
+                </span>
+              </li>
+              <li>Find &quot;Pallad Wallet&quot; in your list of extensions</li>
+              <li>Toggle the switch to disable it</li>
+            </ol>
+            <div className="mt-2 text-sm">
+              <a
+                href="https://chromewebstore.google.com/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Get Auro Wallet
+              </a>
+            </div>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="mt-2 text-sm text-gray-500 hover:text-gray-700"
+            >
+              Dismiss
+            </button>
+          </div>
+        ),
+        {
+          duration: 20000, // Show for 20 seconds
+          position: "top-center",
+        }
+      );
+    } else {
+      networkStore.connectWallet(false);
+    }
+  };
+
   return (
     <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pb-1 pt-2 text-black backdrop-blur-md">
       <div className="flex w-full items-start justify-between">
@@ -227,9 +275,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
                   svg={"account"}
                   text="Connect wallet"
                   isMiddle={true}
-                  onClick={() => {
-                    networkStore.connectWallet(false);
-                  }}
+                  onClick={connectWallet}
                   className="border border-primary"
                 />
               ) : (

@@ -41,7 +41,6 @@ export const metadata = {
       { rel: "manifest", url: "/img/favicon/site.webmanifest" },
     ],
   },
-  themeColor: "#ffffff",
   msapplication: {
     tileColor: "#da532c",
   },
