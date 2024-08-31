@@ -176,7 +176,11 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.3.3)
       tileville-chain-dev:
+<<<<<<< Updated upstream
         specifier: ^0.0.3
+=======
+        specifier: 0.0.5
+>>>>>>> Stashed changes
         version: link:../../packages/chain
       truncate-middle:
         specifier: ^1.0.6
