@@ -1,7 +1,7 @@
 import { type RuntimeModulesRecord } from "@proto-kit/module";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { GameRecordProof, client } from "tileville-chain-dev";
+import { GameRecordProof, ClientAppChain as client } from "tileville-chain-dev";
 import { dummyProofBase64 } from "@/constants/dummyProofBase64";
 import { PublicKey } from "o1js";
 

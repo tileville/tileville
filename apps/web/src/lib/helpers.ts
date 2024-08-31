@@ -113,12 +113,20 @@ export async function sendPayment({
   from: string;
   amount: number;
 }) {
+  const nonceResponse = await fetch(`/api/nonce?wallet_address=${from}`);
+  const nonce = await nonceResponse.json();
+  console.log("nonce", nonce);
+  if (!nonce.success) {
+    throw new Error("failed to fetch nonce");
+    return;
+  }
+  console.log("nonce", nonce);
   const transaction = {
-    to: TREASURY_ADDRESS,
+    to: "B62qrMJvdEiZksNtqGpMbYLGr9gtPx8zrGHhArex2ka9fzRL89XcsRD",
     memo: "game fess",
     fee: 100_000_000,
     amount: amount * 1000_000_000,
-    nonce: 0,
+    nonce: nonce.nonce,
     from: from,
   };
 
@@ -133,6 +141,7 @@ export async function sendPayment({
 
     const signedTransaction = await signedTransactionResponse();
 
+    console.log(JSON.stringify(signedTransaction));
     const response = await (window as any).mina?.request({
       method: "mina_sendTransaction",
       params: {
