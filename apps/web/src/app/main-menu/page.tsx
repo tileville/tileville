@@ -69,8 +69,8 @@ export default function MainMenu() {
   return (
     <div className="flex min-h-screen flex-col pt-20" tabIndex={0}>
       <LandingBackground />
-      <div className="z-10 flex w-full flex-col items-center justify-center gap-8">
-        <div className="m-20 text-3xl font-semibold">
+      <div className="z-10 flex w-full flex-col items-center justify-center gap-8 px-3">
+        <div className="my-20 text-center text-xl font-semibold md:text-3xl">
           MINTING IS LIVE NOW 🎉{" "}
           <Link
             href="/marketplace"

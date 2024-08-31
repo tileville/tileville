@@ -30,7 +30,7 @@ export const MobileNavBar = () => {
       </button>
 
       <nav
-        className={`absolute z-30 flex h-full min-h-screen  flex-col justify-between bg-white transition-transform ${
+        className={`fixed z-30 flex h-screen  flex-col justify-between bg-white transition-transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

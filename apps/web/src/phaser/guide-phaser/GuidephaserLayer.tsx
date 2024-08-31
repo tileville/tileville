@@ -23,7 +23,7 @@ export const GuidePhaserLayer = () => {
     };
   }, []);
 
-  return <div className="guide-hex" />;
+  return <div id="guide-hex" />;
 };
 
 export default GuidePhaserLayer;

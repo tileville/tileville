@@ -103,9 +103,9 @@ export default function Marketplace() {
   }
 
   return (
-    <div className="relative p-4 pb-28 pt-20">
+    <div className="relative p-4 pb-0 pt-12 md:pb-28 md:pt-20">
       <div className="mx-auto max-w-[1280px]">
-        <div className="mb-8 flex gap-3">
+        <div className="mb-8 flex flex-wrap gap-3">
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
             {toggleGroupOptions.map((option) => {
               return (
@@ -132,7 +132,7 @@ export default function Marketplace() {
               );
             })}
           </ul>
-          <div className="relative flex-1 overflow-hidden">
+          <div className="relative min-h-[40px] min-w-[200px] flex-1 overflow-hidden">
             <span className="text-primary-50 absolute left-3 top-1/2 -translate-y-1/2">
               <MagnifyingGlassIcon width={20} height={20} />
             </span>
@@ -222,7 +222,7 @@ export default function Marketplace() {
           </div>
         )}
 
-        <div className="">
+        <div className="mb-16">
           {data?.nfts.length === 0 ? (
             <div className="py-36 text-center">
               <h2 className="font-3xl text-center font-semibold">
