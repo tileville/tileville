@@ -151,7 +151,7 @@ export async function sendPayment({
     });
 
     //todo: pallad wallet integration and this function should return hash
-    return response;
+    return response.result.hash;
   } else {
     try {
       const data: SendTransactionResult | ProviderError = await (
