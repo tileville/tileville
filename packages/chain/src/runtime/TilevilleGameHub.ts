@@ -6,7 +6,7 @@ import {
   loadGameContext,
 } from './GameContext';
 import { GameInput, TileMap, TriHexDeck } from '../types';
-import { GameHub } from '../engine/GameHub';
+import { Gamehub } from '../engine/GameHub';
 import { runtimeMethod, runtimeModule } from '@proto-kit/module';
 
 export class GameRecordPublicOutput extends Struct({
@@ -118,7 +118,7 @@ export const GameRecord = ZkProgram({
 export class GameRecordProof extends ZkProgram.Proof(GameRecord) {}
 
 @runtimeModule()
-export class TilevilleGameHub extends GameHub<
+export class TilevilleGameHub extends Gamehub<
   undefined,
   GameRecordPublicOutput,
   GameRecordProof
@@ -128,6 +128,6 @@ export class TilevilleGameHub extends GameHub<
     competitionId: UInt64,
     gameRecordProof: GameRecordProof
   ): Promise<void> {
-    super.addGameResult(competitionId, gameRecordProof);
+    await super.addGameResult(competitionId, gameRecordProof);
   }
 }

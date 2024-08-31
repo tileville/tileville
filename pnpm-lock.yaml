@@ -287,6 +287,9 @@ importers:
       o1js:
         specifier: 1.6.0
         version: 1.6.0
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.14
       tsyringe:
         specifier: ^4.7.0
         version: 4.8.0
