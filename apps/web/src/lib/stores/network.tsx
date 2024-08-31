@@ -8,12 +8,27 @@ import {
 } from "@aurowallet/mina-provider";
 import { NETWORKS, Network } from "@/constants/network";
 import { useSessionStorage } from "react-use";
-import { GAME_ENTRY_FEE_KEY } from "@/constants";
+import {
+  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
+  ACCOUNT_AUTH_MESSAGE,
+  GAME_ENTRY_FEE_KEY,
+} from "@/constants";
 import toast from "react-hot-toast";
 import { addTransactionLog } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
+// import { mintNFT } from "@/app/api/mint-nft/minanft-call";
+import { useSetAtom } from "jotai";
+import { mintProgressAtom } from "@/contexts/atoms";
+import { useMintNFT } from "@/hooks/useMintNFT";
+import {
+  requestAccounts,
+  requestNetwork,
+  sendPayment,
+  signMessage,
+} from "../helpers";
+// import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
 export interface NetworkState {
@@ -26,88 +41,145 @@ export interface NetworkState {
   onProtokitClientStarted: () => void;
   connectWallet: (soft: boolean) => Promise<void>;
   walletInstalled: () => boolean;
-
+  accountAuthSignature?: string | undefined;
   pendingL2Transactions: PendingTransaction[];
   addPendingL2Transaction: (pendingTransaction: PendingTransaction) => void;
   removePendingL2Transaction: (pendingTransaction: PendingTransaction) => void;
+  setAuthSignature: () => Promise<boolean>;
 }
 
 export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
-  immer((set) => ({
-    walletConnected: false,
-    protokitClientStarted: false,
-    minaNetwork: undefined,
-    onProtokitClientStarted() {
-      set({
-        protokitClientStarted: true,
-      });
-    },
-    async setNetwork(network: Network | undefined) {
-      const O1js = await import("o1js");
+  immer((set) => {
+    // const [accountAuthSignature, setSignature, deleteSignature] =
+    //   useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY, "");
+    return {
+      walletConnected: false,
+      protokitClientStarted: false,
+      minaNetwork: undefined,
+      onProtokitClientStarted() {
+        set({
+          protokitClientStarted: true,
+        });
+      },
+      async setNetwork(network: Network | undefined) {
+        const O1js = await import("o1js");
 
-      set((state) => {
-        // console.log("###Target network###", network);
-        state.minaNetwork = network;
-        if (network) {
-          const Network = O1js.Mina.Network(network?.graphql);
-          O1js.Mina.setActiveInstance(Network);
-        }
-      });
-    },
-    address: undefined,
-    async onWalletConnected(address: string | undefined) {
-      if (address) {
-        localStorage.minaAdderess = address;
-        const network = await (window as any).mina.requestNetwork();
-        const minaNetwork = NETWORKS.find(
-          (x) =>
-            (network.chainId != "unknown"
-              ? x.chainId == network.chainId
-              : x.name == network.name) || x.networkID === network.networkID
-        );
-        this.setNetwork(minaNetwork);
-      } else {
-        localStorage.minaAdderess = "";
-      }
-      set((state) => {
-        state.address = address;
-        state.walletConnected = !!address;
-      });
-    },
-    async connectWallet(soft: boolean) {
-      if (soft) {
-        if (localStorage.minaAdderess) {
-          this.onWalletConnected(localStorage.minaAdderess);
-          return this.onWalletConnected(localStorage.minaAdderess);
-        }
-      } else {
-        const accounts = await (window as any).mina.requestAccounts();
-        this.onWalletConnected(accounts[0]);
-      }
-    },
-    walletInstalled() {
-      return typeof mina !== "undefined";
-    },
-    pendingL2Transactions: [],
-    addPendingL2Transaction(pendingTransaction) {
-      set((state) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        state.pendingL2Transactions.push(pendingTransaction);
-      });
-    },
-    removePendingL2Transaction(pendingTransaction) {
-      set((state) => {
-        state.pendingL2Transactions = state.pendingL2Transactions.filter(
-          (tx) => {
-            return (
-              tx.hash().toString() !== pendingTransaction.hash().toString()
-            );
+        set((state) => {
+          // console.log("###Target network###", network);
+          state.minaNetwork = network;
+          if (network) {
+            const Network = O1js.Mina.Network(network?.graphql);
+            O1js.Mina.setActiveInstance(Network);
           }
-        );
-      });
-    },
-  }))
+        });
+      },
+      address: undefined,
+      async onWalletConnected(address: string | undefined) {
+        if (address) {
+          localStorage.minaAdderess = address;
+          const network = await requestNetwork();
+          const minaNetwork = NETWORKS.find(
+            (x) =>
+              (network.chainId != "unknown"
+                ? x.chainId == network.chainId ||
+                  x.palladNetworkID === network.chainId
+                : x.name == network.name) || x.networkID === network.networkID
+          );
+          const accountAuthSignature =
+            localStorage[ACCOUNT_AUTH_LOCALSTORAGE_KEY];
+          let isSignatureRequired = true;
+          if (accountAuthSignature) {
+            try {
+              const signatureAccount = accountAuthSignature.split(" ")[0] || "";
+              isSignatureRequired = signatureAccount === address ? false : true;
+            } catch (error) {
+              console.warn(`Failed to parse stored signature.`);
+              isSignatureRequired = true;
+            }
+          }
+
+          if (isSignatureRequired) {
+            // const isSignSuccess = await this.setAuthSignature();
+            // if (!isSignSuccess) {
+            //   toast("You need to authenticate wallet");
+            //   localStorage.minaAddress = undefined;
+            //   return;
+            // }
+          } else {
+            // set((state) => {
+            //   state.accountAuthSignature = accountAuthSignature;
+            // });
+          }
+
+          this.setNetwork(minaNetwork);
+        } else {
+          localStorage.minaAdderess = "";
+        }
+        set((state) => {
+          state.address = address;
+          state.walletConnected = !!address;
+        });
+      },
+      async connectWallet(soft: boolean) {
+        if (soft) {
+          if (localStorage.minaAdderess) {
+            this.onWalletConnected(localStorage.minaAdderess);
+          }
+        } else {
+          const accounts = await requestAccounts();
+          this.onWalletConnected(accounts[0]);
+        }
+      },
+      walletInstalled() {
+        return typeof mina !== "undefined";
+      },
+      pendingL2Transactions: [],
+      addPendingL2Transaction(pendingTransaction) {
+        set((state) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          state.pendingL2Transactions.push(pendingTransaction);
+        });
+      },
+      removePendingL2Transaction(pendingTransaction) {
+        set((state) => {
+          state.pendingL2Transactions = state.pendingL2Transactions.filter(
+            (tx) => {
+              return (
+                tx.hash().toString() !== pendingTransaction.hash().toString()
+              );
+            }
+          );
+        });
+      },
+      setAuthSignature() {
+        return signMessage(ACCOUNT_AUTH_MESSAGE)
+          .then((signResult: any) => {
+            const authSignatureStr = `${signResult.publicKey || ""} ${
+              signResult?.signature?.scalar || ""
+            } ${signResult?.signature?.field || ""}`;
+            console.log("auth signature", authSignatureStr);
+            localStorage[ACCOUNT_AUTH_LOCALSTORAGE_KEY] = authSignatureStr;
+            set((state) => {
+              state.accountAuthSignature = authSignatureStr;
+            });
+            return true;
+          })
+          .catch((error: any) => {
+            console.log("failed to set signature", error);
+            if (
+              error.code === 1001 ||
+              (error.message || "").toLowercase().contains("User disconnect")
+            ) {
+              toast(
+                "Your wallet extenstion is locked. please unlock your wallet extension first and then try again"
+              );
+            }
+            return false;
+          });
+      },
+    };
+  })
 );
 
 export const useParticipationFee = () => {
@@ -144,7 +216,9 @@ export const useParticipationFee = () => {
     type: "VOUCHER" | "NETWORK" | "FREE";
   }): Promise<{ id: number } | null | undefined> => {
     let hash;
-    let network = networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
+    let network = window.mina?.isPallad
+      ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
+      : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
     let txn_status = "PENDING";
     if (!networkStore.address) {
       networkStore.connectWallet(false);
@@ -172,19 +246,13 @@ export const useParticipationFee = () => {
         txn_status = "CONFIRMED";
         break;
       case "NETWORK":
-        try {
-          const data: SendTransactionResult | ProviderError = await (
-            window as any
-          )?.mina?.sendPayment({
-            amount: participation_fee,
-            to: treasury_address,
-            memo: `Pay ${participation_fee} MINA.`,
-          });
-          hash = (data as SendTransactionResult).hash;
-          txn_status = "PENDING";
-        } catch (err: any) {
-          toast(`Txn failed with error ${err.toString()}. report a bug`);
-        }
+        hash = await sendPayment({
+          from: networkStore.address,
+          amount: participation_fee,
+        });
+
+        txn_status = "PENDING";
+
         break;
       default:
     }
@@ -214,4 +282,47 @@ export const useParticipationFee = () => {
   };
 
   return { payParticipationFees };
+};
+
+export const usePayNFTMintFee = () => {
+  const networkStore = useNetworkStore();
+  const setMintProgress = useSetAtom(mintProgressAtom);
+  const { mintMINANFTHelper } = useMintNFT();
+
+  const mintNft = async ({ nft_id }: { nft_id: number }) => {
+    if (!networkStore.address) {
+      networkStore.connectWallet(false);
+      return null;
+    }
+    try {
+      const nft_payload_response = await fetch(`/api/mint-nft`, {
+        method: "POST",
+        body: JSON.stringify({
+          wallet_address: networkStore.address,
+          nft_id,
+        }),
+        headers: {
+          "Auth-Signature": "abv1",
+        },
+      });
+
+      const nft_payload = await nft_payload_response.json();
+      console.log({ nft_payload });
+      if (nft_payload.success === false) {
+        return nft_payload;
+      }
+      setMintProgress({
+        [nft_id]: {
+          step: 2,
+          message: "Loading O1JS and MINANFT Environment",
+        },
+      });
+      const response = await mintMINANFTHelper(nft_payload);
+      return response;
+    } catch (error: any) {
+      toast(`Txn failed with error ${error.toString()}. report a bug`);
+    }
+  };
+
+  return { mintNft };
 };

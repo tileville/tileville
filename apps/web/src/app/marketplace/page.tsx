@@ -9,12 +9,13 @@ import { useNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import Link from "next/link";
 import { Pagination } from "@/components/common/Pagination";
+import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
 const toggleGroupOptions = [
   {
     iconSrc: "/icons/gridFour.svg",
     gridApplyClass:
-      "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4",
+      "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
     id: 0,
   },
 
@@ -41,18 +42,6 @@ const options = [
     text: "Price: Low to High",
     id: 1,
   },
-  // {
-  //   text: "Recently Listed",
-  //   id: 2,
-  // },
-  // {
-  //   text: "Common to Rare",
-  //   id: 3,
-  // },
-  // {
-  //   text: "Rare to Common",
-  //   id: 4,
-  // },
 ];
 
 export default function Marketplace() {
@@ -74,6 +63,7 @@ export default function Marketplace() {
     searchTerm: activeSearchTerm,
     currentPage,
   });
+  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
 
   const handleSearchAction = useCallback(() => {
     setActiveSearchTerm(searchTerm);
@@ -169,10 +159,14 @@ export default function Marketplace() {
                 <Tooltip.Trigger asChild>
                   <Link
                     href="/traits-info"
-                    className="flex h-10 items-center justify-center gap-2 rounded-md border border-primary bg-primary px-3 text-white hover:bg-primary/90 hover:opacity-80"
+                    className="flex h-10 items-center justify-center gap-2 rounded-md border border-green-950 bg-green-950  px-3 font-semibold uppercase text-white hover:opacity-90"
                   >
                     <span>Traits Info</span>
-                    <InfoCircledIcon className="text-white" />
+                    <InfoCircledIcon
+                      className="text-white"
+                      width={18}
+                      height={18}
+                    />
                   </Link>
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
@@ -224,6 +218,7 @@ export default function Marketplace() {
             <div>Owner</div>
             <div>Listed Time</div>
             <div>Listed Price</div>
+            <div>MINTED</div>
           </div>
         )}
 
@@ -254,6 +249,10 @@ export default function Marketplace() {
                       nftID={nft.nft_id}
                       nftPrice={nft.price}
                       renderStyle={renderStyle}
+                      ownerAddress={nft.owner_address}
+                      algoliaHitData={mintNFTHitsResponse.find(
+                        ({ name }) => name === nft.name
+                      )}
                     />
                   );
                 })}

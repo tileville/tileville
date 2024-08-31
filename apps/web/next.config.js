@@ -3,7 +3,8 @@ const { withSentryConfig } = require('@sentry/nextjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['oqymtqolwjujkayjyxdt.supabase.co'],
+    domains: ['oqymtqolwjujkayjyxdt.supabase.co', 'gateway.pinata.cloud'],
+
   },
   reactStrictMode: true,
   output: "standalone",
@@ -41,5 +42,9 @@ module.exports = withSentryConfig(nextConfig, {
   org: 'satyam-bansal',
   project: 'tileville',
   authToken: process.env.SENTRY_AUTH_TOKEN || "",
-  silent: false
+  silent: true,
+  silent: true,
+  disableServerWebpackPlugin: true,
+  disableClientWebpackPlugin: true,
+  telemetry: false
 })

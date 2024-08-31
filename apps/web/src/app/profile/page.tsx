@@ -20,6 +20,7 @@ import PastGames from "@/components/profileTabs/pastGames";
 import Transactions from "@/components/profileTabs/transactions";
 import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
+import { getPalladBalance } from "@/lib/helpers";
 
 interface IFormInput {
   firstName: string;
@@ -121,11 +122,11 @@ export default function Profile() {
   const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
     try {
       await navigator.clipboard.writeText(toCopyContent);
-      toast(<>{copiedType} copied to clipboard!</>, {
+      toast.success(<>{copiedType} copied to clipboard!</>, {
         duration: 2000,
       });
     } catch (err) {
-      toast(<>Error copying {copiedType}! Please Try Again</>, {
+      toast.error(<>Error copying {copiedType}! Please Try Again</>, {
         duration: 2000,
       });
     }
@@ -154,7 +155,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="fade-slide-in px-4 pb-16 pt-8 md:pt-32">
+    <div className="fade-slide-in p-4 pb-24 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -403,7 +404,7 @@ export default function Profile() {
                     minaBalancesStore.balances[networkStore.address] ?? 0n
                   ) /
                   10 ** 9
-                ).toFixed(2)}{" "}
+                ).toFixed(2)}
                 MINA
               </div>
             </div>

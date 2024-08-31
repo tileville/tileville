@@ -53,7 +53,8 @@ export const POSTHOG_TOKEN =
 export const POSTHOG_URI =
   process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 
-export const isMockEnv = process.env.NEXT_PUBLIC_IS_MOCK_ENV || false;
+export const isMockEnv =
+  process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true" || false;
 export const NOVU_API_KEY =
   process.env.NEXT_PUBLIC_NOVU_API_KEY || "ed1f7d240a9a31843dc24795660e95d4";
 export const NOVU_APP_ID =
@@ -107,6 +108,8 @@ export const GLOBAL_CONFIG_DEFAULT = {
 export const ACCOUNT_AUTH_MESSAGE =
   "I am authenticating my wallet for TileVille";
 export const ACCOUNT_AUTH_LOCALSTORAGE_KEY = "tileville_auth_signature";
+export const DEFAULT_TRASURY_ADDRESS =
+  "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 
 export const ATTRIBUTES_DATA = {
   "Sustainability Rating": {
@@ -201,6 +204,9 @@ export const ATTRIBUTES_DATA = {
     },
   },
 };
+
+export const NFT_DESCRIPTION =
+  "This NFT is part of our first edition of TileVille Builders.";
 
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;

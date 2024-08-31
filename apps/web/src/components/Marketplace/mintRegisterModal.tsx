@@ -12,7 +12,12 @@ interface IFormInput {
   name: string;
   email: string;
 }
-export const MintRegisterModal = () => {
+
+export const MintRegisterModal = ({
+  triggerBtnClasses,
+}: {
+  triggerBtnClasses: string;
+}) => {
   const globalConfig = useAtomValue(globalConfigAtom);
   const emailSentMutation = useSendEmail({
     onSuccess: () => {
@@ -47,9 +52,7 @@ export const MintRegisterModal = () => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <button className="cursor-pointer text-xs font-semibold text-primary underline hover:no-underline">
-          Register for the event
-        </button>
+        <button className={triggerBtnClasses}>Register for the event</button>
       </Dialog.Trigger>
 
       <Dialog.Content className="relative !m-0 !max-w-[480px] !rounded-md !p-0">
@@ -65,9 +68,9 @@ export const MintRegisterModal = () => {
 
           <div className="">
             <div className="mb-4">
-              <h2 className=" text-xl font-semibold leading-none">
+              <Dialog.Title className="!mb-0 text-xl font-semibold leading-none">
                 Subscribe for MINT Event
-              </h2>
+              </Dialog.Title>
               <p className="text-xs font-medium text-gray-400">
                 We will notify you before 12 hours of event being started.
               </p>

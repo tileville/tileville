@@ -8,7 +8,7 @@ import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "../PrimaryButton";
 import { MediaPlayer } from "../MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
-import { formatAddress, walletInstalled } from "@/lib/helpers";
+import { formatAddress, signMessage, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
 import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
@@ -71,14 +71,24 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
 
   useEffect(() => {
     if (networkStore.walletConnected && isFetched) {
-      if (!accountAuthSignature) {
-        (window as any).mina
-          ?.signMessage({
-            message: ACCOUNT_AUTH_MESSAGE,
-          })
-          .then((signResult: { signature: any }) => {
-            const signature = signResult.signature;
-            setAccountAuthSignature(signature);
+      let isSignatureRequired = true;
+      if (accountAuthSignature) {
+        try {
+          const signatureAccount = accountAuthSignature.split(" ")[0] || "";
+          isSignatureRequired =
+            signatureAccount === networkStore.address ? false : true;
+        } catch (error) {
+          console.warn(`Failed to parse stored signature.`);
+          isSignatureRequired = true;
+        }
+      }
+      if (isSignatureRequired) {
+        signMessage(ACCOUNT_AUTH_MESSAGE)
+          .then((signResult: any) => {
+            const authSignatureStr = `${signResult.publicKey || ""} ${
+              signResult?.signature?.scalar || ""
+            } ${signResult?.signature?.field || ""}`;
+            setAccountAuthSignature(authSignatureStr);
           })
           .catch((error: any) => {
             console.log("failed to set signature", error);

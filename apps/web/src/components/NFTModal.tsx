@@ -1,20 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import Image from "next/image";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
+import toast from "react-hot-toast";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
-import { useNetworkStore } from "@/lib/stores/network";
-import { ATTRIBUTES_DATA } from "@/constants";
+import { useNetworkStore, usePayNFTMintFee } from "@/lib/stores/network";
+import { ATTRIBUTES_DATA, isMockEnv } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { getTime, isFuture } from "date-fns";
-import { useAtomValue } from "jotai";
-import { globalConfigAtom } from "@/contexts/atoms";
-import { MintRegisterModal } from "./Marketplace/mintRegisterModal";
+import { useAtomValue, useSetAtom } from "jotai";
+import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
+import { Spinner } from "./common/Spinner";
+import { StepProgressBar } from "./ProgressBar";
+import { AlgoliaHitResponse } from "@/hooks/useFetchNFTSAlgolia";
+import {
+  formatAddress,
+  getMINANFTLink,
+  getMINAScanAccountLink,
+} from "@/lib/helpers";
+import clsx from "clsx";
+import { useMinaBalancesStore } from "@/lib/stores/minaBalances";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
+import { MAINNET_NETWORK } from "@/constants/network";
+import { useLocalStorage } from "react-use";
 
 type Trait = {
   key: string;
@@ -40,6 +53,32 @@ interface GlobalConfig {
   name: string | null;
 }
 
+const INITIAL_MINT_RESPONSE = {
+  state: "idle",
+  success: false,
+  message: "",
+  reason: "",
+  txHash: "",
+};
+
+const parseTraits = (traits: Json): Trait[] => {
+  if (Array.isArray(traits)) {
+    return traits.filter(
+      (trait): trait is Trait =>
+        typeof trait === "object" &&
+        trait !== null &&
+        "key" in trait &&
+        "value" in trait
+    );
+  } else if (typeof traits === "object" && traits !== null) {
+    return Object.entries(traits).map(([key, value]) => ({
+      key,
+      value: String(value),
+    }));
+  }
+  return [];
+};
+
 export const NFTModal = ({
   traits,
   img_url,
@@ -47,6 +86,8 @@ export const NFTModal = ({
   name,
   nftPrice,
   renderStyle,
+  nftID,
+  algoliaHitData,
 }: {
   traits: Json;
   img_url: string;
@@ -55,8 +96,11 @@ export const NFTModal = ({
   nftID: number;
   nftPrice: number;
   renderStyle: string;
+  ownerAddress: string | null;
+  algoliaHitData: AlgoliaHitResponse | undefined;
 }) => {
   // Function to parse traits
+  const [mintLoading, setMintLoading] = useState(false);
   const configData: UseQueryResult<void | GlobalConfig, unknown> =
     useGlobalConfig("config_v1");
   const configValues = configData.data?.config_values as
@@ -65,29 +109,77 @@ export const NFTModal = ({
   const rarityData = configValues?.traits_rarity_counts;
   const totalNFTCount = parseInt(configValues?.total_nft_count || "0", 10);
   const globalConfig = useAtomValue(globalConfigAtom);
+  const [nftMintResponse, setNftMintResponse] = useState(INITIAL_MINT_RESPONSE);
+  const [mintTxnHash, setMintTxnHash] = useState("");
+  const mintProgress = useAtomValue(mintProgressAtom);
+  const minaBalancesStore = useMinaBalancesStore();
 
   const networkStore = useNetworkStore();
-  const parseTraits = (traits: Json): Trait[] => {
-    if (Array.isArray(traits)) {
-      return traits.filter(
-        (trait): trait is Trait =>
-          typeof trait === "object" &&
-          trait !== null &&
-          "key" in trait &&
-          "value" in trait
-      );
-    } else if (typeof traits === "object" && traits !== null) {
-      return Object.entries(traits).map(([key, value]) => ({
-        key,
-        value: String(value),
-      }));
+  const { mintNft } = usePayNFTMintFee();
+  const setMintProgress = useSetAtom(mintProgressAtom);
+  const [error, setError] = useState<string | null>(null);
+  const { switchNetwork } = useSwitchNetwork();
+  const [mintKey] = useLocalStorage("MINTING_ENABLE", "");
+
+  useEffect(() => {
+    if (nftMintResponse.state === "active") {
+      if (nftMintResponse.success) {
+        toast.success(
+          <>
+            <p>
+              NFT minted successfully. You can check your new nft on{" "}
+              <Link
+                target="_blank"
+                href={getMINANFTLink(nftMintResponse.txHash)}
+                className="font-semibold text-primary underline hover:no-underline"
+              >
+                minanft
+              </Link>
+            </p>
+          </>,
+          {
+            id: "mint-success-toast",
+          }
+        );
+      } else {
+        toast.error(
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium text-red-700">
+              NFT mint failed 😭
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              {nftMintResponse.message}
+            </p>
+            {nftMintResponse.reason && (
+              <p className="text-xs text-gray-500">{nftMintResponse.reason}</p>
+            )}
+          </div>,
+          {
+            id: "mint-error-toast",
+          }
+        );
+      }
     }
-    return [];
-  };
+  }, [nftMintResponse]);
 
   const parsedTraits = parseTraits(traits);
 
-  const handlePayParticipationFess = () => {
+  let isMintingDisabled: boolean;
+  if (isMockEnv) {
+    isMintingDisabled = false;
+  } else if (mintKey) {
+    isMintingDisabled = false;
+  } else if (isFuture(globalConfig.nft_mint_start_date)) {
+    isMintingDisabled = true;
+  } else {
+    isMintingDisabled = false;
+  }
+
+  const handleMint = async (nft_id: number) => {
+    if (networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
+      await switchNetwork(MAINNET_NETWORK);
+      return;
+    }
     if (!networkStore.address) {
       try {
         networkStore.connectWallet(false);
@@ -97,11 +189,69 @@ export const NFTModal = ({
         return;
       }
     }
+
+    setMintLoading(true);
+    setError(null);
+    setMintProgress({
+      [nftID]: {
+        step: 1,
+        message: "Uploading image to IPFS",
+      },
+    });
+
+    try {
+      const response = await mintNft({
+        nft_id,
+      });
+
+      console.log("186 response", response);
+
+      if (response.success && response.txn_hash) {
+        setMintTxnHash(response.txn_hash);
+      }
+      setNftMintResponse({ state: "active", ...response });
+      if (response.success) {
+      }
+      setMintLoading(false);
+
+      if (!response.success) {
+        setError(response.message);
+
+        setMintProgress((prev) => ({
+          ...prev,
+          [nft_id]: {
+            ...prev[nft_id], // Keep the previous step (if needed) or other properties
+            message: response.message, // Update the message only
+          },
+        }));
+
+        console.log("MINT PROgress", mintProgress);
+      }
+    } catch (err) {
+      console.error("Minting error:", err);
+
+      let errorMessage: string;
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      } else {
+        errorMessage = "An unknown error occurred during minting";
+      }
+
+      setError(errorMessage);
+      setMintProgress((prev) => ({
+        ...prev,
+        message: errorMessage,
+      }));
+    } finally {
+      setMintLoading(false);
+    }
   };
 
   const getRarityPercentage = (count: number, total: number) => {
-    const result = Math.ceil((count / total) * 100);
-    return result;
+    return Math.ceil((count / total) * 100);
   };
 
   const getRarityBackgroundColor = (percentage: number) => {
@@ -123,14 +273,39 @@ export const NFTModal = ({
       return "text-primary";
     }
   };
-  const isMintingDisabled = isFuture(globalConfig.nft_mint_start_date);
-  // const isMintingEnabled = true;
 
+  const isSufficientBalance = (price: number) => {
+    return networkStore.address &&
+      minaBalancesStore.balances[networkStore.address] &&
+      Number(minaBalancesStore.balances[networkStore.address] ?? 0n) / 10 ** 9 >
+        price + 0.1
+      ? true
+      : false;
+  };
+
+  const getMINTText = (price: number) => {
+    if (isMintingDisabled) {
+      return `MINTING STARTS SOON`;
+    } else if (!networkStore.address) {
+      return "Connect Wallet";
+    } else if (!!algoliaHitData) {
+      return "ALREADY MINTED";
+    } else if (!isSufficientBalance(price)) {
+      return "Insufficient Balance";
+    } else {
+      return "MINT NFT";
+    }
+  };
+
+  const date = algoliaHitData
+    ? new Date(algoliaHitData?.time).toUTCString()
+    : "-";
+  // console.log("mint progress", mintProgress, algoliaHitData);
   return (
     <>
       <Dialog.Root>
         <Dialog.Trigger>
-          <div className="border-primary-30 group/item listItem fade-slide-in cursor-pointer overflow-hidden rounded-md transition-colors">
+          <div className="border-primary-30 group/item listItem fade-slide-in relative cursor-pointer overflow-hidden rounded-md transition-colors">
             <div className="nft-img w-full overflow-hidden">
               <Image
                 className="h-full w-full object-cover transition-all group-hover/item:scale-110"
@@ -140,6 +315,8 @@ export const NFTModal = ({
                 src={img_url}
                 quality={100}
                 priority={false}
+                placeholder="blur"
+                blurDataURL="/img/load/load.png"
               />
             </div>
 
@@ -151,14 +328,51 @@ export const NFTModal = ({
               {renderStyle.includes("list-style") && (
                 <>
                   <div>-</div>
-                  <div>-</div>
-                  <div>-</div>
+                  <div>
+                    {algoliaHitData ? (
+                      <Link
+                        target="_blank"
+                        href={getMINAScanAccountLink(algoliaHitData?.owner)}
+                        className="font-semibold text-primary underline hover:no-underline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        {formatAddress(algoliaHitData?.owner)}
+                      </Link>
+                    ) : (
+                      "-"
+                    )}
+                  </div>
+                  <div>{date}</div>
                 </>
               )}
 
-              <div className="font-semibold">
-                {nftPrice}
-                <span className="text-primary-50"> MINA</span>
+              <div className="nft-price mt-1 flex items-center">
+                <div className="font-semibold">
+                  {nftPrice}
+                  <span className="text-primary-50"> MINA</span>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                {algoliaHitData && (
+                  <div className="mt-1 rounded-md bg-primary/30 p-1 text-center text-sm">
+                    Already Minted
+                  </div>
+                )}
+
+                {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
+                  <div className="text-center">
+                    <Link
+                      target="_blank"
+                      href={getMINANFTLink(algoliaHitData.hash)}
+                      className="text-sm font-semibold text-primary underline hover:no-underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Buy on minanft
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -174,15 +388,19 @@ export const NFTModal = ({
                 alt="img"
                 className="h-full object-cover"
                 priority={false}
+                placeholder="blur"
+                blurDataURL="/img/load/load.png"
               />
             </div>
             <div className="bg-primary/30 px-4 py-8">
-              <h1 className="text-2xl font-semibold leading-4">{name}</h1>
+              <Dialog.Title className="!mb-0 text-2xl font-semibold leading-4">
+                {name}
+              </Dialog.Title>
               <div className="my-3">
                 Price:{" "}
                 <span>
                   <span className="text-lg font-semibold">{price}</span> MINA
-                </span>{" "}
+                </span>
               </div>
               <Flex direction="column" gap="3" mt="4" justify="center">
                 {isMintingDisabled && (
@@ -190,23 +408,102 @@ export const NFTModal = ({
                     initialTime={getTime(globalConfig.nft_mint_start_date)}
                   />
                 )}
+
                 <button
-                  className="h-10 rounded-md border-primary bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90"
-                  onClick={handlePayParticipationFess}
-                  disabled={isMintingDisabled}
+                  className={clsx({
+                    "relative h-10 rounded-md border-primary  px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed ":
+                      true,
+                    "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
+                      !!algoliaHitData,
+                    "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
+                      !algoliaHitData,
+                  })}
+                  onClick={() => handleMint(nftID)}
+                  disabled={
+                    isMintingDisabled ||
+                    mintLoading ||
+                    !!algoliaHitData ||
+                    !isSufficientBalance(Number(price))
+                  }
                 >
-                  {!!networkStore.address
-                    ? isMintingDisabled
-                      ? `MINTING STARTS SOON`
-                      : "MINT"
-                    : "Connect Wallet"}
+                  {mintLoading && (
+                    <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
+                      <Spinner />
+                    </span>
+                  )}
+                  {getMINTText(Number(price))}
                 </button>
+
+                {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
+                  <div className="text-right">
+                    <Link
+                      target="_blank"
+                      href={getMINANFTLink(algoliaHitData.hash)}
+                      className="relative h-10 rounded-md border-primary  bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/80 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-primary/80 disabled:hover:bg-primary/80"
+                    >
+                      Buy on minanft
+                    </Link>
+                  </div>
+                )}
+
+                {!!algoliaHitData && (
+                  <div className="flex justify-between gap-1 text-sm">
+                    <p className="font-semibold text-primary">
+                      Owned by{" "}
+                      <Link
+                        target="_blank"
+                        href={getMINAScanAccountLink(algoliaHitData.owner)}
+                        className="underline hover:no-underline"
+                      >
+                        {formatAddress(algoliaHitData.owner)}
+                      </Link>
+                    </p>
+
+                    <Link
+                      target="_blank"
+                      href={algoliaHitData.external_url}
+                      className="font-semibold text-primary underline hover:no-underline"
+                    >
+                      See on MinaScan
+                    </Link>
+                    <Link
+                      target="_blank"
+                      href={getMINANFTLink(algoliaHitData.hash)}
+                      className="font-semibold text-primary underline hover:no-underline"
+                    >
+                      See on minanft.io
+                    </Link>
+                  </div>
+                )}
+
+                {mintProgress[nftID]?.step > 0 && (
+                  <div className="mt-4">
+                    <StepProgressBar
+                      currentStep={mintProgress[nftID]?.step || 1}
+                      message={mintProgress[nftID]?.message || ""}
+                      error={error}
+                    />
+                  </div>
+                )}
+
+                {nftMintResponse.state === "active" &&
+                  nftMintResponse.success && (
+                    <p className="text-sm">
+                      NFT minted successfully🎉. You can check your new nft on{" "}
+                      <Link
+                        target="_blank"
+                        href={getMINANFTLink(nftMintResponse.txHash)}
+                        className="font-semibold text-primary underline hover:no-underline"
+                      >
+                        minanft
+                      </Link>
+                    </p>
+                  )}
               </Flex>
-              <MintRegisterModal />
               <div className="mt-4 rounded-md">
                 <h3 className="mb-2 font-semibold">Traits</h3>
                 <ul className="grid grid-cols-2 gap-2 text-center text-xs">
-                  {parsedTraits.map((trait, index) => {
+                  {parsedTraits.map((trait) => {
                     const traitCount =
                       rarityData?.[trait.key]?.[trait.value as string] ?? 0;
                     const rarityPercentage = getRarityPercentage(
@@ -217,7 +514,7 @@ export const NFTModal = ({
                     const textColor = getRarityColor(rarityPercentage);
                     return (
                       <li
-                        key={index}
+                        key={trait.key}
                         className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
                       >
                         <div className="flex items-center gap-2">
@@ -298,12 +595,6 @@ export const NFTModal = ({
               </div>
             </div>
           </div>
-          <Dialog.Close>
-            <button className="absolute bottom-2 right-4 rounded-md border-primary bg-primary/30 px-2 py-2 text-xs font-medium hover:bg-primary/50 focus-visible:outline-none">
-              Cancel
-            </button>
-          </Dialog.Close>
-
           <Dialog.Close>
             <button className="absolute right-4 top-4">
               <Cross1Icon />

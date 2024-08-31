@@ -11,39 +11,12 @@ import zekoLogo from "/public/image/cards/zekoLogo.png";
 import berkleyLogo from "/public/image/cards/berkleyLogo.png";
 import minaLogo from "/public/image/cards/minaLogo.png";
 import Image from "next/image";
+import { useSwitchNetwork } from "@/hooks/useSwitchNetwork";
 
 export default function NetworkPicker() {
   const [expanded, setExpanded] = useState(false);
   const networkStore = useNetworkStore();
-
-  const switchNetwork = async (network: Network) => {
-    console.log("Switching to network", network);
-    try {
-      if (network.chainId == "zeko") {
-        (window.mina as any).addChain({
-          url: "https://devnet.zeko.io/graphql",
-          name: "Zeko",
-          networkID: "mina:zeko",
-        });
-      }
-
-      try {
-        await (window as any).mina.switchChain({
-          networkID: network.networkID,
-        });
-      } catch (err) {
-        console.log("switch chain err", err);
-      }
-      networkStore.setNetwork(network);
-      setExpanded(false);
-    } catch (e: any) {
-      if (e?.code == 1001) {
-        await (window as any).mina.requestAccounts();
-        await switchNetwork(network);
-      }
-      throw e;
-    }
-  };
+  const { switchNetwork } = useSwitchNetwork();
 
   useEffect(() => {
     if (!walletInstalled()) return;
@@ -64,6 +37,7 @@ export default function NetworkPicker() {
             (chainId != "unknown" ? x.chainId == chainId : x.name == name) ||
             x.networkID === networkID
         );
+        console.log("mina network", minaNetwork);
         networkStore.setNetwork(minaNetwork);
       };
 
@@ -94,6 +68,7 @@ export default function NetworkPicker() {
     })();
   }, []);
 
+  console.log("mina network 90", networkStore.minaNetwork);
   return (
     <div className="relative">
       <NetworkPickerCard
@@ -101,7 +76,7 @@ export default function NetworkPicker() {
         image={
           networkStore.minaNetwork?.chainId === "zeko"
             ? zekoLogo
-            : networkStore.minaNetwork?.chainId === "berkeley"
+            : networkStore.minaNetwork?.chainId === "devnet"
             ? berkleyLogo
             : minaLogo
         }
@@ -122,16 +97,13 @@ export default function NetworkPicker() {
               <div
                 key={network.chainId}
                 className="text-header-menu flex h-full w-full cursor-pointer flex-row items-center gap-2 py-3 pl-2 text-foreground last:rounded-b hover:font-semibold hover:text-black"
-                onClick={() => switchNetwork(network)}
+                onClick={() => {
+                  switchNetwork(network);
+                  setExpanded(false);
+                }}
               >
                 <Image
-                  src={
-                    network.chainId === "zeko"
-                      ? zekoLogo
-                      : network.chainId === "berkeley"
-                      ? berkleyLogo
-                      : minaLogo
-                  }
+                  src={minaLogo}
                   className={
                     "group-hover:border-left-accent rounded-[5px] border border-foreground"
                   }

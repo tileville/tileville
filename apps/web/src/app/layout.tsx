@@ -1,5 +1,3 @@
-// "use client";
-
 import "@radix-ui/themes/styles.css";
 import "../../public/font/font.css";
 import "./globals.css";
@@ -8,12 +6,45 @@ import { Theme } from "@radix-ui/themes";
 import { Footer } from "@/components/Footer";
 import { ClientLayout } from "./ClientLayout";
 import { PHProvider } from "./providers";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "TileVille",
   description: "On-chain city development arcade game built on MINA",
+  icons: {
+    apple: [
+      {
+        url: "/img/favicon/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+    icon: [
+      {
+        url: "/img/favicon/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/img/favicon/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+    ],
+    shortcut: [{ url: "/img/favicon/favicon-32x32.png", type: "image/x-icon" }],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/img/favicon/safari-pinned-tab.svg",
+        color: "#5bbad5",
+      },
+      { rel: "manifest", url: "/img/favicon/site.webmanifest" },
+    ],
+  },
+  msapplication: {
+    tileColor: "#da532c",
+  },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -30,7 +61,7 @@ export default function RootLayout({
           radius="large"
         >
           <PHProvider>
-            <div>
+            <div className="gradient-bg min-h-screen !bg-fixed">
               <ClientLayout>
                 <div>{children}</div>
               </ClientLayout>
@@ -40,6 +71,7 @@ export default function RootLayout({
         <div className="hidden md:block">
           <Footer />
         </div>
+        <Toaster />
       </body>
     </html>
   );
