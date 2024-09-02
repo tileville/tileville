@@ -41,10 +41,10 @@ export const CompetitionCard = ({
 
   return (
     <div
-      className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-3 overflow-hidden rounded-lg"
+      className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-2 overflow-hidden rounded-lg pb-3 md:gap-3 md:pb-0"
       key={competition.id}
     >
-      <div className="relative col-span-6 h-[200px] w-[200px] overflow-hidden rounded-br-md md:col-span-4 md:h-[400px] md:w-[400px] md:rounded-none">
+      <div className="relative col-span-12 aspect-square w-full overflow-hidden rounded-br-md md:col-span-4 md:h-[400px] md:w-[400px] md:rounded-none">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
@@ -54,13 +54,13 @@ export const CompetitionCard = ({
           priority={false}
         />
       </div>
-      <div className=" col-span-6 flex flex-col py-4 ps-1 md:col-span-5">
+      <div className="col-span-12 flex flex-col pb-0 pr-2 ps-2 pt-0 md:col-span-5 md:py-4 md:pr-0 md:ps-1">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
         <div className="mb-2 flex flex-col flex-wrap space-y-2 text-sm text-black/50">
           <HtmlRenderer htmlContent={competition.description} />
         </div>
         <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>
-        <div className="flex justify-between gap-2 text-sm font-medium">
+        <div className="flex justify-between gap-1 text-sm font-medium md:gap-2">
           <div className="flex items-center gap-2">
             <p>Entry Fees:</p>
             <p className="text-base font-semibold">
@@ -92,12 +92,12 @@ export const CompetitionCard = ({
           </div>
         </div>
       </div>
-      <div className=" col-span-12 px-1 py-4 md:col-span-3">
+      <div className=" col-span-12 px-1 md:col-span-3 md:py-4">
         <div className="grid h-full grid-cols-4 flex-wrap items-center justify-between md:flex md:flex-col md:items-start">
           <div className="col-span-4 mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
               <div>
-                <h3 className="py-4 text-xl font-medium">
+                <h3 className="py-2 text-xl font-medium md:py-4">
                   Competition Starts In
                 </h3>
                 <CountdownTimer initialTime={getTime(competition.start_date)} />
@@ -105,7 +105,7 @@ export const CompetitionCard = ({
             )}
             {competitionStatus === "ongoing" && (
               <div>
-                <h3 className="py-4 text-xl font-medium">
+                <h3 className="py-2 text-xl font-medium md:py-4">
                   Competition Ends In
                 </h3>
                 <CountdownTimer initialTime={getTime(competition.end_date)} />
