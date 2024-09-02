@@ -1,4 +1,3 @@
-import { TREASURY_ADDRESS } from "@/constants";
 import {
   ProviderError,
   SendTransactionResult,
@@ -7,6 +6,7 @@ import clsx, { ClassValue } from "clsx";
 import { method } from "o1js";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
+import { TREASURY_ADDRESS } from "@/constants";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -122,7 +122,7 @@ export async function sendPayment({
   }
   console.log("nonce", nonce);
   const transaction = {
-    to: "B62qrMJvdEiZksNtqGpMbYLGr9gtPx8zrGHhArex2ka9fzRL89XcsRD",
+    to: TREASURY_ADDRESS,
     memo: "game fess",
     fee: 100_000_000,
     amount: amount * 1000_000_000,
@@ -141,7 +141,7 @@ export async function sendPayment({
 
     const signedTransaction = await signedTransactionResponse();
 
-    console.log(JSON.stringify(signedTransaction));
+    console.log("signedTransaction", JSON.stringify(signedTransaction));
     const response = await (window as any).mina?.request({
       method: "mina_sendTransaction",
       params: {
