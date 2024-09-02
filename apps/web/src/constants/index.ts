@@ -210,3 +210,5 @@ export const NFT_DESCRIPTION =
 
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
+
+export const DEFAULT_POSTER_URL = "/img/avatars/2.jpeg";

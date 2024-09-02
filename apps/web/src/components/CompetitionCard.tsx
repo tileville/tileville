@@ -7,14 +7,13 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { HtmlRenderer } from "./common/HTMLRenderer";
 import { InfoCircledIcon, TimerIcon } from "@radix-ui/react-icons";
+import { DEFAULT_POSTER_URL } from "@/constants";
 
 type CompetitionCardProps = {
   competition: Competition;
   setSelectedCompetition: Dispatch<SetStateAction<Competition>>;
   setIsFeesModalOpen: Dispatch<SetStateAction<boolean>>;
 };
-
-const DEFAULT_POSTER_URL = "/img/avatars/2.jpeg";
 
 type CompetitionStatus = "upcoming" | "ongoing" | "over";
 export const CompetitionCard = ({
@@ -218,7 +217,7 @@ export const CompetitionCard = ({
   );
 };
 
-const getDateDifference = (date1: string, date2: string): string => {
+export const getDateDifference = (date1: string, date2: string): string => {
   const time1 = new Date(date1);
   const time2 = new Date(date2);
 
