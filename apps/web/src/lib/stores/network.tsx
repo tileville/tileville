@@ -182,6 +182,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
   })
 );
 
+//TODO: Move this to new files
 export const useParticipationFee = () => {
   const networkStore = useNetworkStore();
   const redeemVoucher = useMutation({
@@ -284,6 +285,7 @@ export const useParticipationFee = () => {
   return { payParticipationFees };
 };
 
+//TODO: Move this to new files
 export const useMintNFT = () => {
   const networkStore = useNetworkStore();
   const setMintProgress = useSetAtom(mintProgressAtom);
