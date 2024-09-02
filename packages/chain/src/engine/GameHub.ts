@@ -14,15 +14,15 @@ import {
   GameRecordKey,
   LeaderboardIndex,
   LeaderboardScore,
-} from './types';
-import { ZNAKE_TOKEN_ID } from './constants';
+} from '../types';
+import { ZNAKE_TOKEN_ID } from '../constants';
 
 export interface IScoreable {
   score: UInt64;
 }
 
 @runtimeModule()
-export class GameHub<
+export class Gamehub<
   PublicInput,
   PublicOutput extends IScoreable,
   GameProof extends Proof<PublicInput, PublicOutput>,
@@ -31,22 +31,25 @@ export class GameHub<
     UInt64,
     PublicKey
   );
+  // CompetitionId -> competition
   @state() public competitions = StateMap.from<UInt64, Competition>(
     UInt64,
     Competition
   );
-
   @state() public lastCompetitonId = State.from<UInt64>(UInt64);
+
+  /// compettitionId + User => Record
   @state() public gameRecords = StateMap.from<GameRecordKey, UInt64>(
     GameRecordKey,
     UInt64
   );
 
+  /// competitionId + User => isRegistered
   @state() public registrations = StateMap.from<GameRecordKey, Bool>(
     GameRecordKey,
     Bool
   );
-
+  /// (competitionId, Unsorted index) => user result
   @state() public leaderboard = StateMap.from<
     LeaderboardIndex,
     LeaderboardScore
@@ -61,6 +64,7 @@ export class GameHub<
   );
 
   public leaderboardSize = 10;
+
   public constructor(@inject('Balances') private balances: Balances) {
     super();
   }
@@ -68,20 +72,28 @@ export class GameHub<
   @runtimeMethod()
   public async updateSeed(seed: UInt64): Promise<void> {
     const lastSeedIndex = (await this.lastSeed.get()).orElse(UInt64.from(0));
-    this.seeds.set(lastSeedIndex, seed);
-    this.lastSeed.set(lastSeedIndex.add(1));
+    await this.seeds.set(lastSeedIndex, seed);
+    await this.lastSeed.set(lastSeedIndex.add(1));
   }
 
+  /**
+   * Creates new game competition
+   *
+   * @param competition - Competition to create
+   */
   @runtimeMethod()
   public async createCompetition(competition: Competition): Promise<void> {
     const competitionId = (await this.lastCompetitonId.get()).orElse(
       UInt64.from(0)
     );
-    this.competitionCreator.set(competitionId, this.transaction.sender.value);
-    this.competitions.set(competitionId, competition);
-    this.lastCompetitonId.set(competitionId.add(1));
+    await this.competitionCreator.set(
+      competitionId,
+      this.transaction.sender.value
+    );
+    await this.competitions.set(competitionId, competition);
+    await this.lastCompetitonId.set(competitionId.add(1));
 
-    this.balances.transfer(
+    await this.balances.transfer(
       ZNAKE_TOKEN_ID,
       this.transaction.sender.value,
       PublicKey.empty(),
@@ -91,16 +103,23 @@ export class GameHub<
 
   @runtimeMethod()
   public async register(competitionId: UInt64): Promise<void> {
-    this.registrations.set(
+    await this.registrations.set(
       new GameRecordKey({
         competitionId,
         player: this.transaction.sender.value,
       }),
       Bool(true)
     );
-    this.payCompetitionFee(competitionId, Bool(true));
+
+    await this.payCompetitionFee(competitionId, Bool(true));
   }
 
+  /**
+   * Adds game record to a competition
+   *
+   * @param competitionId - Competition id to add record to
+   * @param newScore - Score to be added
+   */
   @runtimeMethod()
   public async addGameResult(
     competitionId: UInt64,
@@ -113,6 +132,7 @@ export class GameHub<
       player: this.transaction.sender.value,
     });
 
+    // Check for registration
     const registrationNeeded = (await this.competitions.get(competitionId))
       .value.prereg;
     const userRegistration = (await this.registrations.get(gameKey)).value;
@@ -122,14 +142,17 @@ export class GameHub<
       'Should register first'
     );
 
-    this.payCompetitionFee(competitionId, registrationNeeded.not());
+    await this.payCompetitionFee(competitionId, registrationNeeded.not());
+
     const currentScore = (await this.gameRecords.get(gameKey)).value;
     const newScore = gameRecordProof.publicOutput.score;
-    console.log('new score', newScore);
+
     const betterScore = currentScore.lessThan(newScore);
 
     {
-      this.gameRecords.set(
+      // Everything that is done here, should be done only if <betterScore>
+      // So all set should be with <betterScore> check
+      await this.gameRecords.set(
         gameKey,
         Provable.if(betterScore, newScore, currentScore)
       );
@@ -154,7 +177,7 @@ export class GameHub<
 
         found = found.or(gameRecord.score.lessThan(prevValue.score));
 
-        this.leaderboard.set(
+        await this.leaderboard.set(
           leaderboardKey,
           Provable.if(found, LeaderboardScore, prevValue, gameRecord)
         );
@@ -164,16 +187,20 @@ export class GameHub<
     }
   }
 
+  /// #TODO change to multiple receivers
+  /// #TODO add timestamp check, when timestamp will be on protokit
   @runtimeMethod()
   public async getReward(competitionId: UInt64): Promise<void> {
     let competition = (await this.competitions.get(competitionId)).value;
+
     let key = new GameRecordKey({
       competitionId,
       player: this.transaction.sender.value,
     });
 
     assert((await this.gotReward.get(key)).value, 'Already got your reward');
-    this.gotReward.set(key, Bool(true));
+    await this.gotReward.set(key, Bool(true));
+
     let winner = (
       await this.leaderboard.get(
         new LeaderboardIndex({
@@ -187,7 +214,8 @@ export class GameHub<
       winner.player.equals(this.transaction.sender.value),
       'You are not the winner'
     );
-    this.balances.mint(
+
+    await this.balances.mint(
       ZNAKE_TOKEN_ID,
       this.transaction.sender.value,
       ProtoUInt64.from(competition.funds)
@@ -198,21 +226,21 @@ export class GameHub<
     competitionId: UInt64,
     shouldPay: Bool
   ): Promise<void> {
-    const competition = (await this.competitions.get(competitionId)).value;
-    const fee = Provable.if<ProtoUInt64>(
+    let competition = (await this.competitions.get(competitionId)).value;
+    let fee = Provable.if<ProtoUInt64>(
       shouldPay,
       ProtoUInt64,
       competition.participationFee,
       ProtoUInt64.zero
     );
 
-    this.balances.transfer(
+    await this.balances.transfer(
       ZNAKE_TOKEN_ID,
       this.transaction.sender.value,
       PublicKey.empty(),
-      ProtoUInt64.from(fee as any)
+      ProtoUInt64.from(fee)
     );
     competition.funds = competition.funds.add(fee);
-    this.competitions.set(competitionId, competition);
+    await this.competitions.set(competitionId, competition);
   }
 }

@@ -21,7 +21,13 @@ import { useMutation } from "@tanstack/react-query";
 // import { mintNFT } from "@/app/api/mint-nft/minanft-call";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
-import { useMintNFT } from "@/hooks/useMintNFT";
+import { useMintMINANFT } from "@/hooks/useMintMINANFT";
+import {
+  requestAccounts,
+  requestNetwork,
+  sendPayment,
+  signMessage,
+} from "../helpers";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import uuid from "uuid";
 
@@ -71,11 +77,12 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
       async onWalletConnected(address: string | undefined) {
         if (address) {
           localStorage.minaAdderess = address;
-          const network = await (window as any).mina.requestNetwork();
+          const network = await requestNetwork();
           const minaNetwork = NETWORKS.find(
             (x) =>
               (network.chainId != "unknown"
-                ? x.chainId == network.chainId
+                ? x.chainId == network.chainId ||
+                  x.palladNetworkID === network.chainId
                 : x.name == network.name) || x.networkID === network.networkID
           );
           const accountAuthSignature =
@@ -119,7 +126,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
             this.onWalletConnected(localStorage.minaAdderess);
           }
         } else {
-          const accounts = await (window as any).mina.requestAccounts();
+          const accounts = await requestAccounts();
           this.onWalletConnected(accounts[0]);
         }
       },
@@ -146,10 +153,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
         });
       },
       setAuthSignature() {
-        return (window as any).mina
-          ?.signMessage({
-            message: ACCOUNT_AUTH_MESSAGE,
-          })
+        return signMessage(ACCOUNT_AUTH_MESSAGE)
           .then((signResult: any) => {
             const authSignatureStr = `${signResult.publicKey || ""} ${
               signResult?.signature?.scalar || ""
@@ -178,6 +182,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
   })
 );
 
+//TODO: Move this to new files
 export const useParticipationFee = () => {
   const networkStore = useNetworkStore();
   const redeemVoucher = useMutation({
@@ -212,7 +217,9 @@ export const useParticipationFee = () => {
     type: "VOUCHER" | "NETWORK" | "FREE";
   }): Promise<{ id: number } | null | undefined> => {
     let hash;
-    let network = networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
+    let network = window.mina?.isPallad
+      ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
+      : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
     let txn_status = "PENDING";
     if (!networkStore.address) {
       networkStore.connectWallet(false);
@@ -240,19 +247,13 @@ export const useParticipationFee = () => {
         txn_status = "CONFIRMED";
         break;
       case "NETWORK":
-        try {
-          const data: SendTransactionResult | ProviderError = await (
-            window as any
-          )?.mina?.sendPayment({
-            amount: participation_fee,
-            to: treasury_address,
-            memo: `Pay ${participation_fee} MINA.`,
-          });
-          hash = (data as SendTransactionResult).hash;
-          txn_status = "PENDING";
-        } catch (err: any) {
-          toast(`Txn failed with error ${err.toString()}. report a bug`);
-        }
+        hash = await sendPayment({
+          from: networkStore.address,
+          amount: participation_fee,
+        });
+
+        txn_status = "PENDING";
+
         break;
       default:
     }
@@ -284,10 +285,11 @@ export const useParticipationFee = () => {
   return { payParticipationFees };
 };
 
-export const usePayNFTMintFee = () => {
+//TODO: Move this to new files
+export const useMintNFT = () => {
   const networkStore = useNetworkStore();
   const setMintProgress = useSetAtom(mintProgressAtom);
-  const { mintMINANFTHelper } = useMintNFT();
+  const { mintMINANFTHelper } = useMintMINANFT();
 
   const mintNft = async ({ nft_id }: { nft_id: number }) => {
     if (!networkStore.address) {

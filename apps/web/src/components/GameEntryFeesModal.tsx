@@ -71,6 +71,8 @@ export const GameEntryFeesModal = ({
         : "NETWORK",
       code: voucherCode,
     });
+
+    console.log("DATA ID", data?.id);
     if (data?.id) {
       toast(
         `You have joined the ${competition.name} competition successfully. Redirecting you to the game screen now.`

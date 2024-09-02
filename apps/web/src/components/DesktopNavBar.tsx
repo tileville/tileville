@@ -8,7 +8,7 @@ import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "./PrimaryButton";
 import { MediaPlayer } from "./MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
-import { formatAddress, walletInstalled } from "@/lib/helpers";
+import { formatAddress, signMessage, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
 import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
@@ -63,7 +63,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useEffect(() => {
     if (!walletInstalled()) return;
     if (autoConnect) {
-      networkStore.connectWallet(true);
+      networkStore.connectWallet(false);
     }
     setCanGoBack(window.history.length > 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,10 +83,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
         }
       }
       if (isSignatureRequired) {
-        (window as any).mina
-          ?.signMessage({
-            message: ACCOUNT_AUTH_MESSAGE,
-          })
+        signMessage(ACCOUNT_AUTH_MESSAGE)
           .then((signResult: any) => {
             const authSignatureStr = `${signResult.publicKey || ""} ${
               signResult?.signature?.scalar || ""

@@ -1,4 +1,5 @@
 import { Network } from "@/constants/network";
+import { requestAccounts } from "@/lib/helpers";
 import { useNetworkStore } from "@/lib/stores/network";
 
 export function useSwitchNetwork() {
@@ -7,6 +8,14 @@ export function useSwitchNetwork() {
   const switchNetwork = async (network: Network) => {
     console.log("Switching to network", network);
     try {
+      if (window.mina?.isPallad) {
+        await window.mina.request({
+          method: "mina_switchChain",
+          params: {
+            chainId: network.palladNetworkID,
+          },
+        });
+      }
       try {
         await (window as any).mina.switchChain({
           networkID: network.networkID,
@@ -17,7 +26,7 @@ export function useSwitchNetwork() {
       networkStore.setNetwork(network);
     } catch (e: any) {
       if (e?.code == 1001) {
-        await (window as any).mina.requestAccounts();
+        await requestAccounts();
         await switchNetwork(network);
       }
       throw e;

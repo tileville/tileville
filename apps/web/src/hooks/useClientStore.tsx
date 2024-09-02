@@ -1,4 +1,4 @@
-import { client } from "tileville-chain-dev";
+import { ClientAppChain as client } from "tileville-chain-dev";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -13,15 +13,14 @@ export const useClientStore = create<ClientState, [["zustand/immer", never]]>(
   immer((set) => ({
     loading: Boolean(false),
     async start() {
-      set((state) => {
-        state.loading = true;
-      });
-      await client.start();
-
-      set((state) => {
-        state.loading = false;
-        state.client = client;
-      });
+      // set((state) => {
+      //   state.loading = true;
+      // });
+      // await client.start();
+      // set((state) => {
+      //   state.loading = false;
+      //   state.client = client;
+      // });
     },
   }))
 );
