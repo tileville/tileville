@@ -7,6 +7,7 @@ import { method } from "o1js";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { TREASURY_ADDRESS } from "@/constants";
+import { data as mockTxnData } from "@/hooks/mockTxnData";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -106,6 +107,35 @@ export async function signMessage(message: string) {
   }
 }
 
+//TODO: REMOVE IT AFTER TESTING
+export async function dummy() {
+  const transaction = JSON.parse(mockTxnData.transaction);
+  if (window.mina?.isPallad) {
+    console.log("INIT DUMMY FLOW");
+    const signedTransactionResponse = async () => {
+      const response = await (window as any).mina.request({
+        method: "mina_signTransaction",
+        params: { transaction },
+      });
+      return response.result;
+    };
+    const signedTransaction = await signedTransactionResponse();
+
+    console.log("signedTransaction", JSON.stringify(signedTransaction));
+    const response = await (window as any).mina?.request({
+      method: "mina_sendTransaction",
+      params: {
+        signedTransaction,
+        transactionType: "zkapp",
+      },
+    });
+
+    const hash = response.result.hash;
+    console.log("DUMMY RESIUKT", hash);
+  } else {
+    console.log("Incorrect wallet");
+  }
+}
 export async function sendPayment({
   from,
   amount,
@@ -150,7 +180,6 @@ export async function sendPayment({
       },
     });
 
-    //todo: pallad wallet integration and this function should return hash
     return response.result.hash;
   } else {
     try {
@@ -165,10 +194,6 @@ export async function sendPayment({
     } catch (err: any) {
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }
-
-    // return (window as any).mina?.signMessage({
-    //   message,
-    // });
   }
 }
 
