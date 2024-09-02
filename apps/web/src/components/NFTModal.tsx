@@ -189,7 +189,9 @@ export const NFTModal = ({
   const parsedTraits = parseTraits(traits);
 
   let isMintingDisabled: boolean;
-  if (isMockEnv) {
+  if (window.mina?.isPallad) {
+    isMintingDisabled = true;
+  } else if (isMockEnv) {
     isMintingDisabled = false;
   } else if (mintKey) {
     isMintingDisabled = false;
@@ -289,8 +291,8 @@ export const NFTModal = ({
   };
 
   const getMINTText = (price: number) => {
-    if (isMintingDisabled) {
-      return `MINTING STARTS SOON`;
+    if (window.mina?.isPallad) {
+      return "MINT NFT";
     } else if (!networkStore.address) {
       return "Connect Wallet";
     } else if (!!algoliaHitData) {
@@ -421,36 +423,79 @@ export const NFTModal = ({
                 </span>
               </div>
               <Flex direction="column" gap="3" mt="4" justify="center">
-                {isMintingDisabled && (
-                  <CountdownTimer
-                    initialTime={getTime(globalConfig.nft_mint_start_date)}
-                  />
-                )}
+                <Tooltip.Provider delayDuration={100}>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <button
+                        className={clsx({
+                          "relative h-10 rounded-md border-primary  px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed ":
+                            true,
+                          "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
+                            isMintingDisabled ||
+                            mintLoading ||
+                            !!algoliaHitData ||
+                            !isSufficientBalance(Number(price)),
+                          "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
+                            !isMintingDisabled,
+                        })}
+                        onClick={() => handleMint(nftID)}
+                        disabled={
+                          isMintingDisabled ||
+                          mintLoading ||
+                          !!algoliaHitData ||
+                          !isSufficientBalance(Number(price))
+                        }
+                      >
+                        {mintLoading && (
+                          <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
+                            <Spinner />
+                          </span>
+                        )}
+                        {getMINTText(Number(price))}
+                      </button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      {window.mina?.isPallad && (
+                        <Tooltip.Content
+                          className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
+                          sideOffset={5}
+                        >
+                          <div className="max-w-md">
+                            <p className="mb-2 font-bold">
+                              Pallad wallet is not supported yet. Please use
+                              Auro wallet instead.
+                            </p>
+                            <ol className="mb-2 list-inside list-decimal text-sm">
+                              <li>
+                                Open a new tab and go to{" "}
+                                <span className="rounded bg-gray-200 px-1 font-mono">
+                                  chrome://extensions
+                                </span>
+                              </li>
+                              <li>
+                                Find &quot;Pallad Wallet&quot; in your list of
+                                extensions
+                              </li>
+                              <li>Toggle the switch to disable it</li>
+                            </ol>
+                            <div className="mt-2 text-sm">
+                              <a
+                                href="https://chromewebstore.google.com/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline"
+                              >
+                                Get Auro Wallet
+                              </a>
+                            </div>
+                          </div>
 
-                <button
-                  className={clsx({
-                    "relative h-10 rounded-md border-primary  px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed ":
-                      true,
-                    "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
-                      !!algoliaHitData,
-                    "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
-                      !algoliaHitData,
-                  })}
-                  onClick={() => handleMint(nftID)}
-                  disabled={
-                    isMintingDisabled ||
-                    mintLoading ||
-                    !!algoliaHitData ||
-                    !isSufficientBalance(Number(price))
-                  }
-                >
-                  {mintLoading && (
-                    <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
-                      <Spinner />
-                    </span>
-                  )}
-                  {getMINTText(Number(price))}
-                </button>
+                          <Tooltip.Arrow className="TooltipArrow" />
+                        </Tooltip.Content>
+                      )}
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                </Tooltip.Provider>
 
                 {algoliaHitData?.price && +algoliaHitData?.price > 0 && (
                   <div className="text-right">
