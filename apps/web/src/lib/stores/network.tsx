@@ -21,7 +21,7 @@ import { useMutation } from "@tanstack/react-query";
 // import { mintNFT } from "@/app/api/mint-nft/minanft-call";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
-import { useMintNFT } from "@/hooks/useMintNFT";
+import { useMintMINANFT } from "@/hooks/useMintMINANFT";
 import {
   requestAccounts,
   requestNetwork,
@@ -284,10 +284,10 @@ export const useParticipationFee = () => {
   return { payParticipationFees };
 };
 
-export const usePayNFTMintFee = () => {
+export const useMintNFT = () => {
   const networkStore = useNetworkStore();
   const setMintProgress = useSetAtom(mintProgressAtom);
-  const { mintMINANFTHelper } = useMintNFT();
+  const { mintMINANFTHelper } = useMintMINANFT();
 
   const mintNft = async ({ nft_id }: { nft_id: number }) => {
     if (!networkStore.address) {

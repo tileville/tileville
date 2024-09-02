@@ -6,7 +6,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
-import { useNetworkStore, usePayNFTMintFee } from "@/lib/stores/network";
+import { useNetworkStore, useMintNFT } from "@/lib/stores/network";
 import { ATTRIBUTES_DATA, isMockEnv } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
@@ -139,7 +139,7 @@ export const NFTModal = ({
   const minaBalancesStore = useMinaBalancesStore();
 
   const networkStore = useNetworkStore();
-  const { mintNft } = usePayNFTMintFee();
+  const { mintNft } = useMintNFT();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const [error, setError] = useState<string | null>(null);
   const { switchNetwork } = useSwitchNetwork();

@@ -16,7 +16,7 @@ import {
 import { createFileFromImageUrl } from "@/app/api/mint-nft/common-utils";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
-import { requestAccounts } from "@/lib/helpers";
+import { requestAccounts, sendPayment } from "@/lib/helpers";
 
 export type MintNFTParams = {
   name: string;
@@ -30,7 +30,7 @@ export type MintNFTParams = {
   nft_id: number;
 };
 
-export function useMintNFT() {
+export function useMintMINANFT() {
   const setMintProgress = useSetAtom(mintProgressAtom);
   const mintMINANFTHelper = async (params: MintNFTParams) => {
     console.log("######## MINT NFT Flow Starts ######");
@@ -283,6 +283,17 @@ export function useMintNFT() {
     function isErrorWithCode(error: unknown): error is { code: number } {
       return typeof error === "object" && error !== null && "code" in error;
     }
+    const palladTxData = {
+      from: owner || "",
+      amount: price,
+    };
+    const nftPrice =
+      Number(
+        JSON.parse(payload.transaction).accountUpdates[1].body.balanceChange
+          .magnitude
+      ) / 1e9;
+
+    console.log("NFT PRICE", nftPrice);
     try {
       txResult = await (window as any).mina?.sendTransaction(payload);
     } catch (error: unknown) {
