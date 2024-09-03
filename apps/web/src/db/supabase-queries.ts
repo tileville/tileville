@@ -61,7 +61,7 @@ export const getAllCompetitionsEntries = async (
     .order("priority");
   const formattedData = data ?? [];
 
-  if (isMockEnv) {
+  if (isMockEnv()) {
     formattedData.push(mockCompetition);
   }
   if (error) {
@@ -342,7 +342,7 @@ export const getCompetitionByKey = async (
   supabase: AppSupabaseClient,
   unique_keyname: string
 ): Promise<Table<"tileville_competitions">> => {
-  if (isMockEnv && mockCompetition.unique_keyname === unique_keyname)
+  if (isMockEnv() && mockCompetition.unique_keyname === unique_keyname)
     return mockCompetition;
   const { data, error } = await supabase
     .from("tileville_competitions")
