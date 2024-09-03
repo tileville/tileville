@@ -212,6 +212,7 @@ export const useProfileLazyQuery = (walletAddress: string) => {
           console.error(e);
         });
     },
+    enabled: !!walletAddress,
   });
 };
 
@@ -411,6 +412,9 @@ export const useIsGameAlreadyPlayed = (game_id: number) => {
     () => isGameAlreadyPlayed(game_id),
     {
       enabled: game_id > 0,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     }
   );
 };

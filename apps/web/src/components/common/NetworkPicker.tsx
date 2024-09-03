@@ -68,7 +68,6 @@ export default function NetworkPicker() {
     })();
   }, []);
 
-  console.log("mina network 90", networkStore.minaNetwork);
   return (
     <div className="relative">
       <NetworkPickerCard
