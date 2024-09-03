@@ -53,8 +53,21 @@ export const POSTHOG_TOKEN =
 export const POSTHOG_URI =
   process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 
-export const isMockEnv =
-  process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true" || false;
+export const isMockEnv = (): boolean => {
+  // Access localStorage directly, without using a hook
+  const mintKey =
+    typeof window !== "undefined" ? localStorage.getItem("IS_MOCK") : null;
+
+  if (mintKey) {
+    return true;
+  } else if (process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true") {
+    return true;
+  } else {
+    return false;
+  }
+};
+// export const isMockEnv =
+//   process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true" || false;
 export const NOVU_API_KEY =
   process.env.NEXT_PUBLIC_NOVU_API_KEY || "ed1f7d240a9a31843dc24795660e95d4";
 export const NOVU_APP_ID =

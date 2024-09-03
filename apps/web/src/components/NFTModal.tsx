@@ -151,7 +151,7 @@ export const NFTModal = ({
         toast.success(
           <>
             <p>
-              NFT minted successfully. You can check your new nft on{" "}
+              NFT minted successfully🎉. You can check your new nft on{" "}
               <Link
                 target="_blank"
                 href={getMINANFTLink(nftMintResponse.txHash)}
@@ -191,7 +191,7 @@ export const NFTModal = ({
   let isMintingDisabled: boolean;
   if (window.mina?.isPallad) {
     isMintingDisabled = true;
-  } else if (isMockEnv) {
+  } else if (isMockEnv()) {
     isMintingDisabled = false;
   } else if (mintKey) {
     isMintingDisabled = false;
@@ -559,6 +559,13 @@ export const NFTModal = ({
                         className="font-semibold text-primary underline hover:no-underline"
                       >
                         minanft
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        href="/profile"
+                        className="font-semibold text-primary underline hover:no-underline"
+                      >
+                        profile section
                       </Link>
                     </p>
                   )}

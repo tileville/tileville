@@ -409,28 +409,32 @@ export default function Profile() {
           </div>
         </div>
 
-        <Tabs.Root defaultValue="active-games">
+        <Tabs.Root defaultValue="collection">
           <Tabs.List className="mt-4">
+            <Tabs.Trigger value="collection">Digital Collection</Tabs.Trigger>
             <Tabs.Trigger value="active-games">Active Games</Tabs.Trigger>
             <Tabs.Trigger value="past-games">Past Games</Tabs.Trigger>
             <Tabs.Trigger value="transactions">Transactions</Tabs.Trigger>
-            <Tabs.Trigger value="collection">Digital Collection</Tabs.Trigger>
             <Tabs.Trigger value="preferences">Preferences</Tabs.Trigger>
           </Tabs.List>
 
           <Box pt="3">
-            <Tabs.Content value="active-games">
-              <ActiveGames walletAddress={networkStore?.address} />
-            </Tabs.Content>
-            <Tabs.Content value="past-games">
-              <PastGames walletAddress={networkStore?.address} />
-            </Tabs.Content>
-            <Tabs.Content value="transactions">
-              <Transactions walletAddress={networkStore?.address} />
-            </Tabs.Content>
             <Tabs.Content value="collection">
               <DigitalCollection />
             </Tabs.Content>
+
+            <Tabs.Content value="active-games">
+              <ActiveGames walletAddress={networkStore?.address} />
+            </Tabs.Content>
+
+            <Tabs.Content value="past-games">
+              <PastGames walletAddress={networkStore?.address} />
+            </Tabs.Content>
+
+            <Tabs.Content value="transactions">
+              <Transactions walletAddress={networkStore?.address} />
+            </Tabs.Content>
+
             <Tabs.Content value="preferences">
               <Preferences />
             </Tabs.Content>
