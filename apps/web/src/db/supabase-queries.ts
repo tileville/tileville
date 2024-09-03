@@ -312,7 +312,7 @@ export const getActiveGames = async (
     .from("transaction_logs")
     .select("*")
     .eq("wallet_address", wallet_address)
-    .eq("txn_status", "CONFIRMED")
+    .or("txn_status.eq.CONFIRMED,txn_status.eq.PENDING")
     .order("created_at", { ascending: false });
 
   const gameScoresPromise = await supabase
