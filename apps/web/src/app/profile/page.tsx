@@ -1,5 +1,4 @@
 "use client";
-import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Box, Button, Tabs } from "@radix-ui/themes";
@@ -20,7 +19,7 @@ import PastGames from "@/components/profileTabs/pastGames";
 import Transactions from "@/components/profileTabs/transactions";
 import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
-import { getPalladBalance } from "@/lib/helpers";
+import { copyToClipBoard } from "@/lib/helpers";
 
 interface IFormInput {
   firstName: string;
@@ -118,19 +117,6 @@ export default function Profile() {
   }
 
   const avatarUrl = watch("avatar_url");
-
-  const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
-    try {
-      await navigator.clipboard.writeText(toCopyContent);
-      toast.success(<>{copiedType} copied to clipboard!</>, {
-        duration: 2000,
-      });
-    } catch (err) {
-      toast.error(<>Error copying {copiedType}! Please Try Again</>, {
-        duration: 2000,
-      });
-    }
-  };
 
   // Check if any profile field is missing
   const isProfileIncomplete =
@@ -358,10 +344,10 @@ export default function Profile() {
                       <h3>{profileData.username}</h3>
                       <button
                         onClick={() => {
-                          copyToClipBoard(
-                            `${profileData.username}`,
-                            "username"
-                          );
+                          copyToClipBoard({
+                            toCopyContent: `${profileData.username}`,
+                            copiedType: "username",
+                          });
                         }}
                       >
                         <CopyIcon />
@@ -381,10 +367,10 @@ export default function Profile() {
 
                 <button
                   onClick={() => {
-                    copyToClipBoard(
-                      `${networkStore.address}`,
-                      "Wallet Address"
-                    );
+                    copyToClipBoard({
+                      toCopyContent: `${networkStore.address}`,
+                      copiedType: "Wallet Address",
+                    });
                   }}
                 >
                   <CopyIcon />

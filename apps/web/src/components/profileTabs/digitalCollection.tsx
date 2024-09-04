@@ -4,13 +4,14 @@ import {
   AlgoliaHitResponse,
 } from "@/hooks/useFetchNFTSAlgolia";
 import { useNetworkStore } from "@/lib/stores/network";
-import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { CopyIcon, Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Dialog } from "@radix-ui/themes";
+// import * as Separator from "@radix-ui/react-separator";
 import Image from "next/image";
 import Link from "next/link";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { ATTRIBUTES_DATA } from "@/constants";
-import { getMINANFTLink } from "@/lib/helpers";
+import { copyToClipBoard, formatAddress, getMINANFTLink } from "@/lib/helpers";
 
 interface AttributesData {
   [key: string]: {
@@ -75,10 +76,28 @@ export default function DigitalCollection() {
                       {nft.name}
                     </Dialog.Title>
 
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold">NFT Address:</p>
+                      {formatAddress(nft.address)}
+                      <button
+                        onClick={() => {
+                          copyToClipBoard({
+                            toCopyContent: nft.address,
+                            copiedType: "NFT Address",
+                          });
+                        }}
+                      >
+                        <CopyIcon />
+                      </button>
+                    </div>
+
                     <div className="mt-4 rounded-md">
-                      <Dialog.Description className="!mb-2 font-semibold">
-                        Traits
-                      </Dialog.Description>
+                      <div className="flex items-center justify-between">
+                        <Dialog.Description className="!mb-2 font-semibold">
+                          Traits
+                        </Dialog.Description>
+                      </div>
+
                       <ul className="grid grid-cols-2 gap-2 text-center text-xs">
                         {Object.entries(nft.properties).map(([key, value]) => {
                           if (
@@ -156,30 +175,53 @@ export default function DigitalCollection() {
                       </ul>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="mt-4 space-y-3 text-sm">
                       <Link
                         href="/faq#tileville-builder-nfts"
-                        className="text-xs font-semibold text-primary underline hover:no-underline"
+                        className="block text-primary hover:underline"
                       >
                         Learn more about the utility of TileVille NFTs
                       </Link>
-                    </div>
-
-                    <div className="mt-4 flex gap-6 text-sm">
-                      <Link
-                        target="_blank"
-                        href={nft.external_url}
-                        className="font-semibold text-primary underline hover:no-underline"
-                      >
-                        See on MinaScan
-                      </Link>
-                      <Link
-                        target="_blank"
-                        href={getMINANFTLink(nft.hash)}
-                        className="font-semibold text-primary underline hover:no-underline"
-                      >
-                        See on minanft.io
-                      </Link>
+                      <div className="h-[1px] w-full bg-primary/30"></div>
+                      <div className="flex items-center space-x-2">
+                        <Link
+                          href={`https://minanft.io/@${nft.name}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:bg-primary-dark inline-flex items-center rounded-full bg-primary px-3 py-1 text-white transition-colors"
+                        >
+                          Sell
+                        </Link>
+                        <span className="text-gray-500">or</span>
+                        <Link
+                          href="https://minanft.io/transfer"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:bg-primary-dark inline-flex items-center rounded-full bg-primary px-3 py-1 text-white transition-colors"
+                        >
+                          Transfer
+                        </Link>
+                        <span className="text-gray-500">on MINANFT</span>
+                      </div>
+                      <div className="h-[1px] w-full bg-primary/30"></div>
+                      <div className="flex space-x-4">
+                        <Link
+                          href={nft.external_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          See on MinaScan
+                        </Link>
+                        <Link
+                          href={getMINANFTLink(nft.hash)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          See on minanft.io
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

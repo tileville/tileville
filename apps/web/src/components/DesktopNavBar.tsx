@@ -216,7 +216,10 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             {isMounted() &&
               (networkStore.walletConnected && networkStore.address ? (
                 <>
-                  <AccountCard text={formatAddress(networkStore.address)} />
+                  <Link href="/profile">
+                    <AccountCard text={formatAddress(networkStore.address)} />
+                  </Link>
+
                   <NetworkPicker />
                 </>
               ) : walletInstalled() ? (
