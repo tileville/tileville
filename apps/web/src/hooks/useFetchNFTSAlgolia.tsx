@@ -88,7 +88,7 @@ type FetchOptions = {
   owner?: string;
 };
 export const useFetchNFTSAlgolia = (options: FetchOptions) => {
-  console.log({ options });
+  // console.log({ options });
   const [response, setResponse] = useState<AlgoliaHitResponse[]>([]);
   useEffect(() => {
     searchJobs({

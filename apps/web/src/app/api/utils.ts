@@ -26,9 +26,10 @@ export async function isSignatureValid(
     const signClient = await getSignClient();
     const verifyBody = {
       data: verifyMessage,
-      publicKey,
       signature,
+      publicKey,
     };
+
     const verifyResult = signClient.verifyMessage(verifyBody);
     console.log("verification result", verifyResult, verifyBody);
     return verifyResult;
@@ -37,9 +38,6 @@ export async function isSignatureValid(
     return false;
   }
 }
-
-
-
 
 export async function verifyUserAuthentication(
   authSignature: string | null,
@@ -52,6 +50,8 @@ export async function verifyUserAuthentication(
   }
   try {
     const [publicKey, scalar, field] = authSignature.split(" ");
+
+    // console.log("FIELD", field);
 
     console.log({ publicKey, scalar, field });
 

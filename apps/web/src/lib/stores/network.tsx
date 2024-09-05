@@ -2,17 +2,9 @@
 import { type PendingTransaction } from "@proto-kit/sequencer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import {
-  SendTransactionResult,
-  ProviderError,
-} from "@aurowallet/mina-provider";
 import { NETWORKS, Network } from "@/constants/network";
 import { useSessionStorage } from "react-use";
-import {
-  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
-  ACCOUNT_AUTH_MESSAGE,
-  GAME_ENTRY_FEE_KEY,
-} from "@/constants";
+import { GAME_ENTRY_FEE_KEY } from "@/constants";
 import toast from "react-hot-toast";
 import { addTransactionLog } from "@/db/supabase-queries";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
@@ -22,13 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintMINANFT } from "@/hooks/useMintMINANFT";
-import {
-  requestAccounts,
-  requestNetwork,
-  sendPayment,
-  signMessage,
-} from "../helpers";
-// import { useAuthSignature } from "@/hooks/useAuthSignature";
+import { requestAccounts, requestNetwork, sendPayment } from "../helpers";
 // import uuid from "uuid";
 
 export interface NetworkState {
@@ -41,17 +27,15 @@ export interface NetworkState {
   onProtokitClientStarted: () => void;
   connectWallet: (soft: boolean) => Promise<void>;
   walletInstalled: () => boolean;
-  accountAuthSignature?: string | undefined;
+  // accountAuthSignature?: string | undefined;
   pendingL2Transactions: PendingTransaction[];
   addPendingL2Transaction: (pendingTransaction: PendingTransaction) => void;
   removePendingL2Transaction: (pendingTransaction: PendingTransaction) => void;
-  setAuthSignature: () => Promise<boolean>;
+  // setAuthSignature: () => Promise<boolean>;
 }
 
 export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
   immer((set) => {
-    // const [accountAuthSignature, setSignature, deleteSignature] =
-    //   useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY, "");
     return {
       walletConnected: false,
       protokitClientStarted: false,
@@ -73,7 +57,9 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
           }
         });
       },
+
       address: undefined,
+
       async onWalletConnected(address: string | undefined) {
         if (address) {
           localStorage.minaAdderess = address;
@@ -86,30 +72,8 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
                 : x.name == network.name) || x.networkID === network.networkID
           );
           const accountAuthSignature =
-            localStorage[ACCOUNT_AUTH_LOCALSTORAGE_KEY];
+            localStorage.ACCOUNT_AUTH_LOCALSTORAGE_KEY;
           let isSignatureRequired = true;
-          if (accountAuthSignature) {
-            try {
-              const signatureAccount = accountAuthSignature.split(" ")[0] || "";
-              isSignatureRequired = signatureAccount === address ? false : true;
-            } catch (error) {
-              console.warn(`Failed to parse stored signature.`);
-              isSignatureRequired = true;
-            }
-          }
-
-          if (isSignatureRequired) {
-            // const isSignSuccess = await this.setAuthSignature();
-            // if (!isSignSuccess) {
-            //   toast("You need to authenticate wallet");
-            //   localStorage.minaAddress = undefined;
-            //   return;
-            // }
-          } else {
-            // set((state) => {
-            //   state.accountAuthSignature = accountAuthSignature;
-            // });
-          }
 
           this.setNetwork(minaNetwork);
         } else {
@@ -151,32 +115,6 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
             }
           );
         });
-      },
-      setAuthSignature() {
-        return signMessage(ACCOUNT_AUTH_MESSAGE)
-          .then((signResult: any) => {
-            const authSignatureStr = `${signResult.publicKey || ""} ${
-              signResult?.signature?.scalar || ""
-            } ${signResult?.signature?.field || ""}`;
-            console.log("auth signature", authSignatureStr);
-            localStorage[ACCOUNT_AUTH_LOCALSTORAGE_KEY] = authSignatureStr;
-            set((state) => {
-              state.accountAuthSignature = authSignatureStr;
-            });
-            return true;
-          })
-          .catch((error: any) => {
-            console.log("failed to set signature", error);
-            if (
-              error.code === 1001 ||
-              (error.message || "").toLowercase().contains("User disconnect")
-            ) {
-              toast(
-                "Your wallet extenstion is locked. please unlock your wallet extension first and then try again"
-              );
-            }
-            return false;
-          });
       },
     };
   })
