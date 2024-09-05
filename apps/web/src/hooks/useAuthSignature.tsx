@@ -1,68 +1,98 @@
-import {
-  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
-  ACCOUNT_AUTH_MESSAGE,
-} from "@/constants";
+import { ACCOUNT_AUTH_SESSION_KEY, ACCOUNT_AUTH_MESSAGE } from "@/constants";
 import { useNetworkStore } from "@/lib/stores/network";
-import { useEffect } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import toast from "react-hot-toast";
-import { useLocalStorage } from "react-use";
+import { useSessionStorage } from "react-use";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { signMessage } from "@/lib/helpers";
+
+type ShowToastFunction = (message: string, isError?: boolean) => void;
 
 export const useAuthSignature = () => {
   const networkStore = useNetworkStore();
-  const [accountAuthSignature, setSignature, deleteSignature] = useLocalStorage(
-    ACCOUNT_AUTH_LOCALSTORAGE_KEY,
+  const [accountAuthSignature, setAccountAuthSignature] = useSessionStorage(
+    ACCOUNT_AUTH_SESSION_KEY,
     ""
   );
 
-  const setSignatureFn = () => {
-    console.log("network address", networkStore.address);
+  const validateOrSetSignature = useCallback(() => {
     if (!networkStore.address) {
       return networkStore.connectWallet(false);
     }
-    (window as any).mina
-      ?.signMessage({
-        message: ACCOUNT_AUTH_MESSAGE,
-      })
-      .then((signResult: any) => {
-        const authSignatureStr = `${signResult.publicKey || ""} ${
-          signResult?.signature?.scalar || ""
-        } ${signResult?.signature?.field || ""}`;
-        console.log("auth signature", authSignatureStr);
-        setSignature(authSignatureStr);
-      })
-      .catch((error: any) => {
-        console.log("failed to set signature", error);
-        if (
-          error.code === 1001 ||
-          (error.message || "").toLowercase().contains("User disconnect")
-        ) {
-          toast(
-            "Your wallet extenstion is locked. please unlock your wallet extension first and then try again"
-          );
-        }
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  };
-
-  useEffect(() => {
-    if (networkStore.walletConnected) {
-      let isSignatureRequired = true;
-      if (accountAuthSignature) {
-        try {
-          const signatureAccount = accountAuthSignature.split(" ")[0] || "";
-          isSignatureRequired =
-            signatureAccount === networkStore.address ? false : true;
-        } catch (error) {
-          console.warn(`Failed to parse stored signature.`);
-          isSignatureRequired = true;
-        }
-      }
-      if (isSignatureRequired) {
-        setSignatureFn();
+    let isSignatureRequired = true;
+    if (accountAuthSignature) {
+      try {
+        const signatureAccount = accountAuthSignature.split(" ")[0] || "";
+        isSignatureRequired =
+          signatureAccount === networkStore.address ? false : true;
+      } catch (error) {
+        console.warn(`Failed to parse stored signature.`);
+        isSignatureRequired = true;
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [networkStore.walletConnected]);
+    if (isSignatureRequired) {
+      signMessage(ACCOUNT_AUTH_MESSAGE)
+        .then((signResult: any) => {
+          const authSignatureStr = `${signResult.publicKey || ""} ${
+            signResult?.signature?.scalar || ""
+          } ${signResult?.signature?.field || ""}`;
+          setAccountAuthSignature(authSignatureStr);
 
-  return { setSignatureFn, accountAuthSignature, deleteSignature };
+          showAuthSignatureToast("Signature added successfully.", false);
+        })
+        .catch((error: any) => {
+          console.log("failed to set signature", error);
+
+          if (String(error).includes("4001") || error.code === 1002) {
+            showAuthSignatureToast(
+              "You've declined the request to sign with your wallet. Please don't decline it.",
+              true
+            );
+          } else {
+            showAuthSignatureToast(
+              "An error occurred while signing. Please try again.",
+              true
+            );
+          }
+        });
+    }
+  }, [networkStore.address, accountAuthSignature]);
+
+  const showAuthSignatureToast: ShowToastFunction = (
+    message,
+    isError = false
+  ) => {
+    toast.custom(
+      (t) => (
+        <div className="flex w-full max-w-md items-center gap-2 rounded-lg bg-white p-3 shadow-lg">
+          <div>
+            {isError ? (
+              <ExclamationTriangleIcon className="h-6 w-6 text-red-500" />
+            ) : (
+              <span className="text-green-500">✓</span>
+            )}
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-900">
+              {isError ? "Wallet Signature Error" : "Wallet Signature"}
+            </p>
+            <p className="mt-1 text-sm text-gray-500">
+              {message}
+              {isError && (
+                <button
+                  className="ms-1 text-blue-500"
+                  onClick={validateOrSetSignature}
+                >
+                  Retry
+                </button>
+              )}
+            </p>
+          </div>
+        </div>
+      ),
+      { duration: 5000 }
+    );
+  };
+
+  return { validateOrSetSignature, accountAuthSignature };
 };

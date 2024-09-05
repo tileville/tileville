@@ -25,13 +25,13 @@ import {
   getAllNFTsEntries,
 } from "./supabase-queries";
 import {
-  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
+  ACCOUNT_AUTH_SESSION_KEY,
   BLOCKBERRY_API_KEY,
   BLOCKBERRY_MAINNET_BASE_URL,
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
-import { useLocalStorage } from "react-use";
+import { useSessionStorage } from "react-use";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 export const useSendEmail = ({
@@ -193,7 +193,7 @@ export const useNFTEntries = ({
   );
 };
 export const useProfileLazyQuery = (walletAddress: string) => {
-  const [authSignature] = useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY);
+  const [authSignature] = useSessionStorage(ACCOUNT_AUTH_SESSION_KEY, "");
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () => {
@@ -203,7 +203,7 @@ export const useProfileLazyQuery = (walletAddress: string) => {
       }
       return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
         headers: {
-          "Auth-Signature": JSON.stringify(authSignature as string | ""),
+          "Auth-Signature": JSON.stringify(authSignature),
           "Wallet-Address": walletAddress,
         },
       })
