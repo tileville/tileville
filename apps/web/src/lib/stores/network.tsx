@@ -73,7 +73,6 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
           );
           const accountAuthSignature =
             localStorage.ACCOUNT_AUTH_LOCALSTORAGE_KEY;
-          let isSignatureRequired = true;
 
           this.setNetwork(minaNetwork);
         } else {
