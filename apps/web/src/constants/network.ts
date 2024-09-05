@@ -19,7 +19,7 @@ export const NETWORKS: Network[] = [
   },
 ];
 
-if (isMockEnv) {
+if (isMockEnv()) {
   NETWORKS.push({
     chainId: "testnet",
     name: "Devnet",

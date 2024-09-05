@@ -7,6 +7,7 @@ import { method } from "o1js";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { TREASURY_ADDRESS } from "@/constants";
+import { data as mockTxnData } from "@/hooks/mockTxnData";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -106,6 +107,35 @@ export async function signMessage(message: string) {
   }
 }
 
+//TODO: REMOVE IT AFTER TESTING
+export async function dummy() {
+  const transaction = JSON.parse(mockTxnData.transaction);
+  if (window.mina?.isPallad) {
+    console.log("INIT DUMMY FLOW");
+    const signedTransactionResponse = async () => {
+      const response = await (window as any).mina.request({
+        method: "mina_signTransaction",
+        params: { transaction },
+      });
+      return response.result;
+    };
+    const signedTransaction = await signedTransactionResponse();
+
+    console.log("signedTransaction", JSON.stringify(signedTransaction));
+    const response = await (window as any).mina?.request({
+      method: "mina_sendTransaction",
+      params: {
+        signedTransaction,
+        transactionType: "zkapp",
+      },
+    });
+
+    const hash = response.result.hash;
+    console.log("DUMMY RESIUKT", hash);
+  } else {
+    console.log("Incorrect wallet");
+  }
+}
 export async function sendPayment({
   from,
   amount,
@@ -150,7 +180,6 @@ export async function sendPayment({
       },
     });
 
-    //todo: pallad wallet integration and this function should return hash
     return response.result.hash;
   } else {
     try {
@@ -165,10 +194,6 @@ export async function sendPayment({
     } catch (err: any) {
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }
-
-    // return (window as any).mina?.signMessage({
-    //   message,
-    // });
   }
 }
 
@@ -180,28 +205,3 @@ export async function getPalladBalance() {
   console.log("response balance", response);
   return response.result;
 }
-
-//  const response =  await window.mina.request({
-//   method: "mina_sendTransaction",
-//   params: {
-//     signedTransaction: {
-//       signature: {
-//         field:
-//           "25832171506121427139016814727942190909414892823940908613882743324875967002800",
-//         scalar:
-//           "3407931015617535538689382857035449367911109896176560494347527690582616018775",
-//       },
-//       publicKey: "B62qm8YHJAvZit7qRXwvmVTLsAwsX5GjRZ7APAtLmQZiPVAB5LjMdf8",
-//       data: {
-//         to: "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
-//         from: "B62qm8YHJAvZit7qRXwvmVTLsAwsX5GjRZ7APAtLmQZiPVAB5LjMdf8",
-//         fee: "100000000",
-//         amount: "10000000",
-//         nonce: "0",
-//         memo: "game fess",
-//         validUntil: "4294967295",
-//       },
-//     },
-//     transactionType: "payment",
-//   },
-// });

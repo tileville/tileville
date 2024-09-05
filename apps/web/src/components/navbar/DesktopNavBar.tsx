@@ -63,7 +63,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useEffect(() => {
     if (!walletInstalled()) return;
     if (autoConnect) {
-      networkStore.connectWallet(true);
+      networkStore.connectWallet(false);
     }
     setCanGoBack(window.history.length > 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps

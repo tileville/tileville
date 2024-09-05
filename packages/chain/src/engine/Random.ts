@@ -23,12 +23,15 @@ export class RandomGenerator extends Struct({
   getNumber(maxValue: number): Int64 {
     this.source = Poseidon.hash([this.source]);
     this.curValue = this.source;
-    const val = Gadgets.and(
-      this.curValue,
-      Field.from(shift64divisor).sub(1),
-      254
-    );
-    return Int64.fromField(val).mod(maxValue);
+    let result: Int64 = Int64.from(0);
+
+    let bytes = this.curValue.toBits();
+
+    result.magnitude.value = Field.fromBits(bytes.slice(0 * 32 + 1, 1 * 32));
+    result = result.modV2(maxValue);
+    result.sgn.value = Field.fromBits(bytes.slice(0, 1 * 32 + 1));
+
+    return result;
   }
 
   // Get 3 number
@@ -41,15 +44,14 @@ export class RandomGenerator extends Struct({
       Int64.from(0),
     ];
 
-    for (let i = 0; i < 3; i++) {
-      let val = Gadgets.and(
-        this.curValue,
-        Field.from(shift64divisor).sub(1),
-        254
-      );
-      result[i] = Int64.fromField(val).mod(maxValues[i]);
+    let bytes = this.curValue.toBits();
 
-      this.curValue = this.curValue.div(shift64divisor); // Check if its ok
+    for (let i = 0; i < 3; i++) {
+      result[i].magnitude.value = Field.fromBits(
+        bytes.slice(i * 32 + 1, (i + 1) * 32)
+      );
+      result[i] = result[i].modV2(maxValues[i]);
+      result[i].sgn.value = Field.fromBits(bytes.slice(i * 32, i * 32 + 1));
     }
     return result;
   }

@@ -18,7 +18,7 @@ export const TREASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 export const FAUCET_URL = "https://faucet.minaprotocol.com/";
 export const GAME_ENTRY_FEE_KEY = "is_entry_fee_paid";
-export const GITHUB_URL = "https://github.com/satyambnsal/minapolis";
+export const GITHUB_URL = "https://github.com/tileville/tileville";
 export const GAME_TUTORIAL_VIDEO_URL = "https://youtu.be/rUd880VHHT0";
 export const MY_GITHUB_URL = "https://github.com/satyambnsal";
 export const FEEDBACK_FORM_URL = "https://forms.gle/PyPU67YmDvQvZ7HF9";
@@ -53,8 +53,19 @@ export const POSTHOG_TOKEN =
 export const POSTHOG_URI =
   process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 
-export const isMockEnv =
-  process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true" || false;
+export const isMockEnv = (): boolean => {
+  const mintKey =
+    typeof window !== "undefined" ? localStorage.getItem("IS_MOCK") : null;
+
+  if (mintKey) {
+    return true;
+  } else if (process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true") {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export const NOVU_API_KEY =
   process.env.NEXT_PUBLIC_NOVU_API_KEY || "ed1f7d240a9a31843dc24795660e95d4";
 export const NOVU_APP_ID =
