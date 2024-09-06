@@ -10,6 +10,8 @@ import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import Link from "next/link";
 import { Pagination } from "@/components/common/Pagination";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
+import useDeviceDetection from "@/hooks/useDeviceDetection";
+import clsx from "clsx";
 
 const toggleGroupOptions = [
   {
@@ -50,6 +52,7 @@ export default function Marketplace() {
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
   const [selectedToggle, setSelectedToggle] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const { isMobile, isTablet, isDesktop } = useDeviceDetection();
 
   const [renderStyle, setRenderStyle] = useState(
     toggleGroupOptions[0].gridApplyClass
@@ -202,55 +205,62 @@ export default function Marketplace() {
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         </div>
-        {renderStyle === toggleGroupOptions[2].gridApplyClass && (
-          <div className="list-header">
-            <div className="nft-item">Item</div>
-            <div className="Last-sold">Last Sold</div>
-            <div>Owner</div>
-            <div>Listed Time</div>
-            <div>Listed Price</div>
-            <div>MINTED</div>
-          </div>
-        )}
-
-        <div className="mb-16">
-          {data?.nfts.length === 0 ? (
-            <div className="py-36 text-center">
-              <h2 className="text-center text-3xl font-semibold">
-                No Results Found
-              </h2>
+        <div className="overflow-auto">
+          {renderStyle === toggleGroupOptions[2].gridApplyClass && (
+            <div
+              className={clsx({
+                "list-header": true,
+              })}
+            >
+              <div className="nft-item">Item</div>
+              <div className="Last-sold">Last Sold</div>
+              <div>Owner</div>
+              <div>Listed Time</div>
+              <div>Listed Price</div>
+              <div>MINTED</div>
             </div>
-          ) : (
-            ""
           )}
 
-          <div className={`${renderStyle} pr-2 text-lg`}>
-            {isLoading ? (
-              <MarketplaceLoading />
+          <div className="mb-16">
+            {data?.nfts.length === 0 ? (
+              <div className="py-36 text-center">
+                <h2 className="text-center text-3xl font-semibold">
+                  No Results Found
+                </h2>
+              </div>
             ) : (
-              <>
-                {data?.nfts.map((nft) => {
-                  return (
-                    <NFTModal
-                      traits={nft.traits}
-                      img_url={nft.img_url}
-                      price={nft.price}
-                      name={nft.name}
-                      key={nft.nft_id}
-                      nftID={nft.nft_id}
-                      nftPrice={nft.price}
-                      renderStyle={renderStyle}
-                      ownerAddress={nft.owner_address}
-                      algoliaHitData={mintNFTHitsResponse.find(
-                        ({ name }) => name === nft.name
-                      )}
-                    />
-                  );
-                })}
-              </>
+              ""
             )}
+
+            <div className={`${renderStyle} pr-2 text-lg`}>
+              {isLoading ? (
+                <MarketplaceLoading />
+              ) : (
+                <>
+                  {data?.nfts.map((nft) => {
+                    return (
+                      <NFTModal
+                        traits={nft.traits}
+                        img_url={nft.img_url}
+                        price={nft.price}
+                        name={nft.name}
+                        key={nft.nft_id}
+                        nftID={nft.nft_id}
+                        nftPrice={nft.price}
+                        renderStyle={renderStyle}
+                        ownerAddress={nft.owner_address}
+                        algoliaHitData={mintNFTHitsResponse.find(
+                          ({ name }) => name === nft.name
+                        )}
+                      />
+                    );
+                  })}
+                </>
+              )}
+            </div>
           </div>
         </div>
+
         <Pagination
           currentPage={currentPage}
           totalCount={data?.count || 0}
