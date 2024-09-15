@@ -1,4 +1,5 @@
 "use client";
+
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -20,14 +21,38 @@ import PastGames from "@/components/profileTabs/pastGames";
 import Transactions from "@/components/profileTabs/transactions";
 import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
-import { getPalladBalance } from "@/lib/helpers";
-
+import { useSearchParams, useRouter } from "next/navigation";
 interface IFormInput {
   firstName: string;
   lastName: string;
   username: string;
   avatar_url: string;
 }
+
+const TABS_HEADINGS = [
+  {
+    value: "collection",
+    text: "Digital Collection",
+  },
+  {
+    value: "active-games",
+    text: "Active Games",
+  },
+
+  {
+    value: "past-games",
+    text: "Past Games",
+  },
+
+  {
+    value: "transactions",
+    text: "transactions",
+  },
+  {
+    value: "preferences",
+    text: "Preferences",
+  },
+];
 
 export default function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,7 +63,7 @@ export default function Profile() {
   const { data: profileData, refetch } = useProfileLazyQuery(
     networkStore?.address || ""
   );
-
+  const searchParams = useSearchParams();
   const {
     register,
     handleSubmit,
@@ -54,6 +79,11 @@ export default function Profile() {
       avatar_url: profileData?.avatar_url || "/img/avatars/defaultImg.webp",
     },
   });
+  const router = useRouter();
+
+  const paramsValue = searchParams.get("tab");
+
+  const [activeTab, setActiveTab] = useState(paramsValue);
 
   useEffect(() => {
     if (profileData) {
@@ -409,13 +439,22 @@ export default function Profile() {
           </div>
         </div>
 
-        <Tabs.Root defaultValue="collection">
+        <Tabs.Root
+          value={String(activeTab)}
+          defaultValue="collection"
+          onValueChange={(e) => {
+            router.push(`/profile?tab=${e}`);
+            setActiveTab(e);
+          }}
+        >
           <Tabs.List className="mt-4">
-            <Tabs.Trigger value="collection">Digital Collection</Tabs.Trigger>
-            <Tabs.Trigger value="active-games">Active Games</Tabs.Trigger>
-            <Tabs.Trigger value="past-games">Past Games</Tabs.Trigger>
-            <Tabs.Trigger value="transactions">Transactions</Tabs.Trigger>
-            <Tabs.Trigger value="preferences">Preferences</Tabs.Trigger>
+            {TABS_HEADINGS.map((tab) => {
+              return (
+                <Tabs.Trigger value={tab.value} key={tab.value}>
+                  {tab.text}
+                </Tabs.Trigger>
+              );
+            })}
           </Tabs.List>
 
           <Box pt="3">

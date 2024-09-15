@@ -7,12 +7,11 @@ import { Cross1Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
 import { useNetworkStore, useMintNFT } from "@/lib/stores/network";
-import { ATTRIBUTES_DATA, isMockEnv } from "@/constants";
+import { ATTRIBUTES_DATA, COLLECTION_URL, isMockEnv } from "@/constants";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { UseQueryResult } from "@tanstack/react-query";
 import Link from "next/link";
-import { CountdownTimer } from "./common/CountdownTimer";
-import { getTime, isFuture } from "date-fns";
+import { isFuture } from "date-fns";
 import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { Spinner } from "./common/Spinner";
@@ -562,7 +561,7 @@ export const NFTModal = ({
                       </Link>{" "}
                       and{" "}
                       <Link
-                        href="/profile"
+                        href={COLLECTION_URL}
                         className="font-semibold text-primary underline hover:no-underline"
                       >
                         profile section

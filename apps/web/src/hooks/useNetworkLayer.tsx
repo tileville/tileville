@@ -1,11 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ChainContext, SignerContext } from "../contexts";
-import {
-  SendTransactionResult,
-  ProviderError,
-} from "@aurowallet/mina-provider";
 import toast from "react-hot-toast";
-import { GAME_ENTRY_FEE_KEY, TREASURY_ADDRESS } from "../constants";
+import { GAME_ENTRY_FEE_KEY } from "../constants";
 import { Network } from "../types";
 import { useSessionStorage } from "react-use";
 import { requestAccounts, requestNetwork, sendPayment } from "@/lib/helpers";

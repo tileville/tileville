@@ -1,4 +1,3 @@
-// import { Target } from "@/assets";
 import Link from "next/link";
 
 export default function Community() {
