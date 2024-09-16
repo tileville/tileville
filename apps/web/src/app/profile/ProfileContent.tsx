@@ -21,7 +21,7 @@ import PastGames from "@/components/profileTabs/pastGames";
 import Transactions from "@/components/profileTabs/transactions";
 import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 interface IFormInput {
   firstName: string;
   lastName: string;
@@ -63,7 +63,6 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   const { data: profileData, refetch } = useProfileLazyQuery(
     networkStore?.address || ""
   );
-  const searchParams = useSearchParams();
   const {
     register,
     handleSubmit,
