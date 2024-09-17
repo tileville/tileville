@@ -2,9 +2,8 @@
 import { useState } from "react";
 import LandingBackground from "@/components/LandingBackground";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { useAtomValue } from "jotai";
-import { globalConfigAtom } from "@/contexts/atoms";
 import Link from "next/link";
+import { COLLECTION_URL } from "@/constants";
 
 const buttons = [
   {
@@ -36,7 +35,7 @@ const buttons = [
     name: "User Profile",
     key: 3,
     targetBlank: false,
-    href: "/profile",
+    href: COLLECTION_URL,
   },
   {
     name: "NFTS MARKETPLACE",
