@@ -250,7 +250,7 @@ export const NFTModal = ({
           },
         }));
 
-        console.log("MINT PROgress", mintProgress);
+        // console.log("MINT PROgress", mintProgress);
       }
     } catch (err) {
       console.error("Minting error:", err);
@@ -307,7 +307,8 @@ export const NFTModal = ({
     ? new Date(algoliaHitData?.time).toUTCString()
     : "-";
 
-  console.log("mint progress", mintProgress, error);
+  // console.log("mint progress", mintProgress, error);
+  // console.log("ALGOLIA DATA", algoliaHitData);
 
   return (
     <>
