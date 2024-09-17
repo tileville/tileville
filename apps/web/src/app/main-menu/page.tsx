@@ -2,11 +2,13 @@
 import { useState } from "react";
 import LandingBackground from "@/components/LandingBackground";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { useAtomValue } from "jotai";
-import { globalConfigAtom } from "@/contexts/atoms";
 import Link from "next/link";
+<<<<<<< HEAD
 import useDeviceDetection from "@/hooks/useDeviceDetection";
 import clsx from "clsx";
+=======
+import { COLLECTION_URL } from "@/constants";
+>>>>>>> 8103ee86256dc2a980a5e458ed3f353eb6d4a7b4
 
 const buttons = [
   {
@@ -38,7 +40,7 @@ const buttons = [
     name: "User Profile",
     key: 3,
     targetBlank: false,
-    href: "/profile",
+    href: COLLECTION_URL,
   },
   {
     name: "NFTS MARKETPLACE",

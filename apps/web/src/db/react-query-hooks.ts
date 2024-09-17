@@ -32,7 +32,6 @@ import {
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { useLocalStorage } from "react-use";
-// import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 export const useSendEmail = ({
   onSuccess,

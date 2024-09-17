@@ -223,3 +223,5 @@ export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
 
 export const DEFAULT_POSTER_URL = "/img/avatars/2.jpeg";
+export const ACTIVE_GAMES_URL = "/profile?tab=active-games";
+export const COLLECTION_URL = "/profile?tab=collection";

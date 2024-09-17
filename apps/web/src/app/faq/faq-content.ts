@@ -100,6 +100,13 @@ export const faqContent: {
         answer:
           "We're currently handling the payout. However, we're working on automating this process to allow users to claim their winnings directly from their profile section.",
       },
+      {
+        id: 6,
+        question:
+          "What happens if two players have the same score on the leaderboard?",
+        answer:
+          "if two players achieve the same score on the leaderboard, the player who reached that score first will be ranked higher. In other words, the earlier you achieve a particular score, the better your chances of being placed higher on the leaderboard.\n For example,  if Player A and Player B both score 100 points, but Player A reached 100 points before Player B, then Player A will be placed higher on the leaderboard.",
+      },
     ],
   },
   {

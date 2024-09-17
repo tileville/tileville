@@ -16,7 +16,7 @@ import {
 import { createFileFromImageUrl } from "@/app/api/mint-nft/common-utils";
 import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
-import { requestAccounts, sendPayment } from "@/lib/helpers";
+import { requestAccounts } from "@/lib/helpers";
 
 export type MintNFTParams = {
   name: string;
@@ -69,7 +69,6 @@ export function useMintMINANFT() {
       initBlockchain,
       MINANFT_NAME_SERVICE_V2,
       VERIFICATION_KEY_V2_JSON,
-      wallet,
       fetchMinaAccount,
       api,
       serializeFields,
@@ -283,10 +282,7 @@ export function useMintMINANFT() {
     function isErrorWithCode(error: unknown): error is { code: number } {
       return typeof error === "object" && error !== null && "code" in error;
     }
-    const palladTxData = {
-      from: owner || "",
-      amount: price,
-    };
+
     const nftPrice =
       Number(
         JSON.parse(payload.transaction).accountUpdates[1].body.balanceChange
@@ -353,7 +349,7 @@ export async function getAccount(): Promise<string | undefined> {
   let address: string | undefined = undefined;
   if (accounts?.code === undefined && accounts?.length > 0) {
     address = accounts[0];
-    console.log("Address", address);
+    // console.log("Address", address);
   }
   return address;
 }

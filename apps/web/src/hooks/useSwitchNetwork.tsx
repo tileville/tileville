@@ -6,7 +6,7 @@ export function useSwitchNetwork() {
   const networkStore = useNetworkStore();
 
   const switchNetwork = async (network: Network) => {
-    console.log("Switching to network", network);
+    // console.log("Switching to network", network);
     try {
       if (window.mina?.isPallad) {
         await window.mina.request({
