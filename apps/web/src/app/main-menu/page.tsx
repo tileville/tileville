@@ -3,12 +3,9 @@ import { useState } from "react";
 import LandingBackground from "@/components/LandingBackground";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import Link from "next/link";
-<<<<<<< HEAD
 import useDeviceDetection from "@/hooks/useDeviceDetection";
 import clsx from "clsx";
-=======
 import { COLLECTION_URL } from "@/constants";
->>>>>>> 8103ee86256dc2a980a5e458ed3f353eb6d4a7b4
 
 const buttons = [
   {
