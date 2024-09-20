@@ -2,7 +2,11 @@ import { Dialog, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import LottieAnimation from "./common/LottieAnimation";
 
-import { BUG_REPORT_URL, GAMEPLAY_NOT_ALLOWED_MESSAGES } from "@/constants";
+import {
+  ACTIVE_GAMES_URL,
+  BUG_REPORT_URL,
+  GAMEPLAY_NOT_ALLOWED_MESSAGES,
+} from "@/constants";
 import { useAtomValue } from "jotai";
 import { gameplayDisallowTypeAtom } from "@/contexts/atoms";
 // import DoneLottie from "../../public/lotties/doneLottie.json";
@@ -53,7 +57,7 @@ export const GameInfoModal = ({
 
             <li className="pt-3">
               You can play this game later as well from{" "}
-              <Link href="/profile" className="underline">
+              <Link href={ACTIVE_GAMES_URL} className="underline">
                 profile section
               </Link>
             </li>
