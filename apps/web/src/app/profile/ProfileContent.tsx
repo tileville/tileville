@@ -167,7 +167,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
 
   if (!networkStore.address) {
     return (
-      <div className="flex  min-h-screen w-full items-center justify-center">
+      <div className="flex w-full items-center justify-center">
         <Button
           variant="classic"
           className="mx-4 !cursor-pointer"
@@ -185,8 +185,8 @@ export default function Profile({ initialTab }: { initialTab: string }) {
     <div className="fade-slide-in p-4 pb-24 pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div>
-          <div className="flex items-center justify-between gap-3">
-            <div className="items-ceter flex gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="items-ceter flex flex-[0.5] gap-3">
               <div>
                 {!!profileData?.avatar_url && (
                   <div className="relative h-20 w-20 rounded-full">
@@ -399,12 +399,12 @@ export default function Profile({ initialTab }: { initialTab: string }) {
               </div>
             </div>
 
-            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+            <div className="hidden h-full min-h-[100px] w-[1px] bg-black/10 md:block"></div>
 
             <div>
               <h3 className="text-xl font-semibold">Wallet Address</h3>
               <div className="flex items-center gap-2">
-                <p>{networkStore?.address}</p>
+                <p className="break-all">{networkStore?.address}</p>
 
                 <button
                   onClick={() => {
@@ -419,7 +419,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
               </div>
             </div>
 
-            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+            <div className="hidden h-full min-h-[100px] w-[1px] bg-black/10 md:block"></div>
 
             <div className="mb-4 flex items-center justify-end gap-4">
               <div>Balance :</div>
@@ -444,7 +444,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
             setActiveTab(e);
           }}
         >
-          <Tabs.List className="mt-4">
+          <Tabs.List className="mt-4 whitespace-nowrap">
             {TABS_HEADINGS.map((tab) => {
               return (
                 <Tabs.Trigger value={tab.value} key={tab.value}>

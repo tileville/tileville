@@ -54,7 +54,7 @@ export default function TraitsInfo() {
               </h1>
               <HomeIcon width={24} height={24} />
             </div>
-            <p className="mt-2 text-sm text-primary-foreground md:text-base">
+            <p className="md:mt-2 text-sm text-primary-foreground md:text-base">
               Each Builder possesses a unique combination of traits that define
               their strengths and specialties in city development. These traits
               not only make each Builder special but also have the potential to

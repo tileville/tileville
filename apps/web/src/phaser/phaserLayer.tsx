@@ -5,6 +5,7 @@ import { LoadScene, MainScene, MenuScene } from "./scenes";
 import { useSaveScore } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
+import { isMobile } from "react-device-detect";
 
 type PhaserLayerProps = {
   isDemoGame: boolean;
@@ -30,6 +31,7 @@ export const PhaserLayer = ({
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(true);
 
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
@@ -71,6 +73,17 @@ export const PhaserLayer = ({
   );
 
   useEffect(() => {
+    const checkOrientation = () => {
+      if (window.innerWidth > window.innerHeight) {
+        setIsLandscape(true);
+      } else {
+        setIsLandscape(false);
+      }
+    };
+
+    // Check orientation on mount and whenever the window is resized
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
     const config: Phaser.Types.Core.GameConfig = {
       width: 1280,
       height: 720,
@@ -96,6 +109,7 @@ export const PhaserLayer = ({
 
     return () => {
       game.destroy(true);
+      window.removeEventListener("resize", checkOrientation);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGamePlayAllowed]);
@@ -103,6 +117,15 @@ export const PhaserLayer = ({
   return (
     <>
       <div id="tileville-hex" />
+
+      {isMobile && !isLandscape && (
+        <div className="p-4 text-center">
+          <p className="text-sm font-semibold text-red-500">
+            Please rotate your device to landscape mode for the best experience.
+          </p>
+        </div>
+      )}
+
       <GameInfoModal
         open={showGameInfoModal}
         txnHash={txnHash}

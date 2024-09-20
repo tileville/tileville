@@ -25,12 +25,11 @@ import {
   ACCOUNT_AUTH_LOCALSTORAGE_KEY,
   ACCOUNT_AUTH_MESSAGE,
   BUG_REPORT_URL,
+  HIDE_BACK_BUTTON_PATHS,
 } from "@/constants";
 import { anonymousSignIn } from "@/db/supabase-queries";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 // import { addNovuSubscriber } from "@/lib/novu";
-
-const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");

@@ -1,4 +1,5 @@
 import {
+  ChevronLeftIcon,
   Cross1Icon,
   DiscordLogoIcon,
   FaceIcon,
@@ -7,6 +8,7 @@ import {
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { MediaPlayer } from "../MediaPlayer/page";
 import {
@@ -14,35 +16,65 @@ import {
   FEEDBACK_FORM_URL,
   GAME_ROADMAP_URL,
   GITHUB_URL,
+  HIDE_BACK_BUTTON_PATHS,
 } from "@/constants";
+import { PrimaryButton } from "../PrimaryButton";
+import clsx from "clsx";
 
 export const MobileNavBar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
+  const router = useRouter();
+
   return (
     <div className="">
-      <button
-        onClick={() => {
-          setSidebarOpen(!sidebarOpen);
-        }}
-        className="fixed left-0 top-0 z-20 p-4 text-black"
-      >
-        <HamburgerMenuIcon />
-      </button>
+      <div className="fixed left-0 right-0 top-0 z-20 flex w-full items-center justify-between p-2">
+        {!isHideBackBtn && (
+          <PrimaryButton
+            key={1}
+            onFocus={() => console.log("on focus")}
+            size="sm"
+            icon={<ChevronLeftIcon width={20} height={20} />}
+            className={clsx(
+              `rounded-[20px] !border !border-primary px-3 md:!px-6`,
+              {
+                hidden: isHideBackBtn,
+              }
+            )}
+            onClickHandler={() => {
+              router.back();
+            }}
+          />
+        )}
+
+        <button
+          onClick={() => {
+            setSidebarOpen(!sidebarOpen);
+          }}
+          className="ms-auto p-2 text-black"
+        >
+          <HamburgerMenuIcon />
+        </button>
+      </div>
 
       <nav
-        className={`fixed z-30 flex h-screen  flex-col justify-between bg-white transition-transform ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed right-0 z-30 flex h-screen flex-col justify-between bg-white transition-transform ${
+          sidebarOpen ? "translate-x-0" : "translate-x-[100vw]"
         }`}
       >
         <ul className="flex flex-col gap-2 p-4">
           <li>
             <div>
-              <Link
-                href="/main-menu"
+              <button
+                onClick={() => {
+                  router.push("/main-menu");
+                  setSidebarOpen(false);
+                }}
                 className="text-primary-shadow sm font-mono"
               >
                 <span>T</span>il<span>e</span>Vi<span>l</span>le
-              </Link>
+              </button>
             </div>
           </li>
           <li>

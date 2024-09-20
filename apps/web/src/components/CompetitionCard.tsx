@@ -44,7 +44,7 @@ export const CompetitionCard = ({
       className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-2 overflow-hidden rounded-lg pb-3 md:gap-3 md:pb-0"
       key={competition.id}
     >
-      <div className="relative col-span-12 aspect-square w-full overflow-hidden rounded-br-md md:col-span-4 md:h-[400px] md:w-[400px] md:rounded-none">
+      <div className="relative col-span-12 aspect-square w-full overflow-hidden rounded-br-md h-auto md:h-full md:col-span-4 xl:h-[400px] xl:w-[400px] md:rounded-none">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
@@ -114,7 +114,7 @@ export const CompetitionCard = ({
           </div>
           {competition.is_speed_version && (
             <div className="col-span-4">
-              <div className="mb-2 flex items-center gap-2 text-xl">
+              <div className="mb-2 flex justify-center md:justify-start items-center gap-2 text-xl">
                 <span>
                   <Image
                     src="/icons/speed.svg"
@@ -123,7 +123,7 @@ export const CompetitionCard = ({
                     height="30"
                   />
                 </span>
-                <p className="text-medium ">Speedy Version</p>
+                <p className="text-medium text-sm md:text-base">Speedy Version</p>
                 <Tooltip.Provider delayDuration={200}>
                   <Tooltip.Root>
                     <Tooltip.Trigger asChild>
@@ -147,12 +147,12 @@ export const CompetitionCard = ({
                 </Tooltip.Provider>
               </div>
 
-              <div className="flex items-center gap-2 text-xl">
+              <div className="flex items-center justify-center md:justify-start gap-2 text-xl">
                 <span>
                   <TimerIcon width={24} height={24} />
                 </span>
-                <p className="text-medium ">Game Time:-</p>
-                <p className="text-medium ">
+                <p className="text-medium text-sm md:text-base">Game Time:-</p>
+                <p className="text-medium text-sm md:text-base">
                   {competition.speed_duration} Secs
                 </p>
               </div>

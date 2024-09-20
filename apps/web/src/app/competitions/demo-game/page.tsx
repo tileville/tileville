@@ -12,7 +12,7 @@ export default function DemoGame() {
     <div className="gradient-bg gradient-bg h-[calc(100vh-80px)]">
       <LandingBackground />
       <div className="relative z-10">
-        <div className="mb-0 flex w-full items-center justify-center">
+        <div className="mb-0 flex w-full flex-col items-center justify-center">
           <PhaserLayer
             isDemoGame={true}
             isGamePlayAllowed={true}

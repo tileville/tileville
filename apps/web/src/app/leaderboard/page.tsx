@@ -50,7 +50,7 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="p-4 py-8 md:py-40">
+    <div className="p-4 pb-8 pt-12 md:py-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div className="grid grid-cols-2 items-center gap-2 md:gap-3">
