@@ -27,7 +27,6 @@ export default function DigitalCollection() {
   const { address } = useNetworkStore();
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({ owner: address });
 
-  console.log("algolia response", mintNFTHitsResponse);
   return (
     <>
       {mintNFTHitsResponse && mintNFTHitsResponse.length > 0 ? (

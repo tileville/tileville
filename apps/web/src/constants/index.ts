@@ -101,7 +101,7 @@ export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
   TRANSACTION_CONFIRMED: {
     title: "Transaction Confirmed.",
     description:
-      "Transactin is confirmed. Please close the modal and click on play button to start playing.",
+      "Transaction is confirmed. Please close the modal and click on play button to start playing.",
     animation: TxnConfirmed,
   },
   NONE: {
@@ -118,7 +118,7 @@ export const GLOBAL_CONFIG_DEFAULT = {
 
 export const ACCOUNT_AUTH_MESSAGE =
   "I am authenticating my wallet for TileVille";
-export const ACCOUNT_AUTH_LOCALSTORAGE_KEY = "tileville_auth_signature";
+export const ACCOUNT_AUTH_SESSION_KEY = "tileville_auth_signature";
 export const DEFAULT_TRASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 
