@@ -90,7 +90,7 @@ export const useAuthSignature = () => {
           </div>
         </div>
       ),
-      { duration: 5000 }
+      { duration: 2000 }
     );
   };
 
