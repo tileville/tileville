@@ -423,7 +423,6 @@ export const getAllNFTsEntries = async ({
   if (searchTerm) {
     const numericSearch = parseInt(searchTerm);
     if (!isNaN(numericSearch)) {
-      // Search for price, nft_id, or name
       query = query.or(
         `price.eq.${numericSearch},nft_id.eq.${numericSearch},name.ilike.%${searchTerm}%`
       );

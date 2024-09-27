@@ -93,7 +93,7 @@ export const useFetchNFTSAlgolia = (options: FetchOptions) => {
   useEffect(() => {
     searchJobs({
       query: options.queryText || "Tileville Builder",
-      hitsPerPage: 10,
+      hitsPerPage: 100,
       currentPage: 0,
       statuses: ["pending", "applied"],
       ...(options.owner ? { owner: options.owner } : {}),

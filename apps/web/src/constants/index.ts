@@ -221,3 +221,59 @@ export const NFT_DESCRIPTION =
 
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
+
+export const ACTIVE_GAMES_URL = "/profile?tab=active-games";
+export const COLLECTION_URL = "/profile?tab=collection";
+
+export const NAVIGATION_MENU_ITEMS = [
+  {
+    name: "Play Game",
+    key: 0,
+    href: "/competitions",
+  },
+  {
+    name: "Guide",
+    key: 1,
+    targetBlank: false,
+    href: "/guide",
+  },
+
+  {
+    name: "Leaderboard",
+    key: 2,
+    targetBlank: false,
+    href: "/leaderboard",
+  },
+  {
+    name: "Community Section",
+    key: 7,
+    targetBlank: false,
+    href: "/community",
+  },
+
+  {
+    name: "User Profile",
+    key: 3,
+    targetBlank: false,
+    href: COLLECTION_URL,
+  },
+  {
+    name: "NFTS MARKETPLACE",
+    key: 4,
+    targetBlank: false,
+    href: "/marketplace",
+  },
+  {
+    name: "FAQ",
+    key: 5,
+    targetBlank: false,
+    href: "/faq",
+  },
+
+  {
+    name: "ZKNOID games store",
+    key: 6,
+    href: "https://app.zknoid.io/",
+    targetBlank: true,
+  },
+];

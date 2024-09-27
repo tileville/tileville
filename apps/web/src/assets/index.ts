@@ -2,4 +2,3 @@
 export { default as MonsterSad } from "./monster-sad.svg";
 export { default as ChevronLeft } from "./chevron-left.svg";
 export { default as ChevronRight } from "./chevron-right.svg";
-// export { default as Target } from "./target.svg";
