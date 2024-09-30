@@ -32,6 +32,7 @@ import {
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { useSessionStorage } from "react-use";
+import { useAuthSignature } from "@/hooks/useAuthSignature";
 // import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 export const useSendEmail = ({
@@ -193,17 +194,22 @@ export const useNFTEntries = ({
   );
 };
 export const useProfileLazyQuery = (walletAddress: string) => {
-  const [authSignature] = useSessionStorage(ACCOUNT_AUTH_SESSION_KEY, "");
+  // const { accountAuthSignature: authSignature } = useAuthSignature();
+
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () => {
+      const authSignature = window.sessionStorage.getItem(
+        ACCOUNT_AUTH_SESSION_KEY
+      );
+      console.log({ authSignature });
       if (!authSignature) {
         console.warn("Auth signature missing in storage");
-        return;
+        throw new Error("Auth signature missing!");
       }
       return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
         headers: {
-          "Auth-Signature": JSON.stringify(authSignature),
+          "Auth-Signature": authSignature,
           "Wallet-Address": walletAddress,
         },
       })

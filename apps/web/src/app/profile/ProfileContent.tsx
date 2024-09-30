@@ -23,8 +23,7 @@ import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
 import { useRouter } from "next/navigation";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { useSessionStorage } from "react-use";
-import { ACCOUNT_AUTH_SESSION_KEY } from "@/constants";
+
 interface IFormInput {
   firstName: string;
   lastName: string;
@@ -84,11 +83,11 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(initialTab);
-  const { validateOrSetSignature } = useAuthSignature();
-  const [accountAuthSignature] = useSessionStorage(
-    ACCOUNT_AUTH_SESSION_KEY,
-    ""
-  );
+  const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
+  // const [accountAuthSignature] = useSessionStorage(
+  //   ACCOUNT_AUTH_SESSION_KEY,
+  //   ""
+  // );
   console.log("accountAuthSignature", accountAuthSignature);
   console.log("isSignatureRequired", !accountAuthSignature);
 
@@ -199,7 +198,15 @@ export default function Profile({ initialTab }: { initialTab: string }) {
             <div className="items-ceter flex gap-3">
               <div>
                 {!accountAuthSignature ? (
-                  <button onClick={validateOrSetSignature}>
+                  <button
+                    onClick={async () => {
+                      await validateOrSetSignature();
+                      setTimeout(() => {
+                        refetch();
+                        window.location.reload();
+                      }, 2000);
+                    }}
+                  >
                     Please sign by wallet
                   </button>
                 ) : (
