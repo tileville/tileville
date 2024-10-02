@@ -3,7 +3,6 @@ import {
   SendTransactionResult,
 } from "@aurowallet/mina-provider";
 import clsx, { ClassValue } from "clsx";
-import { method } from "o1js";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { TREASURY_ADDRESS } from "@/constants";
@@ -204,4 +203,21 @@ export async function getPalladBalance() {
 
   console.log("response balance", response);
   return response.result;
+}
+
+export async function copyToClipBoard({
+  toCopyContent,
+  copiedType,
+}: {
+  toCopyContent: string;
+  copiedType: string;
+}) {
+  try {
+    await navigator.clipboard.writeText(toCopyContent);
+    toast.success(`${copiedType} copied to clipboard!`, { duration: 2000 });
+  } catch (err) {
+    toast.error(`Error copying ${copiedType}! Please Try Again`, {
+      duration: 2000,
+    });
+  }
 }

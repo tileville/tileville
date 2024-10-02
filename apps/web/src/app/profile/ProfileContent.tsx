@@ -1,11 +1,10 @@
 "use client";
 
-import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Box, Button, Tabs } from "@radix-ui/themes";
 import Image from "next/image";
-import { CameraIcon, CopyIcon } from "@radix-ui/react-icons";
+import { CameraIcon, CopyIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Modal } from "@/components/common/Modal";
 import ProfileSideBar from "@/components/ProfileSideBar";
 import RightSideBar from "@/components/RightSideBar";
@@ -22,37 +21,16 @@ import Transactions from "@/components/profileTabs/transactions";
 import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
 import { useRouter } from "next/navigation";
+import { useAuthSignature } from "@/hooks/useAuthSignature";
+import { TABS_HEADINGS } from "@/constants";
+import { copyToClipBoard } from "@/lib/helpers";
+
 interface IFormInput {
   firstName: string;
   lastName: string;
   username: string;
   avatar_url: string;
 }
-
-const TABS_HEADINGS = [
-  {
-    value: "collection",
-    text: "Digital Collection",
-  },
-  {
-    value: "active-games",
-    text: "Active Games",
-  },
-
-  {
-    value: "past-games",
-    text: "Past Games",
-  },
-
-  {
-    value: "transactions",
-    text: "transactions",
-  },
-  {
-    value: "preferences",
-    text: "Preferences",
-  },
-];
 
 export default function Profile({ initialTab }: { initialTab: string }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -81,6 +59,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(initialTab);
+  const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
   useEffect(() => {
     if (profileData) {
@@ -146,19 +125,6 @@ export default function Profile({ initialTab }: { initialTab: string }) {
 
   const avatarUrl = watch("avatar_url");
 
-  const copyToClipBoard = async (toCopyContent: string, copiedType: string) => {
-    try {
-      await navigator.clipboard.writeText(toCopyContent);
-      toast.success(<>{copiedType} copied to clipboard!</>, {
-        duration: 2000,
-      });
-    } catch (err) {
-      toast.error(<>Error copying {copiedType}! Please Try Again</>, {
-        duration: 2000,
-      });
-    }
-  };
-
   // Check if any profile field is missing
   const isProfileIncomplete =
     !profileData?.fullname ||
@@ -184,78 +150,83 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   return (
     <div className="fade-slide-in p-4 pb-24 pt-40">
       <div className="mx-auto max-w-[1280px]">
-        <div>
-          <div className="flex items-center justify-between gap-3">
-            <div className="items-ceter flex gap-3">
-              <div>
-                {!!profileData?.avatar_url && (
-                  <div className="relative h-20 w-20 rounded-full">
-                    <Image
-                      src={profileData.avatar_url}
-                      width={80}
-                      height={80}
-                      alt="profile"
-                      className="h-full w-full rounded-full object-cover"
-                    />
-                  </div>
-                )}
+        <div className="flex items-center justify-between gap-3">
+          <div className="items-ceter flex gap-3">
+            <div>
+              {!accountAuthSignature ? (
+                <button
+                  onClick={async () => {
+                    await validateOrSetSignature();
+                    // setTimeout(() => {
+                    //   refetch();
+                    // }, 2000);
+                  }}
+                >
+                  Please sign by wallet
+                </button>
+              ) : (
+                <>
+                  {!!profileData?.avatar_url && (
+                    <div className="relative h-20 w-20 rounded-full">
+                      <Image
+                        src={profileData.avatar_url}
+                        width={80}
+                        height={80}
+                        alt="profile"
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    </div>
+                  )}
 
-                <div>
-                  <Modal
-                    isOpen={modalOpen}
-                    setIsOpen={setModalOpen}
-                    onClose={closeModal}
-                    trigger={
-                      <button className="text-sm text-black/60 underline">
-                        {isProfileIncomplete
-                          ? "Complete Profile"
-                          : "Edit Profile"}
-                      </button>
-                    }
-                  >
-                    <div className="relative max-h-full w-full max-w-md">
-                      <div className="relative p-4 text-center md:p-5">
-                        <svg
-                          className="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  <div>
+                    <Modal
+                      isOpen={modalOpen}
+                      setIsOpen={setModalOpen}
+                      onClose={closeModal}
+                      trigger={
+                        <button className="text-sm text-black/60 underline">
+                          {isProfileIncomplete
+                            ? "Complete Profile"
+                            : "Edit Profile"}
+                        </button>
+                      }
+                    >
+                      <div className="relative max-h-full w-full max-w-md">
+                        <div className="relative p-4 text-center md:p-5">
+                          <InfoCircledIcon
+                            width={48}
+                            height={48}
+                            color="#9ca3af"
+                            className="mx-auto mb-4"
                           />
-                        </svg>
-                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                          Please Complete Your Profile.
-                          <Tooltip.Provider>
-                            <Tooltip.Root>
-                              <Tooltip.Trigger asChild>
-                                <span className="cursor-pointer text-gray-800">
-                                  Why?
-                                </span>
-                              </Tooltip.Trigger>
-                              <Tooltip.Portal>
-                                <Tooltip.Content
-                                  className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                                  sideOffset={5}
-                                >
-                                  We Want to show your score in the leaderboard
-                                  that is why we want your name.
-                                  <Tooltip.Arrow className="TooltipArrow" />
-                                </Tooltip.Content>
-                              </Tooltip.Portal>
-                            </Tooltip.Root>
-                          </Tooltip.Provider>
-                        </h3>
+                          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            Please Complete Your Profile.
+                            <Tooltip.Provider>
+                              <Tooltip.Root>
+                                <Tooltip.Trigger asChild>
+                                  <span className="cursor-pointer text-gray-800">
+                                    Why?
+                                  </span>
+                                </Tooltip.Trigger>
+                                <Tooltip.Portal>
+                                  <Tooltip.Content
+                                    className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
+                                    sideOffset={5}
+                                  >
+                                    We Want to show your score in the
+                                    leaderboard that is why we want your name.
+                                    <Tooltip.Arrow className="TooltipArrow" />
+                                  </Tooltip.Content>
+                                </Tooltip.Portal>
+                              </Tooltip.Root>
+                            </Tooltip.Provider>
+                          </h3>
 
-                        <div className="text-left">
-                          <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="mb-4">
+                          <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="left-left"
+                          >
+                            <div className="">
                               <div
                                 className="group relative mx-auto h-20 w-20 rounded-full"
                                 onClick={handleToggle}
@@ -367,71 +338,71 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                           </form>
                         </div>
                       </div>
-                    </div>
-                  </Modal>
-                </div>
-              </div>
-              <div>
-                {!!profileData?.fullname && (
-                  <h3>
-                    <span className="text-xl font-semibold">
-                      {profileData.fullname}
-                    </span>{" "}
-                  </h3>
-                )}
-                <div className="tet-sm text-gray-500">
-                  {!!profileData?.username && (
-                    <div className="flex items-center gap-2">
-                      <h3>{profileData.username}</h3>
-                      <button
-                        onClick={() => {
-                          copyToClipBoard(
-                            `${profileData.username}`,
-                            "username"
-                          );
-                        }}
-                      >
-                        <CopyIcon />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
+                    </Modal>
+                  </div>
+                </>
+              )}
             </div>
-
-            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
-
             <div>
-              <h3 className="text-xl font-semibold">Wallet Address</h3>
-              <div className="flex items-center gap-2">
-                <p>{networkStore?.address}</p>
-
-                <button
-                  onClick={() => {
-                    copyToClipBoard(
-                      `${networkStore.address}`,
-                      "Wallet Address"
-                    );
-                  }}
-                >
-                  <CopyIcon />
-                </button>
+              {!!profileData?.fullname && (
+                <h3>
+                  <span className="text-xl font-semibold">
+                    {profileData.fullname}
+                  </span>{" "}
+                </h3>
+              )}
+              <div className="tet-sm text-gray-500">
+                {!!profileData?.username && (
+                  <div className="flex items-center gap-2">
+                    <h3>{profileData.username}</h3>
+                    <button
+                      onClick={() => {
+                        copyToClipBoard({
+                          toCopyContent: profileData.username,
+                          copiedType: "username",
+                        });
+                      }}
+                    >
+                      <CopyIcon />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+          <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
 
-            <div className="mb-4 flex items-center justify-end gap-4">
-              <div>Balance :</div>
-              <div className="text-2xl font-semibold">
-                {(
-                  Number(
-                    minaBalancesStore.balances[networkStore.address] ?? 0n
-                  ) /
-                  10 ** 9
-                ).toFixed(2)}
-                MINA
-              </div>
+          <div>
+            <h3 className="text-xl font-semibold">Wallet Address</h3>
+            <div className="flex items-center gap-2">
+              <p>{networkStore?.address}</p>
+
+              <button
+                onClick={() => {
+                  copyToClipBoard({
+                    toCopyContent: networkStore.address
+                      ? networkStore.address
+                      : "",
+                    copiedType: "Wallet Address",
+                  });
+                }}
+              >
+                <CopyIcon />
+              </button>
+            </div>
+          </div>
+
+          <div className="h-full min-h-[100px] w-[1px] bg-black/10"></div>
+
+          <div className="mb-4 flex items-center justify-end gap-4">
+            <div>Balance :</div>
+            <div className="text-2xl font-semibold">
+              {(
+                Number(minaBalancesStore.balances[networkStore.address] ?? 0n) /
+                10 ** 9
+              ).toFixed(2)}
+              MINA
             </div>
           </div>
         </div>
