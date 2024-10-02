@@ -1,6 +1,5 @@
 "use client";
 
-import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Box, Button, Tabs } from "@radix-ui/themes";
@@ -158,10 +157,9 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                 <button
                   onClick={async () => {
                     await validateOrSetSignature();
-                    setTimeout(() => {
-                      refetch();
-                      window.location.reload();
-                    }, 2000);
+                    // setTimeout(() => {
+                    //   refetch();
+                    // }, 2000);
                   }}
                 >
                   Please sign by wallet

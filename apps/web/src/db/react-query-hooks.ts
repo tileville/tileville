@@ -25,15 +25,12 @@ import {
   getAllNFTsEntries,
 } from "./supabase-queries";
 import {
-  ACCOUNT_AUTH_SESSION_KEY,
+  ACCOUNT_AUTH_LOCAL_KEY,
   BLOCKBERRY_API_KEY,
   BLOCKBERRY_MAINNET_BASE_URL,
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
-import { useSessionStorage } from "react-use";
-import { useAuthSignature } from "@/hooks/useAuthSignature";
-// import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 export const useSendEmail = ({
   onSuccess,
@@ -199,9 +196,7 @@ export const useProfileLazyQuery = (walletAddress: string) => {
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () => {
-      const authSignature = window.sessionStorage.getItem(
-        ACCOUNT_AUTH_SESSION_KEY
-      );
+      const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
       console.log({ authSignature });
       if (!authSignature) {
         console.warn("Auth signature missing in storage");
