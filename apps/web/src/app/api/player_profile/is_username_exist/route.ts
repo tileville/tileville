@@ -12,7 +12,10 @@ export async function GET(request: NextRequest) {
   if (userId) {
     query = query.neq("id", userId);
   }
-  const { data, error } = await query.single();
+
+  const { data, error } = await query;
+
+  const status = data && data?.length > 0;
   if (error) throw error;
-  return Response.json(data);
+  return Response.json({ status });
 }

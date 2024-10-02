@@ -40,31 +40,41 @@ export const useMinaBalancesStore = create<
         state.loading = true;
       });
       try {
-        const response = await fetch(
-          NETWORKS.find((x) => x.chainId == chainId)?.graphql!,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              query: `
-              query {
-                account(publicKey: "${address}") {
-                  balance {
-                    total
-                  }
-                  delegate
-                  nonce
-                }
-              }
-            `,
-            }),
-          }
-        );
+        let balance = BigInt(0);
+        if (window.mina?.isPallad) {
+          const response = await window.mina?.request({
+            method: "mina_getBalance",
+          });
 
-        const { data } = (await response.json()) as BalanceQueryResponse;
-        const balance = BigInt(data.account?.balance.total ?? "0");
+          console.log("response balance", response?.result);
+          balance = BigInt((Number(response?.result) * 10 ** 9).toFixed(0));
+        } else {
+          const response = await fetch(
+            NETWORKS.find((x) => x.chainId == chainId)?.graphql!,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                query: `
+                query {
+                  account(publicKey: "${address}") {
+                    balance {
+                      total
+                    }
+                    delegate
+                    nonce
+                  }
+                }
+              `,
+              }),
+            }
+          );
+
+          const { data } = (await response.json()) as BalanceQueryResponse;
+          balance = BigInt(data.account?.balance.total ?? "0");
+        }
 
         set((state) => {
           state.loading = false;
@@ -83,21 +93,16 @@ export const useObserveMinaBalance = () => {
   const network = useNetworkStore();
 
   useEffect(() => {
-    if (
-      !network.walletConnected ||
-      !network.address ||
-      !network.minaNetwork?.chainId
-    )
-      return;
-    console.log(
-      "Triggered",
-      chain.block?.height,
-      network.walletConnected,
-      network.minaNetwork?.chainId,
-      network.address,
-      balances
-    );
-    balances.loadBalance(network.minaNetwork?.chainId, network.address);
+    const chainId = window.mina?.isPallad
+      ? network.minaNetwork?.palladNetworkID
+      : network.minaNetwork?.chainId;
+
+    const isSkipLoadBalance =
+      !network.walletConnected || !network.address || !chainId;
+
+    if (isSkipLoadBalance) return;
+
+    balances.loadBalance(chainId || "", network.address!);
   }, [
     chain.block?.height,
     network.walletConnected,

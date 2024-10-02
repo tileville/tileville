@@ -1,4 +1,3 @@
-// import { GAME_ENTRY_FEE_KEY } from "../../constants";
 import { HexGrid } from "../hex-grid";
 import { Button } from "../util";
 import { Scene, GameObjects } from "phaser";
@@ -13,7 +12,6 @@ const tutorialTexts = [
 ];
 
 const tutorialTypes = [
-  [1, 2, 3, 4, 5],
   [1, 2, 3, 4, 5],
   [1, 2, 3, 4, 5],
   [3, 4, 5],
@@ -166,7 +164,7 @@ export class MenuScene extends Scene {
       this.menu.add(playButton);
     }
 
-    const howToPlayButton = this.add.image(100, 700, "how-to-play-button");
+    const howToPlayButton = this.add.image(100, 600, "how-to-play-button");
     howToPlayButton.setOrigin(0.5);
 
     howToPlayButton.setInteractive({ useHandCursor: true });

@@ -21,8 +21,16 @@ import {
   fetchTransactions,
   getCompetitionByKey,
   isGameAlreadyPlayed,
+  fetchGlobalConfig,
+  getAllNFTsEntries,
 } from "./supabase-queries";
-import { BLOCKBERRY_API_KEY, BLOCKBERRY_MAINNET_BASE_URL } from "@/constants";
+import {
+  ACCOUNT_AUTH_LOCAL_KEY,
+  BLOCKBERRY_API_KEY,
+  BLOCKBERRY_MAINNET_BASE_URL,
+} from "@/constants";
+import { useAtom } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
 
 export const useSendEmail = ({
   onSuccess,
@@ -66,7 +74,7 @@ export const useSendEmail = ({
 };
 
 export const useSaveScore = ({
-  onSuccess,
+  // onSuccess,
   onMutate,
   onError,
 }: {
@@ -91,7 +99,7 @@ export const useSaveScore = ({
         // toastRef.current = toast.loading('Saving leaderboard data...');
         onMutate?.();
       },
-      onSuccess: () => {},
+      // onSuccess: () => {},
       onError: (error) => {
         toast.error(String(error), {
           id: toastRef.current ?? undefined,
@@ -167,13 +175,58 @@ export const useCompetitionsData = () => {
   );
 };
 
+export const useNFTEntries = ({
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+}) => {
+  return useQuery(
+    ["tileville_builder_nfts", sortOrder, searchTerm, currentPage],
+    () => getAllNFTsEntries({ sortOrder, searchTerm, currentPage }),
+    {}
+  );
+};
 export const useProfileLazyQuery = (walletAddress: string) => {
+  // const { accountAuthSignature: authSignature } = useAuthSignature();
+
   return useQuery({
     queryKey: ["user_profile", walletAddress],
-    queryFn: async () =>
-      fetch(`/api/player_profile?wallet_address=${walletAddress}`).then((res) =>
-        res.json()
-      ),
+    queryFn: async () => {
+      const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+      console.log({ authSignature });
+      if (!authSignature) {
+        console.warn("Auth signature missing in storage");
+        throw new Error("Auth signature missing!");
+      }
+      return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
+        headers: {
+          "Auth-Signature": authSignature,
+          "Wallet-Address": walletAddress,
+        },
+      })
+        .then((res) => res.json())
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+    enabled: !!walletAddress,
+  });
+};
+
+export const useLeaderboardEntries = (competition_key: string) => {
+  return useQuery({
+    queryKey: ["leaderboard_entries", competition_key],
+    queryFn: async () => {
+      return fetch(`/api/leaderboard?competition_key=${competition_key}`, {})
+        .then((res) => res.json())
+        .catch((e) => {
+          console.error(e);
+        });
+    },
   });
 };
 
@@ -233,7 +286,6 @@ export const useMainnetTransactionStatus = (
   txn_hash: string,
   txn_status: string
 ) => {
-  console.log({ txn_hash, txn_status });
   return useQuery(
     ["transaction_status_mainnet", txn_hash],
     () =>
@@ -252,15 +304,32 @@ export const useMainnetTransactionStatus = (
               txn_status: "CONFIRMED",
             });
           }
-          // if (res.failure_reason !== null) {
-          //   return updateTransactionLog(txn_hash, {
-          //     txn_status: "FAILED",
-          //     is_game_played,
-          //   });
-          // }
         }),
     {
       enabled: !!txn_hash && txn_status === "PENDING",
+      retry: 5,
+    }
+  );
+};
+
+export const useMainnetTransactionStatusForMint = (txn_hash: string) => {
+  return useQuery(
+    ["transaction_status_mint_mainnet", txn_hash],
+    () =>
+      fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .catch((error) => {
+          return { success: false, error };
+        }),
+    {
+      enabled: !!txn_hash,
       retry: 5,
     }
   );
@@ -344,6 +413,24 @@ export const useIsGameAlreadyPlayed = (game_id: number) => {
     () => isGameAlreadyPlayed(game_id),
     {
       enabled: game_id > 0,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     }
+  );
+};
+
+export const useGlobalConfig = (config_name: string) => {
+  const [globalConfig, setGlobalConfig] = useAtom(globalConfigAtom);
+  return useQuery(["global_config", config_name], () =>
+    fetchGlobalConfig(config_name)
+      .then((response) => {
+        const config = response.config_values as { [key: string]: any };
+        setGlobalConfig({ ...globalConfig, ...config });
+        return response;
+      })
+      .catch((error) => {
+        console.error(`Failed to fetch global config from db`, error);
+      })
   );
 };

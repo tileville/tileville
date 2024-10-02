@@ -1,7 +1,9 @@
 import { CountdownTimer } from "@/components/common/CountdownTimer";
+import { globalConfigAtom } from "@/contexts/atoms";
 import { useSendEmail } from "@/db/react-query-hooks";
 import { getTime } from "date-fns";
-import { useState } from "react";
+import { useAtomValue } from "jotai";
+import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface IFormInput {
@@ -10,7 +12,7 @@ interface IFormInput {
 }
 
 export const MarketplaceOverlay = () => {
-  const [isSendingData, setIsSendingData] = useState(false);
+  const globalConfig = useAtomValue(globalConfigAtom);
   const emailSentMutation = useSendEmail({
     onSuccess: () => {
       console.log("Email Send to database");
@@ -43,21 +45,32 @@ export const MarketplaceOverlay = () => {
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-start backdrop-blur-sm">
-      <div className="fade-slide-in mt-40">
-        <h2 className="mb-4 text-5xl font-semibold tracking-wider text-white">
+      <div className="fade-slide-in mt-40 rounded-md bg-secondary/80 p-6 text-black backdrop-blur-xl">
+        <h2 className="mb-4 text-5xl font-semibold tracking-wider">
           Minting Starts In
         </h2>
-        <div className="py-8">
-          <CountdownTimer initialTime={getTime("2024-07-23")} />
+        <div className="pb-8 pt-3">
+          <CountdownTimer
+            initialTime={getTime(globalConfig.nft_mint_start_date)}
+          />
         </div>
 
-        <div className="rounded-md bg-secondary/80 p-6 backdrop-blur-xl">
+        <div className="">
           <div className="mb-4">
             <h2 className=" text-xl font-semibold leading-none">
               Subscribe for MINT Event
             </h2>
             <p className="text-xs font-medium text-gray-400">
               We will notify you before 12 hours of event being started.
+            </p>
+            <p className="mt-2 text-xs font-medium text-gray-600">
+              Learn more about TileVille NFTs{" "}
+              <Link
+                href="/faq#tileville-builder-nfts"
+                className="text-primary underline hover:no-underline"
+              >
+                here
+              </Link>{" "}
             </p>
           </div>
 
@@ -118,7 +131,6 @@ export const MarketplaceOverlay = () => {
 
             <div className="pt-4 text-right">
               <button className="rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]">
-                {isSendingData && <>Loading</>}
                 Subscribe
               </button>
             </div>

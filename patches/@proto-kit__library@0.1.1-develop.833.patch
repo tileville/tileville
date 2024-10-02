@@ -1,0 +1,42 @@
+diff --git a/dist/hooks/TransactionFeeHook.js b/dist/hooks/TransactionFeeHook.js
+index ac07534fef9e1ab0031ca555ed2a7972c4cb3ce9..3f480b581fffdb39049bda8c0fccaa3312a4c586 100644
+--- a/dist/hooks/TransactionFeeHook.js
++++ b/dist/hooks/TransactionFeeHook.js
+@@ -45,9 +45,12 @@ export let TransactionFeeHook = class TransactionFeeHook extends ProvableTransac
+         });
+     }
+     async start() {
+-        this.persistedFeeAnalyzer = new RuntimeFeeAnalyzerService(this.runtime);
+-        this.persistedFeeAnalyzer.config = this.config;
+-        await this.persistedFeeAnalyzer.initializeFeeTree();
++        console.log('Hook start', typeof window === 'undefined', typeof process === 'object') 
++        if (typeof window == 'undefined') {
++            this.persistedFeeAnalyzer = new RuntimeFeeAnalyzerService(this.runtime);
++            this.persistedFeeAnalyzer.config = this.config;
++            await this.persistedFeeAnalyzer.initializeFeeTree();
++        }
+     }
+     get config() {
+         this.verifyConfig();
+diff --git a/src/hooks/TransactionFeeHook.ts b/src/hooks/TransactionFeeHook.ts
+index d22b2fc9dfe283480365c69d1ec16b472e5d5f71..b591147e5b5af155eb04b9cffeb3b70fff296b16 100644
+--- a/src/hooks/TransactionFeeHook.ts
++++ b/src/hooks/TransactionFeeHook.ts
+@@ -77,10 +77,13 @@ export class TransactionFeeHook extends ProvableTransactionHook<TransactionFeeHo
+   }
+ 
+   public async start() {
+-    this.persistedFeeAnalyzer = new RuntimeFeeAnalyzerService(this.runtime);
+-    this.persistedFeeAnalyzer.config = this.config;
+-    await this.persistedFeeAnalyzer.initializeFeeTree();
+-  }
++    console.log('Hook start', typeof window === 'undefined', typeof process === 'object') 
++    if (typeof window == 'undefined') {
++        this.persistedFeeAnalyzer = new RuntimeFeeAnalyzerService(this.runtime);
++        this.persistedFeeAnalyzer.config = this.config;
++        await this.persistedFeeAnalyzer.initializeFeeTree();
++    }
++}
+ 
+   public get config() {
+     this.verifyConfig();

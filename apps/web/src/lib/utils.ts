@@ -1,7 +1,7 @@
 import { type RuntimeModulesRecord } from "@proto-kit/module";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { GameRecordProof, client } from "tileville-chain-dev";
+import { GameRecordProof, ClientAppChain as client } from "tileville-chain-dev";
 import { dummyProofBase64 } from "@/constants/dummyProofBase64";
 import { PublicKey } from "o1js";
 
@@ -70,10 +70,9 @@ export const getShareScoreTwitterContent = (content: string, score: number) =>
     `${replaceTemplateVariables(content, { score })}`
   )}`;
 
-export const formatBalance = (balance: bigint) => {
-  // return (Number(balance ?? 0n) / 10 ** 9).toFixed(2);
-  return "1000";
-};
+// export const formatBalance = (balance: bigint) => {
+//   return (Number(balance ?? 0n) / 10 ** 9).toFixed(2);
+// };
 
 const replaceTemplateVariables = (
   template: string,

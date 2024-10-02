@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      fitrace_signup_emails: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: number
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: number
+          name?: string | null
+        }
+        Relationships: []
+      }
       game_scores: {
         Row: {
           competition_key: string
@@ -46,6 +67,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      global_config: {
+        Row: {
+          config_values: Json
+          created_at: string
+          id: number
+          name: string | null
+        }
+        Insert: {
+          config_values: Json
+          created_at?: string
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          config_values?: Json
+          created_at?: string
+          id?: number
+          name?: string | null
+        }
+        Relationships: []
       }
       player_profile: {
         Row: {
@@ -92,6 +134,39 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+        }
+        Relationships: []
+      }
+      tileville_builder_nfts: {
+        Row: {
+          created_at: string
+          img_url: string
+          name: string
+          nft_id: number
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          created_at?: string
+          img_url: string
+          name: string
+          nft_id?: number
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          created_at?: string
+          img_url?: string
+          name?: string
+          nft_id?: number
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
         }
         Relationships: []
       }

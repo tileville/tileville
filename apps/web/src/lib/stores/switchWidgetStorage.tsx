@@ -12,13 +12,13 @@ export const useSwitchWidgetStorage = create<
   [["zustand/persist", never]]
 >(
   persist(
-    (set, get) => ({
+    (set) => ({
       competitionId: undefined,
       getCompetitionId() {
         return this.competitionId;
       },
       setCompetitionId: (competitionId) => {
-        set((state) => ({
+        set(() => ({
           competitionId: competitionId,
         }));
       },

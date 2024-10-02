@@ -2,6 +2,8 @@
 import { useState } from "react";
 import LandingBackground from "@/components/LandingBackground";
 import { PrimaryButton } from "@/components/PrimaryButton";
+import Link from "next/link";
+import { NAVIGATION_MENU_ITEMS } from "@/constants";
 
 export default function MainMenu() {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
@@ -10,68 +12,21 @@ export default function MainMenu() {
     setFocusedButtonIndex(index);
   };
 
-  const buttons = [
-    {
-      name: "Play Game",
-      key: 0,
-      href: "/competitions",
-    },
-    {
-      name: "Guide",
-      key: 1,
-      targetBlank: false,
-      href: "/guide",
-    },
-
-    {
-      name: "Leaderboard",
-      key: 2,
-      targetBlank: false,
-      href: "/leaderboard",
-    },
-    {
-      name: "Community Section",
-      key: 7,
-      targetBlank: false,
-      href: "/community",
-    },
-
-    {
-      name: "User Profile",
-      key: 3,
-      targetBlank: false,
-      href: "/profile",
-    },
-    {
-      name: "Marketplace",
-      key: 4,
-      targetBlank: false,
-      href: "/marketplace",
-    },
-    {
-      name: "FAQ",
-      key: 5,
-      targetBlank: false,
-      href: "/faq",
-    },
-
-    {
-      name: "ZKNOID games store",
-      key: 6,
-      href: "https://app.zknoid.io/",
-      targetBlank: true,
-    },
-  ];
-
   return (
-    <div
-      className="flex min-h-screen items-center justify-center pt-20"
-      tabIndex={0}
-    >
+    <div className="flex min-h-screen flex-col pt-20" tabIndex={0}>
       <LandingBackground />
-      <div className="z-10 flex w-full items-center justify-center">
-        <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
-          {buttons.map((button) => (
+      <div className="z-10 flex w-full flex-col items-center justify-center gap-8">
+        <div className="m-20 text-3xl font-semibold">
+          MINTING IS LIVE NOW 🎉{" "}
+          <Link
+            href="/marketplace"
+            className="font-semibold text-primary underline hover:no-underline"
+          >
+            CHECK HERE
+          </Link>
+        </div>
+        <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] pt-20 text-xl uppercase text-white">
+          {NAVIGATION_MENU_ITEMS.map((button) => (
             <PrimaryButton
               key={button.key}
               onFocus={() => handleFocus(button.key)}
@@ -84,12 +39,6 @@ export default function MainMenu() {
             />
           ))}
         </div>
-      </div>
-
-      <div className="fixed bottom-0 right-0 p-3 pb-20">
-        <h1 className="text-primary-shadow sm font-mono">
-          <span>T</span>il<span>e</span>Vi<span>l</span>le
-        </h1>
       </div>
     </div>
   );

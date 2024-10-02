@@ -1,5 +1,6 @@
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
+import { withAuth } from "../authMiddleware";
 
 async function isProfileExist(wallet_address: string): Promise<boolean> {
   const { data } = await supabase
@@ -12,19 +13,24 @@ async function isProfileExist(wallet_address: string): Promise<boolean> {
   return false;
 }
 
-export async function GET(request: NextRequest) {
+const getHandler = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
   const wallet_address = searchParams.get("wallet_address") || "";
-  const { data, error } = await supabase
-    .from("player_profile")
-    .select("*")
-    .eq("wallet_address", wallet_address)
-    .single();
 
-  console.log("data", data);
-  if (error) throw error;
-  return Response.json(data);
-}
+  try {
+    const { data, error } = await supabase
+      .from("player_profile")
+      .select("*")
+      .eq("wallet_address", wallet_address)
+      .single();
+
+    if (error) throw error;
+    return Response.json(data, { status: 200 });
+  } catch (error: any) {
+    console.error("Error in GET route:", error);
+    return Response.json({ error: error.message }, { status: 200 });
+  }
+};
 
 export async function POST(request: NextRequest) {
   const payload = await request.json();
@@ -55,3 +61,6 @@ export async function POST(request: NextRequest) {
   }
   return Response.json(res);
 }
+
+export const GET = withAuth(getHandler);
+// export const GET = getHandler;

@@ -1,6 +1,6 @@
 import { createZkNoidGameConfig } from "@/lib/createConfig";
 import { ZkNoidGameType } from "@/lib/platform/game_types";
-import { MinapolisGameHub } from "tileville-chain-dev";
+import { TilevilleGameHub } from "tileville-chain-dev";
 import { MinaPolisPage } from "@/components/MinapolisPage";
 import { TileVilleCompetitionPage } from "@/components/TileVilleCompetitionPage";
 import { TileVilleCompetitionListPage } from "@/components/TileVilleCompetitionListPage";
@@ -21,7 +21,7 @@ export const minapolisConfig = createZkNoidGameConfig({
   rules: `In TileVille, your objective is build a city around the center with hexagonal road, tree, and windmill tiles
     `,
   runtimeModules: {
-    MinapolisGameHub: MinapolisGameHub as any,
+    MinapolisGameHub: TilevilleGameHub as any,
   },
   page: MinaPolisPage,
   pageCompetitionsList: TileVilleCompetitionListPage,

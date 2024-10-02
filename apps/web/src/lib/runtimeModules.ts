@@ -1,5 +1,5 @@
-import { Balances } from "tileville-chain-dev";
+// import { Balances } from "tileville-chain-dev";
 
-export const DefaultRuntimeModules = {
-  Balances,
-};
+// export const DefaultRuntimeModules = {
+//   Balances,
+// };

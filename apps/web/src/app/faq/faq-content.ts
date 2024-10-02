@@ -96,10 +96,16 @@ export const faqContent: {
 
       {
         id: 5,
-        question:
-          "What is the reward payout mechanism?",
+        question: "What is the reward payout mechanism?",
         answer:
-          "We're currently handling the payout. However, we're working on automating this process to allow users to claim their winnings directly from their profile section."
+          "We're currently handling the payout. However, we're working on automating this process to allow users to claim their winnings directly from their profile section.",
+      },
+      {
+        id: 6,
+        question:
+          "What happens if two players have the same score on the leaderboard?",
+        answer:
+          "if two players achieve the same score on the leaderboard, the player who reached that score first will be ranked higher. In other words, the earlier you achieve a particular score, the better your chances of being placed higher on the leaderboard.\n For example,  if Player A and Player B both score 100 points, but Player A reached 100 points before Player B, then Player A will be placed higher on the leaderboard.",
       },
     ],
   },
@@ -170,6 +176,73 @@ export const faqContent: {
           "Will players be able to create and share content in TileVille?",
         answer:
           "Yes, we aim to introduce user-generated content, such as custom maps and levels, as well as modding support, in later phases of the roadmap.",
+      },
+    ],
+  },
+  {
+    id: "tileville-builder-nfts",
+    title: "TileVille Builder NFTs",
+    faqs: [
+      {
+        id: 1,
+        question: "What is the utility of TileVille Builder NFTs?",
+        answer:
+          "TileVille Builder NFTs provide various in-game benefits, including unique abilities, efficiency boosts, and specialized skills that enhance your city-building experience. They also grant voting rights in the TileVille DAO, allowing you to influence the game's future development.",
+      },
+      {
+        id: 2,
+        question: "How do the NFT traits affect gameplay?",
+        answer:
+          "Each NFT trait corresponds to specific in-game bonuses. For example, a Builder with high Sustainability Rating may receive bonuses when placing eco-friendly structures, while one with Wind Whisperer affinity might boost windmill efficiency. These traits directly impact your strategy and city's performance.",
+      },
+      {
+        id: 3,
+        question: "What is the TileVille DAO and how does it work?",
+        answer:
+          "The TileVille DAO (Decentralized Autonomous Organization) allows NFT holders to participate in game governance. Members can propose and vote on game updates, new features, and other important decisions affecting TileVille's future.",
+      },
+      {
+        id: 4,
+        question: "How can I participate in governance with my Builder NFT?",
+        answer:
+          "As a Builder NFT holder, you automatically gain voting rights in the TileVille DAO. You can participate in governance by submitting proposals and voting on community decisions through our dedicated governance platform.",
+      },
+      {
+        id: 5,
+        question: "Are there different rarity levels for Builder NFTs?",
+        answer:
+          "Yes, Builder NFTs have varying rarity levels based on their trait combinations. Rarer NFTs may have more powerful or unique abilities, making them particularly valuable for gameplay and collecting.",
+      },
+      {
+        id: 6,
+        question: "Can I upgrade or evolve my Builder NFT?",
+        answer:
+          "Currently, Builder NFTs cannot be upgraded or evolved. However, we're exploring future features that might allow for NFT progression or enhancement based on in-game achievements or community feedback.",
+      },
+      {
+        id: 7,
+        question: "How many Builder NFTs can I use in the game at once?",
+        answer:
+          "Players can only use one Builder NFT per game session. However, you can own multiple NFTs and switch between them to suit different strategies or game modes.",
+      },
+      {
+        id: 8,
+        question: "Will there be more Builder NFT collections in the future?",
+        answer:
+          "Yes, we plan to release additional Builder NFT collections in the future. Each new collection may introduce new traits, abilities, or specializations to keep the gameplay fresh and exciting.",
+      },
+      {
+        id: 9,
+        question: "Can I trade or sell my Builder NFT?",
+        answer:
+          "Yes, TileVille Builder NFTs are fully owned by you and can be traded or sold on compatible NFT marketplaces. Always ensure you're using trusted platforms for any transactions.",
+      },
+      {
+        id: 10,
+        question:
+          "How do I claim in-game rewards associated with my Builder NFT?",
+        answer:
+          "In-game rewards are automatically applied when you play with your Builder NFT. Additional rewards or airdrops for NFT holders will be announced through our official channels, with clear instructions on how to claim them.",
       },
     ],
   },

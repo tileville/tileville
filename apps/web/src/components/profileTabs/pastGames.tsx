@@ -9,7 +9,6 @@ type PastGamesProps = {
 
 export default function PastGames({ walletAddress }: PastGamesProps) {
   const { data: pastGames, isLoading } = usePastGames(walletAddress);
-  console.log("past games", pastGames);
   return (
     <div className="">
       <Table.Root>
@@ -32,7 +31,7 @@ export default function PastGames({ walletAddress }: PastGamesProps) {
                 <>
                   {pastGames.map((game) => (
                     <Table.Row key={game.id}>
-                      <Table.Cell>{game.id}</Table.Cell>
+                      <Table.Cell>{game.game_id}</Table.Cell>
                       <Table.Cell>{game.competition_key}</Table.Cell>
                       <Table.Cell>{game.score}</Table.Cell>
                       <Table.Cell>

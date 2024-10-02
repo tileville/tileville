@@ -23,11 +23,13 @@ import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
 import { BUG_REPORT_URL } from "@/constants";
 import { anonymousSignIn } from "@/db/supabase-queries";
-// import { addNovuSubscriber } from "@/lib/novu";
+import { useGlobalConfig } from "@/db/react-query-hooks";
+import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
+  useGlobalConfig("config_v1");
   const [canGoBack, setCanGoBack] = useState(false);
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
   const networkStore = useNetworkStore();
@@ -37,7 +39,9 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     networkStore?.address || "",
     "PENDING"
   );
+  const { validateOrSetSignature } = useAuthSignature();
   const isMounted = useMountedState();
+
   useMainnetTransactionsStatus(
     pendingTransactions
       .filter(({ network }) => network === "mina:mainnet")
@@ -49,20 +53,18 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
   const { phClient } = usePosthogEvents();
-  console.log("PENDING Transactions", pendingTransactions);
-
-  console.log("can go back", canGoBack);
   useEffect(() => {
     if (!walletInstalled()) return;
     if (autoConnect) {
-      networkStore.connectWallet(true);
+      networkStore.connectWallet(false);
     }
     setCanGoBack(window.history.length > 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {   
     if (networkStore.walletConnected && isFetched) {
+      validateOrSetSignature();
       phClient.identify(networkStore.address, { username: data?.username });
       // This is not working. debug this.
       // addNovuSubscriber(networkStore.address!, {
@@ -70,7 +72,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
       //   email: data?.email || "",
       //   fullname: data?.fullname || "",
       // });
-      anonymousSignIn({ wallet_address: networkStore.address! })
+      anonymousSignIn()
         .then(() => {
           console.log("anonymous login done");
         })
@@ -107,7 +109,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pt-2 text-black backdrop-blur-sm">
+    <nav className="fixed left-0 right-0 top-0 z-20 mb-6 px-4 pb-1 pt-2 text-black backdrop-blur-md">
       <div className="flex w-full items-start justify-between">
         <div className="flex items-center gap-3">
           {!isHideBackBtn && (
@@ -126,6 +128,15 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
               }}
             />
           )}
+
+          <div>
+            <Link
+              href="/main-menu"
+              className="text-primary-shadow sm font-mono"
+            >
+              <span>T</span>il<span>e</span>Vi<span>l</span>le
+            </Link>
+          </div>
 
           <div className="min-w-[180px]">
             <MediaPlayer />
@@ -176,7 +187,10 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             {isMounted() &&
               (networkStore.walletConnected && networkStore.address ? (
                 <>
-                  <AccountCard text={formatAddress(networkStore.address)} />
+                  <Link href="/profile">
+                    <AccountCard text={formatAddress(networkStore.address)} />
+                  </Link>
+
                   <NetworkPicker />
                 </>
               ) : walletInstalled() ? (

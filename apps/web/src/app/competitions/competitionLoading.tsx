@@ -1,13 +1,11 @@
 import { Skeleton } from "@radix-ui/themes";
 
+const INITIAL_ARRAY = [34534123344, 34534123345];
+
 export default function CompetitionLoading() {
-  const initialArray = [34534123344, 34534123345];
-
-  console.log(initialArray);
-
   return (
     <>
-      {initialArray?.map((competition) => {
+      {INITIAL_ARRAY?.map((competition) => {
         return (
           <div
             className="border-primary-30 group relative grid grid-cols-12 gap-3 overflow-hidden rounded-lg"
@@ -23,11 +21,11 @@ export default function CompetitionLoading() {
               </Skeleton>
               <div className="flex flex-col">
                 <Skeleton className="">
-                  <p className="mb-2 line-clamp-2 h-2 text-sm">{competition}</p>
+                  <p className="mb-2 text-sm">{competition}</p>
                 </Skeleton>
 
                 <Skeleton className="w-3/4">
-                  <p className="mb-2 line-clamp-2 h-2 text-sm">{competition}</p>
+                  <p className="mb-2 text-sm">{competition}</p>
                 </Skeleton>
               </div>
               <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>
@@ -40,7 +38,6 @@ export default function CompetitionLoading() {
                 </div>
                 <div className="h-full w-[1px] bg-primary/30"></div>
                 <div className="flex items-center gap-2">
-                  {/* <CalendarIcon /> */}
                   <Skeleton>
                     <p>Entry Fees:</p>
                   </Skeleton>
@@ -49,10 +46,9 @@ export default function CompetitionLoading() {
                       {competition} MINA
                     </p>
                   </Skeleton>
-                </div>{" "}
+                </div>
                 <div className="h-full w-[1px] bg-primary/30"></div>
                 <div className="flex items-center gap-2">
-                  {/* <CalendarIcon /> */}
                   <Skeleton>
                     <p>Prize</p>
                   </Skeleton>
@@ -61,7 +57,7 @@ export default function CompetitionLoading() {
                       {competition} MINA
                     </p>
                   </Skeleton>
-                </div>{" "}
+                </div>
               </div>
             </div>
 
