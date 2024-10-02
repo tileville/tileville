@@ -277,3 +277,28 @@ export const NAVIGATION_MENU_ITEMS = [
     targetBlank: true,
   },
 ];
+
+export const TABS_HEADINGS = [
+  {
+    value: "collection",
+    text: "Digital Collection",
+  },
+  {
+    value: "active-games",
+    text: "Active Games",
+  },
+
+  {
+    value: "past-games",
+    text: "Past Games",
+  },
+
+  {
+    value: "transactions",
+    text: "transactions",
+  },
+  {
+    value: "preferences",
+    text: "Preferences",
+  },
+];
