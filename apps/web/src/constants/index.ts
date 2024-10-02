@@ -118,7 +118,7 @@ export const GLOBAL_CONFIG_DEFAULT = {
 
 export const ACCOUNT_AUTH_MESSAGE =
   "I am authenticating my wallet for TileVille";
-export const ACCOUNT_AUTH_SESSION_KEY = "tileville_auth_signature";
+export const ACCOUNT_AUTH_LOCAL_KEY = "tileville_auth_signature";
 export const DEFAULT_TRASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 
@@ -277,5 +277,30 @@ export const NAVIGATION_MENU_ITEMS = [
     key: 6,
     href: "https://app.zknoid.io/",
     targetBlank: true,
+  },
+];
+
+export const TABS_HEADINGS = [
+  {
+    value: "collection",
+    text: "Digital Collection",
+  },
+  {
+    value: "active-games",
+    text: "Active Games",
+  },
+
+  {
+    value: "past-games",
+    text: "Past Games",
+  },
+
+  {
+    value: "transactions",
+    text: "transactions",
+  },
+  {
+    value: "preferences",
+    text: "Preferences",
   },
 ];

@@ -1,8 +1,8 @@
-import { ACCOUNT_AUTH_SESSION_KEY, ACCOUNT_AUTH_MESSAGE } from "@/constants";
+import { ACCOUNT_AUTH_LOCAL_KEY, ACCOUNT_AUTH_MESSAGE } from "@/constants";
 import { useNetworkStore } from "@/lib/stores/network";
-import { useEffect, useCallback, useState, useRef } from "react";
+import { useCallback } from "react";
 import toast from "react-hot-toast";
-import { useSessionStorage } from "react-use";
+import { useLocalStorage } from "react-use";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { signMessage } from "@/lib/helpers";
 
@@ -10,8 +10,8 @@ type ShowToastFunction = (message: string, isError?: boolean) => void;
 
 export const useAuthSignature = () => {
   const networkStore = useNetworkStore();
-  const [accountAuthSignature, setAccountAuthSignature] = useSessionStorage(
-    ACCOUNT_AUTH_SESSION_KEY,
+  const [accountAuthSignature, setAccountAuthSignature] = useLocalStorage(
+    ACCOUNT_AUTH_LOCAL_KEY,
     ""
   );
 

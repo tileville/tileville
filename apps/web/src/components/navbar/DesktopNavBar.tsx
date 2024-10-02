@@ -60,7 +60,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {   
     if (networkStore.walletConnected && isFetched) {
       validateOrSetSignature();
       phClient.identify(networkStore.address, { username: data?.username });

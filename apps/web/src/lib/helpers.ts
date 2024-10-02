@@ -3,7 +3,6 @@ import {
   SendTransactionResult,
 } from "@aurowallet/mina-provider";
 import clsx, { ClassValue } from "clsx";
-import { method } from "o1js";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { TREASURY_ADDRESS } from "@/constants";
