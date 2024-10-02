@@ -46,6 +46,7 @@ export const metadata = {
     tileColor: "#da532c",
   },
 };
+
 export default function RootLayout({
   children,
 }: {

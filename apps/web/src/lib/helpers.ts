@@ -205,3 +205,20 @@ export async function getPalladBalance() {
   console.log("response balance", response);
   return response.result;
 }
+
+export async function copyToClipBoard({
+  toCopyContent,
+  copiedType,
+}: {
+  toCopyContent: string;
+  copiedType: string;
+}) {
+  try {
+    await navigator.clipboard.writeText(toCopyContent);
+    toast.success(`${copiedType} copied to clipboard!`, { duration: 2000 });
+  } catch (err) {
+    toast.error(`Error copying ${copiedType}! Please Try Again`, {
+      duration: 2000,
+    });
+  }
+}

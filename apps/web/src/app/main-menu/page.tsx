@@ -3,62 +3,9 @@ import { useState } from "react";
 import LandingBackground from "@/components/LandingBackground";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import Link from "next/link";
+import { NAVIGATION_MENU_ITEMS } from "@/constants";
 import useDeviceDetection from "@/hooks/useDeviceDetection";
 import clsx from "clsx";
-import { COLLECTION_URL } from "@/constants";
-
-const buttons = [
-  {
-    name: "Play Game",
-    key: 0,
-    href: "/competitions",
-  },
-  {
-    name: "Guide",
-    key: 1,
-    targetBlank: false,
-    href: "/guide",
-  },
-
-  {
-    name: "Leaderboard",
-    key: 2,
-    targetBlank: false,
-    href: "/leaderboard",
-  },
-  {
-    name: "Community Section",
-    key: 7,
-    targetBlank: false,
-    href: "/community",
-  },
-
-  {
-    name: "User Profile",
-    key: 3,
-    targetBlank: false,
-    href: COLLECTION_URL,
-  },
-  {
-    name: "NFTS MARKETPLACE",
-    key: 4,
-    targetBlank: false,
-    href: "/marketplace",
-  },
-  {
-    name: "FAQ",
-    key: 5,
-    targetBlank: false,
-    href: "/faq",
-  },
-
-  {
-    name: "ZKNOID games store",
-    key: 6,
-    href: "https://app.zknoid.io/",
-    targetBlank: true,
-  },
-];
 
 export default function MainMenu() {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
@@ -89,7 +36,7 @@ export default function MainMenu() {
           </Link>
         </div>
         <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
-          {buttons.map((button) => (
+          {NAVIGATION_MENU_ITEMS.map((button) => (
             <PrimaryButton
               key={button.key}
               onFocus={() => handleFocus(button.key)}
