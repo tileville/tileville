@@ -1,28 +1,4 @@
 [
-    {
-        "hexSize": 2,
-        "hillsCount": 2,
-        "deckSize": 4,
-        "isMineTile": false
-    },
-     {
-        "hexSize": 3,
-        "hillsCount": 5,
-        "deckSize": 9,
-        "isMineTile": false
-    },
-     {
-        "hexSize": 4,
-        "hillsCount": 6,
-        "deckSize": 18,
-        "isMineTile": false
-    },
-     {
-        "hexSize": 5,
-        "hillsCount": 8,
-        "deckSize": 25,
-        "isMineTile": false
-    },
      {
         "hexSize": 6,
         "hillsCount": 9,
