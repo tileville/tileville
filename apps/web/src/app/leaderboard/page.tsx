@@ -50,10 +50,10 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="p-4 pb-8 pt-12 md:py-40">
+    <div className="mt-4 p-4 pb-8 pt-12 md:py-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <div className="grid grid-cols-2 items-center gap-2 md:gap-3">
+          <div className="grid grid-cols-2 items-center gap-2 md:flex md:gap-3">
             <p className="col-auto whitespace-nowrap text-sm md:text-base">
               Select Competitions:
             </p>
@@ -71,7 +71,7 @@ export default function Leaderboard() {
                   </span>
                 </button>
               </DropdownMenu.Trigger>
-              <DropdownMenu.Content className="min-w-[224px] !bg-transparent backdrop-blur-2xl">
+              <DropdownMenu.Content className="min-w-[200px] max-w-[350px] !bg-transparent backdrop-blur-2xl md:min-w-[320px] md:max-w-none">
                 {competitionData?.map((competition) => (
                   <DropdownMenu.Item
                     key={competition.id}
@@ -82,7 +82,7 @@ export default function Leaderboard() {
                         name: competition.name,
                       });
                     }}
-                    className="hover:bg-primary"
+                    className="!md:h-8 !h-auto py-2 hover:bg-primary"
                   >
                     {competition.name}
                   </DropdownMenu.Item>

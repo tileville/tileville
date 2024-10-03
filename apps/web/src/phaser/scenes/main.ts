@@ -39,8 +39,8 @@ export class MainScene extends Scene {
   // timerText: GameObjects.BitmapText | null = null;
   timerText: Phaser.GameObjects.Text | null = null;
   timedEvent: Phaser.Time.TimerEvent | null = null;
-  timerPositionX =  0;
-  timerPositionY =  0;
+  timerPositionX = 0;
+  timerPositionY = 0;
 
   scoreBackground: Phaser.GameObjects.Graphics | null = null;
   scoreBackgroundPositionX = 0;
@@ -85,59 +85,84 @@ export class MainScene extends Scene {
     this.grid = new HexGrid(this, 5, 8, 0, 0, this.onNewPoints.bind(this));
     this.trihexDeck = this.createTrihexDeck(25, true);
 
-    if(isSpeedVersion){
+    if (isSpeedVersion) {
       this.scoreTextPositionX = -40;
       this.scoreBackgroundPositionX = -50;
-    }else{
+    } else {
       this.scoreTextPositionX = 140;
       this.scoreBackgroundPositionX = 130;
     }
-    this.scoreText = this.add.bitmapText(this.scoreTextPositionX, 30, "font", "0 points", 60);
+    this.scoreText = this.add.bitmapText(
+      this.scoreTextPositionX,
+      45,
+      "font",
+      "0 points",
+      60
+    );
     this.scoreText.setDepth(4);
 
     this.scoreBackground = this.add.graphics();
-    this.scoreBackground.fillStyle(0x378209, 0.3); 
-    this.scoreBackground.fillRoundedRect(this.scoreBackgroundPositionX, 25, 225, 80, 8);
+    this.scoreBackground.fillStyle(0x378209, 0.3);
+    this.scoreBackground.fillRoundedRect(
+      this.scoreBackgroundPositionX,
+      40,
+      225,
+      80,
+      8
+    );
     this.scoreBackground.setDepth(3);
 
     this.tweens.add({
       targets: [this.scoreBackground, this.scoreText],
-      props: { x: '+= 800' },
+      props: { x: "+= 800" },
       duration: 400,
     });
 
-    if(isSpeedVersion){
-    this.timerPositionX = 330;
-    this.timerPositionY = 65;
-    const speedDuration = this.game.registry.get("speedDuration");
+    if (isSpeedVersion) {
+      this.timerPositionX = 330;
+      this.timerPositionY = 80;
+      const speedDuration = this.game.registry.get("speedDuration");
 
-    this.timerBackground = this.add.graphics();
-    this.timerBackground.fillStyle(0xeeeeee, 0.3); 
-    this.timerBackground.fillRoundedRect(this.timerPositionX - 140 , this.timerPositionY - 40, 280, 80 , 8);
-    this.timerBackground.setDepth(3);
-    
-    this.tweens.add({
-      targets: [this.timerBackground, this.timerText],
-      props: { x: '+= 800' },
-      duration: 400,
-    });
-    
+      this.timerBackground = this.add.graphics();
+      this.timerBackground.fillStyle(0xeeeeee, 0.3);
+      this.timerBackground.fillRoundedRect(
+        this.timerPositionX - 140,
+        this.timerPositionY - 40,
+        280,
+        80,
+        8
+      );
+      this.timerBackground.setDepth(3);
 
-    if(isSpeedVersion){
-      this.initialTime = speedDuration;
-      this.timerText = this.add.text(this.timerPositionX, this.timerPositionY, `Time Left: ${this.formatTime(this.initialTime)}`, {
-        // fontFamily: 'Arial',
-        fontSize: '30px',
-        fontStyle: 'bold',
-        color: '#378209'
+      this.tweens.add({
+        targets: [this.timerBackground, this.timerText],
+        props: { x: "+= 800" },
+        duration: 400,
       });
-      this.timerText.setDepth(4);
-      this.timerText.setOrigin(0.5);
-      this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+
+      if (isSpeedVersion) {
+        this.initialTime = speedDuration;
+        this.timerText = this.add.text(
+          this.timerPositionX,
+          this.timerPositionY,
+          `Time Left: ${this.formatTime(this.initialTime)}`,
+          {
+            // fontFamily: 'Arial',
+            fontSize: "30px",
+            fontStyle: "bold",
+            color: "#378209",
+          }
+        );
+        this.timerText.setDepth(4);
+        this.timerText.setOrigin(0.5);
+        this.timedEvent = this.time.addEvent({
+          delay: 1000,
+          callback: this.onEvent,
+          callbackScope: this,
+          loop: true,
+        });
+      }
     }
-}
-
-
 
     this.rotateLeftButton = new Button(
       this,
@@ -244,14 +269,13 @@ export class MainScene extends Scene {
       duration: 400,
     });
 
-    if(isSpeedVersion){
-    this.tweens.add({
-      targets: this.timerText,
-      props: { x: (this.timerText?.x ?? 0) + 800 },
-      duration: 400,
-    });
-  }
-
+    if (isSpeedVersion) {
+      this.tweens.add({
+        targets: this.timerText,
+        props: { x: (this.timerText?.x ?? 0) + 800 },
+        duration: 400,
+      });
+    }
 
     this.tweens.add({
       targets: [this.deckCounterText, this.deckCounterImage],
@@ -269,64 +293,73 @@ export class MainScene extends Scene {
     );
 
     this.input.on("wheel", this.onMouseWheel, this);
-
-
-   
-}
-
-
-onEvent() {
-  this.initialTime -= 1; 
-  if (this.timerText) {
-    this.timerText.setText(`Time Left: ${this.formatTime(this.initialTime)}`);
-    if (this.initialTime <= 10) {
-      this.timerText.setColor('#E67E22');
-      this.timerBackground?.fillStyle(0xE67E22, 0.2); // Yellow with 20% opacity
-      this.timerBackground?.fillRoundedRect(this.timerPositionX - 140 + 800, this.timerPositionY - 40, 280, 60 , 10);
-    }
-  
-    if (this.initialTime <= 5) {
-      this.timerText.setColor('#DC143C');
-      this.timerBackground?.fillStyle(0xDC143C, 0.2); // Red with 20% opacity
-      this.timerBackground?.fillRoundedRect(this.timerPositionX - 140 + 800, this.timerPositionY - 40, 280, 60 , 10);
-      this.pulseAndShakeTimer();
-    }
   }
 
-  if(this.initialTime === 0){
-    this.timedEvent?.remove();
-    this.grid!.onQueueEmpty = this.endGame.bind(this);
-    this.grid!.deactivate();
+  onEvent() {
+    this.initialTime -= 1;
     if (this.timerText) {
-      this.timerText.setPosition(this.timerPositionX + 800, this.timerPositionY);
-      this.timerText.setScale(1);
+      this.timerText.setText(`Time Left: ${this.formatTime(this.initialTime)}`);
+      if (this.initialTime <= 10) {
+        this.timerText.setColor("#E67E22");
+        this.timerBackground?.fillStyle(0xe67e22, 0.2); // Yellow with 20% opacity
+        this.timerBackground?.fillRoundedRect(
+          this.timerPositionX - 140 + 800,
+          this.timerPositionY - 40,
+          280,
+          60,
+          10
+        );
+      }
+
+      if (this.initialTime <= 5) {
+        this.timerText.setColor("#DC143C");
+        this.timerBackground?.fillStyle(0xdc143c, 0.2); // Red with 20% opacity
+        this.timerBackground?.fillRoundedRect(
+          this.timerPositionX - 140 + 800,
+          this.timerPositionY - 40,
+          280,
+          60,
+          10
+        );
+        this.pulseAndShakeTimer();
+      }
+    }
+
+    if (this.initialTime === 0) {
+      this.timedEvent?.remove();
+      this.grid!.onQueueEmpty = this.endGame.bind(this);
+      this.grid!.deactivate();
+      if (this.timerText) {
+        this.timerText.setPosition(
+          this.timerPositionX + 800,
+          this.timerPositionY
+        );
+        this.timerText.setScale(1);
+      }
     }
   }
-  
-}
 
-pulseAndShakeTimer() {
-  this.tweens.add({
-    targets: [this.timerText],
-    scale: 1.05,
-    duration: 200,
-    yoyo: true,
-    repeat: 1,
-    ease: 'Sine.easeInOut'
-  });
+  pulseAndShakeTimer() {
+    this.tweens.add({
+      targets: [this.timerText],
+      scale: 1.05,
+      duration: 200,
+      yoyo: true,
+      repeat: 1,
+      ease: "Sine.easeInOut",
+    });
 
-  this.tweens.add({
-    targets: [this.timerText],
-    x: this.timerPositionX + 800 + Phaser.Math.Between(-6, 6),
-    
-    y: this.timerPositionY + Phaser.Math.Between(-6, 6),
-    duration: 50,
-    yoyo: true,
-    repeat: 3,
-    ease: 'Sine.easeInOut'
-  });
+    this.tweens.add({
+      targets: [this.timerText],
+      x: this.timerPositionX + 800 + Phaser.Math.Between(-6, 6),
 
-}
+      y: this.timerPositionY + Phaser.Math.Between(-6, 6),
+      duration: 50,
+      yoyo: true,
+      repeat: 3,
+      ease: "Sine.easeInOut",
+    });
+  }
 
   onNewPoints(points: number, hexType: number) {
     this.score += points;
@@ -509,9 +542,9 @@ pulseAndShakeTimer() {
 
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
 
-      if(isSpeedVersion){
-          this.timedEvent?.remove();
-      }
+    if (isSpeedVersion) {
+      this.timedEvent?.remove();
+    }
 
     if (this.scoreText) {
       handleSaveScore(this.score);
@@ -540,16 +573,7 @@ pulseAndShakeTimer() {
       duration: 300,
     });
 
-    this.tweens.add({
-      targets: this.scoreText,
-      props: {
-        y: 140,
-      },
-      duration: 700,
-      ease: PhaserMath.Easing.Quadratic.Out,
-    });
-
-    if(isSpeedVersion){
+    if (isSpeedVersion) {
       this.tweens.add({
         targets: this.timerText,
         props: {
@@ -560,11 +584,10 @@ pulseAndShakeTimer() {
       });
     }
 
-
     this.tweens.add({
       targets: [this.scoreText],
       props: {
-        y: 140,
+        y: 155,
       },
       duration: 700,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -578,12 +601,12 @@ pulseAndShakeTimer() {
       duration: 700,
       ease: PhaserMath.Easing.Quadratic.Out,
     });
-    
+
     // Also in endGame(), update the timer text tween:
     this.tweens.add({
       targets: [this.timerText],
       props: {
-        y: 175,
+        y: 190,
       },
       duration: 700,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -597,8 +620,6 @@ pulseAndShakeTimer() {
       duration: 700,
       ease: PhaserMath.Easing.Quadratic.Out,
     });
-    
-    
 
     let rank, message1, message2;
     if (this.score === 0) {
@@ -880,8 +901,8 @@ pulseAndShakeTimer() {
     this.scoreBackground?.setVisible(false);
     this.scoreBackground?.setVisible(false);
     this.timerBackground?.setVisible(false);
-    this.competitionNameText?.setVisible(false)
-    this.currentTimeText?.setVisible(false)
+    this.competitionNameText?.setVisible(false);
+    this.currentTimeText?.setVisible(false);
 
     // this.tweens.add({
     //   targets: this.foreground,
@@ -900,18 +921,16 @@ pulseAndShakeTimer() {
     window.open(url, "_blank");
   }
 
- formatTime(seconds: number): string {
+  formatTime(seconds: number): string {
     // Minutes
     const minutes = Math.floor(seconds / 60);
     // Seconds
     let partInSeconds: number | string = seconds % 60;
     // Adds left zeros to seconds
-    partInSeconds = partInSeconds.toString().padStart(2, '0');
+    partInSeconds = partInSeconds.toString().padStart(2, "0");
     // Returns formated time
     return `${minutes}:${partInSeconds}`;
-}
-
-
+  }
 
   onPointerUp(event: Input.Pointer) {
     if (this.pointerDown) {

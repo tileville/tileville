@@ -119,9 +119,10 @@ export const PhaserLayer = ({
       <div id="tileville-hex" />
 
       {isMobile && !isLandscape && (
-        <div className="p-4 text-center">
-          <p className="text-sm font-semibold text-red-500">
-            Please rotate your device to landscape mode for the best experience.
+        <div className="p-5 text-center text-destructive">
+          <p>
+            Please rotate your device to landscape mode for the best guide
+            experience.
           </p>
         </div>
       )}

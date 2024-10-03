@@ -21,7 +21,7 @@ export default function Competitions() {
 
   return (
     <>
-      <div className="mx-auto max-w-[1280px]">
+      <div className="mx-auto max-w-[1280px] pt-4">
         <div className="p-4 pb-2 pt-10 md:py-20">
           <div className="relative flex items-center justify-between">
             <div className="flex items-center">
