@@ -116,7 +116,7 @@ export const PhaserLayer = ({
 
   return (
     <>
-      <div id="tileville-hex" />
+      <div id="tileville-hex" className="max-h-[99svh]" />
 
       {isMobile && !isLandscape && (
         <div className="p-5 text-center text-destructive">
