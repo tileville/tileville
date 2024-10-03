@@ -21,8 +21,8 @@ export default function Competitions() {
 
   return (
     <>
-      <div>
-        <div className="mx-auto max-w-[1280px] p-4 pb-2 pt-10 md:py-20">
+      <div className="mx-auto max-w-[1280px]">
+        <div className="p-4 pb-2 pt-10 md:py-20">
           <div className="relative flex items-center justify-between">
             <div className="flex items-center">
               <h2 className="text-xl md:text-4xl">Competitions</h2>
@@ -45,7 +45,7 @@ export default function Competitions() {
           </div>
         </div>
 
-        <div className="mt-0 grid grid-cols-1 gap-3 px-3 md:mt-5">
+        <div className="mt-0 grid grid-cols-1 gap-3 px-3 md:mt-5 md:pb-5">
           {isLoading ? (
             <CompetitionLoading />
           ) : (
