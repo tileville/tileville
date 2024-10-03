@@ -21,45 +21,45 @@ export default function Competitions() {
 
   return (
     <>
-      <div>
-        <div className="mx-auto max-w-[1280px] p-4 py-20">
+      <div className="mx-auto max-w-[1280px] pt-4">
+        <div className="p-4 pb-2 pt-10 md:py-20">
           <div className="relative flex items-center justify-between">
             <div className="flex items-center">
-              <h2 className="text-4xl">Competitions</h2>
+              <h2 className="text-xl md:text-4xl">Competitions</h2>
               <div>
                 <Image
                   src="/image/cards/trophyGolden.png"
                   width={70}
                   height={86}
                   alt="trophy"
-                  className="h-auto"
+                  className="h-auto w-8 md:w-16"
                 />
               </div>
             </div>
             <Link
               href="/competitions/demo-game"
-              className="rounded-md border-2 border-primary bg-primary bg-opacity-30 px-[15px] py-2 text-center font-mono leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
+              className="rounded-md border-2 border-primary bg-primary bg-opacity-30 px-2 py-2 text-center font-mono text-sm leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))] md:px-[15px] md:text-base"
             >
               Play Demo Game
             </Link>
           </div>
+        </div>
 
-          <div className="mt-5 grid grid-cols-1 gap-3">
-            {isLoading ? (
-              <CompetitionLoading />
-            ) : (
-              <>
-                {data?.map((competition) => (
-                  <CompetitionCard
-                    competition={competition}
-                    key={competition.unique_keyname}
-                    setSelectedCompetition={setSelectedCompetition}
-                    setIsFeesModalOpen={setIsFeesModalOpen}
-                  />
-                ))}
-              </>
-            )}
-          </div>
+        <div className="mt-0 grid grid-cols-1 gap-3 px-3 md:mt-5 md:pb-5">
+          {isLoading ? (
+            <CompetitionLoading />
+          ) : (
+            <>
+              {data?.map((competition) => (
+                <CompetitionCard
+                  competition={competition}
+                  key={competition.unique_keyname}
+                  setSelectedCompetition={setSelectedCompetition}
+                  setIsFeesModalOpen={setIsFeesModalOpen}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <GameEntryFeesModal

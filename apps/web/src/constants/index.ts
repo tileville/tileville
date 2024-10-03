@@ -222,9 +222,18 @@ export const NFT_DESCRIPTION =
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
 
+export const DEFAULT_POSTER_URL = "/img/avatars/2.jpeg";
 export const ACTIVE_GAMES_URL = "/profile?tab=active-games";
 export const COLLECTION_URL = "/profile?tab=collection";
 
+export const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
+export const BACKGROUND_PATHS_HEADER = [
+  "/traits-info",
+  "/marketplace",
+  "/competitions",
+  "/leaderboard",
+  "/faq",
+];
 export const NAVIGATION_MENU_ITEMS = [
   {
     name: "Play Game",

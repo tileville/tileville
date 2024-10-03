@@ -38,7 +38,7 @@ export const Modal = ({
             exit={{ opacity: 0 }}
             transition={{ type: "spring", duration: 0.4, bounce: 0 }}
             className={
-              "fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center backdrop-blur-md"
+              "fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center backdrop-blur-md px-6"
             }
             onClick={
               isDismissible

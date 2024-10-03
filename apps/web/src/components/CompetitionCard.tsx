@@ -7,14 +7,13 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { HtmlRenderer } from "./common/HTMLRenderer";
 import { InfoCircledIcon, TimerIcon } from "@radix-ui/react-icons";
+import { DEFAULT_POSTER_URL } from "@/constants";
 
 type CompetitionCardProps = {
   competition: Competition;
   setSelectedCompetition: Dispatch<SetStateAction<Competition>>;
   setIsFeesModalOpen: Dispatch<SetStateAction<boolean>>;
 };
-
-const DEFAULT_POSTER_URL = "/img/avatars/2.jpeg";
 
 type CompetitionStatus = "upcoming" | "ongoing" | "over";
 export const CompetitionCard = ({
@@ -42,10 +41,10 @@ export const CompetitionCard = ({
 
   return (
     <div
-      className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-3 overflow-hidden rounded-lg"
+      className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-2 overflow-hidden rounded-lg pb-3 md:gap-3 md:pb-0"
       key={competition.id}
     >
-      <div className="relative col-span-4 h-[400px] w-[400x] overflow-hidden">
+      <div className="relative col-span-12 aspect-square w-full overflow-hidden rounded-br-md h-auto md:h-full md:col-span-4 xl:h-[400px] xl:w-[400px] md:rounded-none">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
@@ -55,13 +54,13 @@ export const CompetitionCard = ({
           priority={false}
         />
       </div>
-      <div className="col-span-5 flex flex-col py-4 ps-1">
+      <div className="col-span-12 flex flex-col pb-0 pr-2 ps-2 pt-0 md:col-span-5 md:py-4 md:pr-0 md:ps-1">
         <h2 className="text-xl font-semibold">{competition.name}</h2>
         <div className="mb-2 flex flex-col flex-wrap space-y-2 text-sm text-black/50">
           <HtmlRenderer htmlContent={competition.description} />
         </div>
         <div className="my-3 mt-auto h-[1px] w-full bg-primary/30"></div>
-        <div className="flex justify-between gap-2 text-sm font-medium">
+        <div className="flex justify-between gap-1 text-sm font-medium md:gap-2">
           <div className="flex items-center gap-2">
             <p>Entry Fees:</p>
             <p className="text-base font-semibold">
@@ -93,12 +92,12 @@ export const CompetitionCard = ({
           </div>
         </div>
       </div>
-      <div className="col-span-3 px-1 py-4">
-        <div className="flex h-full flex-col items-start justify-between">
-          <div className="mx-auto mb-1 flex items-center gap-2">
+      <div className=" col-span-12 px-1 md:col-span-3 md:py-4">
+        <div className="grid h-full grid-cols-4 flex-wrap items-center justify-between md:flex md:flex-col md:items-start">
+          <div className="col-span-4 mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
               <div>
-                <h3 className="py-4 text-xl font-medium">
+                <h3 className="py-2 text-xl font-medium md:py-4">
                   Competition Starts In
                 </h3>
                 <CountdownTimer initialTime={getTime(competition.start_date)} />
@@ -106,7 +105,7 @@ export const CompetitionCard = ({
             )}
             {competitionStatus === "ongoing" && (
               <div>
-                <h3 className="py-4 text-xl font-medium">
+                <h3 className="py-2 text-xl font-medium md:py-4">
                   Competition Ends In
                 </h3>
                 <CountdownTimer initialTime={getTime(competition.end_date)} />
@@ -114,8 +113,8 @@ export const CompetitionCard = ({
             )}
           </div>
           {competition.is_speed_version && (
-            <div>
-              <div className="mb-2 flex items-center gap-2 text-xl">
+            <div className="col-span-4">
+              <div className="mb-2 flex justify-center md:justify-start items-center gap-2 text-xl">
                 <span>
                   <Image
                     src="/icons/speed.svg"
@@ -124,7 +123,7 @@ export const CompetitionCard = ({
                     height="30"
                   />
                 </span>
-                <p className="text-medium ">Speedy Version</p>
+                <p className="text-medium text-sm md:text-base">Speedy Version</p>
                 <Tooltip.Provider delayDuration={200}>
                   <Tooltip.Root>
                     <Tooltip.Trigger asChild>
@@ -148,49 +147,50 @@ export const CompetitionCard = ({
                 </Tooltip.Provider>
               </div>
 
-              <div className="flex items-center gap-2 text-xl">
+              <div className="flex items-center justify-center md:justify-start gap-2 text-xl">
                 <span>
                   <TimerIcon width={24} height={24} />
                 </span>
-                <p className="text-medium ">Game Time:-</p>
-                <p className="text-medium ">
+                <p className="text-medium text-sm md:text-base">Game Time:-</p>
+                <p className="text-medium text-sm md:text-base">
                   {competition.speed_duration} Secs
                 </p>
               </div>
             </div>
           )}
-
-          <Tooltip.Provider delayDuration={300}>
-            <Tooltip.Root>
-              <Tooltip.Trigger asChild>
-                <button
-                  className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white disabled:cursor-not-allowed disabled:bg-primary/60"
-                  onClick={() => {
-                    setSelectedCompetition(competition);
-                    setIsFeesModalOpen(true);
-                  }}
-                  disabled={competitionStatus !== "ongoing"}
-                >
-                  {competitionStatus === "ongoing"
-                    ? "Join Now"
-                    : competitionStatus === "upcoming"
-                    ? "Competition Starts Soon"
-                    : "Competition Ended"}
-                </button>
-              </Tooltip.Trigger>
-              {competitionStatus === "upcoming" && (
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className="whitespace-nowrap rounded-md bg-primary/10 px-4 py-1 shadow-lg backdrop-blur-xl"
-                    sideOffset={5}
+          <div className="md:flex-0 col-span-4 flex w-full flex-1 flex-grow md:flex-none">
+            <Tooltip.Provider delayDuration={300}>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <button
+                    className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white disabled:cursor-not-allowed disabled:bg-primary/60"
+                    onClick={() => {
+                      setSelectedCompetition(competition);
+                      setIsFeesModalOpen(true);
+                    }}
+                    disabled={competitionStatus !== "ongoing"}
                   >
-                    Competition Starts Soon...
-                    <Tooltip.Arrow className="TooltipArrow" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              )}
-            </Tooltip.Root>
-          </Tooltip.Provider>
+                    {competitionStatus === "ongoing"
+                      ? "Join Now"
+                      : competitionStatus === "upcoming"
+                      ? "Competition Starts Soon"
+                      : "Competition Ended"}
+                  </button>
+                </Tooltip.Trigger>
+                {competitionStatus === "upcoming" && (
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      className="whitespace-nowrap rounded-md bg-primary/10 px-4 py-1 shadow-lg backdrop-blur-xl"
+                      sideOffset={5}
+                    >
+                      Competition Starts Soon...
+                      <Tooltip.Arrow className="TooltipArrow" />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                )}
+              </Tooltip.Root>
+            </Tooltip.Provider>
+          </div>
         </div>
       </div>
       {competition.competition_tweet_content &&
@@ -217,7 +217,7 @@ export const CompetitionCard = ({
   );
 };
 
-const getDateDifference = (date1: string, date2: string): string => {
+export const getDateDifference = (date1: string, date2: string): string => {
   const time1 = new Date(date1);
   const time2 = new Date(date2);
 

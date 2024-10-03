@@ -14,7 +14,7 @@ export default function ActiveGames({ walletAddress }: ActiveGamesProps) {
     <div className="">
       <Table.Root>
         <Table.Header>
-          <Table.Row>
+          <Table.Row className="whitespace-nowrap">
             <Table.ColumnHeaderCell>Game Id</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Competition Name</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Network</Table.ColumnHeaderCell>

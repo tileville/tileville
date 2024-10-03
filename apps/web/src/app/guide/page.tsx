@@ -11,11 +11,9 @@ const GuidePhaserLayer = dynamic(
 
 export default function Guide() {
   return (
-    <div className="overflow-y-scroll">
-      <div className="min-h-scree mx-auto  flex items-center justify-center">
-        <div className="w-full">
-          <GuidePhaserLayer />
-        </div>
+    <div className="mx-auto flex min-h-screen items-center justify-center">
+      <div className="w-full">
+        <GuidePhaserLayer />
       </div>
     </div>
   );

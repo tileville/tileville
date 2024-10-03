@@ -5,8 +5,8 @@ import clsx from "clsx";
 import { useMountedState } from "react-use";
 import Image from "next/image";
 import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
-import { PrimaryButton } from "./PrimaryButton";
-import { MediaPlayer } from "./MediaPlayer/page";
+import { PrimaryButton } from "../PrimaryButton";
+import { MediaPlayer } from "../MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
 import { formatAddress, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
@@ -21,12 +21,10 @@ import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
-import { BUG_REPORT_URL } from "@/constants";
+import { BUG_REPORT_URL, HIDE_BACK_BUTTON_PATHS } from "@/constants";
 import { anonymousSignIn } from "@/db/supabase-queries";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-
-const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");
