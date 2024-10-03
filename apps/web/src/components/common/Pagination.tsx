@@ -41,7 +41,7 @@ export const Pagination = ({
   return (
     <div
       className={clsx(
-        "fixed bottom-[54px] left-0 z-10 mt-4 flex w-full items-center justify-center md:justify-end",
+        "fixed bottom-0 left-0 z-10 mt-4 flex w-full items-center justify-center bg-primary-foreground md:bottom-[54px] md:justify-end md:bg-transparent",
         containerClassName
       )}
     >

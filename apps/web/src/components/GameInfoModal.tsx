@@ -9,6 +9,7 @@ import {
 } from "@/constants";
 import { useAtomValue } from "jotai";
 import { gameplayDisallowTypeAtom } from "@/contexts/atoms";
+import { isMobile, isTablet } from "react-device-detect";
 // import DoneLottie from "../../public/lotties/doneLottie.json";
 
 export const GameInfoModal = ({
@@ -27,12 +28,17 @@ export const GameInfoModal = ({
     <Dialog.Root open={open}>
       <Dialog.Content style={{ maxWidth: 500 }} className="rounded-md">
         <Dialog.Title className="text-center">{content.title}</Dialog.Title>
-        <div className="mx-auto max-w-[300px]">
+        <div
+          className={`mx-auto ${
+            isMobile || isTablet ? "max-w-[150px]" : "max-w-[300px]"
+          }`}
+        >
           <LottieAnimation animationData={content.animation} />
         </div>
-        <Dialog.Description my="2">{content.description}</Dialog.Description>
+
+        <Dialog.Description className="text-sm md:text-base" my="2">{content.description}</Dialog.Description>
         {gameplayDisallowType === "TRANSACTION_PENDING" && (
-          <ul className="flex flex-col gap-y-4 divide-y divide-primary/30">
+          <ul className="flex flex-col gap-y-2 md:gap-y-4 divide-y divide-primary/30 text-sm md:text-base">
             <li className="pt-3">
               Transaction on mina on an avg take 2 to 3 mins
             </li>

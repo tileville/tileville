@@ -15,9 +15,9 @@ export const PrimaryButton = ({
   onClickHandler,
   className,
 }: {
-  onFocus: any;
+  onFocus?: any;
   text?: string;
-  autoFocus: any;
+  autoFocus?: any;
   href?: string;
   size?: string;
   icon?: React.ReactNode;
@@ -64,7 +64,7 @@ export const PrimaryButton = ({
         onClick={onClickHandler ? onClickHandler : handleClick}
         ref={buttonRef}
         onMouseEnter={handleMouseEnter}
-        className="focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
+        className="focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[20px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
       >
         {icon}
         {text}
@@ -81,7 +81,7 @@ export const PrimaryButton = ({
         href={`${href}`}
         className={clsx(
           className,
-          "focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-[15px] py-[3.5px] leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
+          "focus-visible-bg-primary-30 focus-bg-primary-30 bg-primary-30 flex cursor-pointer items-center justify-center gap-2 rounded-[15px] border-2 border-transparent bg-opacity-30 px-2 md:px-[15px] py-[3.5px] leading-none text-primary outline-none hover:shadow-[0_0_8px_hsl(var(--primary))] focus:border-primary focus:shadow-[0_0_8px_hsl(var(--primary))] focus-visible:shadow-[0_0_8px_hsl(var(--primary))]"
         )}
       >
         {icon}

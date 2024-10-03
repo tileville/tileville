@@ -11,7 +11,7 @@ export const ErrorBoundaryFallbackComponent = ({
   return (
     <div
       className={twMerge(
-        "flex h-screen w-full flex-col items-center justify-center space-y-4",
+        "flex w-full flex-col items-center justify-center space-y-4",
         className
       )}
     >
