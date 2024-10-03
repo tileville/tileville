@@ -106,7 +106,7 @@ export default function Marketplace() {
 
   return (
     <div className="relative p-4 pb-0 pt-12 md:pb-28 md:pt-20">
-      <div className="mx-auto max-w-[1280px]">
+      <div className="mx-auto max-w-[1280px] pt-3">
         <div className="mb-8 flex flex-wrap gap-3">
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
             {toggleGroupOptions.map((option) => {

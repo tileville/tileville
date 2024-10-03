@@ -44,9 +44,9 @@ export default function TraitsInfo() {
   };
 
   return (
-    <div className="bg-primary/10 px-2 pb-12 pt-8 md:px-4 md:pb-28 md:pt-20">
+    <div className="bg-primary/10 px-2 pb-12 pt-12 md:px-4 md:pb-28 md:pt-20">
       <div className="fade-slide-in mx-auto max-w-[1280px]">
-        <div className="sticky top-0 z-10 bg-primary/90 p-3 shadow-md md:top-[52px] md:p-5">
+        <div className="sticky top-[47px] z-10 bg-primary/90 p-3 shadow-md md:top-[52px] md:p-5">
           <div className="mb-4 md:mb-8">
             <div className="text-md mb-1 flex items-center gap-2 text-white md:text-2xl">
               <h1 className="font-bold">

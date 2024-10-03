@@ -12,6 +12,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { MediaPlayer } from "../MediaPlayer/page";
 import {
+  BACKGROUND_PATHS_HEADER,
   BUG_REPORT_URL,
   FEEDBACK_FORM_URL,
   GAME_ROADMAP_URL,
@@ -25,11 +26,16 @@ export const MobileNavBar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
+  const isHeaderWithBg = BACKGROUND_PATHS_HEADER.includes(pathname);
   const router = useRouter();
 
   return (
     <div className="">
-      <div className="fixed left-0 right-0 top-0 z-20 flex w-full items-center justify-between p-2">
+      <div
+        className={`fixed left-0 right-0 top-0 z-20 flex w-full items-center justify-between p-2 ${
+          isHeaderWithBg && "bg-[#a4b881]"
+        }`}
+      >
         {!isHideBackBtn && (
           <PrimaryButton
             key={1}

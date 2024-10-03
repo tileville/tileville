@@ -57,7 +57,7 @@ export default function DigitalCollection() {
               </Dialog.Trigger>
 
               <Dialog.Content className="relative !m-0 !max-w-[1020px] !rounded-md !p-0">
-                <div className="grid grid-cols-2">
+                <div className="grid md:grid-cols-2">
                   <div className="h-full w-full">
                     <Image
                       src={nft.image}

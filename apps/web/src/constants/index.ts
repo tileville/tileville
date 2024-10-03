@@ -227,6 +227,7 @@ export const ACTIVE_GAMES_URL = "/profile?tab=active-games";
 export const COLLECTION_URL = "/profile?tab=collection";
 
 export const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
+export const BACKGROUND_PATHS_HEADER = ["/traits-info" , '/marketplace']
 export const NAVIGATION_MENU_ITEMS = [
   {
     name: "Play Game",

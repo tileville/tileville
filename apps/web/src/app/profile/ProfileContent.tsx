@@ -133,16 +133,15 @@ export default function Profile({ initialTab }: { initialTab: string }) {
 
   if (!networkStore.address) {
     return (
-      <div className="flex w-full items-center justify-center">
-        <Button
-          variant="classic"
-          className="mx-4 !cursor-pointer"
+      <div className="flex w-full items-center justify-center p-8">
+        <button
+          className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
           onClick={() => {
             networkStore.connectWallet(false);
           }}
         >
           Connect your wallet first
-        </Button>
+        </button>
       </div>
     );
   }
