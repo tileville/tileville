@@ -47,17 +47,19 @@ export const metadata = {
   },
 };
 
+const renderFooter = () => {
+  if (isMobile || isTablet) {
+    return "";
+  } else {
+    return <Footer />;
+  }
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const renderFooter = () => {
-    if (isMobile || isTablet) {
-      return <Footer />;
-    }
-  };
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="gradient-bg min-h-screen">
