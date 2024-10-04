@@ -5,6 +5,7 @@ import { LoadScene, MainScene, MenuScene } from "./scenes";
 import { useSaveScore } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
+import { isMobile } from "react-device-detect";
 
 type PhaserLayerProps = {
   isDemoGame: boolean;
@@ -30,6 +31,7 @@ export const PhaserLayer = ({
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(true);
 
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
@@ -71,12 +73,27 @@ export const PhaserLayer = ({
   );
 
   useEffect(() => {
+    const checkOrientation = () => {
+      if (window.innerWidth > window.innerHeight) {
+        setIsLandscape(true);
+      } else {
+        setIsLandscape(false);
+      }
+    };
+
+    // Check orientation on mount and whenever the window is resized
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
     const config: Phaser.Types.Core.GameConfig = {
       width: 1280,
-      height: "100%",
-      parent: "minapolis-hex",
+      height: 720,
+      parent: "tileville-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
+      scale: {
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.FIT,
+      },
       transparent: true,
     };
 
@@ -92,13 +109,24 @@ export const PhaserLayer = ({
 
     return () => {
       game.destroy(true);
+      window.removeEventListener("resize", checkOrientation);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGamePlayAllowed]);
 
   return (
     <>
-      <div id="minapolis-hex" className="min-h-[850px]" />
+      <div id="tileville-hex" className="max-h-[99svh]" />
+
+      {isMobile && !isLandscape && (
+        <div className="p-5 text-center text-destructive">
+          <p>
+            Please rotate your device to landscape mode for the best guide
+            experience.
+          </p>
+        </div>
+      )}
+
       <GameInfoModal
         open={showGameInfoModal}
         txnHash={txnHash}

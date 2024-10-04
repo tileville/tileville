@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { useLocalStorage, useMountedState } from "react-use";
+import { useMountedState } from "react-use";
 import Image from "next/image";
 import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
-import { PrimaryButton } from "./PrimaryButton";
-import { MediaPlayer } from "./MediaPlayer/page";
+import { PrimaryButton } from "../PrimaryButton";
+import { MediaPlayer } from "../MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
-import { formatAddress, signMessage, walletInstalled } from "@/lib/helpers";
+import { formatAddress, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
 import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
@@ -21,16 +21,10 @@ import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
-import {
-  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
-  ACCOUNT_AUTH_MESSAGE,
-  BUG_REPORT_URL,
-} from "@/constants";
+import { BUG_REPORT_URL, HIDE_BACK_BUTTON_PATHS } from "@/constants";
 import { anonymousSignIn } from "@/db/supabase-queries";
 import { useGlobalConfig } from "@/db/react-query-hooks";
-// import { addNovuSubscriber } from "@/lib/novu";
-
-const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
+import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");
@@ -43,11 +37,8 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     networkStore?.address || "",
     "PENDING"
   );
+  const { validateOrSetSignature } = useAuthSignature();
   const isMounted = useMountedState();
-  const [accountAuthSignature, setAccountAuthSignature] = useLocalStorage(
-    ACCOUNT_AUTH_LOCALSTORAGE_KEY,
-    ""
-  );
 
   useMainnetTransactionsStatus(
     pendingTransactions
@@ -69,31 +60,9 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {   
     if (networkStore.walletConnected && isFetched) {
-      let isSignatureRequired = true;
-      if (accountAuthSignature) {
-        try {
-          const signatureAccount = accountAuthSignature.split(" ")[0] || "";
-          isSignatureRequired =
-            signatureAccount === networkStore.address ? false : true;
-        } catch (error) {
-          console.warn(`Failed to parse stored signature.`);
-          isSignatureRequired = true;
-        }
-      }
-      if (isSignatureRequired) {
-        signMessage(ACCOUNT_AUTH_MESSAGE)
-          .then((signResult: any) => {
-            const authSignatureStr = `${signResult.publicKey || ""} ${
-              signResult?.signature?.scalar || ""
-            } ${signResult?.signature?.field || ""}`;
-            setAccountAuthSignature(authSignatureStr);
-          })
-          .catch((error: any) => {
-            console.log("failed to set signature", error);
-          });
-      }
+      validateOrSetSignature();
       phClient.identify(networkStore.address, { username: data?.username });
       // This is not working. debug this.
       // addNovuSubscriber(networkStore.address!, {
@@ -216,7 +185,10 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             {isMounted() &&
               (networkStore.walletConnected && networkStore.address ? (
                 <>
-                  <AccountCard text={formatAddress(networkStore.address)} />
+                  <Link href="/profile">
+                    <AccountCard text={formatAddress(networkStore.address)} />
+                  </Link>
+
                   <NetworkPicker />
                 </>
               ) : walletInstalled() ? (

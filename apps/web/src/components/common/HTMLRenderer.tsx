@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import DOMPurify from "isomorphic-dompurify";
 
-export const HtmlRenderer = ({ htmlContent }: { htmlContent: string }) => {
+export const HtmlRenderer = ({
+  htmlContent = "",
+}: {
+  htmlContent?: string;
+}) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

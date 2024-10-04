@@ -90,7 +90,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
       <>
         <Table.Root>
           <Table.Header>
-            <Table.Row>
+            <Table.Row className="whitespace-nowrap">
               <Table.ColumnHeaderCell>Transaction Hash</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Type</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>
@@ -114,7 +114,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
                             <Link
                               target="_blank"
                               href={`https://minascan.io/mainnet/tx/${transaction.txn_hash}`}
-                              className="font-medium text-primary hover:text-primary/80"
+                              className="font-medium text-primary hover:text-primary/80 break-all"
                             >
                               {transaction.txn_hash}
                             </Link>

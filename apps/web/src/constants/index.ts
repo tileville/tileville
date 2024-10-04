@@ -101,7 +101,7 @@ export const GAMEPLAY_NOT_ALLOWED_MESSAGES = {
   TRANSACTION_CONFIRMED: {
     title: "Transaction Confirmed.",
     description:
-      "Transactin is confirmed. Please close the modal and click on play button to start playing.",
+      "Transaction is confirmed. Please close the modal and click on play button to start playing.",
     animation: TxnConfirmed,
   },
   NONE: {
@@ -118,7 +118,7 @@ export const GLOBAL_CONFIG_DEFAULT = {
 
 export const ACCOUNT_AUTH_MESSAGE =
   "I am authenticating my wallet for TileVille";
-export const ACCOUNT_AUTH_LOCALSTORAGE_KEY = "tileville_auth_signature";
+export const ACCOUNT_AUTH_LOCAL_KEY = "tileville_auth_signature";
 export const DEFAULT_TRASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 
@@ -222,5 +222,92 @@ export const NFT_DESCRIPTION =
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
 
+export const DEFAULT_POSTER_URL = "/img/avatars/2.jpeg";
 export const ACTIVE_GAMES_URL = "/profile?tab=active-games";
 export const COLLECTION_URL = "/profile?tab=collection";
+
+export const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
+export const BACKGROUND_PATHS_HEADER = [
+  "/traits-info",
+  "/marketplace",
+  "/competitions",
+  "/leaderboard",
+  "/faq",
+];
+export const NAVIGATION_MENU_ITEMS = [
+  {
+    name: "Play Game",
+    key: 0,
+    href: "/competitions",
+  },
+  {
+    name: "Guide",
+    key: 1,
+    targetBlank: false,
+    href: "/guide",
+  },
+
+  {
+    name: "Leaderboard",
+    key: 2,
+    targetBlank: false,
+    href: "/leaderboard",
+  },
+  {
+    name: "Community Section",
+    key: 7,
+    targetBlank: false,
+    href: "/community",
+  },
+
+  {
+    name: "User Profile",
+    key: 3,
+    targetBlank: false,
+    href: COLLECTION_URL,
+  },
+  {
+    name: "NFTS MARKETPLACE",
+    key: 4,
+    targetBlank: false,
+    href: "/marketplace",
+  },
+  {
+    name: "FAQ",
+    key: 5,
+    targetBlank: false,
+    href: "/faq",
+  },
+
+  {
+    name: "ZKNOID games store",
+    key: 6,
+    href: "https://app.zknoid.io/",
+    targetBlank: true,
+  },
+];
+
+export const TABS_HEADINGS = [
+  {
+    value: "collection",
+    text: "Digital Collection",
+  },
+  {
+    value: "active-games",
+    text: "Active Games",
+  },
+
+  {
+    value: "past-games",
+    text: "Past Games",
+  },
+
+  {
+    value: "transactions",
+    text: "transactions",
+  },
+  {
+    value: "preferences",
+    text: "Preferences",
+  },
+];

@@ -96,16 +96,12 @@ export const useObserveMinaBalance = () => {
     const chainId = window.mina?.isPallad
       ? network.minaNetwork?.palladNetworkID
       : network.minaNetwork?.chainId;
+
     const isSkipLoadBalance =
       !network.walletConnected || !network.address || !chainId;
-    console.log("Load balance getting called 96", isSkipLoadBalance, {
-      a: !network.walletConnected,
-      b: !network.address,
-      c: chainId,
-      D: network.minaNetwork,
-    });
+
     if (isSkipLoadBalance) return;
-    console.log("Load balance getting called");
+
     balances.loadBalance(chainId || "", network.address!);
   }, [
     chain.block?.height,

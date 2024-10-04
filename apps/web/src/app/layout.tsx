@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { ClientLayout } from "./ClientLayout";
 import { PHProvider } from "./providers";
 import { Toaster } from "react-hot-toast";
+import { isMobile, isTablet } from "react-device-detect";
 
 export const metadata = {
   title: "TileVille",
@@ -45,11 +46,18 @@ export const metadata = {
     tileColor: "#da532c",
   },
 };
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const renderFooter = () => {
+    if (isMobile || isTablet) {
+      return <Footer />;
+    }
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="gradient-bg min-h-screen">
@@ -63,12 +71,12 @@ export default function RootLayout({
           <PHProvider>
             <div className="gradient-bg min-h-screen !bg-fixed">
               <ClientLayout>
-                <div className="">{children}</div>
+                <div>{children}</div>
               </ClientLayout>
             </div>
           </PHProvider>
         </Theme>
-        <Footer />
+        {renderFooter()}
         <Toaster />
       </body>
     </html>

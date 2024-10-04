@@ -25,13 +25,12 @@ import {
   getAllNFTsEntries,
 } from "./supabase-queries";
 import {
-  ACCOUNT_AUTH_LOCALSTORAGE_KEY,
+  ACCOUNT_AUTH_LOCAL_KEY,
   BLOCKBERRY_API_KEY,
   BLOCKBERRY_MAINNET_BASE_URL,
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
-import { useLocalStorage } from "react-use";
 
 export const useSendEmail = ({
   onSuccess,
@@ -192,17 +191,20 @@ export const useNFTEntries = ({
   );
 };
 export const useProfileLazyQuery = (walletAddress: string) => {
-  const [authSignature] = useLocalStorage(ACCOUNT_AUTH_LOCALSTORAGE_KEY);
+  // const { accountAuthSignature: authSignature } = useAuthSignature();
+
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () => {
+      const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+      console.log({ authSignature });
       if (!authSignature) {
         console.warn("Auth signature missing in storage");
-        return;
+        throw new Error("Auth signature missing!");
       }
       return fetch(`/api/player_profile?wallet_address=${walletAddress}`, {
         headers: {
-          "Auth-Signature": JSON.stringify(authSignature as string | ""),
+          "Auth-Signature": authSignature,
           "Wallet-Address": walletAddress,
         },
       })

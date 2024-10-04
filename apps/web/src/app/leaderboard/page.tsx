@@ -50,15 +50,17 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="p-4 py-40">
+    <div className="mt-4 p-4 pb-8 pt-12 md:py-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <p>Select Competitions:</p>
+          <div className="grid grid-cols-2 items-center gap-2 md:flex md:gap-3">
+            <p className="col-auto whitespace-nowrap text-sm md:text-base">
+              Select Competitions:
+            </p>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <button className="border-primary-30 flex h-10 min-w-[224px] items-center justify-between rounded-md border bg-transparent px-3 font-semibold text-primary outline-none">
-                  <span>{selectedCompetition.name}</span>
+                <button className="border-primary-30  flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
+                  <span className="truncate">{selectedCompetition.name}</span>
                   <span>
                     <Image
                       src="icons/topBottomArrows.svg"
@@ -69,7 +71,7 @@ export default function Leaderboard() {
                   </span>
                 </button>
               </DropdownMenu.Trigger>
-              <DropdownMenu.Content className="min-w-[224px] !bg-transparent backdrop-blur-2xl">
+              <DropdownMenu.Content className="min-w-[200px] max-w-[350px] !bg-transparent backdrop-blur-2xl md:min-w-[320px] md:max-w-none">
                 {competitionData?.map((competition) => (
                   <DropdownMenu.Item
                     key={competition.id}
@@ -80,7 +82,7 @@ export default function Leaderboard() {
                         name: competition.name,
                       });
                     }}
-                    className="hover:bg-primary"
+                    className="!md:h-8 !h-auto py-2 hover:bg-primary"
                   >
                     {competition.name}
                   </DropdownMenu.Item>
@@ -91,7 +93,7 @@ export default function Leaderboard() {
         </div>
         <Table.Root>
           <Table.Header>
-            <Table.Row>
+            <Table.Row className="whitespace-nowrap">
               <Table.ColumnHeaderCell>Rank</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>Wallet Address</Table.ColumnHeaderCell>
