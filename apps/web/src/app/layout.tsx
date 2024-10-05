@@ -3,11 +3,9 @@ import "../../public/font/font.css";
 import "./globals.css";
 import "reflect-metadata";
 import { Theme } from "@radix-ui/themes";
-import { Footer } from "@/components/Footer";
 import { ClientLayout } from "./ClientLayout";
 import { PHProvider } from "./providers";
 import { Toaster } from "react-hot-toast";
-import { isMobile, isTablet } from "react-device-detect";
 
 export const metadata = {
   title: "TileVille",
@@ -47,14 +45,6 @@ export const metadata = {
   },
 };
 
-const renderFooter = () => {
-  if (isMobile || isTablet) {
-    return "";
-  } else {
-    return <Footer />;
-  }
-};
-
 export default function RootLayout({
   children,
 }: {
@@ -78,7 +68,6 @@ export default function RootLayout({
             </div>
           </PHProvider>
         </Theme>
-        {renderFooter()}
         <Toaster />
       </body>
     </html>
