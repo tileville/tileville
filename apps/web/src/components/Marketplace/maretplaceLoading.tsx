@@ -1,11 +1,10 @@
 import { Skeleton } from "@radix-ui/themes";
 
+const INITIAL_ARRAY = Array(10).fill(0);
 export const MarketplaceLoading = () => {
-  const initialArray = Array(10).fill(0);
-
   return (
     <>
-      {initialArray.map((arr, index) => {
+      {INITIAL_ARRAY.map((arr, index) => {
         return (
           <div className="border-primary-30 rounded-md" key={index}>
             <Skeleton className="aspect-[852/845] h-auto w-full"></Skeleton>

@@ -311,3 +311,21 @@ export const TABS_HEADINGS = [
     text: "Preferences",
   },
 ];
+
+export const TRACKS = [
+  {
+    url: "/sfx/ambience.wav",
+    title: "Ambience",
+    tags: ["house"],
+  },
+  {
+    url: "/medias/sound1.ogg",
+    title: "Melody Of Nature",
+    tags: ["dnb"],
+  },
+  {
+    url: "/medias/sound2.ogg",
+    title: "scott buckley moonlight",
+    tags: ["dnb"],
+  },
+];

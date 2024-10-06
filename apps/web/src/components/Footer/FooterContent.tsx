@@ -1,10 +1,10 @@
 import { FEEDBACK_FORM_URL, GAME_ROADMAP_URL, GITHUB_URL } from "@/constants";
 import { FaceIcon, StarFilledIcon } from "@radix-ui/react-icons";
 
-export const Footer = () => {
+export const FooterContent = () => {
   return (
-    <footer className="fixed bottom-0 right-0  rounded-md ps-2 pt-2 backdrop-blur-md">
-      <div className="flex items-center justify-end gap-4 p-2">
+    <div className="flex flex-col items-end gap-1 p-2">
+      <div className="flex items-center gap-4">
         <a
           href={GAME_ROADMAP_URL}
           target="_blank"
@@ -32,7 +32,7 @@ export const Footer = () => {
         </a>
       </div>
 
-      <div className="text-right text-sm">
+      <div className="text-xs">
         <span>
           TileVille was inspired by Six Sided Streets made by{" "}
           <a
@@ -44,6 +44,6 @@ export const Footer = () => {
           </a>
         </span>
       </div>
-    </footer>
+    </div>
   );
 };

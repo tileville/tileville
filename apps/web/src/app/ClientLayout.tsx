@@ -6,7 +6,7 @@ import { DesktopNavBar } from "@/components/navbar/DesktopNavBar";
 import { MobileNavBar } from "@/components/navbar/MobileNavBar";
 import { isMobile, isTablet, isDesktop } from "react-device-detect";
 import { useEffect, useState } from "react";
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/components/Footer/Footer";
 
 const queryClient = new QueryClient();
 const StoreProtokitUpdater = dynamic(
