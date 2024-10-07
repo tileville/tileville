@@ -45,7 +45,7 @@ export default function Competitions() {
           </div>
         </div>
 
-        <div className="mt-0 grid grid-cols-1 gap-3 px-3 md:mt-5 md:pb-5">
+        <div className="mt-0 grid grid-cols-1 gap-3 px-3 md:mt-5 md:pb-20">
           {isLoading ? (
             <CompetitionLoading />
           ) : (

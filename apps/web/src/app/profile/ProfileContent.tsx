@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import * as Tooltip from "@radix-ui/react-tooltip";
-import { Box, Button, Tabs } from "@radix-ui/themes";
 import Image from "next/image";
-import { CameraIcon, CopyIcon, InfoCircledIcon } from "@radix-ui/react-icons";
-import { Modal } from "@/components/common/Modal";
+import { CopyIcon } from "@radix-ui/react-icons";
 import ProfileSideBar from "@/components/ProfileSideBar";
 import RightSideBar from "@/components/RightSideBar";
 import { useProfile, useProfileLazyQuery } from "@/db/react-query-hooks";
@@ -15,17 +12,12 @@ import {
   useObserveMinaBalance,
   useMinaBalancesStore,
 } from "@/lib/stores/minaBalances";
-import ActiveGames from "@/components/profileTabs/activeGames";
-import PastGames from "@/components/profileTabs/pastGames";
-import Transactions from "@/components/profileTabs/transactions";
-import DigitalCollection from "@/components/profileTabs/digitalCollection";
-import Preferences from "@/components/profileTabs/preferences";
-import { useRouter } from "next/navigation";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { TABS_HEADINGS } from "@/constants";
 import { copyToClipBoard } from "@/lib/helpers";
+import { ProfileTabs } from "@/components/profileTabs/ProfileTabs";
+import { EditProfileModal } from "@/components/Modals/EditProfileModal";
 
-interface IFormInput {
+export interface IFormInput {
   firstName: string;
   lastName: string;
   username: string;
@@ -56,9 +48,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
       avatar_url: profileData?.avatar_url || "/img/avatars/defaultImg.webp",
     },
   });
-  const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState(initialTab);
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
   useEffect(() => {
@@ -178,166 +168,20 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                   )}
 
                   <div>
-                    <Modal
-                      isOpen={modalOpen}
-                      setIsOpen={setModalOpen}
-                      onClose={closeModal}
-                      trigger={
-                        <button className="text-sm text-black/60 underline">
-                          {isProfileIncomplete
-                            ? "Complete Profile"
-                            : "Edit Profile"}
-                        </button>
-                      }
-                    >
-                      <div className="relative max-h-full w-full max-w-md">
-                        <div className="relative p-4 text-center md:p-5">
-                          <InfoCircledIcon
-                            width={48}
-                            height={48}
-                            color="#9ca3af"
-                            className="mx-auto mb-4"
-                          />
-                          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                            Please Complete Your Profile.
-                            <Tooltip.Provider>
-                              <Tooltip.Root>
-                                <Tooltip.Trigger asChild>
-                                  <span className="cursor-pointer text-gray-800">
-                                    Why?
-                                  </span>
-                                </Tooltip.Trigger>
-                                <Tooltip.Portal>
-                                  <Tooltip.Content
-                                    className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                                    sideOffset={5}
-                                  >
-                                    We Want to show your score in the
-                                    leaderboard that is why we want your name.
-                                    <Tooltip.Arrow className="TooltipArrow" />
-                                  </Tooltip.Content>
-                                </Tooltip.Portal>
-                              </Tooltip.Root>
-                            </Tooltip.Provider>
-                          </h3>
-
-                          <form
-                            onSubmit={handleSubmit(onSubmit)}
-                            className="left-left"
-                          >
-                            <div className="">
-                              <div
-                                className="group relative mx-auto h-20 w-20 rounded-full"
-                                onClick={handleToggle}
-                              >
-                                <Image
-                                  src={avatarUrl}
-                                  width={80}
-                                  height={80}
-                                  alt="profile"
-                                  className="h-full w-full rounded-full object-cover"
-                                />
-
-                                <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
-                                <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                                  <CameraIcon />
-                                </span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-                              <div>
-                                <label htmlFor="firstName" className="block">
-                                  First Name
-                                  <span className="text-sm text-red-500">
-                                    *
-                                  </span>
-                                </label>
-
-                                <div>
-                                  <input
-                                    type="text"
-                                    className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
-                                    placeholder="First Name"
-                                    {...register("firstName", {
-                                      required: true,
-                                    })}
-                                  />
-                                </div>
-
-                                <span
-                                  className={`${
-                                    errors.firstName ? "opacity-100" : ""
-                                  } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
-                                >
-                                  First Name is required..
-                                </span>
-                              </div>
-
-                              <div>
-                                <label htmlFor="lastName" className="block">
-                                  Last Name
-                                </label>
-
-                                <div>
-                                  <input
-                                    type="text"
-                                    className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
-                                    id="lastName"
-                                    placeholder="Last Name"
-                                    {...register("lastName")}
-                                  />
-                                </div>
-                              </div>
-                              <div className="col-span-2">
-                                <label htmlFor="username" className="block">
-                                  Username
-                                  <span className="text-sm text-red-500">
-                                    *
-                                  </span>
-                                </label>
-
-                                <div>
-                                  <input
-                                    type="text"
-                                    className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
-                                    id="username"
-                                    placeholder="Username"
-                                    {...register("username", {
-                                      required: true,
-                                    })}
-                                  />
-                                </div>
-
-                                <span
-                                  className={`${
-                                    errors.username ? "opacity-100" : ""
-                                  } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
-                                >
-                                  {errors.username?.message}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
-                              <button
-                                className="h-10 rounded-full border-primary bg-primary/30 px-5 py-2 text-sm font-medium hover:bg-primary/50"
-                                onClick={closeModal}
-                                type="button"
-                              >
-                                No, cancel
-                              </button>
-
-                              <button
-                                className="rounded-full bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
-                                type="submit"
-                              >
-                                Submit
-                              </button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </Modal>
+                    <EditProfileModal
+                      closeModal={closeModal}
+                      modalOpen={modalOpen}
+                      setModalOpen={setModalOpen}
+                      isProfileIncomplete={isProfileIncomplete}
+                      register={register}
+                      firstNameError={errors.firstName}
+                      userNameError={errors.username}
+                      userNameErrorMsg={errors.username?.message}
+                      onSubmit={onSubmit}
+                      handleSubmit={handleSubmit}
+                      handleToggle={handleToggle}
+                      avatarUrl={avatarUrl}
+                    />
                   </div>
                 </>
               )}
@@ -405,47 +249,10 @@ export default function Profile({ initialTab }: { initialTab: string }) {
             </div>
           </div>
         </div>
-
-        <Tabs.Root
-          value={String(activeTab)}
-          defaultValue="collection"
-          onValueChange={(e) => {
-            router.push(`/profile?tab=${e}`);
-            setActiveTab(e);
-          }}
-        >
-          <Tabs.List className="mt-4 whitespace-nowrap">
-            {TABS_HEADINGS.map((tab) => {
-              return (
-                <Tabs.Trigger value={tab.value} key={tab.value}>
-                  {tab.text}
-                </Tabs.Trigger>
-              );
-            })}
-          </Tabs.List>
-
-          <Box pt="3">
-            <Tabs.Content value="collection">
-              <DigitalCollection />
-            </Tabs.Content>
-
-            <Tabs.Content value="active-games">
-              <ActiveGames walletAddress={networkStore?.address} />
-            </Tabs.Content>
-
-            <Tabs.Content value="past-games">
-              <PastGames walletAddress={networkStore?.address} />
-            </Tabs.Content>
-
-            <Tabs.Content value="transactions">
-              <Transactions walletAddress={networkStore?.address} />
-            </Tabs.Content>
-
-            <Tabs.Content value="preferences">
-              <Preferences />
-            </Tabs.Content>
-          </Box>
-        </Tabs.Root>
+        <ProfileTabs
+          walletAddress={networkStore.address}
+          initialTab={initialTab}
+        />
       </div>
 
       <RightSideBar handleToggle={handleToggle} rightSlider={rightSlider}>

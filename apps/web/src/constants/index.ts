@@ -329,3 +329,34 @@ export const TRACKS = [
     tags: ["dnb"],
   },
 ];
+
+export const TOGGLE_GROUP_OPTIONS = [
+  {
+    iconSrc: "/icons/gridFour.svg",
+    gridApplyClass:
+      "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
+    id: 0,
+  },
+  {
+    iconSrc: "/icons/gridEight.svg",
+    gridApplyClass:
+      "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2",
+    id: 1,
+  },
+  {
+    iconSrc: "/icons/listThree.svg",
+    gridApplyClass: "list-style gap-2",
+    id: 2,
+  },
+];
+
+export const SORT_OPTIONS = [
+  {
+    text: "Price: High to Low",
+    id: 0,
+  },
+  {
+    text: "Price: Low to High",
+    id: 1,
+  },
+];

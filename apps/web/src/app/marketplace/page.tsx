@@ -10,39 +10,8 @@ import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import Link from "next/link";
 import { Pagination } from "@/components/common/Pagination";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
-import useDeviceDetection from "@/hooks/useDeviceDetection";
 import clsx from "clsx";
-
-const toggleGroupOptions = [
-  {
-    iconSrc: "/icons/gridFour.svg",
-    gridApplyClass:
-      "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
-    id: 0,
-  },
-  {
-    iconSrc: "/icons/gridEight.svg",
-    gridApplyClass:
-      "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2",
-    id: 1,
-  },
-  {
-    iconSrc: "/icons/listThree.svg",
-    gridApplyClass: "list-style gap-2",
-    id: 2,
-  },
-];
-
-const options = [
-  {
-    text: "Price: High to Low",
-    id: 0,
-  },
-  {
-    text: "Price: Low to High",
-    id: 1,
-  },
-];
+import { SORT_OPTIONS, TOGGLE_GROUP_OPTIONS } from "@/constants";
 
 export default function Marketplace() {
   const [selectedItem, setSelectedItem] =
@@ -52,10 +21,9 @@ export default function Marketplace() {
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
   const [selectedToggle, setSelectedToggle] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const { isMobile, isTablet, isDesktop } = useDeviceDetection();
 
   const [renderStyle, setRenderStyle] = useState(
-    toggleGroupOptions[0].gridApplyClass
+    TOGGLE_GROUP_OPTIONS[0].gridApplyClass
   );
 
   const { data, isLoading, isError, error } = useNFTEntries({
@@ -109,7 +77,7 @@ export default function Marketplace() {
       <div className="mx-auto max-w-[1280px] pt-3">
         <div className="mb-8 flex flex-wrap gap-3">
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
-            {toggleGroupOptions.map((option) => {
+            {TOGGLE_GROUP_OPTIONS.map((option) => {
               return (
                 <li key={option.id}>
                   <button
@@ -191,7 +159,7 @@ export default function Marketplace() {
               </button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content className="min-w-[190px] !bg-transparent backdrop-blur-2xl">
-              {options.map((option) => {
+              {SORT_OPTIONS.map((option) => {
                 return (
                   <DropdownMenu.Item
                     key={option.id}
@@ -206,7 +174,7 @@ export default function Marketplace() {
           </DropdownMenu.Root>
         </div>
         <div className="overflow-auto">
-          {renderStyle === toggleGroupOptions[2].gridApplyClass && (
+          {renderStyle === TOGGLE_GROUP_OPTIONS[2].gridApplyClass && (
             <div
               className={clsx({
                 "list-header": true,
