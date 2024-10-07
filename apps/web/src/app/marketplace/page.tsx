@@ -1,17 +1,16 @@
 "use client";
-import { InfoCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
 import { NFTModal } from "@/components/NFTModal";
 import { useNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
-import Link from "next/link";
 import { Pagination } from "@/components/common/Pagination";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 import clsx from "clsx";
 import { SORT_OPTIONS, TOGGLE_GROUP_OPTIONS } from "@/constants";
+import { TraitsInfoBtn } from "@/components/Marketplace/TraitsInfoBtn";
 
 export default function Marketplace() {
   const [selectedItem, setSelectedItem] =
@@ -116,32 +115,7 @@ export default function Marketplace() {
           </div>
 
           <div>
-            <Tooltip.Provider delayDuration={200}>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <Link
-                    href="/traits-info"
-                    className="flex h-10 items-center justify-center gap-2 rounded-md border border-green-950 bg-green-950  px-3 font-semibold uppercase text-white hover:opacity-90"
-                  >
-                    <span>Traits Info</span>
-                    <InfoCircledIcon
-                      className="text-white"
-                      width={18}
-                      height={18}
-                    />
-                  </Link>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                    sideOffset={5}
-                  >
-                    Click to get more info about TileVille NFTs
-                    <Tooltip.Arrow className="TooltipArrow" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            </Tooltip.Provider>
+            <TraitsInfoBtn />
           </div>
 
           <DropdownMenu.Root>

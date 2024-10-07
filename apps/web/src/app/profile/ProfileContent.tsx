@@ -50,6 +50,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   });
 
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (profileData) {
@@ -62,6 +63,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   }, [profileData, setValue]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    setIsLoading(true);
     const isExistApiResponse = await fetch(
       `/api/player_profile/is_username_exist?username=${data.username}&userId=${
         profileData?.id || ""
@@ -78,6 +80,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
       return;
     }
 
+    setIsLoading(false);
     return (
       profileMutation.mutate({
         wallet_address: `${networkStore?.address}`,
@@ -146,9 +149,6 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                 <button
                   onClick={async () => {
                     await validateOrSetSignature();
-                    // setTimeout(() => {
-                    //   refetch();
-                    // }, 2000);
                   }}
                 >
                   Please sign by wallet
@@ -181,6 +181,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                       handleSubmit={handleSubmit}
                       handleToggle={handleToggle}
                       avatarUrl={avatarUrl}
+                      isLoading={isLoading}
                     />
                   </div>
                 </>

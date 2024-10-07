@@ -12,6 +12,26 @@ import Failed from "../../public/lotties/failed.json";
 import DoneLottie from "../../public/lotties/doneLottie.json";
 import TxnConfirmed from "../../public/lotties/txnConfirmed.json";
 import confusingLottie from "../../public/lotties/confusingLottie.json";
+import { IconProps } from "@radix-ui/react-icons/dist/types";
+
+type AttributeValue = {
+  [key: string]: string;
+};
+
+type AttributeData = {
+  Icon: React.ComponentType<IconProps>;
+  description: string;
+  values: AttributeValue;
+};
+
+export type AttributesDataType = {
+  "Sustainability Rating": AttributeData;
+  "Efficiency Level": AttributeData;
+  "Environmental Affinity": AttributeData;
+  "Urban Planning Expertise": AttributeData;
+  "Special Ability": AttributeData;
+  Edition: AttributeData;
+};
 
 export const MINA_DENOM = 1e9;
 export const TREASURY_ADDRESS =
@@ -122,7 +142,7 @@ export const ACCOUNT_AUTH_LOCAL_KEY = "tileville_auth_signature";
 export const DEFAULT_TRASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 
-export const ATTRIBUTES_DATA = {
+export const ATTRIBUTES_DATA: AttributesDataType = {
   "Sustainability Rating": {
     Icon: StarFilledIcon,
     description:
@@ -360,3 +380,11 @@ export const SORT_OPTIONS = [
     id: 1,
   },
 ];
+
+export const INITIAL_MINT_RESPONSE = {
+  state: "idle",
+  success: false,
+  message: "",
+  reason: "",
+  txHash: "",
+};

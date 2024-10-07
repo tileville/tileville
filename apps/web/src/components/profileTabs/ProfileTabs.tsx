@@ -4,9 +4,9 @@ import { Box, Tabs } from "@radix-ui/themes";
 import ActiveGames from "@/components/profileTabs/activeGames";
 import PastGames from "@/components/profileTabs/pastGames";
 import Transactions from "@/components/profileTabs/transactions";
-import DigitalCollection from "@/components/profileTabs/digitalCollection";
 import Preferences from "@/components/profileTabs/preferences";
 import { TABS_HEADINGS } from "@/constants";
+import DigitalCollection from "./digitalCollection";
 
 type ProfileTabsType = {
   walletAddress: string;

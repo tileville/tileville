@@ -9,6 +9,7 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 import { IFormInput } from "@/app/profile/ProfileContent";
+import { Spinner } from "../common/Spinner";
 
 type EditProfileModalType = {
   closeModal: () => void;
@@ -23,6 +24,7 @@ type EditProfileModalType = {
   handleSubmit: UseFormHandleSubmit<IFormInput, undefined>;
   handleToggle: () => void;
   avatarUrl: string;
+  isLoading: boolean;
 };
 
 export const EditProfileModal = ({
@@ -38,6 +40,7 @@ export const EditProfileModal = ({
   handleSubmit,
   handleToggle,
   avatarUrl,
+  isLoading,
 }: EditProfileModalType) => {
   return (
     <Modal
@@ -181,8 +184,10 @@ export const EditProfileModal = ({
               <button
                 className="rounded-full bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
                 type="submit"
+                disabled={isLoading}
               >
                 Submit
+                {isLoading && <Spinner className="align-middle ms-5" />}
               </button>
             </div>
           </form>
