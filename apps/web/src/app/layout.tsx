@@ -3,7 +3,6 @@ import "../../public/font/font.css";
 import "./globals.css";
 import "reflect-metadata";
 import { Theme } from "@radix-ui/themes";
-import { Footer } from "@/components/Footer";
 import { ClientLayout } from "./ClientLayout";
 import { PHProvider } from "./providers";
 import { Toaster } from "react-hot-toast";
@@ -64,12 +63,11 @@ export default function RootLayout({
           <PHProvider>
             <div className="gradient-bg min-h-screen !bg-fixed">
               <ClientLayout>
-                <div className="">{children}</div>
+                <div>{children}</div>
               </ClientLayout>
             </div>
           </PHProvider>
         </Theme>
-        <Footer />
         <Toaster />
       </body>
     </html>

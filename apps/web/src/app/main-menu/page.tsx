@@ -4,9 +4,12 @@ import LandingBackground from "@/components/LandingBackground";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import Link from "next/link";
 import { NAVIGATION_MENU_ITEMS } from "@/constants";
+import useDeviceDetection from "@/hooks/useDeviceDetection";
+import clsx from "clsx";
 
 export default function MainMenu() {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
+  const { isMobile, isTablet, isDesktop } = useDeviceDetection();
 
   const handleFocus = (index: number) => {
     setFocusedButtonIndex(index);
@@ -15,8 +18,15 @@ export default function MainMenu() {
   return (
     <div className="flex min-h-screen flex-col pt-20" tabIndex={0}>
       <LandingBackground />
-      <div className="z-10 flex w-full flex-col items-center justify-center gap-8">
-        <div className="m-20 text-3xl font-semibold">
+      <div className="z-10 flex w-full flex-col items-center justify-center gap-8 px-3">
+        <div
+          className={clsx({
+            "text-center font-semibold": true,
+            "my-6 text-xl": isMobile,
+            "mt-10 text-2xl": isTablet,
+            "my-20 text-3xl": isDesktop,
+          })}
+        >
           MINTING IS LIVE NOW 🎉{" "}
           <Link
             href="/marketplace"
@@ -25,7 +35,7 @@ export default function MainMenu() {
             CHECK HERE
           </Link>
         </div>
-        <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] pt-20 text-xl uppercase text-white">
+        <div className="slideAnimOnChilds mx-auto flex w-full max-w-[500px] cursor-pointer flex-col gap-[10px] text-xl uppercase text-white">
           {NAVIGATION_MENU_ITEMS.map((button) => (
             <PrimaryButton
               key={button.key}

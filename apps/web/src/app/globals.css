@@ -220,9 +220,10 @@ button:focus-visible{
   }
 }
 
+
 .sideBarProfile {
   height: 100%;
-  width: 460px;
+  width: 300px;
   background: linear-gradient(
     hsl(var(--primary) / 0.3),
     hsl(var(--primary-foreground))
@@ -238,6 +239,12 @@ button:focus-visible{
   max-height: 100vh;
   z-index: 99;
   transform: translateX(100%);
+}
+
+@media (min-width: 768px) {
+  .sideBarProfile {
+    width: 460px;
+  }
 }
 
 .sideBarProfile.sideBarProfileOpen {
@@ -427,6 +434,8 @@ input[type="range"]:focus::-moz-range-thumb {
   transform: translate(0);
 }
 
+
+  
 .list-style{
   display: flex;
   flex-direction: column;
@@ -437,6 +446,8 @@ input[type="range"]:focus::-moz-range-thumb {
   grid-template-columns: repeat(24, minmax(0, 1fr));
   align-items: center;
   padding: 12px;
+  white-space: nowrap;
+  min-width: 1000px;
 }
 
 .list-style .listItem:hover{
@@ -512,6 +523,29 @@ input[type="range"]:focus::-moz-range-thumb {
 .list-header > div:nth-child(2){
   grid-column: span 2 / span 2;
 }
+
+@media screen and (max-width: 750px) {
+
+  .text-primary-shadow {
+    color: hsl(var(--primary));
+    text-shadow: 0 -2px 1px, 0 0 0, 0 0 1px hsl(var(--primary)),
+      0 0 3px hsl(var(--primary)), 0 0 2px hsl(var(--primary)), 0 3px 3px #000;
+    font-size: 50px;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .list-header{
+    white-space: nowrap;
+    min-width: 1000px;
+  }
+
+  .list-style .listItem{
+    padding: 4px 8px;
+  }
+}
+
+
 @keyframes mulShdSpin {
   0%,
   100% {

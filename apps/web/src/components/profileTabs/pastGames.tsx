@@ -13,7 +13,7 @@ export default function PastGames({ walletAddress }: PastGamesProps) {
     <div className="">
       <Table.Root>
         <Table.Header>
-          <Table.Row>
+          <Table.Row className="whitespace-nowrap">
             <Table.ColumnHeaderCell>Game Id</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Competition Name</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Score</Table.ColumnHeaderCell>

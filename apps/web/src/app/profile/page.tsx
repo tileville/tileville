@@ -20,5 +20,5 @@ function ProfileWrapper() {
   const searchParams = useSearchParams();
   const paramsValue = searchParams.get("tab");
 
-  return <ProfileContent initialTab={paramsValue || ""} />;
+  return <ProfileContent initialTab={paramsValue || "collection"} />;
 }

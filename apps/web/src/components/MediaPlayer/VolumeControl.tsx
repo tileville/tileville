@@ -33,8 +33,6 @@ export const VolumeControl = () => {
           className="pointer-events-none absolute left-0 top-1/2 h-full -translate-y-1/2 rounded-xl bg-primary"
           style={{ width: `${volume * 100}%` }}
         ></div>
-
-        {/* <i className="fa fa-volume-up volumeControl__icon" /> */}
       </div>
 
       <button

@@ -7,31 +7,14 @@ import {
 import { useEffect, useState } from "react";
 import { useGlobalAudioPlayer } from "react-use-audio-player";
 import { VolumeControl } from "./VolumeControl";
-
-const tracks = [
-  {
-    url: "/sfx/ambience.wav",
-    title: "Ambience",
-    tags: ["house"],
-  },
-  {
-    url: "/medias/sound1.ogg",
-    title: "Melody Of Nature",
-    tags: ["dnb"],
-  },
-  {
-    url: "/medias/sound2.ogg",
-    title: "scott buckley moonlight",
-    tags: ["dnb"],
-  },
-];
+import { TRACKS } from "@/constants";
 
 export const MediaPlayer = () => {
   const { load, togglePlayPause, playing } = useGlobalAudioPlayer();
   const [songIndex, setSongIndex] = useState(0);
 
   useEffect(() => {
-    load(tracks[songIndex].url, {
+    load(TRACKS[songIndex].url, {
       autoplay: true,
       loop: true,
       initialVolume: 0.5,
@@ -43,7 +26,7 @@ export const MediaPlayer = () => {
   };
 
   const handleNextTrack = () => {
-    if (songIndex >= tracks.length - 1) {
+    if (songIndex >= TRACKS.length - 1) {
       setSongIndex(0);
     } else {
       setSongIndex(songIndex + 1);
@@ -52,7 +35,7 @@ export const MediaPlayer = () => {
 
   const handlePreviousTrack = () => {
     if (songIndex <= 0) {
-      setSongIndex(tracks.length - 1);
+      setSongIndex(TRACKS.length - 1);
     } else {
       setSongIndex(songIndex - 1);
     }

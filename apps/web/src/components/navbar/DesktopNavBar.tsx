@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { useMountedState } from "react-use";
-import Image from "next/image";
 import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
-import { PrimaryButton } from "./PrimaryButton";
-import { MediaPlayer } from "./MediaPlayer/page";
+import { PrimaryButton } from "../PrimaryButton";
+import { MediaPlayer } from "../MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
 import { formatAddress, walletInstalled } from "@/lib/helpers";
 import { HeaderCard } from "@/components/common/HeaderCard";
@@ -21,12 +20,15 @@ import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { useRouter } from "next/navigation";
-import { BUG_REPORT_URL } from "@/constants";
+import { HIDE_BACK_BUTTON_PATHS } from "@/constants";
 import { anonymousSignIn } from "@/db/supabase-queries";
 import { useGlobalConfig } from "@/db/react-query-hooks";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-
-const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
+import {
+  BugReportBtn,
+  JoinDiscordBtn,
+  XFollowBtn,
+} from "../NavButtons/NavButtons";
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");
@@ -62,7 +64,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {   
+  useEffect(() => {
     if (networkStore.walletConnected && isFetched) {
       validateOrSetSignature();
       phClient.identify(networkStore.address, { username: data?.username });
@@ -141,47 +143,12 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           <div className="min-w-[180px]">
             <MediaPlayer />
           </div>
-          <Link
-            target="_blank"
-            href={BUG_REPORT_URL}
-            className="flex items-center gap-2 rounded-full border-primary bg-primary/30 px-5 py-2 text-xs font-medium hover:bg-primary/50"
-          >
-            <span>Bug Report</span>
-            <Image
-              src="/icons/bugReport.svg"
-              width={20}
-              height={20}
-              alt="bug report"
-            />
-          </Link>
+          <BugReportBtn />
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            id="follow-button"
-            className="ms-auto flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
-            title="Follow @tileVille on X"
-            href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fpublish.twitter.com%2F&amp;ref_src=twsrc%5Etfw%7Ctwcamp%5Ebuttonembed%7Ctwterm%5Efollow%7Ctwgr%5EtileVille&amp;region=follow_link&amp;screen_name=tileVilleSocial"
-            target="_blank"
-          >
-            <i className="twitterIcon"></i>
-            <span className="label ms-1 whitespace-nowrap text-xs" id="l">
-              Follow
-            </span>
-          </Link>
-
-          <Link
-            id="follow-button"
-            className="ms-auto flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
-            title="Follow @tileVille on X"
-            href="https://discord.com/invite/NvNBQZX7rU"
-            target="_blank"
-          >
-            <DiscordLogoIcon />
-            <span className="label ms-1 whitespace-nowrap text-xs" id="l">
-              Join Discord
-            </span>
-          </Link>
+          <XFollowBtn />
+          <JoinDiscordBtn />
 
           <div className="flex gap-5">
             {isMounted() &&

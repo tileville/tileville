@@ -12,6 +12,26 @@ import Failed from "../../public/lotties/failed.json";
 import DoneLottie from "../../public/lotties/doneLottie.json";
 import TxnConfirmed from "../../public/lotties/txnConfirmed.json";
 import confusingLottie from "../../public/lotties/confusingLottie.json";
+import { IconProps } from "@radix-ui/react-icons/dist/types";
+
+type AttributeValue = {
+  [key: string]: string;
+};
+
+type AttributeData = {
+  Icon: React.ComponentType<IconProps>;
+  description: string;
+  values: AttributeValue;
+};
+
+export type AttributesDataType = {
+  "Sustainability Rating": AttributeData;
+  "Efficiency Level": AttributeData;
+  "Environmental Affinity": AttributeData;
+  "Urban Planning Expertise": AttributeData;
+  "Special Ability": AttributeData;
+  Edition: AttributeData;
+};
 
 export const MINA_DENOM = 1e9;
 export const TREASURY_ADDRESS =
@@ -122,7 +142,7 @@ export const ACCOUNT_AUTH_LOCAL_KEY = "tileville_auth_signature";
 export const DEFAULT_TRASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 
-export const ATTRIBUTES_DATA = {
+export const ATTRIBUTES_DATA: AttributesDataType = {
   "Sustainability Rating": {
     Icon: StarFilledIcon,
     description:
@@ -222,9 +242,18 @@ export const NFT_DESCRIPTION =
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
 
+export const DEFAULT_POSTER_URL = "/img/avatars/2.jpeg";
 export const ACTIVE_GAMES_URL = "/profile?tab=active-games";
 export const COLLECTION_URL = "/profile?tab=collection";
 
+export const HIDE_BACK_BUTTON_PATHS = ["/main-menu", "/"];
+export const BACKGROUND_PATHS_HEADER = [
+  "/traits-info",
+  "/marketplace",
+  "/competitions",
+  "/leaderboard",
+  "/faq",
+];
 export const NAVIGATION_MENU_ITEMS = [
   {
     name: "Play Game",
@@ -302,3 +331,60 @@ export const TABS_HEADINGS = [
     text: "Preferences",
   },
 ];
+
+export const TRACKS = [
+  {
+    url: "/sfx/ambience.wav",
+    title: "Ambience",
+    tags: ["house"],
+  },
+  {
+    url: "/medias/sound1.ogg",
+    title: "Melody Of Nature",
+    tags: ["dnb"],
+  },
+  {
+    url: "/medias/sound2.ogg",
+    title: "scott buckley moonlight",
+    tags: ["dnb"],
+  },
+];
+
+export const TOGGLE_GROUP_OPTIONS = [
+  {
+    iconSrc: "/icons/gridFour.svg",
+    gridApplyClass:
+      "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
+    id: 0,
+  },
+  {
+    iconSrc: "/icons/gridEight.svg",
+    gridApplyClass:
+      "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2",
+    id: 1,
+  },
+  {
+    iconSrc: "/icons/listThree.svg",
+    gridApplyClass: "list-style gap-2",
+    id: 2,
+  },
+];
+
+export const SORT_OPTIONS = [
+  {
+    text: "Price: High to Low",
+    id: 0,
+  },
+  {
+    text: "Price: Low to High",
+    id: 1,
+  },
+];
+
+export const INITIAL_MINT_RESPONSE = {
+  state: "idle",
+  success: false,
+  message: "",
+  reason: "",
+  txHash: "",
+};

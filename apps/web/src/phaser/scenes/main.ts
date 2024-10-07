@@ -127,7 +127,7 @@ export class MainScene extends Scene {
     }
     this.scoreText = this.add.bitmapText(
       this.scoreTextPositionX,
-      30,
+      45,
       "font",
       "0 points",
       60
@@ -138,7 +138,7 @@ export class MainScene extends Scene {
     this.scoreBackground.fillStyle(0x378209, 0.3);
     this.scoreBackground.fillRoundedRect(
       this.scoreBackgroundPositionX,
-      25,
+      40,
       225,
       80,
       8
@@ -153,7 +153,7 @@ export class MainScene extends Scene {
 
     if (isSpeedVersion) {
       this.timerPositionX = 330;
-      this.timerPositionY = 65;
+      this.timerPositionY = 80;
       const speedDuration = this.game.registry.get("speedDuration");
 
       this.timerBackground = this.add.graphics();
@@ -618,15 +618,6 @@ export class MainScene extends Scene {
       duration: 300,
     });
 
-    this.tweens.add({
-      targets: this.scoreText,
-      props: {
-        y: 140,
-      },
-      duration: 700,
-      ease: PhaserMath.Easing.Quadratic.Out,
-    });
-
     if (isSpeedVersion) {
       this.tweens.add({
         targets: this.timerText,
@@ -641,7 +632,7 @@ export class MainScene extends Scene {
     this.tweens.add({
       targets: [this.scoreText],
       props: {
-        y: 140,
+        y: 155,
       },
       duration: 700,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -660,7 +651,7 @@ export class MainScene extends Scene {
     this.tweens.add({
       targets: [this.timerText],
       props: {
-        y: 175,
+        y: 190,
       },
       duration: 700,
       ease: PhaserMath.Easing.Quadratic.Out,
@@ -1014,6 +1005,12 @@ export class MainScene extends Scene {
     this.competitionNameText?.setVisible(false);
     this.currentTimeText?.setVisible(false);
     this.nextLevelButton?.setVisible(false);
+
+    // this.tweens.add({
+    //   targets: this.foreground,
+    //   props: { x: 1600 },
+    //   duration: 400,
+    // });
 
     this.time.addEvent({
       callback: this.scene.restart,

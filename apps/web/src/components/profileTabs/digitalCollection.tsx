@@ -13,7 +13,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { ATTRIBUTES_DATA } from "@/constants";
 import { copyToClipBoard, formatAddress, getMINANFTLink } from "@/lib/helpers";
 
-interface AttributesData {
+export interface AttributesDataType {
   [key: string]: {
     Icon?: React.ComponentType;
     description?: string;
@@ -57,7 +57,7 @@ export default function DigitalCollection() {
               </Dialog.Trigger>
 
               <Dialog.Content className="relative !m-0 !max-w-[1020px] !rounded-md !p-0">
-                <div className="grid grid-cols-2">
+                <div className="grid md:grid-cols-2">
                   <div className="h-full w-full">
                     <Image
                       src={nft.image}
@@ -107,7 +107,7 @@ export default function DigitalCollection() {
                             key !== "image"
                           ) {
                             const attributeData = (
-                              ATTRIBUTES_DATA as AttributesData
+                              ATTRIBUTES_DATA as AttributesDataType
                             )[key];
                             const hasTooltip =
                               attributeData?.description ||
