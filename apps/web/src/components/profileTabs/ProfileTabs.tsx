@@ -6,7 +6,7 @@ import PastGames from "@/components/profileTabs/pastGames";
 import Transactions from "@/components/profileTabs/transactions";
 import Preferences from "@/components/profileTabs/preferences";
 import { TABS_HEADINGS } from "@/constants";
-import DigitalCollection from "./digitalCollection";
+import DigitalCollection from "./DigitalCollection/DigitalCollection";
 
 type ProfileTabsType = {
   walletAddress: string;
