@@ -25,6 +25,7 @@ export const TraitsSection = ({ traits }: TraitsSectionType) => {
             ATTRIBUTES_DATA[trait.key as keyof AttributesDataType];
           return (
             <TraitsInfoCard
+              key={trait.key}
               traitKey={trait.key}
               traitIcon={attributeData.Icon}
               traitValue={trait.value}
