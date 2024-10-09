@@ -87,7 +87,7 @@ export const PhaserLayer = ({
     const config: Phaser.Types.Core.GameConfig = {
       width: 1405,
       height: "100%",
-      parent: "minapolis-hex",
+      parent: "tileville-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
       scale: {

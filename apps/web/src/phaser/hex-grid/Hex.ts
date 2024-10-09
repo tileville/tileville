@@ -21,6 +21,7 @@ export class Hex extends GameObjects.Image {
   seEdge: Phaser.GameObjects.Image;
   edges: Phaser.GameObjects.Group;
   propeller: Phaser.GameObjects.Image;
+  goldCoins: Phaser.GameObjects.Image[] = [];
 
   constructor(
     scene: Phaser.Scene,
@@ -131,7 +132,9 @@ export class Hex extends GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ["empty", "windmill", "grass", "street", "center", "port-bw" , "mine"][hexType]
+      ["empty", "windmill", "grass", "street", "center", "port-bw", "mine"][
+        hexType
+      ]
     );
     this.hexType = hexType;
     if (hexType === 1) {
@@ -163,6 +166,10 @@ export class Hex extends GameObjects.Image {
       this.wEdge.setVisible(false);
       this.nwEdge.setVisible(false);
       this.swEdge.setVisible(false);
+    }
+
+    if (hexType === 6) {
+      this.createGoldMineAnimation();
     }
   }
 
@@ -222,10 +229,35 @@ export class Hex extends GameObjects.Image {
       } else if (this.hexType === 5) {
         if (this.upgraded) this.setTexture("port");
         else this.setTexture("port-bw");
-      }else if (this.hexType === 6) {
+      } else if (this.hexType === 6) {
         this.setTexture("mine-bw");
       }
     }
+  }
+
+  createGoldMineAnimation() {
+    const coinCount = 5; // Number of coins to pop out
+    for (let i = 0; i < coinCount; i++) {
+      const coin = this.scene.add.image(this.x, this.y, "gold-coin");
+      coin.setScale(0.3); // Adjust scale to fit your game's style
+      coin.setDepth(this.depth + 1);
+      this.goldCoins.push(coin);
+
+      // Animate each coin
+      this.scene.tweens.add({
+        targets: coin,
+        x: this.x + Phaser.Math.Between(-50, 50),
+        y: this.y + Phaser.Math.Between(-50, 50),
+        alpha: { from: 1, to: 0 },
+        scale: { from: 0.3, to: 0.1 },
+        duration: 1000,
+        ease: "Cubic.easeOut",
+        onComplete: () => {
+          coin.destroy();
+        },
+      });
+    }
+    this.scene.sound.play("place", { volume: 0.5 });
   }
 
   update(_: number, delta: number) {

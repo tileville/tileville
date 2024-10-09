@@ -92,6 +92,7 @@ export class LoadScene extends Scene {
     this.load.image("center-bw", "/img/center-bw.png");
     this.load.image("windmill", "/img/windmill.png");
     this.load.image("propeller", "/img/propeller.png");
+    this.load.image("gold-coin", "/img/gold-coin.png");
     this.load.image("windmill-red", "/img/windmill-red.png");
     this.load.image("windmill-hill", "/img/windmill-hill.png");
     this.load.image("windmill-bw", "/img/windmill-bw.png");

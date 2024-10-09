@@ -16,6 +16,7 @@ export class HexGrid extends GameObjects.Group {
   onQueueEmpty: (() => void) | null = null;
 
   onNewPoints: (score: number, hexType: number) => void;
+  warningTooltip: Phaser.GameObjects.Container | null = null;
 
   size: number;
 
@@ -42,6 +43,22 @@ export class HexGrid extends GameObjects.Group {
 
     this.x = x || 0;
     this.y = y || 0;
+
+    const tooltipBackground = this.scene.add.graphics();
+    tooltipBackground.fillStyle(0x378209, 0.3);
+    tooltipBackground.fillRoundedRect(0, 0, 200, 40, 10);
+
+    const tooltipText = this.scene.add.text(10, 10, "Bad move!", {
+      fontSize: "16px",
+      color: "#FF0000",
+    });
+
+    this.warningTooltip = this.scene.add.container(0, 0, [
+      tooltipBackground,
+      tooltipText,
+    ]);
+    this.warningTooltip.setDepth(10);
+    this.warningTooltip.setVisible(false);
 
     this.scoreQueue = new Queue<ScorePopper>();
 
@@ -294,14 +311,16 @@ export class HexGrid extends GameObjects.Group {
 
     const hexes = [];
     let touching = false;
+    let isWindmillAdjacent = false;
+
     for (let i = 0; i < 3; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const offsets = (shapes as any)[trihex.shape][i];
-      hexes.push(this.grid.get(r + offsets.ro, c + offsets.co));
+      const currentHex = this.grid.get(r + offsets.ro, c + offsets.co);
+      hexes.push(currentHex);
       this.triPreviews[i].setX(getX(r + offsets.ro, c + offsets.co));
       this.triPreviews[i].setY(getY(r + offsets.ro));
 
-      if (!touching) {
+      if (!touching || !isWindmillAdjacent) {
         for (const n of this.neighbors(r + offsets.ro, c + offsets.co)) {
           if (
             n &&
@@ -311,7 +330,10 @@ export class HexGrid extends GameObjects.Group {
               n.hexType === 4)
           ) {
             touching = true;
-            break;
+          }
+          // Check if the current hex is a windmill and if there's an adjacent windmill
+          if (trihex.hexes[i] === 1 && n && n.hexType === 1) {
+            isWindmillAdjacent = true;
           }
         }
       }
@@ -333,6 +355,13 @@ export class HexGrid extends GameObjects.Group {
           ]
         );
       }
+
+      // Show warning if a windmill is being placed adjacent to another windmill
+      if (isWindmillAdjacent) {
+        this.showWarningTooltip(x, y);
+      } else {
+        this.hideWarningTooltip();
+      }
     } else {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
@@ -347,6 +376,7 @@ export class HexGrid extends GameObjects.Group {
           ][trihex.hexes[i]]
         );
       }
+      this.hideWarningTooltip();
     }
   }
 
@@ -553,6 +583,18 @@ export class HexGrid extends GameObjects.Group {
     } else if (this.onQueueEmpty) {
       this.onQueueEmpty();
       this.onQueueEmpty = null;
+    }
+  }
+  showWarningTooltip(x: number, y: number) {
+    if (this.warningTooltip) {
+      this.warningTooltip.setPosition(x, y);
+      this.warningTooltip.setVisible(true);
+    }
+  }
+
+  hideWarningTooltip() {
+    if (this.warningTooltip) {
+      this.warningTooltip.setVisible(false);
     }
   }
 }
