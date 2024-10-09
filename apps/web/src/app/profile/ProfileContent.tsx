@@ -15,7 +15,7 @@ import {
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { copyToClipBoard } from "@/lib/helpers";
 import { ProfileTabs } from "@/components/profileTabs/ProfileTabs";
-import { EditProfileModal } from "@/components/Modals/EditProfileModal";
+import { EditProfileModal } from "@/components/Modals/EditProfileModal/EditProfileModal";
 
 export interface IFormInput {
   firstName: string;
@@ -65,8 +65,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
     const isExistApiResponse = await fetch(
-      `/api/player_profile/is_username_exist?username=${data.username}&userId=${
-        profileData?.id || ""
+      `/api/player_profile/is_username_exist?username=${data.username}&userId=${profileData?.id || ""
       }`
     );
 
