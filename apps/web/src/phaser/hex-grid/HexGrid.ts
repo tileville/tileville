@@ -293,7 +293,6 @@ export class HexGrid extends GameObjects.Group {
 
     const hexes = [];
     let touching = false;
-    let isWindmillAdjacent = false;
 
     for (let i = 0; i < 3; i++) {
       const offsets = (shapes as any)[trihex.shape][i];
@@ -302,7 +301,7 @@ export class HexGrid extends GameObjects.Group {
       this.triPreviews[i].setX(getX(r + offsets.ro, c + offsets.co));
       this.triPreviews[i].setY(getY(r + offsets.ro));
 
-      if (!touching || !isWindmillAdjacent) {
+      if (!touching) {
         for (const n of this.neighbors(r + offsets.ro, c + offsets.co)) {
           if (
             n &&
@@ -312,10 +311,6 @@ export class HexGrid extends GameObjects.Group {
               n.hexType === 4)
           ) {
             touching = true;
-          }
-          // Check if the current hex is a windmill and if there's an adjacent windmill
-          if (trihex.hexes[i] === 1 && n && n.hexType === 1) {
-            isWindmillAdjacent = true;
           }
         }
       }

@@ -20,6 +20,12 @@ interface Level {
   deckSize: number;
   isMineTile: boolean;
 }
+
+interface Tile {
+  row: number;
+  col: number;
+  tile_type: number;
+}
 export class MainScene extends Scene {
   grid: HexGrid | null = null;
   foreground: GameObjects.Image | null = null;
@@ -1075,6 +1081,14 @@ export class MainScene extends Scene {
     this.pointerDown = false;
   }
 
+  placeTile(hex: Hex, type: number) {
+    hex.setType(type);
+    if (type === 6) {
+      hex.initiateGoldMineAnimation();
+    }
+    this.onNewPoints(1, type);
+  }
+
   placeTrihex() {
     if (!this.grid?.enabled) return;
     if (
@@ -1082,7 +1096,15 @@ export class MainScene extends Scene {
         this.previewX,
         this.previewY,
         this.nextTrihex!,
-        this.onPlaceTile.bind(this)
+        (tiles: Tile[]) => {
+          tiles.forEach((tile) => {
+            const hex = this.grid!.grid.get(tile.row, tile.col);
+            if (hex) {
+              this.placeTile(hex, tile.tile_type);
+            }
+          });
+          this.onPlaceTile();
+        }
       )
     ) {
       this.pickNextTrihex();
