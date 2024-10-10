@@ -7,6 +7,7 @@ import {
   useLeaderboardEntries,
 } from "@/db/react-query-hooks";
 import TableSkeleton from "./tableSkeleton";
+import { LEADERBOARD_COLUMNS } from "@/constants";
 
 type SelectedCompetition = {
   id: number;
@@ -94,11 +95,13 @@ export default function Leaderboard() {
         <Table.Root>
           <Table.Header>
             <Table.Row className="whitespace-nowrap">
-              <Table.ColumnHeaderCell>Rank</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Wallet Address</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Game Id</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Score</Table.ColumnHeaderCell>
+              {LEADERBOARD_COLUMNS.map((column) => {
+                return (
+                  <Table.ColumnHeaderCell key={column}>
+                    {column}
+                  </Table.ColumnHeaderCell>
+                );
+              })}
             </Table.Row>
           </Table.Header>
 
