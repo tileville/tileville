@@ -44,6 +44,9 @@ export class HexGrid extends GameObjects.Group {
 
     this.scoreQueue = new Queue<ScorePopper>();
 
+    this.loadFishAssets();
+    this.createFishAnimation();
+
     for (let r = 0; r < size + size + 1; r++) {
       for (let c = 0; c < size + size + 1; c++) {
         if (c + r < size || c + r > size * 3) {
@@ -114,6 +117,25 @@ export class HexGrid extends GameObjects.Group {
       callback: this.nextPopper,
       callbackScope: this,
       delay: 100,
+    });
+  }
+
+  loadFishAssets() {
+    this.scene.load.spritesheet("fish", "path/to/fish_spritesheet.png", {
+      frameWidth: 100, // Adjust based on your image size
+      frameHeight: 50, // Adjust based on your image size
+    });
+  }
+
+  createFishAnimation() {
+    this.scene.anims.create({
+      key: "swim",
+      frames: this.scene.anims.generateFrameNumbers("fish", {
+        start: 0,
+        end: 5,
+      }),
+      frameRate: 10,
+      repeat: -1,
     });
   }
 
@@ -366,7 +388,6 @@ export class HexGrid extends GameObjects.Group {
     const c = getCol(x, y);
 
     const hexes: Hex[] = [];
-    // console.log({ r, c, trihex });
     let touching = false;
     for (let i = 0; i < 3; i++) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -407,6 +428,12 @@ export class HexGrid extends GameObjects.Group {
           col: hexes[i].col,
           tile_type: trihex.hexes[i],
         });
+
+        // Add this block here
+        if (trihex.hexes[i] === 3) {
+          // If it's a road tile
+          hexes[i].addFishAnimation();
+        }
       }
 
       // calculate scores
@@ -552,6 +579,13 @@ export class HexGrid extends GameObjects.Group {
     } else if (this.onQueueEmpty) {
       this.onQueueEmpty();
       this.onQueueEmpty = null;
+    }
+  }
+
+  update(time: number, delta: number) {
+    // super.update(time, delta);
+    for (const hex of this.hexes) {
+      hex.update(time, delta);
     }
   }
 }

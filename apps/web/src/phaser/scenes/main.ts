@@ -26,6 +26,7 @@ interface Tile {
   col: number;
   tile_type: number;
 }
+
 export class MainScene extends Scene {
   grid: HexGrid | null = null;
   foreground: GameObjects.Image | null = null;
