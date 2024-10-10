@@ -388,3 +388,18 @@ export const INITIAL_MINT_RESPONSE = {
   reason: "",
   txHash: "",
 };
+
+export const LEADERBOARD_COLUMNS = [
+  "Rank",
+  "Username",
+  "Wallet Address",
+  "Game Id",
+  "Score",
+];
+
+export const TABLE_SKELETON_CONTENT = [
+  "171732534",
+  "1717325346195sdfsad1717325346195sdfsad1717325346195sdfsadsdfsdf",
+  "7asdfasdfs0",
+  "70",
+];
