@@ -16,8 +16,6 @@ export class HexGrid extends GameObjects.Group {
   onQueueEmpty: (() => void) | null = null;
 
   onNewPoints: (score: number, hexType: number) => void;
-  warningTooltip: Phaser.GameObjects.Container | null = null;
-
   size: number;
 
   x: number;
@@ -43,22 +41,6 @@ export class HexGrid extends GameObjects.Group {
 
     this.x = x || 0;
     this.y = y || 0;
-
-    const tooltipBackground = this.scene.add.graphics();
-    tooltipBackground.fillStyle(0x378209, 0.3);
-    tooltipBackground.fillRoundedRect(0, 0, 200, 40, 10);
-
-    const tooltipText = this.scene.add.text(10, 10, "Bad move!", {
-      fontSize: "16px",
-      color: "#FF0000",
-    });
-
-    this.warningTooltip = this.scene.add.container(0, 0, [
-      tooltipBackground,
-      tooltipText,
-    ]);
-    this.warningTooltip.setDepth(10);
-    this.warningTooltip.setVisible(false);
 
     this.scoreQueue = new Queue<ScorePopper>();
 
@@ -355,13 +337,6 @@ export class HexGrid extends GameObjects.Group {
           ]
         );
       }
-
-      // Show warning if a windmill is being placed adjacent to another windmill
-      if (isWindmillAdjacent) {
-        this.showWarningTooltip(x, y);
-      } else {
-        this.hideWarningTooltip();
-      }
     } else {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
@@ -376,7 +351,6 @@ export class HexGrid extends GameObjects.Group {
           ][trihex.hexes[i]]
         );
       }
-      this.hideWarningTooltip();
     }
   }
 
@@ -583,18 +557,6 @@ export class HexGrid extends GameObjects.Group {
     } else if (this.onQueueEmpty) {
       this.onQueueEmpty();
       this.onQueueEmpty = null;
-    }
-  }
-  showWarningTooltip(x: number, y: number) {
-    if (this.warningTooltip) {
-      this.warningTooltip.setPosition(x, y);
-      this.warningTooltip.setVisible(true);
-    }
-  }
-
-  hideWarningTooltip() {
-    if (this.warningTooltip) {
-      this.warningTooltip.setVisible(false);
     }
   }
 }
