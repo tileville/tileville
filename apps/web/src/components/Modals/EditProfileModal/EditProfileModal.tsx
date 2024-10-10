@@ -1,5 +1,4 @@
 import { CameraIcon, InfoCircledIcon } from "@radix-ui/react-icons";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import { Modal } from "@/components/common/Modal";
 import Image from "next/image";
 import {
@@ -9,7 +8,8 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 import { IFormInput } from "@/app/profile/ProfileContent";
-import { Spinner } from "../common/Spinner";
+import { Spinner } from "../../common/Spinner";
+import { WhyToolTip } from "./whyToolTip";
 
 type EditProfileModalType = {
   closeModal: () => void;
@@ -54,32 +54,16 @@ export const EditProfileModal = ({
       }
     >
       <div className="relative max-h-full w-full max-w-md">
-        <div className="relative p-4 text-center md:p-5">
+        <div className="relative p-4 md:p-5">
           <InfoCircledIcon
             width={48}
             height={48}
             color="#9ca3af"
             className="mx-auto mb-4"
           />
-          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
             Please Complete Your Profile.
-            <Tooltip.Provider>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <span className="cursor-pointer text-gray-800">Why?</span>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                    sideOffset={5}
-                  >
-                    We Want to show your score in the leaderboard that is why we
-                    want your name.
-                    <Tooltip.Arrow className="TooltipArrow" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            </Tooltip.Provider>
+            <WhyToolTip />
           </h3>
 
           <form onSubmit={handleSubmit(onSubmit)} className="left-left">
@@ -121,9 +105,8 @@ export const EditProfileModal = ({
                 </div>
 
                 <span
-                  className={`${
-                    firstNameError ? "opacity-100" : ""
-                  } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+                  className={`${firstNameError ? "opacity-100" : ""
+                    } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
                 >
                   First Name is required..
                 </span>
@@ -163,9 +146,8 @@ export const EditProfileModal = ({
                 </div>
 
                 <span
-                  className={`${
-                    userNameError ? "opacity-100" : ""
-                  } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+                  className={`${userNameError ? "opacity-100" : ""
+                    } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
                 >
                   {userNameErrorMsg}
                 </span>
