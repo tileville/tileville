@@ -103,10 +103,11 @@ export class LoadScene extends Scene {
       frameHeight: 140,
     });
 
-    this.load.spritesheet("fish", "/img/Rest_to_right_sheet.png", {
-      frameWidth: 256, // Adjust this to match the width of each frame
-      frameHeight: 256, // Adjust this to match the height of each frame
-    });
+    // TODO: Uncomment this while making pond map
+    // this.load.spritesheet("fish", "/img/Rest_to_right_sheet.png", {
+    //   frameWidth: 256,
+    //   frameHeight: 256,
+    // });
 
     this.load.image("blue", "/img/blue.png");
     this.load.image("rotate", "/img/rotate.png");

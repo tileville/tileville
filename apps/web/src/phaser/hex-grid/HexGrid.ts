@@ -429,11 +429,10 @@ export class HexGrid extends GameObjects.Group {
           tile_type: trihex.hexes[i],
         });
 
-        // Add this block here
-        if (trihex.hexes[i] === 3) {
-          // If it's a road tile
-          hexes[i].addFishAnimation();
-        }
+        // TODO: Uncomment this while making pond map
+        // if (trihex.hexes[i] === 3) {
+        //   hexes[i].addFishAnimation();
+        // }
       }
 
       // calculate scores

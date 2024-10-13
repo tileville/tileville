@@ -162,12 +162,13 @@ export class Hex extends GameObjects.Image {
       this.puffer.setVisible(false);
     }
 
-    if (hexType === 6) {
-      // Assuming 3 is the road type
-      this.addFishAnimation();
-    } else {
-      this.removeFishAnimation();
-    }
+    // TODO: Uncomment this while making pond map
+    // if (hexType === 6) {
+    //   // Assuming 3 is the road type
+    //   this.addFishAnimation();
+    // } else {
+    //   this.removeFishAnimation();
+    // }
 
     if (hexType === 5) {
       this.eEdge.setVisible(false);
@@ -181,7 +182,7 @@ export class Hex extends GameObjects.Image {
 
   initiateGoldMineAnimation() {
     if (this.hexType === 6) {
-      // this.createGoldMineAnimation();
+      this.createGoldMineAnimation();
     }
   }
 
@@ -298,28 +299,29 @@ export class Hex extends GameObjects.Image {
     this.scene.sound.play("place", { volume: 0.5 });
   }
 
-  addFishAnimation() {
-    if (!this.fishSprite) {
-      this.fishSprite = this.scene.add.sprite(this.x, this.y, "fish");
-      this.fishSprite.setScale(0.2); // Adjust scale as needed
-      this.fishSprite.play("swim");
-      this.scene.tweens.add({
-        targets: this.fishSprite,
-        y: this.y - 5,
-        duration: 1000,
-        yoyo: true,
-        repeat: -1,
-        ease: "Sine.easeInOut",
-      });
-    }
-  }
+  // TODO: Uncomment this while making pond map
+  // addFishAnimation() {
+  //   if (!this.fishSprite) {
+  //     this.fishSprite = this.scene.add.sprite(this.x, this.y, "fish");
+  //     this.fishSprite.setScale(0.2); // Adjust scale as needed
+  //     this.fishSprite.play("swim");
+  //     this.scene.tweens.add({
+  //       targets: this.fishSprite,
+  //       y: this.y - 5,
+  //       duration: 1000,
+  //       yoyo: true,
+  //       repeat: -1,
+  //       ease: "Sine.easeInOut",
+  //     });
+  //   }
+  // }
 
-  removeFishAnimation() {
-    if (this.fishSprite) {
-      this.fishSprite.destroy();
-      this.fishSprite = null;
-    }
-  }
+  // removeFishAnimation() {
+  //   if (this.fishSprite) {
+  //     this.fishSprite.destroy();
+  //     this.fishSprite = null;
+  //   }
+  // }
 
   update(_: number, delta: number) {
     if (this.propeller.visible) {
