@@ -18,7 +18,7 @@ interface Level {
   hexSize: number;
   hillsCount: number;
   deckSize: number;
-  isMineTile: boolean;
+  isExtraTile: boolean;
 }
 
 interface Tile {
@@ -99,16 +99,14 @@ export class MainScene extends Scene {
     this.add.rectangle(640, 360, 1280, 720);
     this.score = 0;
 
-    if (this.levels[this.currentLevel - 1].isMineTile) {
-      this.scoreBreakdown = [0, 0, 0, 0, 0, 0, 0, 0];
-    } else {
-      this.scoreBreakdown = [0, 0, 0, 0, 0, 0];
-    }
+    // if (this.levels[this.currentLevel - 1].isExtraTile) {
+    //   this.scoreBreakdown = [0, 0, 0, 0, 0, 0, 0, 0];
+    // } else {
+    this.scoreBreakdown = [0, 0, 0, 0, 0, 0];
+    // }
 
     this.pointerDown = false;
 
-    // this.waves = this.add.image(640, 360, 'waves');
-    // this.waves2 = this.add.image(640, 360, 'waves2');
     this.grid = new HexGrid(
       this,
       this.levels[this.currentLevel - 1].hexSize,
@@ -272,15 +270,6 @@ export class MainScene extends Scene {
     this.helpPage.setVisible(false);
 
     this.pickNextTrihex();
-
-    // this.foreground = this.add.image(1600, 360, "page");
-    // this.foreground.setDepth(3);
-
-    // this.tweens.add({
-    //   targets: this.foreground,
-    //   props: { x: 2400 },
-    //   duration: 400,
-    // });
 
     this.tweens.add({
       targets: this.rotateLeftButton,
@@ -495,7 +484,7 @@ export class MainScene extends Scene {
       }
     }
     deck = shuffle(deck);
-    if (this.levels[this.currentLevel - 1].isMineTile) {
+    if (this.levels[this.currentLevel - 1].isExtraTile) {
       for (let i = 0; i < size; i++) {
         if (i < (3 * size) / 10) {
           deck[i].hexes[1] = 3;
@@ -898,7 +887,7 @@ export class MainScene extends Scene {
     this.breakdownHexes = [];
     this.breakdownTexts = [];
     let resultCardCount = 3;
-    if (this.levels[this.currentLevel - 1].isMineTile) {
+    if (this.levels[this.currentLevel - 1].isExtraTile) {
       resultCardCount = 4;
     } else {
       resultCardCount = 3;
@@ -936,7 +925,7 @@ export class MainScene extends Scene {
     this.breakdownTexts[2].setX(125);
     this.breakdownTexts[2].setText(String(this.scoreBreakdown[1]));
 
-    if (this.levels[this.currentLevel - 1].isMineTile) {
+    if (this.levels[this.currentLevel - 1].isExtraTile) {
       this.breakdownHexes[3].setType(6);
       this.breakdownHexes[3].setX(250);
       this.breakdownTexts[3].setX(250);
@@ -1009,12 +998,6 @@ export class MainScene extends Scene {
     this.competitionNameText?.setVisible(false);
     this.currentTimeText?.setVisible(false);
     this.nextLevelButton?.setVisible(false);
-
-    // this.tweens.add({
-    //   targets: this.foreground,
-    //   props: { x: 1600 },
-    //   duration: 400,
-    // });
 
     this.time.addEvent({
       callback: this.scene.restart,
