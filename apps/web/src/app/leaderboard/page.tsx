@@ -110,25 +110,35 @@ export default function Leaderboard() {
               <TableSkeleton />
             ) : (
               <>
-                {leaderboardData.map(
-                  (entry: LeaderboardResult, index: number) => (
-                    <Table.Row key={entry.id}>
-                      <Table.Cell>{index + 1}</Table.Cell>
-                      <Table.Cell>
-                        {entry.username ? (
-                          entry.username
-                        ) : (
-                          <span className="ps-4">-</span>
-                        )}
+                {
+                  leaderboardData.length > 0 ?
+                    leaderboardData.map(
+                      (entry: LeaderboardResult, index: number) => (
+                        <Table.Row key={entry.id}>
+                          <Table.Cell>{index + 1}</Table.Cell>
+                          <Table.Cell>
+                            {entry.username ? (
+                              entry.username
+                            ) : (
+                              <span className="ps-4">-</span>
+                            )}
+                          </Table.Cell>
+                          <Table.RowHeaderCell>
+                            {entry.wallet_address}
+                          </Table.RowHeaderCell>
+                          <Table.Cell>{entry.game_id}</Table.Cell>
+                          <Table.Cell>{entry.score}</Table.Cell>
+                        </Table.Row>
+                      )
+                    )
+                    : <Table.Row>
+                      <Table.Cell colSpan={5}>
+                        <h2 className="text-2xl font-semibold text-center">
+                          No games are played yet :(
+                        </h2>
                       </Table.Cell>
-                      <Table.RowHeaderCell>
-                        {entry.wallet_address}
-                      </Table.RowHeaderCell>
-                      <Table.Cell>{entry.game_id}</Table.Cell>
-                      <Table.Cell>{entry.score}</Table.Cell>
                     </Table.Row>
-                  )
-                )}
+                }
               </>
             )}
           </Table.Body>
