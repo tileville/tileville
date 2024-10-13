@@ -330,7 +330,8 @@ export class HexGrid extends GameObjects.Group {
             (n.hexType === 1 ||
               n.hexType === 2 ||
               n.hexType === 3 ||
-              n.hexType === 4)
+              n.hexType === 4 ||
+              n.hexType === 6)
           ) {
             touching = true;
           }
@@ -401,7 +402,8 @@ export class HexGrid extends GameObjects.Group {
             (n.hexType === 1 ||
               n.hexType === 2 ||
               n.hexType === 3 ||
-              n.hexType === 4)
+              n.hexType === 4 ||
+              n.hexType === 6)
           ) {
             touching = true;
             break;
