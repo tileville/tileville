@@ -99,11 +99,11 @@ export class MainScene extends Scene {
     this.add.rectangle(640, 360, 1280, 720);
     this.score = 0;
 
-    // if (this.levels[this.currentLevel - 1].isExtraTile) {
-    //   this.scoreBreakdown = [0, 0, 0, 0, 0, 0, 0, 0];
-    // } else {
-    this.scoreBreakdown = [0, 0, 0, 0, 0, 0];
-    // }
+    if (this.levels[this.currentLevel - 1].isExtraTile) {
+      this.scoreBreakdown = [0, 0, 0, 0, 0, 0, 0, 0];
+    } else {
+      this.scoreBreakdown = [0, 0, 0, 0, 0, 0];
+    }
 
     this.pointerDown = false;
 
