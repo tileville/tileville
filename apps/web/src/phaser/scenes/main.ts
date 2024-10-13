@@ -1067,7 +1067,6 @@ export class MainScene extends Scene {
     if (type === 6) {
       hex.initiateGoldMineAnimation();
     }
-    this.onNewPoints(1, type);
   }
 
   placeTrihex() {
