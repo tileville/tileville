@@ -97,9 +97,6 @@ export class MainScene extends Scene {
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
 
     this.add.rectangle(640, 360, 1280, 720);
-    const bgImage = this.add.image(640, 360, "map_pattern");
-    bgImage.setScale(0.2);
-    bgImage.setAlpha(0.1);
     this.score = 0;
 
     if (this.levels[this.currentLevel - 1].isMineTile) {
