@@ -75,6 +75,7 @@ export class LoadScene extends Scene {
     this.load.image("empty", "/img/empty.png");
     this.load.image("empty-hill", "/img/empty-hill.png");
 
+    this.load.image("pond", "/img/pond.png");
     this.load.image("mine", "/img/mine.png");
     this.load.image("mine-bw", "/img/mine-bw.png");
     this.load.image("mine-red", "/img/mine-red.png");
@@ -103,11 +104,10 @@ export class LoadScene extends Scene {
       frameHeight: 140,
     });
 
-    // TODO: Uncomment this while making pond map
-    // this.load.spritesheet("fish", "/img/Rest_to_right_sheet.png", {
-    //   frameWidth: 256,
-    //   frameHeight: 256,
-    // });
+    this.load.spritesheet("fish", "/img/Rest_to_right_sheet.png", {
+      frameWidth: 256,
+      frameHeight: 256,
+    });
 
     this.load.image("blue", "/img/blue.png");
     this.load.image("rotate", "/img/rotate.png");
