@@ -34,6 +34,7 @@ export async function sendTransaction(params: {
   mintParams: string;
   contractAddress: string;
   name: string;
+  nonce: { success: boolean; nonce: number };
 }): Promise<{ isSent: boolean; hash: string }> {
   const {
     serializedTransaction,

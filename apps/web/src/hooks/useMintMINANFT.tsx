@@ -100,6 +100,14 @@ export function useMintMINANFT() {
     const jwt = process.env.NEXT_PUBLIC_MINANFT_JWT!;
     const minanft = new api(jwt);
 
+    const nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
+    const nonce = await nonceResponse.json();
+    console.log("NONCE", nonce);
+    if (!nonce.success) {
+      throw new Error("failed to fetch nonce");
+      return;
+    }
+
     const reservedPromise = minanft.reserveName({
       name,
       publicKey: owner,
@@ -327,6 +335,7 @@ export function useMintMINANFT() {
       mintParams: serializeFields(MintParams.toFields(mintParams)),
       contractAddress,
       name,
+      nonce,
     });
     setMintProgress({
       [nft_id]: {
