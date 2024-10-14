@@ -37,10 +37,6 @@ export class MenuScene extends Scene {
     this.cameras.main.setBackgroundColor("rgba(0 , 0 , 0 , 0)");
     this.menu = this.add.group();
 
-    const map_pattern = this.add.image(920, 360, "map_pattern");
-    map_pattern.setScale(0.05);
-    map_pattern.setAlpha(0.3);
-
     const title = this.add.text(100, 150, "A Tour To Game", {
       fontFamily: "monospace",
       fontSize: "40px",
