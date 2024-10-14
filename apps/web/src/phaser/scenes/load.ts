@@ -75,6 +75,7 @@ export class LoadScene extends Scene {
     this.load.image("empty", "/img/empty.png");
     this.load.image("empty-hill", "/img/empty-hill.png");
 
+    this.load.image("pond", "/img/pond.png");
     this.load.image("mine", "/img/mine.png");
     this.load.image("mine-bw", "/img/mine-bw.png");
     this.load.image("mine-red", "/img/mine-red.png");
@@ -108,6 +109,12 @@ export class LoadScene extends Scene {
     //   frameWidth: 256,
     //   frameHeight: 256,
     // });
+
+    // TODO: Uncomment this while making waterfall map
+    this.load.spritesheet("waterfall", "/img/waterfall.png", {
+      frameWidth: 256,
+      frameHeight: 186,
+    });
 
     this.load.image("blue", "/img/blue.png");
     this.load.image("rotate", "/img/rotate.png");

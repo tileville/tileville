@@ -44,8 +44,9 @@ export class HexGrid extends GameObjects.Group {
 
     this.scoreQueue = new Queue<ScorePopper>();
 
-    this.loadFishAssets();
-    this.createFishAnimation();
+    //TODO: add animation according to map name
+    // this.createFishAnimation();
+    this.createWaterfallAnimation();
 
     for (let r = 0; r < size + size + 1; r++) {
       for (let c = 0; c < size + size + 1; c++) {
@@ -120,21 +121,26 @@ export class HexGrid extends GameObjects.Group {
     });
   }
 
-  loadFishAssets() {
-    this.scene.load.spritesheet("fish", "path/to/fish_spritesheet.png", {
-      frameWidth: 100, // Adjust based on your image size
-      frameHeight: 50, // Adjust based on your image size
-    });
-  }
-
   createFishAnimation() {
     this.scene.anims.create({
-      key: "swim",
+      key: "flow",
       frames: this.scene.anims.generateFrameNumbers("fish", {
         start: 0,
         end: 5,
       }),
       frameRate: 10,
+      repeat: -1,
+    });
+  }
+
+  createWaterfallAnimation() {
+    this.scene.anims.create({
+      key: "waterfall_anim",
+      frames: this.scene.anims.generateFrameNumbers("waterfall", {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 12,
       repeat: -1,
     });
   }

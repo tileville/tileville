@@ -23,6 +23,7 @@ export class Hex extends GameObjects.Image {
   propeller: Phaser.GameObjects.Image;
   goldCoins: Phaser.GameObjects.Image[] = [];
   fishSprite: Phaser.GameObjects.Sprite | null = null;
+  waterfallSprite: Phaser.GameObjects.Sprite | null = null;
 
   constructor(
     scene: Phaser.Scene,
@@ -133,7 +134,7 @@ export class Hex extends GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ["empty", "windmill", "grass", "street", "center", "port-bw", "mine"][
+      ["empty", "windmill", "grass", "street", "center", "port-bw", "pond"][
         hexType
       ]
     );
@@ -323,6 +324,22 @@ export class Hex extends GameObjects.Image {
   //   }
   // }
 
+  addWaterfallAnimation() {
+    if (!this.waterfallSprite) {
+      this.waterfallSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
+      this.waterfallSprite.setScale(0.3);
+      this.waterfallSprite.setDepth(this.depth + 1);
+      this.waterfallSprite.play("waterfall_anim");
+    }
+  }
+
+  removeWaterfallAnimation() {
+    if (this.waterfallSprite) {
+      this.waterfallSprite.destroy();
+      this.waterfallSprite = null;
+    }
+  }
+
   update(_: number, delta: number) {
     if (this.propeller.visible) {
       const speed = this.hasHill && this.counted ? 2.2 : this.counted ? 1 : 0.1;
@@ -331,6 +348,10 @@ export class Hex extends GameObjects.Image {
 
     if (this.fishSprite) {
       this.fishSprite.update(12, delta);
+    }
+
+    if (this.waterfallSprite) {
+      this.waterfallSprite.update(12, delta);
     }
   }
 }
