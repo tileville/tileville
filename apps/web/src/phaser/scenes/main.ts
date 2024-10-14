@@ -1065,9 +1065,9 @@ export class MainScene extends Scene {
   placeTile(hex: Hex, type: number) {
     hex.setType(type);
     if (type === 6) {
-      hex.addWaterfallAnimation();
+      hex.addVolcanoAnimation();
     } else {
-      hex.removeWaterfallAnimation();
+      hex.removeVolcanoAnimation();
     }
   }
 

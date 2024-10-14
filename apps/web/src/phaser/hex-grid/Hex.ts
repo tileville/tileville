@@ -24,6 +24,7 @@ export class Hex extends GameObjects.Image {
   goldCoins: Phaser.GameObjects.Image[] = [];
   fishSprite: Phaser.GameObjects.Sprite | null = null;
   waterfallSprite: Phaser.GameObjects.Sprite | null = null;
+  volcanoSprite: Phaser.GameObjects.Sprite | null = null;
 
   constructor(
     scene: Phaser.Scene,
@@ -134,7 +135,7 @@ export class Hex extends GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ["empty", "windmill", "grass", "street", "center", "port-bw", "pond"][
+      ["empty", "windmill", "grass", "street", "center", "port-bw", "land"][
         hexType
       ]
     );
@@ -324,19 +325,35 @@ export class Hex extends GameObjects.Image {
   //   }
   // }
 
-  addWaterfallAnimation() {
-    if (!this.waterfallSprite) {
-      this.waterfallSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
-      this.waterfallSprite.setScale(0.3);
-      this.waterfallSprite.setDepth(this.depth + 1);
-      this.waterfallSprite.play("waterfall_anim");
+  // addWaterfallAnimation() {
+  //   if (!this.waterfallSprite) {
+  //     this.waterfallSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
+  //     this.waterfallSprite.setScale(0.3);
+  //     this.waterfallSprite.setDepth(this.depth + 1);
+  //     this.waterfallSprite.play("waterfall_anim");
+  //   }
+  // }
+
+  // removeWaterfallAnimation() {
+  //   if (this.waterfallSprite) {
+  //     this.waterfallSprite.destroy();
+  //     this.waterfallSprite = null;
+  //   }
+  // }
+
+  addVolcanoAnimation() {
+    if (!this.volcanoSprite) {
+      this.volcanoSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
+      this.volcanoSprite.setScale(0.115);
+      this.volcanoSprite.setDepth(this.depth + 1);
+      this.volcanoSprite.play("volcano_anim");
     }
   }
 
-  removeWaterfallAnimation() {
-    if (this.waterfallSprite) {
-      this.waterfallSprite.destroy();
-      this.waterfallSprite = null;
+  removeVolcanoAnimation() {
+    if (this.volcanoSprite) {
+      this.volcanoSprite.destroy();
+      this.volcanoSprite = null;
     }
   }
 

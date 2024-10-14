@@ -46,7 +46,8 @@ export class HexGrid extends GameObjects.Group {
 
     //TODO: add animation according to map name
     // this.createFishAnimation();
-    this.createWaterfallAnimation();
+    // this.createWaterfallAnimation();
+    this.createVolcanoAnimation();
 
     for (let r = 0; r < size + size + 1; r++) {
       for (let c = 0; c < size + size + 1; c++) {
@@ -141,6 +142,18 @@ export class HexGrid extends GameObjects.Group {
         end: 7,
       }),
       frameRate: 12,
+      repeat: -1,
+    });
+  }
+
+  createVolcanoAnimation() {
+    this.scene.anims.create({
+      key: "volcano_anim",
+      frames: this.scene.anims.generateFrameNumbers("volcano", {
+        start: 0,
+        end: 5,
+      }),
+      frameRate: 4,
       repeat: -1,
     });
   }

@@ -76,6 +76,7 @@ export class LoadScene extends Scene {
     this.load.image("empty-hill", "/img/empty-hill.png");
 
     this.load.image("pond", "/img/pond.png");
+    this.load.image("land", "/img/land.png");
     this.load.image("mine", "/img/mine.png");
     this.load.image("mine-bw", "/img/mine-bw.png");
     this.load.image("mine-red", "/img/mine-red.png");
@@ -111,9 +112,14 @@ export class LoadScene extends Scene {
     // });
 
     // TODO: Uncomment this while making waterfall map
-    this.load.spritesheet("waterfall", "/img/waterfall.png", {
-      frameWidth: 256,
-      frameHeight: 186,
+    // this.load.spritesheet("waterfall", "/img/waterfall.png", {
+    //   frameWidth: 256,
+    //   frameHeight: 186,
+    // });
+    // TODO: Uncomment this while making volcano map
+    this.load.spritesheet("volcano", "/img/volcano.png", {
+      frameWidth: 364,
+      frameHeight: 375,
     });
 
     this.load.image("blue", "/img/blue.png");
