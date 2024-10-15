@@ -233,9 +233,9 @@ export class Hex extends GameObjects.Image {
       } else if (this.hexType === 5) {
         this.setTexture("port-bw");
       } else if (this.hexType === 6) {
-        this.setTexture("mine-bw");
+        this.setTexture("volcanoBg-bw");
       } else if (this.hexType === 7) {
-        this.setTexture("mine-bw");
+        this.setTexture("volcanoBg-bw");
       }
     } else {
       this.setAlpha(1);
@@ -257,9 +257,9 @@ export class Hex extends GameObjects.Image {
         if (this.upgraded) this.setTexture("port");
         else this.setTexture("port-bw");
       } else if (this.hexType === 6) {
-        this.setTexture("mine-bw");
+        this.setTexture("volcanoBg-bw");
       } else if (this.hexType === 7) {
-        this.setTexture("mine-bw");
+        this.setTexture("volcanoBg-bw");
       }
     }
   }

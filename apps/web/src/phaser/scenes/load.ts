@@ -76,8 +76,12 @@ export class LoadScene extends Scene {
     this.load.image("empty-hill", "/img/empty-hill.png");
 
     this.load.image("farm", "/img/farm.png");
+    this.load.image("farm-bw", "/img/farm-bw.png");
+    this.load.image("farm-red", "/img/farm-red.png");
     this.load.image("pond", "/img/pond.png");
     this.load.image("volcanoBg", "/img/volcanoBg.png");
+    this.load.image("volcanoBg-bw", "/img/volcanoBg-bw.png");
+    this.load.image("volcanoBg-red", "/img/volcanoBg-red.png");
     this.load.image("mine", "/img/mine.png");
     this.load.image("mine-bw", "/img/mine-bw.png");
     this.load.image("mine-red", "/img/mine-red.png");

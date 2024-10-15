@@ -390,8 +390,8 @@ export class HexGrid extends GameObjects.Group {
             "street-bw",
             "",
             "",
-            "mine-bw",
-            "mine-bw",
+            "farm-bw",
+            "volcanoBg-bw",
           ][trihex.hexes[i]]
         );
       }
@@ -405,8 +405,8 @@ export class HexGrid extends GameObjects.Group {
             "street-red",
             "",
             "",
-            "mine-red",
-            "mine-red",
+            "farm-red",
+            "volcanoBg-red",
           ][trihex.hexes[i]]
         );
       }
