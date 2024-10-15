@@ -153,7 +153,7 @@ export class HexGrid extends GameObjects.Group {
         start: 0,
         end: 5,
       }),
-      frameRate: 4,
+      frameRate: 3,
       repeat: -1,
     });
   }

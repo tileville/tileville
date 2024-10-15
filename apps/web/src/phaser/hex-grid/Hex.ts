@@ -135,9 +135,15 @@ export class Hex extends GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ["empty", "windmill", "grass", "street", "center", "port-bw", "land"][
-        hexType
-      ]
+      [
+        "empty",
+        "windmill",
+        "grass",
+        "street",
+        "center",
+        "port-bw",
+        "volcanoBg",
+      ][hexType]
     );
     this.hexType = hexType;
     if (hexType === 1) {
