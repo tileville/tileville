@@ -47,7 +47,8 @@ export class HexGrid extends GameObjects.Group {
     //TODO: add animation according to map name
     // this.createFishAnimation();
     // this.createWaterfallAnimation();
-    this.createVolcanoAnimation();
+    // this.createVolcanoAnimation();
+    this.createSheepAnimation();
 
     for (let r = 0; r < size + size + 1; r++) {
       for (let c = 0; c < size + size + 1; c++) {
@@ -152,6 +153,18 @@ export class HexGrid extends GameObjects.Group {
       frames: this.scene.anims.generateFrameNumbers("volcano", {
         start: 0,
         end: 5,
+      }),
+      frameRate: 4,
+      repeat: -1,
+    });
+  }
+
+  createSheepAnimation() {
+    this.scene.anims.create({
+      key: "sheep_anim",
+      frames: this.scene.anims.generateFrameNumbers("sheep", {
+        start: 0,
+        end: 12,
       }),
       frameRate: 4,
       repeat: -1,

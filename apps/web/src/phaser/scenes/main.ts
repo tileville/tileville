@@ -1065,9 +1065,11 @@ export class MainScene extends Scene {
   placeTile(hex: Hex, type: number) {
     hex.setType(type);
     if (type === 6) {
-      hex.addVolcanoAnimation();
+      hex.addSheepAnimation(hex.x - 10, hex.y - 10, 0);
+      hex.addSheepAnimation(hex.x + 20, hex.y - 10, 2);
+      hex.addSheepAnimation(hex.x + 7.5, hex.y + 10, 4);
     } else {
-      hex.removeVolcanoAnimation();
+      hex.removeSheepAnimation();
     }
   }
 

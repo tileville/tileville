@@ -75,6 +75,7 @@ export class LoadScene extends Scene {
     this.load.image("empty", "/img/empty.png");
     this.load.image("empty-hill", "/img/empty-hill.png");
 
+    this.load.image("farm", "/img/farm.png");
     this.load.image("pond", "/img/pond.png");
     this.load.image("land", "/img/land.png");
     this.load.image("mine", "/img/mine.png");
@@ -117,9 +118,15 @@ export class LoadScene extends Scene {
     //   frameHeight: 186,
     // });
     // TODO: Uncomment this while making volcano map
-    this.load.spritesheet("volcano", "/img/volcano.png", {
-      frameWidth: 364,
-      frameHeight: 375,
+    // this.load.spritesheet("volcano", "/img/volcano.png", {
+    //   frameWidth: 364,
+    //   frameHeight: 375,
+    // });
+
+    // TODO: Uncomment this while making volcano map
+    this.load.spritesheet("sheep", "/img/sheep.png", {
+      frameWidth: 128,
+      frameHeight: 128,
     });
 
     this.load.image("blue", "/img/blue.png");

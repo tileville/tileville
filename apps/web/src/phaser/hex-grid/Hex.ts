@@ -25,6 +25,7 @@ export class Hex extends GameObjects.Image {
   fishSprite: Phaser.GameObjects.Sprite | null = null;
   waterfallSprite: Phaser.GameObjects.Sprite | null = null;
   volcanoSprite: Phaser.GameObjects.Sprite | null = null;
+  sheepSprite: Phaser.GameObjects.Sprite | null = null;
 
   constructor(
     scene: Phaser.Scene,
@@ -135,7 +136,7 @@ export class Hex extends GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ["empty", "windmill", "grass", "street", "center", "port-bw", "land"][
+      ["empty", "windmill", "grass", "street", "center", "port-bw", "farm"][
         hexType
       ]
     );
@@ -341,19 +342,34 @@ export class Hex extends GameObjects.Image {
   //   }
   // }
 
-  addVolcanoAnimation() {
-    if (!this.volcanoSprite) {
-      this.volcanoSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
-      this.volcanoSprite.setScale(0.115);
-      this.volcanoSprite.setDepth(this.depth + 1);
-      this.volcanoSprite.play("volcano_anim");
-    }
+  // addVolcanoAnimation() {
+  //   if (!this.volcanoSprite) {
+  //     this.volcanoSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
+  //     this.volcanoSprite.setScale(0.115);
+  //     this.volcanoSprite.setDepth(this.depth + 1);
+  //     this.volcanoSprite.play("volcano_anim");
+  //   }
+  // }
+
+  // removeVolcanoAnimation() {
+  //   if (this.volcanoSprite) {
+  //     this.volcanoSprite.destroy();
+  //     this.volcanoSprite = null;
+  //   }
+  // }
+
+  addSheepAnimation(x: number, y: number , startFrame: number) {
+    this.sheepSprite = this.scene.add.sprite(x, y, "sheep").setOrigin(0.5, 0.5);
+    this.sheepSprite.setScale(0.2);
+    this.sheepSprite.setDepth(this.depth + 1);
+    this.sheepSprite.play("sheep_anim");
+    this.sheepSprite.anims.currentAnim && this.sheepSprite.anims.setCurrentFrame(this.sheepSprite.anims.currentAnim.frames[startFrame]);
   }
 
-  removeVolcanoAnimation() {
-    if (this.volcanoSprite) {
-      this.volcanoSprite.destroy();
-      this.volcanoSprite = null;
+  removeSheepAnimation() {
+    if (this.sheepSprite) {
+      this.sheepSprite.destroy();
+      this.sheepSprite = null;
     }
   }
 
