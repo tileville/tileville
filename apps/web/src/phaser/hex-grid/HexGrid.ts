@@ -16,7 +16,6 @@ export class HexGrid extends GameObjects.Group {
   onQueueEmpty: (() => void) | null = null;
 
   onNewPoints: (score: number, hexType: number) => void;
-
   size: number;
 
   x: number;
@@ -44,6 +43,11 @@ export class HexGrid extends GameObjects.Group {
     this.y = y || 0;
 
     this.scoreQueue = new Queue<ScorePopper>();
+
+    //TODO: add animation according to map name
+    // this.createFishAnimation();
+    // this.createWaterfallAnimation();
+    this.createVolcanoAnimation();
 
     for (let r = 0; r < size + size + 1; r++) {
       for (let c = 0; c < size + size + 1; c++) {
@@ -115,6 +119,42 @@ export class HexGrid extends GameObjects.Group {
       callback: this.nextPopper,
       callbackScope: this,
       delay: 100,
+    });
+  }
+
+  createFishAnimation() {
+    this.scene.anims.create({
+      key: "flow",
+      frames: this.scene.anims.generateFrameNumbers("fish", {
+        start: 0,
+        end: 5,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+  }
+
+  createWaterfallAnimation() {
+    this.scene.anims.create({
+      key: "waterfall_anim",
+      frames: this.scene.anims.generateFrameNumbers("waterfall", {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
+  }
+
+  createVolcanoAnimation() {
+    this.scene.anims.create({
+      key: "volcano_anim",
+      frames: this.scene.anims.generateFrameNumbers("volcano", {
+        start: 0,
+        end: 5,
+      }),
+      frameRate: 3,
+      repeat: -1,
     });
   }
 
@@ -294,10 +334,11 @@ export class HexGrid extends GameObjects.Group {
 
     const hexes = [];
     let touching = false;
+
     for (let i = 0; i < 3; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const offsets = (shapes as any)[trihex.shape][i];
-      hexes.push(this.grid.get(r + offsets.ro, c + offsets.co));
+      const currentHex = this.grid.get(r + offsets.ro, c + offsets.co);
+      hexes.push(currentHex);
       this.triPreviews[i].setX(getX(r + offsets.ro, c + offsets.co));
       this.triPreviews[i].setY(getY(r + offsets.ro));
 
@@ -308,10 +349,10 @@ export class HexGrid extends GameObjects.Group {
             (n.hexType === 1 ||
               n.hexType === 2 ||
               n.hexType === 3 ||
-              n.hexType === 4)
+              n.hexType === 4 ||
+              n.hexType === 6)
           ) {
             touching = true;
-            break;
           }
         }
       }
@@ -328,13 +369,23 @@ export class HexGrid extends GameObjects.Group {
     ) {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
-          ["white", "windmill-bw", "grass-bw", "street-bw"][trihex.hexes[i]]
+          ["white", "windmill-bw", "grass-bw", "street-bw", "", "", "mine-bw"][
+            trihex.hexes[i]
+          ]
         );
       }
     } else {
       for (let i = 0; i < 3; i++) {
         this.triPreviews[i].setTexture(
-          ["white", "windmill-red", "grass-red", "street-red"][trihex.hexes[i]]
+          [
+            "white",
+            "windmill-red",
+            "grass-red",
+            "street-red",
+            "",
+            "",
+            "mine-red",
+          ][trihex.hexes[i]]
         );
       }
     }
@@ -357,7 +408,6 @@ export class HexGrid extends GameObjects.Group {
     const c = getCol(x, y);
 
     const hexes: Hex[] = [];
-    // console.log({ r, c, trihex });
     let touching = false;
     for (let i = 0; i < 3; i++) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -371,7 +421,8 @@ export class HexGrid extends GameObjects.Group {
             (n.hexType === 1 ||
               n.hexType === 2 ||
               n.hexType === 3 ||
-              n.hexType === 4)
+              n.hexType === 4 ||
+              n.hexType === 6)
           ) {
             touching = true;
             break;
@@ -398,6 +449,11 @@ export class HexGrid extends GameObjects.Group {
           col: hexes[i].col,
           tile_type: trihex.hexes[i],
         });
+
+        // TODO: Uncomment this while making pond map
+        // if (trihex.hexes[i] === 3) {
+        //   hexes[i].addFishAnimation();
+        // }
       }
 
       // calculate scores
@@ -498,6 +554,8 @@ export class HexGrid extends GameObjects.Group {
           }
         }
       }
+    } else if (hex.hexType === 6) {
+      this.scoreQueue.enq(new ScorePopper(this.scene, [hex], 3));
     }
   }
 
@@ -534,10 +592,20 @@ export class HexGrid extends GameObjects.Group {
         if (p.hexes[0].hexType === 5) {
           this.scene.sound.play("port", { volume: 0.9 });
         }
+        if (p.hexes[0].hexType === 6) {
+          this.scene.sound.play("digging", { volume: 1 });
+        }
       }
     } else if (this.onQueueEmpty) {
       this.onQueueEmpty();
       this.onQueueEmpty = null;
+    }
+  }
+
+  update(time: number, delta: number) {
+    // super.update(time, delta);
+    for (const hex of this.hexes) {
+      hex.update(time, delta);
     }
   }
 }
