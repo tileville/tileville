@@ -136,9 +136,16 @@ export class Hex extends GameObjects.Image {
 
   setType(hexType: number) {
     this.setTexture(
-      ["empty", "windmill", "grass", "street", "center", "port-bw", "farm"][
-        hexType
-      ]
+      [
+        "empty",
+        "windmill",
+        "grass",
+        "street",
+        "center",
+        "port-bw",
+        "farm",
+        "volcanoBg",
+      ][hexType]
     );
     this.hexType = hexType;
     if (hexType === 1) {
@@ -162,6 +169,8 @@ export class Hex extends GameObjects.Image {
     } else if (hexType === 5) {
       this.puffer.setParticleTint(0x3b80a6);
     } else if (hexType === 6) {
+      this.puffer.setVisible(false);
+    } else if (hexType === 7) {
       this.puffer.setVisible(false);
     }
 
@@ -225,6 +234,8 @@ export class Hex extends GameObjects.Image {
         this.setTexture("port-bw");
       } else if (this.hexType === 6) {
         this.setTexture("mine-bw");
+      } else if (this.hexType === 7) {
+        this.setTexture("mine-bw");
       }
     } else {
       this.setAlpha(1);
@@ -246,6 +257,8 @@ export class Hex extends GameObjects.Image {
         if (this.upgraded) this.setTexture("port");
         else this.setTexture("port-bw");
       } else if (this.hexType === 6) {
+        this.setTexture("mine-bw");
+      } else if (this.hexType === 7) {
         this.setTexture("mine-bw");
       }
     }
@@ -342,28 +355,31 @@ export class Hex extends GameObjects.Image {
   //   }
   // }
 
-  // addVolcanoAnimation() {
-  //   if (!this.volcanoSprite) {
-  //     this.volcanoSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
-  //     this.volcanoSprite.setScale(0.115);
-  //     this.volcanoSprite.setDepth(this.depth + 1);
-  //     this.volcanoSprite.play("volcano_anim");
-  //   }
-  // }
+  addVolcanoAnimation() {
+    if (!this.volcanoSprite) {
+      this.volcanoSprite = this.scene.add.sprite(this.x, this.y, "waterfall");
+      this.volcanoSprite.setScale(0.115);
+      this.volcanoSprite.setDepth(this.depth + 1);
+      this.volcanoSprite.play("volcano_anim");
+    }
+  }
 
-  // removeVolcanoAnimation() {
-  //   if (this.volcanoSprite) {
-  //     this.volcanoSprite.destroy();
-  //     this.volcanoSprite = null;
-  //   }
-  // }
+  removeVolcanoAnimation() {
+    if (this.volcanoSprite) {
+      this.volcanoSprite.destroy();
+      this.volcanoSprite = null;
+    }
+  }
 
-  addSheepAnimation(x: number, y: number , startFrame: number) {
+  addSheepAnimation(x: number, y: number, startFrame: number) {
     this.sheepSprite = this.scene.add.sprite(x, y, "sheep").setOrigin(0.5, 0.5);
     this.sheepSprite.setScale(0.2);
     this.sheepSprite.setDepth(this.depth + 1);
     this.sheepSprite.play("sheep_anim");
-    this.sheepSprite.anims.currentAnim && this.sheepSprite.anims.setCurrentFrame(this.sheepSprite.anims.currentAnim.frames[startFrame]);
+    this.sheepSprite.anims.currentAnim &&
+      this.sheepSprite.anims.setCurrentFrame(
+        this.sheepSprite.anims.currentAnim.frames[startFrame]
+      );
   }
 
   removeSheepAnimation() {

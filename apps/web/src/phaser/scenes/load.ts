@@ -77,7 +77,7 @@ export class LoadScene extends Scene {
 
     this.load.image("farm", "/img/farm.png");
     this.load.image("pond", "/img/pond.png");
-    this.load.image("land", "/img/land.png");
+    this.load.image("volcanoBg", "/img/volcanoBg.png");
     this.load.image("mine", "/img/mine.png");
     this.load.image("mine-bw", "/img/mine-bw.png");
     this.load.image("mine-red", "/img/mine-red.png");
@@ -118,10 +118,10 @@ export class LoadScene extends Scene {
     //   frameHeight: 186,
     // });
     // TODO: Uncomment this while making volcano map
-    // this.load.spritesheet("volcano", "/img/volcano.png", {
-    //   frameWidth: 364,
-    //   frameHeight: 375,
-    // });
+    this.load.spritesheet("volcano", "/img/volcano.png", {
+      frameWidth: 364,
+      frameHeight: 375,
+    });
 
     // TODO: Uncomment this while making volcano map
     this.load.spritesheet("sheep", "/img/sheep.png", {
