@@ -28,6 +28,20 @@ function Game() {
   const [isGamePlayAllowed, setIsGamePlayAllowed] = useState(false);
   const setGameplayDisallowType = useSetAtom(gameplayDisallowTypeAtom);
 
+  const [isLandscape, setIsLandscape] = useState(true);
+
+  useEffect(() => {
+    const checkOrientation = () => {
+      if (window.innerWidth > window.innerHeight) {
+        setIsLandscape(true);
+      } else {
+        setIsLandscape(false);
+      }
+    };
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
+  });
+
   const networkStore = useNetworkStore();
 
   const { data: gameTransaction, isSuccess } = useTransactionLogById(
@@ -80,20 +94,29 @@ function Game() {
       <LandingBackground />
       <div className="relative z-10">
         <div className="mb-0 flex w-full flex-col items-center justify-center">
-          <PhaserLayer
-            isDemoGame={false}
-            isGamePlayAllowed={isGamePlayAllowed}
-            competitionKey={params.uniqueKey}
-            gameId={+params.gameId}
-            txnHash={gameTransaction?.txn_hash}
-            txnStatus={gameTransaction?.txn_status}
-            scoreTweetContent={
-              competitionData?.score_tweet_content ||
-              COMPETITION_SCORE_TWEET_DEFAULT_CONTENT
-            }
-            isSpeedVersion={competitionData?.is_speed_version}
-            speedDuration={competitionData?.speed_duration}
-          />
+          {isLandscape ? (
+            <PhaserLayer
+              isDemoGame={false}
+              isGamePlayAllowed={isGamePlayAllowed}
+              competitionKey={params.uniqueKey}
+              gameId={+params.gameId}
+              txnHash={gameTransaction?.txn_hash}
+              txnStatus={gameTransaction?.txn_status}
+              scoreTweetContent={
+                competitionData?.score_tweet_content ||
+                COMPETITION_SCORE_TWEET_DEFAULT_CONTENT
+              }
+              isSpeedVersion={competitionData?.is_speed_version}
+              speedDuration={competitionData?.speed_duration}
+            />
+          ) : (
+            <div className="flex min-h-[100svh] items-center justify-center p-4">
+              <h1 className="text-2xl font-bold">
+                Please rotate your device to play our game
+              </h1>
+            </div>
+          )}
+
           <Toaster />
         </div>
       </div>
