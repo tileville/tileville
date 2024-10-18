@@ -76,7 +76,7 @@ function Game() {
   ]);
 
   return (
-    <div className="gradient-bg gradient-bg h-[calc(100svh-80px)]">
+    <div className="h-[calc(100svh-80px)]">
       <LandingBackground />
       <div className="relative z-10">
         <div className="mb-0 flex w-full flex-col items-center justify-center">
