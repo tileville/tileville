@@ -157,6 +157,8 @@ export const useParticipationFee = () => {
     let network = window.mina?.isPallad
       ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
       : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
+      console.log("network" , network)
+      console.log("network store address" , networkStore.address)
     let txn_status = "PENDING";
     if (!networkStore.address) {
       networkStore.connectWallet(false);

@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { LoadScene, MainScene, MenuScene } from "./scenes";
+import { LoadScene, MainScene, MenuScene, RotateScene } from "./scenes";
 import { useSaveScore } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
@@ -89,7 +89,7 @@ export const PhaserLayer = ({
       height: 720,
       parent: "tileville-hex",
       type: Phaser.AUTO,
-      scene: [LoadScene, MenuScene, MainScene],
+      scene: [LoadScene, MenuScene, MainScene, RotateScene],
       scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH,
         mode: Phaser.Scale.FIT,

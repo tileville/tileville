@@ -328,7 +328,16 @@ export class MenuScene extends Scene {
   }
 
   transition() {
-    this.scene.start("main");
+    //TODO: check if mobile is in landscape or portrait mode
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    console.log({ isPortrait, isMobile });
+
+    if (isMobile && isPortrait) {
+      this.scene.start("rotate");
+    } else {
+      this.scene.start("main");
+    }
   }
 
   howToPlay() {
