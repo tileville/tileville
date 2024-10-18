@@ -186,6 +186,7 @@ export async function sendPayment({
     return response.result.hash;
   } else {
     try {
+      console.log("SENDING PAYMENT BY AURO");
       const data: SendTransactionResult | ProviderError = await (
         window as any
       )?.mina?.sendPayment({
