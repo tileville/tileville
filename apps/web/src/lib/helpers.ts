@@ -192,6 +192,8 @@ export async function sendPayment({
         amount: amount,
         to: TREASURY_ADDRESS,
         memo: `Pay ${amount} by auro wallet.`,
+        nonce: nonce.nonce,
+        fee: 100_000_000,
       });
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
