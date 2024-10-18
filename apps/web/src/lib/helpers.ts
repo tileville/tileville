@@ -145,6 +145,8 @@ export async function sendPayment({
   const nonceResponse = await fetch(`/api/nonce?wallet_address=${from}`);
   const nonce = await nonceResponse.json();
   console.log("nonce", nonce);
+  console.log("from", from);
+  console.log("amount", amount);
   if (!nonce.success) {
     throw new Error("failed to fetch nonce");
     return;
@@ -191,6 +193,7 @@ export async function sendPayment({
       });
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
+      console.error(`Txn failed with error ${err.toString()}. report a bug`);
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }
   }

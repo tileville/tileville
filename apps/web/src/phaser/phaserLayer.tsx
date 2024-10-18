@@ -81,14 +81,12 @@ export const PhaserLayer = ({
       }
     };
 
-    const width = isMobile ? window.innerWidth : 1280;
-    const height = isMobile ? window.innerHeight : 720;
     // Check orientation on mount and whenever the window is resized
     checkOrientation();
     window.addEventListener("resize", checkOrientation);
     const config: Phaser.Types.Core.GameConfig = {
-      width: width,
-      height: height,
+      width: 1280,
+      height: 720,
       parent: "tileville-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene, RotateScene],

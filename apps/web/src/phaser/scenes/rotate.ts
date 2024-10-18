@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from "react";
 import Phaser from "phaser";
 
 export class RotateScene extends Phaser.Scene {
