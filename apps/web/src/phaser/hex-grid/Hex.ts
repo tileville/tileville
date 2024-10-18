@@ -145,6 +145,7 @@ export class Hex extends GameObjects.Image {
         "port-bw",
         "farm",
         "volcanoBg",
+        "solarPanel",
       ][hexType]
     );
     this.hexType = hexType;
@@ -236,6 +237,8 @@ export class Hex extends GameObjects.Image {
         this.setTexture("volcanoBg-bw");
       } else if (this.hexType === 7) {
         this.setTexture("volcanoBg-bw");
+      } else if (this.hexType === 8) {
+        this.setTexture("volcanoBg-bw");
       }
     } else {
       this.setAlpha(1);
@@ -259,6 +262,8 @@ export class Hex extends GameObjects.Image {
       } else if (this.hexType === 6) {
         this.setTexture("volcanoBg-bw");
       } else if (this.hexType === 7) {
+        this.setTexture("volcanoBg-bw");
+      } else if (this.hexType === 8) {
         this.setTexture("volcanoBg-bw");
       }
     }
@@ -371,10 +376,10 @@ export class Hex extends GameObjects.Image {
     }
   }
 
-  addSheepAnimation(x: number, y: number, startFrame: number , isFlip: boolean) {
+  addSheepAnimation(x: number, y: number, startFrame: number, isFlip: boolean) {
     this.sheepSprite = this.scene.add.sprite(x, y, "sheep").setOrigin(0.5, 0.5);
     this.sheepSprite.setScale(0.18);
-    this.sheepSprite.setFlipX(isFlip)
+    this.sheepSprite.setFlipX(isFlip);
     this.sheepSprite.setDepth(this.depth + 1);
     this.sheepSprite.play("sheep_anim");
     this.sheepSprite.anims.currentAnim &&

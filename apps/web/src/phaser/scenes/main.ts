@@ -480,7 +480,7 @@ export class MainScene extends Scene {
       if (i < (3 * size) / 10) {
         deck[i].hexes[0] = 3;
       } else if (i < size / 2) {
-        deck[i].hexes[0] = 7;
+        deck[i].hexes[0] = 8;
       } else {
         deck[i].hexes[0] = 1;
       }
