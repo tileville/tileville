@@ -1077,9 +1077,9 @@ export class MainScene extends Scene {
   placeTile(hex: Hex, type: number) {
     hex.setType(type);
     if (type === 6) {
-      hex.addSheepAnimation(hex.x - 10, hex.y - 10, 0);
-      hex.addSheepAnimation(hex.x + 20, hex.y - 10, 2);
-      hex.addSheepAnimation(hex.x + 7.5, hex.y + 10, 4);
+      hex.addSheepAnimation(hex.x - 9, hex.y - 20, 0, true);
+      hex.addSheepAnimation(hex.x + 11, hex.y - 6, 2, true);
+      hex.addSheepAnimation(hex.x - 6, hex.y + 4, 4, false);
     } else {
       hex.removeSheepAnimation();
     }

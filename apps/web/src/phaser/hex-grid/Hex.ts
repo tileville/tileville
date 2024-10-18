@@ -371,9 +371,10 @@ export class Hex extends GameObjects.Image {
     }
   }
 
-  addSheepAnimation(x: number, y: number, startFrame: number) {
+  addSheepAnimation(x: number, y: number, startFrame: number , isFlip: boolean) {
     this.sheepSprite = this.scene.add.sprite(x, y, "sheep").setOrigin(0.5, 0.5);
-    this.sheepSprite.setScale(0.2);
+    this.sheepSprite.setScale(0.18);
+    this.sheepSprite.setFlipX(isFlip)
     this.sheepSprite.setDepth(this.depth + 1);
     this.sheepSprite.play("sheep_anim");
     this.sheepSprite.anims.currentAnim &&
