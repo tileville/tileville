@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { TREASURY_ADDRESS } from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
+import { isMobile } from "react-device-detect";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -160,8 +161,9 @@ export async function sendPayment({
     nonce: nonce.nonce,
     from: from,
   };
-
-  if (window.mina?.isPallad) {
+  console.log("window mina", window.mina, isMobile);
+  if (window.mina?.isPallad && !isMobile) {
+    console.log("pallad wallet ");
     const signedTransactionResponse = async () => {
       const response = await (window as any).mina.request({
         method: "mina_signTransaction",
