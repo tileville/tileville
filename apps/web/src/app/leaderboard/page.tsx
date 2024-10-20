@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Table, DropdownMenu } from "@radix-ui/themes";
+import { Table, DropdownMenu, Skeleton } from "@radix-ui/themes";
 import {
   useCompetitionsName,
   useLeaderboardEntries,
 } from "@/db/react-query-hooks";
 import TableSkeleton from "./tableSkeleton";
 import { LEADERBOARD_COLUMNS } from "@/constants";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
 type SelectedCompetition = {
   id: number;
@@ -26,15 +26,25 @@ type LeaderboardResult = {
   wallet_address: string;
 };
 
+const SKELETON_ITEM_COUNT = 10;
+
+const skeletonItems = Array.from(
+  { length: SKELETON_ITEM_COUNT },
+  (_, index) => ({
+    id: `skeleton-${index}`,
+  })
+);
+
 export default function Leaderboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const competitionParam = searchParams.get('competition');
+  const competitionParam = searchParams.get("competition");
 
   const {
     data: competitionData,
     isError: isCompetitionError,
     error: competitionError,
+    isLoading: competitionNameLoading,
   } = useCompetitionsName();
 
   const [selectedCompetition, setSelectedCompetition] =
@@ -65,9 +75,13 @@ export default function Leaderboard() {
 
   const handleCompetitionChange = (competition: SelectedCompetition) => {
     setSelectedCompetition(competition);
-    const newSearchParams = new URLSearchParams(Array.from(searchParams.entries()));
-    newSearchParams.set('competition', competition.competition_key);
-    router.push(`/leaderboard?${newSearchParams.toString()}`, { scroll: false });
+    const newSearchParams = new URLSearchParams(
+      Array.from(searchParams.entries())
+    );
+    newSearchParams.set("competition", competition.competition_key);
+    router.push(`/leaderboard?${newSearchParams.toString()}`, {
+      scroll: false,
+    });
   };
 
   if (isCompetitionError) {
@@ -89,7 +103,12 @@ export default function Leaderboard() {
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
                 <button className="border-primary-30  flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
-                  <span className="truncate">{selectedCompetition.name}</span>
+                  {isLoading ? (
+                    <Skeleton className="h-5 w-full" />
+                  ) : (
+                    <span className="truncate">{selectedCompetition.name}</span>
+                  )}
+
                   <span>
                     <Image
                       src="icons/topBottomArrows.svg"
@@ -101,19 +120,38 @@ export default function Leaderboard() {
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="min-w-[200px] max-w-[350px] !bg-transparent backdrop-blur-2xl md:min-w-[320px] md:max-w-none">
-                {competitionData?.map((competition) => (
-                  <DropdownMenu.Item
-                    key={competition.id}
-                    onClick={() => handleCompetitionChange({
-                      id: competition.id,
-                      competition_key: competition.unique_keyname,
-                      name: competition.name,
-                    })}
-                    className="!md:h-8 !h-auto py-2 hover:bg-primary"
-                  >
-                    {competition.name}
-                  </DropdownMenu.Item>
-                ))}
+                {competitionNameLoading ? (
+                  <>
+                    {skeletonItems.map((item) => (
+                      <DropdownMenu.Item
+                        key={item.id}
+                        className="!md:h-8 !h-auto py-2 hover:bg-primary"
+                      >
+                        <Skeleton className="h-5 w-full" />
+                      </DropdownMenu.Item>
+                    ))}
+                  </>
+                ) : (
+                  competitionData?.map((competition) => (
+                    <DropdownMenu.Item
+                      key={competition.id}
+                      onClick={() =>
+                        handleCompetitionChange({
+                          id: competition.id,
+                          competition_key: competition.unique_keyname,
+                          name: competition.name,
+                        })
+                      }
+                      className="!md:h-8 !h-auto py-2 hover:bg-primary"
+                    >
+                      {competitionNameLoading ? (
+                        <Skeleton className="h-3 w-full" />
+                      ) : (
+                        competition.name
+                      )}
+                    </DropdownMenu.Item>
+                  ))
+                )}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           </div>
@@ -157,7 +195,7 @@ export default function Leaderboard() {
                 ) : (
                   <Table.Row>
                     <Table.Cell colSpan={5}>
-                      <h2 className="text-2xl font-semibold text-center">
+                      <h2 className="text-center text-2xl font-semibold">
                         No games are played yet :(
                       </h2>
                     </Table.Cell>
