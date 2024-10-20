@@ -6,7 +6,6 @@ import Link from "next/link";
 import { NAVIGATION_MENU_ITEMS } from "@/constants";
 import useDeviceDetection from "@/hooks/useDeviceDetection";
 import clsx from "clsx";
-import MobileBanner from "@/components/MainMenu/MobileBanner";
 
 export default function MainMenu() {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
@@ -51,7 +50,6 @@ export default function MainMenu() {
           ))}
         </div>
       </div>
-      <MobileBanner />
     </div>
   );
 }
