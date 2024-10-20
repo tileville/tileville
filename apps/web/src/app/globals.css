@@ -524,6 +524,10 @@ input[type="range"]:focus::-moz-range-thumb {
   grid-column: span 2 / span 2;
 }
 
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
 @media screen and (max-width: 750px) {
 
   .text-primary-shadow {
@@ -665,3 +669,17 @@ input[type="range"]:focus::-moz-range-thumb {
     opacity: 1;
   }
 }
+
+@keyframes device-rotate {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25%, 75% {
+    transform: rotate(90deg);
+  }
+}
+
+.animate-device-rotate {
+  animation: device-rotate 4s ease-in-out infinite;
+}
+
