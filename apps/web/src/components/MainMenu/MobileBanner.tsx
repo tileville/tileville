@@ -27,11 +27,11 @@ const MobileBanner = () => {
     <Dialog.Root open={isOpen}>
       <Dialog.Content className="fixed inset-x-0 bottom-0 max-w-[500px] rounded-md bg-white p-4 shadow-lg dark:bg-gray-800">
         <Dialog.Title className="text-center">
-          Open in Auro Browser
+          Auro Browser Required
         </Dialog.Title>
         <Dialog.Description className="text-sm md:text-base" my="2">
-          For the best experience, we recommend opening this application in Auro
-          Browser.
+          This game is designed to work exclusively with the Auro Browser. To
+          play, you&apos;ll need to open the game in Auro Browser.
         </Dialog.Description>
         <Flex gap="3" mt="4" justify="between">
           <Link
