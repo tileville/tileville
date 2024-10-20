@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Table, DropdownMenu } from "@radix-ui/themes";
 import {
@@ -8,12 +8,14 @@ import {
 } from "@/db/react-query-hooks";
 import TableSkeleton from "./tableSkeleton";
 import { LEADERBOARD_COLUMNS } from "@/constants";
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type SelectedCompetition = {
   id: number;
   name: string;
   competition_key: string;
 };
+
 type LeaderboardResult = {
   competition_key: string;
   created_at: string;
@@ -25,6 +27,10 @@ type LeaderboardResult = {
 };
 
 export default function Leaderboard() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const competitionParam = searchParams.get('competition');
+
   const {
     data: competitionData,
     isError: isCompetitionError,
@@ -41,6 +47,28 @@ export default function Leaderboard() {
   const { data: leaderboardData = [], isLoading } = useLeaderboardEntries(
     selectedCompetition.competition_key
   );
+
+  useEffect(() => {
+    if (competitionData && competitionParam) {
+      const matchedCompetition = competitionData.find(
+        (comp) => comp.unique_keyname === competitionParam
+      );
+      if (matchedCompetition) {
+        setSelectedCompetition({
+          id: matchedCompetition.id,
+          name: matchedCompetition.name,
+          competition_key: matchedCompetition.unique_keyname,
+        });
+      }
+    }
+  }, [competitionData, competitionParam]);
+
+  const handleCompetitionChange = (competition: SelectedCompetition) => {
+    setSelectedCompetition(competition);
+    const newSearchParams = new URLSearchParams(Array.from(searchParams.entries()));
+    newSearchParams.set('competition', competition.competition_key);
+    router.push(`/leaderboard?${newSearchParams.toString()}`, { scroll: false });
+  };
 
   if (isCompetitionError) {
     return (
@@ -76,13 +104,11 @@ export default function Leaderboard() {
                 {competitionData?.map((competition) => (
                   <DropdownMenu.Item
                     key={competition.id}
-                    onClick={() => {
-                      setSelectedCompetition({
-                        id: competition.id,
-                        competition_key: competition.unique_keyname,
-                        name: competition.name,
-                      });
-                    }}
+                    onClick={() => handleCompetitionChange({
+                      id: competition.id,
+                      competition_key: competition.unique_keyname,
+                      name: competition.name,
+                    })}
                     className="!md:h-8 !h-auto py-2 hover:bg-primary"
                   >
                     {competition.name}
@@ -95,13 +121,11 @@ export default function Leaderboard() {
         <Table.Root>
           <Table.Header>
             <Table.Row className="whitespace-nowrap">
-              {LEADERBOARD_COLUMNS.map((column) => {
-                return (
-                  <Table.ColumnHeaderCell key={column}>
-                    {column}
-                  </Table.ColumnHeaderCell>
-                );
-              })}
+              {LEADERBOARD_COLUMNS.map((column) => (
+                <Table.ColumnHeaderCell key={column}>
+                  {column}
+                </Table.ColumnHeaderCell>
+              ))}
             </Table.Row>
           </Table.Header>
 
@@ -110,35 +134,35 @@ export default function Leaderboard() {
               <TableSkeleton />
             ) : (
               <>
-                {
-                  leaderboardData.length > 0 ?
-                    leaderboardData.map(
-                      (entry: LeaderboardResult, index: number) => (
-                        <Table.Row key={entry.id}>
-                          <Table.Cell>{index + 1}</Table.Cell>
-                          <Table.Cell>
-                            {entry.username ? (
-                              entry.username
-                            ) : (
-                              <span className="ps-4">-</span>
-                            )}
-                          </Table.Cell>
-                          <Table.RowHeaderCell>
-                            {entry.wallet_address}
-                          </Table.RowHeaderCell>
-                          <Table.Cell>{entry.game_id}</Table.Cell>
-                          <Table.Cell>{entry.score}</Table.Cell>
-                        </Table.Row>
-                      )
+                {leaderboardData.length > 0 ? (
+                  leaderboardData.map(
+                    (entry: LeaderboardResult, index: number) => (
+                      <Table.Row key={entry.id}>
+                        <Table.Cell>{index + 1}</Table.Cell>
+                        <Table.Cell>
+                          {entry.username ? (
+                            entry.username
+                          ) : (
+                            <span className="ps-4">-</span>
+                          )}
+                        </Table.Cell>
+                        <Table.RowHeaderCell>
+                          {entry.wallet_address}
+                        </Table.RowHeaderCell>
+                        <Table.Cell>{entry.game_id}</Table.Cell>
+                        <Table.Cell>{entry.score}</Table.Cell>
+                      </Table.Row>
                     )
-                    : <Table.Row>
-                      <Table.Cell colSpan={5}>
-                        <h2 className="text-2xl font-semibold text-center">
-                          No games are played yet :(
-                        </h2>
-                      </Table.Cell>
-                    </Table.Row>
-                }
+                  )
+                ) : (
+                  <Table.Row>
+                    <Table.Cell colSpan={5}>
+                      <h2 className="text-2xl font-semibold text-center">
+                        No games are played yet :(
+                      </h2>
+                    </Table.Cell>
+                  </Table.Row>
+                )}
               </>
             )}
           </Table.Body>
