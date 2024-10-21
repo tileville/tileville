@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
 import { DesktopNavBar } from "@/components/navbar/DesktopNavBar";
 import { MobileNavBar } from "@/components/navbar/MobileNavBar";
-import { isMobile, isTablet, isDesktop } from "react-device-detect";
+import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
 import MobileBanner from "@/components/MainMenu/MobileBanner";
