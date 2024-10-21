@@ -159,7 +159,9 @@ export async function sendPayment({
     from: from,
   };
 
-  if (window.mina?.isPallad) {
+  console.log("transaction", transaction)
+
+  if (false) {
     const signedTransactionResponse = async () => {
       const response = await (window as any).mina.request({
         method: "mina_signTransaction",
@@ -181,14 +183,17 @@ export async function sendPayment({
 
     return response.result.hash;
   } else {
+    console.log("flow in else block")
     try {
-      const data: SendTransactionResult | ProviderError = await (
-        window as any
-      )?.mina?.sendPayment({
+      const payload = {
         amount: amount,
         to: TREASURY_ADDRESS,
         memo: `Pay ${amount} by auro wallet.`,
-      });
+      }
+      console.log("payload", payload)
+      const data: SendTransactionResult | ProviderError = await (
+        window as any
+      )?.mina?.sendPayment(payload);
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
       toast(`Txn failed with error ${err.toString()}. report a bug`);
