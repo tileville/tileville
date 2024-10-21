@@ -199,6 +199,7 @@ export async function sendPayment({
       console.log("Transaction data", data)
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
+      console.log("Transaction error", err)
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }
   }
