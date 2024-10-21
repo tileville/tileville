@@ -25,7 +25,7 @@ const MobileBanner = () => {
 
   return (
     isOpen && (
-      <div className="fixed inset-x-0 bottom-0 max-w-[500px] !rounded-none bg-white !px-2 !py-1 shadow-lg dark:bg-gray-800">
+      <div className="fixed inset-x-0 bottom-0 !rounded-none bg-white !px-2 !py-1 shadow-lg dark:bg-gray-800">
         <Flex gap="6" justify="center">
           <Link
             href={AURO_WALLET_DEEP_LINK}
