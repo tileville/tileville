@@ -188,12 +188,15 @@ export async function sendPayment({
       const payload = {
         amount: amount,
         to: TREASURY_ADDRESS,
-        memo: `Pay ${amount} by auro wallet.`,
+        memo: `Pay fees`,
+        fee: 0.02,
+                nonce: nonce.nonce
       }
       console.log("payload", payload)
       const data: SendTransactionResult | ProviderError = await (
         window as any
       )?.mina?.sendPayment(payload);
+      console.log("Transaction data", data)
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
       toast(`Txn failed with error ${err.toString()}. report a bug`);
