@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from 'react'
 import { useCompetitionsData } from "@/db/react-query-hooks";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import { useState } from "react";
@@ -6,6 +7,9 @@ import CompetitionLoading from "./competitionLoading";
 import { Competition } from "@/types";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { CompetitionsHeader } from "@/components/Competitions/CompetitionsHeader";
+import VConsole from 'vconsole';
+
+let vConsole: any;
 
 export default function Competitions() {
   const { data, isLoading, isError, error } = useCompetitionsData();
@@ -17,6 +21,14 @@ export default function Competitions() {
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
   }
+
+  useEffect(() => {
+    vConsole = new VConsole();
+    return () => {
+      vConsole && vConsole.destroy();
+    }
+
+  }, [])
 
   return (
     <>
