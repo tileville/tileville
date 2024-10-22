@@ -17,18 +17,21 @@ export default function Competitions() {
   const [selectedCompetition, setSelectedCompetition] = useState<Competition>(
     {} as Competition
   );
+
+  useEffect(() => {
+    vConsole = new VConsole();
+    return () => {
+      vConsole?.destroy();
+    }
+
+  }, [])
+
+
   //TODO: Error Message UI improvement
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
   }
 
-  useEffect(() => {
-    vConsole = new VConsole();
-    return () => {
-      vConsole && vConsole.destroy();
-    }
-
-  }, [])
 
   return (
     <>
