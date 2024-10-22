@@ -188,9 +188,7 @@ export const useParticipationFee = () => {
           from: networkStore.address,
           amount: participation_fee,
         });
-
         txn_status = "PENDING";
-
         break;
       default:
     }

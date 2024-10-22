@@ -3,6 +3,7 @@ import { TraitsInfoCard } from "./TraitsInfoCard";
 import { Dialog } from "@radix-ui/themes";
 import { ATTRIBUTES_DATA, AttributesDataType } from "@/constants";
 import { Json } from "@/lib/database.types";
+import { safeObjectEntries } from "@/lib/helpers";
 
 type TraitsSectionType = {
   traits: Json;
@@ -59,7 +60,7 @@ const parseTraits = (traits: Json): Trait[] => {
         "value" in trait
     );
   } else if (typeof traits === "object" && traits !== null) {
-    return Object.entries(traits).map(([key, value]) => ({
+    return safeObjectEntries(traits).map(([key, value]) => ({
       key,
       value: String(value),
     }));

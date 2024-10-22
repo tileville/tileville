@@ -230,3 +230,16 @@ export async function copyToClipBoard({
     });
   }
 }
+
+export const safeObjectEntries = (obj: any) => {
+  if (!obj || typeof obj !== 'object') {
+    return [];
+  }
+  
+  try {
+    return Object.entries(obj);
+  } catch (error) {
+    console.error('Error in safeObjectEntries:', error);
+    return [];
+  }
+};
