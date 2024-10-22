@@ -177,13 +177,16 @@ importers:
         version: 1.0.7(tailwindcss@3.3.3)
       tileville-chain-dev:
         specifier: 0.0.5
-        version: 0.0.5(bullmq@3.15.8)(ts-pattern@4.3.0)
+        version: link:../../packages/chain
       truncate-middle:
         specifier: ^1.0.6
         version: 1.0.6
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
+      vconsole:
+        specifier: ^3.15.1
+        version: 3.15.1
       zustand:
         specifier: ^4.4.6
         version: 4.5.2(@types/react@18.2.18)(immer@10.1.1)(react@18.3.1)
@@ -7654,6 +7657,11 @@ packages:
       keygrip: 1.1.0
     dev: false
 
+  /copy-text-to-clipboard@3.2.0:
+    resolution: {integrity: sha512-RnJFp1XR/LOBDckxTib5Qjr/PMfkatD0MUCQgdpqS8MdKiNUzBjAQBEN6oUy+jW7LI93BBG3DtMB2KOOKpGs2Q==}
+    engines: {node: '>=12'}
+    dev: false
+
   /copy-to-clipboard@3.3.3:
     resolution: {integrity: sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==}
     dependencies:
@@ -7669,6 +7677,11 @@ packages:
   /core-js@2.6.12:
     resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
     deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+    requiresBuild: true
+    dev: false
+
+  /core-js@3.38.1:
+    resolution: {integrity: sha512-OP35aUorbU3Zvlx7pjsFdu1rGNnD4pgw/CWoYzRY3t2EzoVT7shKHY1dlAy3f41cGIO7ZDPQimhGFTlEYkG/Hw==}
     requiresBuild: true
     dev: false
 
@@ -11110,6 +11123,10 @@ packages:
       msgpackr-extract: 3.0.3
     dev: false
 
+  /mutation-observer@1.0.3:
+    resolution: {integrity: sha512-M/O/4rF2h776hV7qGMZUH3utZLO/jK7p8rnNgGkjKUw8zCGjRQPxB8z6+5l8+VjRUQ3dNYu4vjqXYLr+U8ZVNA==}
+    dev: false
+
   /mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
     dependencies:
@@ -13269,32 +13286,6 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /tileville-chain-dev@0.0.5(bullmq@3.15.8)(ts-pattern@4.3.0):
-    resolution: {integrity: sha512-480nv68Yhm1OGITrVFQwA08eqjSLe+6wtfAl3pyEn71asimTr/yh+RVlspVlKPIE99+cwRYvf9uOm+8givAqzw==}
-    dependencies:
-      '@prisma/client': 5.17.0(prisma@5.18.0)
-      '@proto-kit/api': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/common': 0.1.1-develop.833(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/deployment': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/persistance@0.1.1-develop.833)(@proto-kit/sdk@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(bullmq@3.15.8)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/library': 0.1.1-develop.833(patch_hash=ums46ps4t26l3tpfdnuuxqk6rm)(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/module': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/persistance': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/protocol': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(o1js@1.6.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
-      '@proto-kit/sdk': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/library@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(graphql@16.6.0)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/sequencer': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      concurrently: 8.2.2
-      o1js: 1.6.0
-      reflect-metadata: 0.1.14
-      tsyringe: 4.8.0
-    transitivePeerDependencies:
-      - bullmq
-      - encoding
-      - graphql
-      - prisma
-      - supports-color
-      - ts-pattern
-    dev: false
-
   /tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
     dev: true
@@ -13974,6 +13965,15 @@ packages:
   /vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+    dev: false
+
+  /vconsole@3.15.1:
+    resolution: {integrity: sha512-KH8XLdrq9T5YHJO/ixrjivHfmF2PC2CdVoK6RWZB4yftMykYIaXY1mxZYAic70vADM54kpMQF+dYmvl5NRNy1g==}
+    dependencies:
+      '@babel/runtime': 7.24.7
+      copy-text-to-clipboard: 3.2.0
+      core-js: 3.38.1
+      mutation-observer: 1.0.3
     dev: false
 
   /w3c-xmlserializer@5.0.0:

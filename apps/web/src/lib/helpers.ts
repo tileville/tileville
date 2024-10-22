@@ -159,7 +159,9 @@ export async function sendPayment({
     from: from,
   };
 
-  if (window.mina?.isPallad) {
+  console.log("transaction", transaction)
+
+  if (false) {
     const signedTransactionResponse = async () => {
       const response = await (window as any).mina.request({
         method: "mina_signTransaction",
@@ -181,16 +183,23 @@ export async function sendPayment({
 
     return response.result.hash;
   } else {
+    console.log("flow in else block")
     try {
-      const data: SendTransactionResult | ProviderError = await (
-        window as any
-      )?.mina?.sendPayment({
+      const payload = {
         amount: amount,
         to: TREASURY_ADDRESS,
-        memo: `Pay ${amount} by auro wallet.`,
-      });
+        memo: `Pay fees`,
+        fee: 0.02,
+                nonce: nonce.nonce
+      }
+      console.log("payload", payload)
+      const data: SendTransactionResult | ProviderError = await (
+        window as any
+      )?.mina?.sendPayment(payload);
+      console.log("Transaction data", data)
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
+      console.log("Transaction error", err)
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }
   }
@@ -221,3 +230,16 @@ export async function copyToClipBoard({
     });
   }
 }
+
+export const safeObjectEntries = (obj: any) => {
+  if (!obj || typeof obj !== 'object') {
+    return [];
+  }
+  
+  try {
+    return Object.entries(obj);
+  } catch (error) {
+    console.error('Error in safeObjectEntries:', error);
+    return [];
+  }
+};
