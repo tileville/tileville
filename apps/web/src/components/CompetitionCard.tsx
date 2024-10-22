@@ -7,7 +7,8 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { HtmlRenderer } from "./common/HTMLRenderer";
 import { InfoCircledIcon, TimerIcon } from "@radix-ui/react-icons";
-import { DEFAULT_POSTER_URL } from "@/constants";
+import { DEFAULT_POSTER_URL, DEFAULT_TRASURY_ADDRESS } from "@/constants";
+import { useParticipationFee } from "@/lib/stores/network";
 
 type CompetitionCardProps = {
   competition: Competition;
@@ -24,6 +25,7 @@ export const CompetitionCard = ({
   const [competitionStatus, setCompetitionStatus] =
     useState<CompetitionStatus>("upcoming");
   const [currentDate] = useState(new Date());
+  const { payParticipationFees } = useParticipationFee();
 
   useEffect(() => {
     const isStartBeforeCurrent = isBefore(competition.start_date, currentDate);
@@ -39,12 +41,21 @@ export const CompetitionCard = ({
     }
   }, []);
 
+  const handlePayParticipationFess = async () => {
+    await payParticipationFees({
+      participation_fee: 1,
+      treasury_address: DEFAULT_TRASURY_ADDRESS,
+      competition_key: competition.unique_keyname,
+      type: "NETWORK",
+    });
+  };
+
   return (
     <div
       className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-2 overflow-hidden rounded-lg pb-3 md:gap-3 md:pb-0"
       key={competition.id}
     >
-      <div className="relative col-span-12 aspect-square w-full overflow-hidden rounded-br-md h-auto md:h-full md:col-span-4 xl:h-[400px] xl:w-[400px] md:rounded-none">
+      <div className="relative col-span-12 aspect-square h-auto w-full overflow-hidden rounded-br-md md:col-span-4 md:h-full md:rounded-none xl:h-[400px] xl:w-[400px]">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
@@ -114,7 +125,7 @@ export const CompetitionCard = ({
           </div>
           {competition.is_speed_version && (
             <div className="col-span-4">
-              <div className="mb-2 flex justify-center md:justify-start items-center gap-2 text-xl">
+              <div className="mb-2 flex items-center justify-center gap-2 text-xl md:justify-start">
                 <span>
                   <Image
                     src="/icons/speed.svg"
@@ -123,7 +134,9 @@ export const CompetitionCard = ({
                     height="30"
                   />
                 </span>
-                <p className="text-medium text-sm md:text-base">Speedy Version</p>
+                <p className="text-medium text-sm md:text-base">
+                  Speedy Version
+                </p>
                 <Tooltip.Provider delayDuration={200}>
                   <Tooltip.Root>
                     <Tooltip.Trigger asChild>
@@ -147,7 +160,7 @@ export const CompetitionCard = ({
                 </Tooltip.Provider>
               </div>
 
-              <div className="flex items-center justify-center md:justify-start gap-2 text-xl">
+              <div className="flex items-center justify-center gap-2 text-xl md:justify-start">
                 <span>
                   <TimerIcon width={24} height={24} />
                 </span>
@@ -191,6 +204,13 @@ export const CompetitionCard = ({
               </Tooltip.Root>
             </Tooltip.Provider>
           </div>
+
+          <button
+            onClick={handlePayParticipationFess}
+            className="animated-button-v1 mx-auto w-full cursor-pointer whitespace-nowrap rounded-md border-2 border-primary bg-primary bg-opacity-30 py-2 text-center leading-none text-white disabled:cursor-not-allowed disabled:bg-primary/60"
+          >
+            Pay Entry Fees demo button
+          </button>
         </div>
       </div>
       {competition.competition_tweet_content &&
