@@ -19,9 +19,13 @@ export default function Competitions() {
   );
 
   useEffect(() => {
-    vConsole = new VConsole();
+    if (typeof window !== 'undefined') {
+      vConsole = new VConsole();
+    }
+
     return () => {
-      vConsole?.destroy();
+      if (typeof window !== 'undefined')
+        vConsole?.destroy();
     }
 
   }, [])
