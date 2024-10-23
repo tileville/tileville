@@ -52,7 +52,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="gradient-bg min-h-screen">
+      <body className="gradient-bg min-h-screen" id="root">
         <Theme
           accentColor="green"
           grayColor="olive"

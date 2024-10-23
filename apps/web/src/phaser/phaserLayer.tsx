@@ -94,6 +94,38 @@ export const PhaserLayer = ({
     game.registry.set("isSpeedVersion", isSpeedVersion);
     game.registry.set("speedDuration", speedDuration);
 
+    // Add fullscreen functionality
+    const gameContainer = document.getElementById("root");
+    if (gameContainer) {
+      const enterFullscreen = () => {
+        console.log("full screen button clicked")
+        if (gameContainer.requestFullscreen) {
+          gameContainer.requestFullscreen().catch((err) => {
+            console.warn("Error attempting to enable fullscreen:", err);
+          });
+        } else if ((gameContainer as any).webkitRequestFullscreen) {
+          (gameContainer as any).webkitRequestFullscreen();
+        } else if ((gameContainer as any).msRequestFullscreen) {
+          (gameContainer as any).msRequestFullscreen();
+        }
+      };
+
+      // Add fullscreen button/handler
+      const fullscreenButton = document.createElement("button");
+      fullscreenButton.textContent = "Fullscreen";
+      fullscreenButton.style.position = "absolute";
+      fullscreenButton.style.bottom = "10px";
+      fullscreenButton.style.right = "100px";
+      fullscreenButton.style.zIndex = "1000";
+      fullscreenButton.onclick = enterFullscreen;
+      gameContainer.appendChild(fullscreenButton);
+
+      // Try to enter fullscreen automatically
+      game.events.once("ready", () => {
+        enterFullscreen();
+      });
+    }
+
     return () => {
       game.destroy(true);
     };

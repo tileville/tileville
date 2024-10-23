@@ -683,3 +683,24 @@ input[type="range"]:focus::-moz-range-thumb {
   animation: device-rotate 4s ease-in-out infinite;
 }
 
+
+:root,
+:fullscreen,
+::backdrop {
+  background-color: white; /* Or whatever your app's background color is */
+}
+
+/* Webkit support */
+:root:-webkit-full-screen {
+  background-color: white;
+}
+
+/* Firefox support */
+:root:-moz-full-screen {
+  background-color: white;
+}
+
+/* IE support */
+:root:-ms-fullscreen {
+  background-color: white;
+}
