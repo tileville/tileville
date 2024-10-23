@@ -125,7 +125,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
 
   if (!networkStore.address) {
     return (
-      <div className="flex w-full items-center justify-center p-8">
+      <div className="flex w-full min-h-screen items-center justify-center p-8">
         <button
           className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
           onClick={() => {
