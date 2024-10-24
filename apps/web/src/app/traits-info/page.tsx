@@ -3,6 +3,7 @@
 import { HomeIcon } from "@radix-ui/react-icons";
 import { Trait, traitsContent } from "./trait-content";
 import { useState, useEffect, useRef } from "react";
+import { safeObjectEntries } from "@/lib/helpers";
 
 export default function TraitsInfo() {
   const [activeSection, setActiveSection] = useState("");
@@ -13,7 +14,7 @@ export default function TraitsInfo() {
       const scrollPosition = window.scrollY + 250;
       let currentSection = "";
 
-      Object.entries(sectionRefs.current).forEach(([id, ref]) => {
+      safeObjectEntries(sectionRefs.current).forEach(([id, ref]: [string, any]) => {
         if (
           ref &&
           ref.offsetTop <= scrollPosition &&
@@ -71,11 +72,10 @@ export default function TraitsInfo() {
                   <li key={trait.title}>
                     <button
                       onClick={() => scrollToSection(sectionId)}
-                      className={`whitespace-nowrap rounded-md border border-primary-foreground px-2 py-1 text-xs font-medium transition-colors md:px-4 md:py-2 md:text-sm ${
-                        activeSection === sectionId
-                          ? "bg-primary-foreground text-primary"
-                          : "text-primary-foreground hover:bg-primary/30"
-                      }`}
+                      className={`whitespace-nowrap rounded-md border border-primary-foreground px-2 py-1 text-xs font-medium transition-colors md:px-4 md:py-2 md:text-sm ${activeSection === sectionId
+                        ? "bg-primary-foreground text-primary"
+                        : "text-primary-foreground hover:bg-primary/30"
+                        }`}
                     >
                       {trait.title}
                     </button>

@@ -68,7 +68,7 @@ export const useNetworkStore = create<NetworkState, [["zustand/immer", never]]>(
             (x) =>
               (network.chainId != "unknown"
                 ? x.chainId == network.chainId ||
-                  x.palladNetworkID === network.chainId
+                x.palladNetworkID === network.chainId
                 : x.name == network.name) || x.networkID === network.networkID
           );
           const accountAuthSignature =
@@ -155,8 +155,8 @@ export const useParticipationFee = () => {
   }): Promise<{ id: number } | null | undefined> => {
     let hash;
     let network = window.mina?.isPallad
-      ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
-      : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
+      ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[0].palladNetworkID
+      : networkStore.minaNetwork?.networkID || NETWORKS[0].networkID;
     let txn_status = "PENDING";
     if (!networkStore.address) {
       networkStore.connectWallet(false);
@@ -188,9 +188,7 @@ export const useParticipationFee = () => {
           from: networkStore.address,
           amount: participation_fee,
         });
-
         txn_status = "PENDING";
-
         break;
       default:
     }

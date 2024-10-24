@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from 'react'
 import { useCompetitionsData } from "@/db/react-query-hooks";
 import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import { useState } from "react";
@@ -6,6 +7,9 @@ import CompetitionLoading from "./competitionLoading";
 import { Competition } from "@/types";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { CompetitionsHeader } from "@/components/Competitions/CompetitionsHeader";
+import VConsole from 'vconsole';
+
+let vConsole: any;
 
 export default function Competitions() {
   const { data, isLoading, isError, error } = useCompetitionsData();
@@ -13,14 +17,29 @@ export default function Competitions() {
   const [selectedCompetition, setSelectedCompetition] = useState<Competition>(
     {} as Competition
   );
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      vConsole = new VConsole();
+    }
+
+    return () => {
+      if (typeof window !== 'undefined')
+        vConsole?.destroy();
+    }
+
+  }, [])
+
+
   //TODO: Error Message UI improvement
   if (isError) {
     return <div>Error: {(error as { message: string }).message}</div>;
   }
 
+
   return (
     <>
-      <div className="mx-auto max-w-[1280px] pt-4">
+      <div className="mx-auto max-w-[1280px] pt-4 pb-12">
         <CompetitionsHeader />
 
         <div className="mt-0 grid grid-cols-1 gap-3 px-3 md:mt-5 md:pb-20">

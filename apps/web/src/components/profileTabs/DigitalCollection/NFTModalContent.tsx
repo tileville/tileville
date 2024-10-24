@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Dialog } from "@radix-ui/themes";
 import { CopyIcon } from "@radix-ui/react-icons";
-import { copyToClipBoard, formatAddress } from "@/lib/helpers";
+import { copyToClipBoard, formatAddress, safeObjectEntries } from "@/lib/helpers";
 import React, { ReactNode } from "react";
 import { TraitsInfoTooltip } from "@/components/Marketplace/TraitsInfoTooltip";
 import { NFTModalFooter } from "./NFTModalFooter";
@@ -76,7 +76,7 @@ export const NFTModalContent = ({
           </div>
 
           <ul className="grid grid-cols-2 gap-2 text-center text-xs">
-            {Object.entries(nftProperties).map(([key, value]) => {
+            {safeObjectEntries(nftProperties).map(([key, value]) => {
               if (
                 typeof value === "object" &&
                 value !== null &&

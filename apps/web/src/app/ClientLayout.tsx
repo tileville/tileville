@@ -7,6 +7,7 @@ import { MobileNavBar } from "@/components/navbar/MobileNavBar";
 import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
+import MobileBanner from "@/components/MainMenu/MobileBanner";
 
 const queryClient = new QueryClient();
 const StoreProtokitUpdater = dynamic(
@@ -34,7 +35,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
 
   const renderFooter = () => {
     if (isMobile || isTablet) {
-      return "";
+      return <MobileBanner />;
     } else {
       return <Footer />;
     }
