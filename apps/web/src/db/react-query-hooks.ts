@@ -434,3 +434,20 @@ export const useGlobalConfig = (config_name: string) => {
       })
   );
 };
+
+export function useGetConnections(wallet_address: string) {
+  return useQuery({
+    queryKey: ["connections", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/connections?wallet_address=${wallet_address}`
+      );
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+      return data.data;
+    },
+    enabled: !!wallet_address,
+  });
+}

@@ -25,3 +25,4 @@ dist-ssr
 .vercel
 private.md
 .env.production
+.env.backup
