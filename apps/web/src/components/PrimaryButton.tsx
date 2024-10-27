@@ -103,3 +103,15 @@ export const PrimaryButton = ({
     </Link>
   );
 };
+
+
+export const MobileNavButton = ({ text, onClickHandler }: { text: string, onClickHandler: () => void }) => {
+  return (
+    <button
+      className="bg-primary-30 w-full block p-[5px] text-left font-semibold uppercase text-primary outline-none outline-offset-0 focus:border-primary shadow-[0_0_8px_hsl(var(--primary))] outline-1 outline-primary border-primary"
+      onClick={onClickHandler}
+    >
+      {text}
+    </button>
+  )
+}
