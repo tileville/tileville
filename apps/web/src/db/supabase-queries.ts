@@ -1,8 +1,7 @@
 import { AppSupabaseClient, Table } from "@/types";
 import { supabaseUserClientComponentClient as supabase } from "@/supabase-clients/supabaseUserClientComponentClient";
 import { TransactionLog } from "@/lib/types";
-import { isMockEnv, NFT_PAGE_SIZE } from "@/constants";
-import { mockCompetition } from "./mock-data";
+import { NFT_PAGE_SIZE } from "@/constants";
 
 type PlayerProfile = {
   username: string;
@@ -61,9 +60,6 @@ export const getAllCompetitionsEntries = async (
     .order("priority");
   const formattedData = data ?? [];
 
-  if (isMockEnv()) {
-    formattedData.push(mockCompetition);
-  }
   if (error) {
     throw error;
   }
@@ -342,8 +338,6 @@ export const getCompetitionByKey = async (
   supabase: AppSupabaseClient,
   unique_keyname: string
 ): Promise<Table<"tileville_competitions">> => {
-  if (isMockEnv() && mockCompetition.unique_keyname === unique_keyname)
-    return mockCompetition;
   const { data, error } = await supabase
     .from("tileville_competitions")
     .select("*")
