@@ -66,7 +66,7 @@ export default function SearchFriendsModal({
         </div>
       </Dialog.Trigger>
 
-      <Dialog.Content className="relative !max-w-[500px]" size="1">
+      <Dialog.Content className="relative !max-w-[500px] !bg-[#99B579]" size="1">
         <Dialog.Title className="text-2xl font-bold">
           Search For Friends
         </Dialog.Title>

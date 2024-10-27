@@ -66,7 +66,7 @@ export const Connections = ({ walletAddress }: ConnectionsType) => {
 
         <Tabs.Content value="following">
           <div className="pt-3">
-            <ul>
+            <ul className="flex flex-col gap-1">
               {isLoading ? (
                 "Loading please wait"
               ) : connections.following.length <= 0 ? (
@@ -88,7 +88,9 @@ export const Connections = ({ walletAddress }: ConnectionsType) => {
                         </div>
 
                         <p className="text-xl">{formatAddress(following)}</p>
-                        <button className="ms-auto">Remove</button>
+                        <button className="ms-auto w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D]">
+                          Remove
+                        </button>
                       </div>
                     </li>
                   );
@@ -99,35 +101,41 @@ export const Connections = ({ walletAddress }: ConnectionsType) => {
         </Tabs.Content>
         <Tabs.Content value="followers">
           <div className="pt-3">
-            <ul>
-              {isLoading
-                ? "Loading please wait"
-                : connections.followers.map((follower: string) => {
-                    return (
-                      <li key={follower}>
-                        <div className="flex items-center gap-4">
-                          <div className="h-[50px] w-[50px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
-                            <Image
-                              src="/img/avatars/1.jpeg"
-                              width={200}
-                              height={200}
-                              alt="profile"
-                              className="h-full w-full rounded-full object-cover"
-                            />
-                          </div>
-
-                          <p className="text-xl">{formatAddress(follower)}</p>
-                          <button
-                            className="ms-auto rounded-md border border-black p-2"
-                            onClick={() => handleFollow(follower)}
-                          >
-                            Follow
-                            {isFollowLoading && "loading..."}
-                          </button>
+            <ul className="flex flex-col gap-1">
+              {isLoading ? (
+                "Loading please wait"
+              ) : connections.followers.length <= 0 ? (
+                <li className="text-xm font-bold">
+                  You do not have any followers yet!
+                </li>
+              ) : (
+                connections.followers.map((follower: string) => {
+                  return (
+                    <li key={follower}>
+                      <div className="flex items-center gap-4">
+                        <div className="h-[40px] w-[40px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
+                          <Image
+                            src="/img/avatars/1.jpeg"
+                            width={200}
+                            height={200}
+                            alt="profile"
+                            className="h-full w-full rounded-full object-cover"
+                          />
                         </div>
-                      </li>
-                    );
-                  })}
+
+                        <p className="text-xl">{formatAddress(follower)}</p>
+                        <button
+                          className="ms-auto rounded-md border border-black p-2"
+                          onClick={() => handleFollow(follower)}
+                        >
+                          Follow
+                          {isFollowLoading && "loading..."}
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })
+              )}
             </ul>
           </div>
         </Tabs.Content>
