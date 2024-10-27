@@ -8,6 +8,7 @@ import { CountdownTimer } from "./common/CountdownTimer";
 import { HtmlRenderer } from "./common/HTMLRenderer";
 import { InfoCircledIcon, TimerIcon } from "@radix-ui/react-icons";
 import { DEFAULT_POSTER_URL } from "@/constants";
+import Link from "next/link";
 
 type CompetitionCardProps = {
   competition: Competition;
@@ -94,6 +95,15 @@ export const CompetitionCard = ({
       </div>
       <div className=" col-span-12 px-1 md:col-span-3 md:py-4">
         <div className="grid h-full grid-cols-4 flex-wrap items-center justify-between md:flex md:flex-col md:items-start">
+
+          <div className="col-span-4 py-1 mx-auto md:ms-auto md:mr-4">
+            <Link
+              className="ms-auto rounded-md border-2 border-primary bg-primary bg-opacity-30 px-2 py-1 text-center font-mono text-sm leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
+              href={`leaderboard?competition=${competition.unique_keyname}`}
+            >
+              View Leaderboard
+            </Link>
+          </div>
           <div className="col-span-4 mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
               <div>
@@ -173,8 +183,8 @@ export const CompetitionCard = ({
                     {competitionStatus === "ongoing"
                       ? "Join Now"
                       : competitionStatus === "upcoming"
-                      ? "Competition Starts Soon"
-                      : "Competition Ended"}
+                        ? "Competition Starts Soon"
+                        : "Competition Ended"}
                   </button>
                 </Tooltip.Trigger>
                 {competitionStatus === "upcoming" && (
