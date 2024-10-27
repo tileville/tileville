@@ -1,3 +1,4 @@
+import { copyToClipBoard } from "@/lib/helpers";
 import { CopyIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import Image from "next/image";
 
@@ -6,7 +7,7 @@ const BADGE_BASE_CLASSES =
 
 export const ProfileBasicInfo = () => {
   return (
-    <div className="col-span-3 rounded-xl bg-primary/20 py-4 px-2 backdrop-blur-sm">
+    <div className="col-span-3 rounded-xl bg-primary/20 px-2 py-4 backdrop-blur-sm">
       <div className="mb-8 flex justify-end">
         <button className={BADGE_BASE_CLASSES}>
           <span>Edit Profile</span>
@@ -17,7 +18,7 @@ export const ProfileBasicInfo = () => {
       </div>
 
       <div className="mb-4 flex items-start gap-3">
-        <div className="h-[100px] w-[100px] basis-auto flex-grow-0 flex-shrink-0 rounded-full border-4 border-[#D3F49E]">
+        <div className="h-[100px] w-[100px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
           <Image
             src="/img/avatars/1.jpeg"
             width={200}
@@ -33,7 +34,14 @@ export const ProfileBasicInfo = () => {
           <div className="flex items-center gap-3">
             <div className={BADGE_BASE_CLASSES}>
               <span>B62q...WBU</span>
-              <button>
+              <button
+                onClick={() =>
+                  copyToClipBoard({
+                    toCopyContent: "B62q...WBU<",
+                    copiedType: "Wallet Address",
+                  })
+                }
+              >
                 <CopyIcon width={12} height={12} />
               </button>
             </div>
@@ -79,54 +87,6 @@ export const ProfileBasicInfo = () => {
         <button>
           <Image src="/icons/x.svg" width={20} height={20} alt="x" />
         </button>
-      </div>
-
-      <div className="px-3">
-        <h3 className="text-base font-bold text-[#435133]">Past Games</h3>
-
-        <div className="grid grid-cols-3 gap-3 text-center text-[10px] text-black">
-          <div>
-            <div className="mb-2 h-20 w-full">
-              <Image
-                src="/img/avatars/1.jpeg"
-                width={200}
-                height={200}
-                alt="profile"
-                className="h-full w-full rounded-[10px] object-cover shadow-[0px_4px_4px_0px_rgba(0_0_0_0.25)]"
-              />
-            </div>
-
-            <p>Competition name</p>
-          </div>
-
-          <div>
-            <div className="mb-2 h-20 w-full">
-              <Image
-                src="/img/avatars/1.jpeg"
-                width={200}
-                height={200}
-                alt="profile"
-                className="h-full w-full rounded-[10px] object-cover shadow-[0px_4px_4px_0px_rgba(0_0_0_0.25)]"
-              />
-            </div>
-
-            <p>Competition name</p>
-          </div>
-
-          <div>
-            <div className="mb-2 h-20 w-full">
-              <Image
-                src="/img/avatars/1.jpeg"
-                width={200}
-                height={200}
-                alt="profile"
-                className="h-full w-full rounded-[10px] object-cover shadow-[0px_4px_4px_0px_rgba(0_0_0_0.25)]"
-              />
-            </div>
-
-            <p>Competition name</p>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -451,3 +451,62 @@ export function useGetConnections(wallet_address: string) {
     enabled: !!wallet_address,
   });
 }
+
+export function useFollowUser() {
+  return useMutation({
+    mutationFn: async ({
+      follower_wallet,
+      target_wallet,
+    }: {
+      follower_wallet: string;
+      target_wallet: string;
+    }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
+      console.log("target wallet", target_wallet);
+      console.log("follower_wallet", follower_wallet);
+      try {
+        const response = await fetch("/api/player/follow", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Wallet-Address": follower_wallet,
+            "Auth-Signature": authSignature,
+          },
+          body: JSON.stringify({
+            follower_wallet,
+            target_wallet,
+          }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+          throw new Error(data.error);
+        }
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    },
+  });
+}
+
+export function useGetAllUsers(currentWallet: string) {
+  return useQuery({
+    queryKey: ["all-users", currentWallet],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/all-users?wallet_address=${currentWallet}`
+      );
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+
+      return data.data;
+    },
+    enabled: !!currentWallet, // Only run query if wallet exists
+  });
+}

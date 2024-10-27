@@ -4,6 +4,7 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { Achievements } from "./Achievements";
 import { Connections } from "./Connections";
 import { ProfileBasicInfo } from "./ProfileBasicInfo";
+import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
 
 export const PublicProfileContent = () => {
   const networkStore = useNetworkStore();
@@ -15,7 +16,10 @@ export const PublicProfileContent = () => {
           <div className="grid grid-cols-12 gap-3">
             <ProfileBasicInfo />
             <Achievements />
-            <Connections walletAddress={networkStore.address || ""} />
+            <div className="col-span-4 grid gap-4">
+              <Connections walletAddress={networkStore.address || ""} />
+              <SearchFriendsModal walletAddress={networkStore.address || ""} />
+            </div>
           </div>
         </div>
       </div>
