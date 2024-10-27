@@ -4,6 +4,7 @@ import { Dialog } from "@radix-ui/themes";
 import Image from "next/image";
 import { useFollowUser, useGetAllUsers } from "@/db/react-query-hooks";
 import toast from "react-hot-toast";
+import { UserListItem } from "./UserListItem";
 
 type SearchFriendsModalProps = {
   walletAddress: string;
@@ -66,7 +67,10 @@ export default function SearchFriendsModal({
         </div>
       </Dialog.Trigger>
 
-      <Dialog.Content className="relative !max-w-[500px] !bg-[#99B579]" size="1">
+      <Dialog.Content
+        className="relative !max-w-[500px] !bg-[#99B579]"
+        size="1"
+      >
         <Dialog.Title className="text-2xl font-bold">
           Search For Friends
         </Dialog.Title>
@@ -74,32 +78,17 @@ export default function SearchFriendsModal({
         <p>Suggested people based on your activity</p>
         <ul className="flex flex-col gap-4">
           {users.map((user: any) => {
-            const isFollowingUser = loadingStates[user.wallet_address];
+            const isLoading = loadingStates[user.wallet_address];
             return (
-              <div key={user.username} className="flex items-center gap-4">
-                <div>
-                  <div className="h-[55px] w-[55px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
-                    <Image
-                      src={user.avatar_url}
-                      width={200}
-                      height={200}
-                      alt="profile"
-                      className="h-full w-full rounded-full object-cover"
-                    />
-                  </div>
-                </div>
-                <div>{user.username}</div>
-
-                <div className="ms-auto">
-                  <button
-                    className="border border-black p-2"
-                    onClick={() => handleFollow(user.wallet_address)}
-                  >
-                    Follow
-                    {isFollowingUser && "...."}
-                  </button>
-                </div>
-              </div>
+              <UserListItem
+                key={user.username}
+                avatar_url={user.avatar_url}
+                username={user.username}
+                handleFollow={() => handleFollow(user.wallet_address)}
+                isLoading={isLoading}
+                currentWalletAddress={walletAddress}
+                userWalletAddress={user.wallet_address}
+              />
             );
           })}
         </ul>
