@@ -7,6 +7,7 @@ import { MobileNavBar } from "@/components/navbar/MobileNavBar";
 import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
+import NavigationLoadingIndicator from "@/components/NavigationLoadingIndicator";
 
 const queryClient = new QueryClient();
 const StoreProtokitUpdater = dynamic(
@@ -43,6 +44,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     <JotaiProvider>
       <StoreProtokitUpdater />
       <QueryClientProvider client={queryClient}>
+        <NavigationLoadingIndicator />
         {renderNavBar()}
         <div className="mx-auto max-h-[calc(100vh-200px)]"></div>
         {children}
