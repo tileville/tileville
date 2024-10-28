@@ -7,7 +7,7 @@ const BADGE_BASE_CLASSES =
 
 export const ProfileBasicInfo = () => {
   return (
-    <div className="col-span-3 rounded-xl bg-primary/20 px-2 py-4 backdrop-blur-sm">
+    <div className="h-full w-full rounded-xl bg-primary/20 px-2 py-4 backdrop-blur-sm">
       <div className="mb-8 flex justify-end">
         <button className={BADGE_BASE_CLASSES}>
           <span>Edit Profile</span>

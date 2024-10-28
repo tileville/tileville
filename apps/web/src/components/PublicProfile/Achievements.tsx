@@ -41,7 +41,7 @@ const ACHIEVEMENTS_DATA = [
 
 export const Achievements = () => {
   return (
-    <div className="col-span-5 text-black">
+    <div className="w-full text-black h-full">
       <div className="grid h-full grid-cols-2 gap-3">
         {ACHIEVEMENTS_DATA.map((achievement) => {
           return (
