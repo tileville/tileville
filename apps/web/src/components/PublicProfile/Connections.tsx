@@ -125,7 +125,7 @@ export const Connections = ({
 
                         <p className="text-xl">{formatAddress(follower)}</p>
                         <button
-                          className="ms-auto rounded-md border border-black p-2"
+                          className={`${PRIMARY_BUTTON_STYLES} ms-auto`}
                           onClick={() => handleFollow(follower)}
                         >
                           Follow

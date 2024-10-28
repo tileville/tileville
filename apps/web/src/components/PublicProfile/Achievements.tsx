@@ -41,7 +41,7 @@ const ACHIEVEMENTS_DATA = [
 
 export const Achievements = () => {
   return (
-    <div className="w-full text-black h-full">
+    <div className="h-full w-full text-black">
       <div className="grid h-full grid-cols-2 gap-3">
         {ACHIEVEMENTS_DATA.map((achievement) => {
           return (
@@ -58,13 +58,14 @@ export const Achievements = () => {
                     7,
                     achievement.iconUrl.length - 4
                   )}
+                  className="w-[33px] lg:w-[53px]"
                 />
               </div>
               <div>
-                <p className="text-[2rem] font-bold leading-tight">
+                <p className="text-xl font-bold leading-tight lg:text-[2rem]">
                   {achievement.heading}
                 </p>
-                <p className="text-xl">{achievement.subHeading}</p>
+                <p className="text-sm lg:text-xl">{achievement.subHeading}</p>
               </div>
             </div>
           );

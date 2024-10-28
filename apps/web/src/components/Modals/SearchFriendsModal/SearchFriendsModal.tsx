@@ -64,7 +64,7 @@ export default function SearchFriendsModal({
 
       toast.success("Successfully unfollowed user");
     } catch (error: any) {
-      toast.error(error.message || "Failed to follow user");
+      toast.error(error.message || "Failed to unfollow user");
     } finally {
       setLoadingStates((prev) => ({ ...prev, [targetWallet]: false }));
     }

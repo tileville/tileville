@@ -39,7 +39,7 @@ export const UserListItem = ({
       <div className="ms-auto">
         {isFollowing ? (
           <button
-            className={`${PRIMARY_BUTTON_STYLES} min-w-[128px]`}
+            className={`${PRIMARY_BUTTON_STYLES} relative min-w-[128px]`}
             onClick={handleUnfollow}
             disabled={isLoading}
           >
