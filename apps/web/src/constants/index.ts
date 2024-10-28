@@ -73,6 +73,9 @@ export const POSTHOG_TOKEN =
 export const POSTHOG_URI =
   process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 
+export const AURO_WALLET_DEEP_LINK =
+  "https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/main-menu";
+
 export const isMockEnv = (): boolean => {
   const mintKey =
     typeof window !== "undefined" ? localStorage.getItem("IS_MOCK") : null;
