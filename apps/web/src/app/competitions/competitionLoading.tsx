@@ -1,6 +1,6 @@
 import { Skeleton } from "@radix-ui/themes";
 
-const INITIAL_ARRAY = [34534123344, 34534123345];
+const INITIAL_ARRAY = [34534123344, 34534123345, 34564123325];
 
 export default function CompetitionLoading() {
   return (
@@ -11,15 +11,32 @@ export default function CompetitionLoading() {
             className="border-primary-30 group relative grid grid-cols-12 gap-3 overflow-hidden rounded-lg"
             key={competition}
           >
-            <div className="col-span-2 h-36 overflow-hidden">
-              <Skeleton className="h-[200px] w-[300px]"></Skeleton>
+            <div className="col-span-4 overflow-hidden">
+              <Skeleton className="h-[400px] w-[400px]"></Skeleton>
             </div>
 
-            <div className="col-span-8 flex flex-col p-4">
+            <div className="col-span-6 flex flex-col p-4">
               <Skeleton className="mb-3 w-1/2">
                 <h2 className="h-4 text-xl font-semibold">{competition}</h2>
               </Skeleton>
               <div className="flex flex-col">
+                <Skeleton className="">
+                  <p className="mb-2 text-sm">{competition}</p>
+                </Skeleton>
+
+                <Skeleton className="">
+                  <p className="mb-2 text-sm">{competition}</p>
+                </Skeleton>
+
+                <Skeleton className="">
+                  <p className="mb-2 text-sm">{competition}</p>
+                </Skeleton>
+
+                <Skeleton className="">
+                  <p className="mb-2 text-sm">{competition}</p>
+                </Skeleton>
+
+
                 <Skeleton className="">
                   <p className="mb-2 text-sm">{competition}</p>
                 </Skeleton>
