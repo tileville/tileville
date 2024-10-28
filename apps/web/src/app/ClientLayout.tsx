@@ -8,6 +8,8 @@ import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
 import MobileBanner from "@/components/MainMenu/MobileBanner";
+import VConsole from "vconsole";
+let vConsole: any;
 
 const queryClient = new QueryClient();
 const StoreProtokitUpdater = dynamic(
@@ -23,6 +25,16 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  {
+    process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true" &&
+      useEffect(() => {
+        vConsole = new VConsole();
+        return () => {
+          vConsole && vConsole.destroy();
+        };
+      }, []);
+  }
 
   const renderNavBar = () => {
     if (!isClient) return null; // Don't render anything on the server
