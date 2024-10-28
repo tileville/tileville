@@ -14,11 +14,24 @@ export async function GET(request: NextRequest) {
 
     if (profileError) throw profileError;
 
+    const { data: followersData, error: followersError } = await supabase
+      .from("player_profile")
+      .select("wallet_address, username, fullname, avatar_url")
+      .in("wallet_address", profileData?.followers || []);
+
+    const { data: followingData, error: followingError } = await supabase
+      .from("player_profile")
+      .select("wallet_address, username, fullname, avatar_url")
+      .in("wallet_address", profileData?.following || []);
+
+    if (followersError || followingError)
+      throw followersError || followingError;
+
     return Response.json({
       success: true,
       data: {
-        followers: profileData?.followers || [],
-        following: profileData?.following || [],
+        followers: followersData || [],
+        following: followingData || [],
       },
     });
   } catch (error: any) {

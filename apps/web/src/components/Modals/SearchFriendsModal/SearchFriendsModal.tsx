@@ -9,15 +9,16 @@ import {
 } from "@/db/react-query-hooks";
 import toast from "react-hot-toast";
 import { UserListItem } from "./UserListItem";
+import { User } from "@/types";
 
 type SearchFriendsModalProps = {
   walletAddress: string;
-  following: string[];
+  followingAddresses: string[];
 };
 
 export default function SearchFriendsModal({
   walletAddress,
-  following = [],
+  followingAddresses = [],
 }: SearchFriendsModalProps) {
   const { data: users, isLoading, error } = useGetAllUsers(walletAddress);
 
@@ -105,8 +106,10 @@ export default function SearchFriendsModal({
 
         <p>Suggested people based on your activity</p>
         <ul className="flex flex-col gap-4">
-          {users.map((user: any) => {
-            const isFollowing = following.includes(user.wallet_address);
+          {users.map((user: User) => {
+            const isFollowing = followingAddresses.includes(
+              user.wallet_address
+            );
             const isLoading = loadingStates[user.wallet_address];
             return (
               <UserListItem

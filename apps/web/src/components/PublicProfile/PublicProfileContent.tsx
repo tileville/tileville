@@ -6,6 +6,7 @@ import { Connections } from "./Connections";
 import { ProfileBasicInfo } from "./ProfileBasicInfo";
 import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
 import { useGetConnections } from "@/db/react-query-hooks";
+import { Connection } from "@/types";
 
 export const PublicProfileContent = () => {
   const networkStore = useNetworkStore();
@@ -15,6 +16,10 @@ export const PublicProfileContent = () => {
     isLoading,
     error,
   } = useGetConnections(networkStore.address || "");
+
+  const followingAddresses = connections?.following.map(
+    (connection: Connection) => connection.wallet_address
+  );
 
   return (
     <div>
@@ -29,7 +34,7 @@ export const PublicProfileContent = () => {
               <Achievements />
             </div>
 
-            <div className="col-span-12 md:col-span-6 grid gap-4 xl:col-span-4">
+            <div className="col-span-12 grid gap-4 md:col-span-6 xl:col-span-4">
               <Connections
                 walletAddress={networkStore.address || ""}
                 isLoading={isLoading}
@@ -38,7 +43,7 @@ export const PublicProfileContent = () => {
               />
               <SearchFriendsModal
                 walletAddress={networkStore.address || ""}
-                following={connections?.following}
+                followingAddresses={followingAddresses}
               />
             </div>
           </div>

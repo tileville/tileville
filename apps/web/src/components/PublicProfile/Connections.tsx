@@ -1,18 +1,19 @@
 "use client";
-import { useFollowUser, useGetConnections } from "@/db/react-query-hooks";
-import { formatAddress } from "@/lib/helpers";
+import { useFollowUser } from "@/db/react-query-hooks";
 import { Tabs } from "@radix-ui/themes";
 import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { NoFriends } from "./NoFriends";
 import { PRIMARY_BUTTON_STYLES } from "@/constants";
+import { UpdateIcon } from "@radix-ui/react-icons";
+import { Connection } from "@/types";
 
 type ConnectionsType = {
   walletAddress: string;
   isLoading: boolean;
-  following: string[];
-  followers: string[];
+  following: Connection[];
+  followers: Connection[];
 };
 
 export const Connections = ({
@@ -72,14 +73,13 @@ export const Connections = ({
               ) : following.length <= 0 ? (
                 <NoFriends />
               ) : (
-                following.map((following: string) => {
+                following.map((following: any) => {
                   return (
-                    // TODO: just address is not enough we need to do something so that we can get the user's profile image and name
-                    <li key={following}>
+                    <li key={following.username}>
                       <div className="flex items-center gap-4">
                         <div className="h-[50px] w-[50px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
                           <Image
-                            src="/img/avatars/1.jpeg"
+                            src={following.avatar_url}
                             width={200}
                             height={200}
                             alt="profile"
@@ -87,7 +87,7 @@ export const Connections = ({
                           />
                         </div>
 
-                        <p className="text-xl">{formatAddress(following)}</p>
+                        <p className="text-xl">{following.username}</p>
                         <button className={`${PRIMARY_BUTTON_STYLES} ms-auto`}>
                           Remove
                         </button>
@@ -109,13 +109,13 @@ export const Connections = ({
                   You do not have any followers yet!
                 </li>
               ) : (
-                followers.map((follower: string) => {
+                followers.map((follower: any) => {
                   return (
-                    <li key={follower}>
+                    <li key={follower.username}>
                       <div className="flex items-center gap-4">
                         <div className="h-[40px] w-[40px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
                           <Image
-                            src="/img/avatars/1.jpeg"
+                            src={follower.avatar_url}
                             width={200}
                             height={200}
                             alt="profile"
@@ -123,13 +123,17 @@ export const Connections = ({
                           />
                         </div>
 
-                        <p className="text-xl">{formatAddress(follower)}</p>
+                        <p className="text-xl">{follower.username}</p>
                         <button
-                          className={`${PRIMARY_BUTTON_STYLES} ms-auto`}
-                          onClick={() => handleFollow(follower)}
+                          className={`${PRIMARY_BUTTON_STYLES} relative ms-auto`}
+                          onClick={() => handleFollow(follower.wallet_address)}
                         >
                           Follow
-                          {isFollowLoading && "loading..."}
+                          {isFollowLoading && (
+                            <span className="absolute right-5 top-1/2 -translate-y-1/2">
+                              <UpdateIcon className="animate-spin" />
+                            </span>
+                          )}
                         </button>
                       </div>
                     </li>

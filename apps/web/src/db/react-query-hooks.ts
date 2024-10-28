@@ -561,6 +561,6 @@ export function useGetAllUsers(currentWallet: string) {
 
       return data.data;
     },
-    enabled: !!currentWallet, // Only run query if wallet exists
+    enabled: !!currentWallet,
   });
 }
