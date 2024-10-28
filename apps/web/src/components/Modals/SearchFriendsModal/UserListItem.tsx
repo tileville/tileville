@@ -7,6 +7,7 @@ type UserListItemType = {
   isLoading: boolean;
   currentWalletAddress: string;
   userWalletAddress: string;
+  isFollowing: boolean;
 };
 
 export const UserListItem = ({
@@ -14,6 +15,7 @@ export const UserListItem = ({
   username,
   handleFollow,
   isLoading,
+  isFollowing,
 }: UserListItemType) => {
   //TODO: code to check if the current user is already following the user or not
 
@@ -33,10 +35,14 @@ export const UserListItem = ({
       <div>{username}</div>
 
       <div className="ms-auto">
-        <button className="border border-black p-2" onClick={handleFollow}>
-          Follow
-          {isLoading && "...."}
-        </button>
+        {isFollowing ? (
+          <button className="border border-black p-2">Remove</button>
+        ) : (
+          <button className="border border-black p-2" onClick={handleFollow}>
+            Follow
+            {isLoading && "...."}
+          </button>
+        )}
       </div>
     </div>
   );

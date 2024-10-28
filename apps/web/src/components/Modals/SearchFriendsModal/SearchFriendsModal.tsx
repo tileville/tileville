@@ -8,10 +8,12 @@ import { UserListItem } from "./UserListItem";
 
 type SearchFriendsModalProps = {
   walletAddress: string;
+  following: string[];
 };
 
 export default function SearchFriendsModal({
   walletAddress,
+  following = [],
 }: SearchFriendsModalProps) {
   const { data: users, isLoading, error } = useGetAllUsers(walletAddress);
 
@@ -78,6 +80,7 @@ export default function SearchFriendsModal({
         <p>Suggested people based on your activity</p>
         <ul className="flex flex-col gap-4">
           {users.map((user: any) => {
+            const isFollowing = following.includes(user.wallet_address);
             const isLoading = loadingStates[user.wallet_address];
             return (
               <UserListItem
@@ -88,6 +91,7 @@ export default function SearchFriendsModal({
                 isLoading={isLoading}
                 currentWalletAddress={walletAddress}
                 userWalletAddress={user.wallet_address}
+                isFollowing={isFollowing}
               />
             );
           })}

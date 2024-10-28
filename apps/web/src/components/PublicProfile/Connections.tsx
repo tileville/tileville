@@ -9,17 +9,19 @@ import { NoFriends } from "./NoFriends";
 
 type ConnectionsType = {
   walletAddress: string;
+  isLoading: boolean;
+  following: string[];
+  followers: string[];
 };
 
-export const Connections = ({ walletAddress }: ConnectionsType) => {
-  const {
-    data: connections,
-    isLoading,
-    error,
-  } = useGetConnections(walletAddress);
-  const [isFollowLoading, setIsFollowLoading] = useState(false);
-
+export const Connections = ({
+  walletAddress,
+  isLoading,
+  following,
+  followers,
+}: ConnectionsType) => {
   const followMutation = useFollowUser();
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
 
   const handleFollow = async (targetWallet: string) => {
     if (!walletAddress) {
@@ -42,9 +44,6 @@ export const Connections = ({ walletAddress }: ConnectionsType) => {
       setIsFollowLoading(false);
     }
   };
-
-  console.log("connections data", connections);
-  console.log("wallet address in connections", walletAddress);
 
   return (
     <div className="w-full rounded-xl bg-primary/20 p-4 text-black backdrop-blur-sm">
@@ -69,10 +68,10 @@ export const Connections = ({ walletAddress }: ConnectionsType) => {
             <ul className="flex flex-col gap-1">
               {isLoading ? (
                 "Loading please wait"
-              ) : connections.following.length <= 0 ? (
+              ) : following.length <= 0 ? (
                 <NoFriends />
               ) : (
-                connections.following.map((following: string) => {
+                following.map((following: string) => {
                   return (
                     // TODO: just address is not enough we need to do something so that we can get the user's profile image and name
                     <li key={following}>
@@ -104,12 +103,12 @@ export const Connections = ({ walletAddress }: ConnectionsType) => {
             <ul className="flex flex-col gap-1">
               {isLoading ? (
                 "Loading please wait"
-              ) : connections.followers.length <= 0 ? (
+              ) : followers.length <= 0 ? (
                 <li className="text-xm font-bold">
                   You do not have any followers yet!
                 </li>
               ) : (
-                connections.followers.map((follower: string) => {
+                followers.map((follower: string) => {
                   return (
                     <li key={follower}>
                       <div className="flex items-center gap-4">

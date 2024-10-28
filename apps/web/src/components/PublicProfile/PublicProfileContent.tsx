@@ -5,9 +5,16 @@ import { Achievements } from "./Achievements";
 import { Connections } from "./Connections";
 import { ProfileBasicInfo } from "./ProfileBasicInfo";
 import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
+import { useGetConnections } from "@/db/react-query-hooks";
 
 export const PublicProfileContent = () => {
   const networkStore = useNetworkStore();
+
+  const {
+    data: connections,
+    isLoading,
+    error,
+  } = useGetConnections(networkStore.address || "");
 
   return (
     <div>
@@ -17,8 +24,16 @@ export const PublicProfileContent = () => {
             <ProfileBasicInfo />
             <Achievements />
             <div className="col-span-4 grid gap-4">
-              <Connections walletAddress={networkStore.address || ""} />
-              <SearchFriendsModal walletAddress={networkStore.address || ""} />
+              <Connections
+                walletAddress={networkStore.address || ""}
+                isLoading={isLoading}
+                following={connections?.following}
+                followers={connections?.followers}
+              />
+              <SearchFriendsModal
+                walletAddress={networkStore.address || ""}
+                following={connections?.following}
+              />
             </div>
           </div>
         </div>
