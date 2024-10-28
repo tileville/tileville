@@ -42,7 +42,13 @@ export default function PastGames({ walletAddress }: PastGamesProps) {
                   ))}
                 </>
               ) : (
-                <h2>No Past Games Found</h2>
+                <Table.Row >
+                  <Table.Cell colSpan={5}>
+                    <h2 className="text-center text-xl font-bold">No Past Games Found</h2>
+                  </Table.Cell>
+                </Table.Row>
+
+
               )}
             </>
           )}
