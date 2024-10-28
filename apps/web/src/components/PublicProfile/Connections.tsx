@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { NoFriends } from "./NoFriends";
+import { PRIMARY_BUTTON_STYLES } from "@/constants";
 
 type ConnectionsType = {
   walletAddress: string;
@@ -87,7 +88,7 @@ export const Connections = ({
                         </div>
 
                         <p className="text-xl">{formatAddress(following)}</p>
-                        <button className="ms-auto w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D]">
+                        <button className={`${PRIMARY_BUTTON_STYLES} ms-auto`}>
                           Remove
                         </button>
                       </div>

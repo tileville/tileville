@@ -3,7 +3,12 @@
 /* ==================== */
 
 import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import {
@@ -453,6 +458,8 @@ export function useGetConnections(wallet_address: string) {
 }
 
 export function useFollowUser() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({
       follower_wallet,
@@ -488,6 +495,53 @@ export function useFollowUser() {
       } catch (error) {
         throw error;
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connections"] });
+    },
+  });
+}
+export function useUnfollowUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      follower_wallet,
+      target_wallet,
+    }: {
+      follower_wallet: string;
+      target_wallet: string;
+    }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
+      console.log("target wallet", target_wallet);
+      console.log("follower_wallet", follower_wallet);
+      try {
+        const response = await fetch("/api/player/unfollow", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Wallet-Address": follower_wallet,
+            "Auth-Signature": authSignature,
+          },
+          body: JSON.stringify({
+            follower_wallet,
+            target_wallet,
+          }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+          throw new Error(data.error);
+        }
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connections"] });
     },
   });
 }

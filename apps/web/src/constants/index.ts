@@ -449,3 +449,6 @@ export const TABLE_SKELETON_CONTENT = [
   "7asdfasdfs0",
   "70",
 ];
+
+export const PRIMARY_BUTTON_STYLES =
+  "w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D]";

@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog } from "@radix-ui/themes";
 import Image from "next/image";
-import { useFollowUser, useGetAllUsers } from "@/db/react-query-hooks";
+import {
+  useFollowUser,
+  useGetAllUsers,
+  useUnfollowUser,
+} from "@/db/react-query-hooks";
 import toast from "react-hot-toast";
 import { UserListItem } from "./UserListItem";
 
@@ -22,6 +26,7 @@ export default function SearchFriendsModal({
   );
 
   const followMutation = useFollowUser();
+  const unfollowMutation = useUnfollowUser();
 
   const handleFollow = async (targetWallet: string) => {
     if (!walletAddress) {
@@ -37,6 +42,27 @@ export default function SearchFriendsModal({
       });
 
       toast.success("Successfully followed user");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to follow user");
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [targetWallet]: false }));
+    }
+  };
+
+  const handleUnfollow = async (targetWallet: string) => {
+    if (!walletAddress) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    setLoadingStates((prev) => ({ ...prev, [targetWallet]: true }));
+    try {
+      await unfollowMutation.mutateAsync({
+        follower_wallet: walletAddress,
+        target_wallet: targetWallet,
+      });
+
+      toast.success("Successfully unfollowed user");
     } catch (error: any) {
       toast.error(error.message || "Failed to follow user");
     } finally {
@@ -88,6 +114,7 @@ export default function SearchFriendsModal({
                 avatar_url={user.avatar_url}
                 username={user.username}
                 handleFollow={() => handleFollow(user.wallet_address)}
+                handleUnfollow={() => handleUnfollow(user.wallet_address)}
                 isLoading={isLoading}
                 currentWalletAddress={walletAddress}
                 userWalletAddress={user.wallet_address}

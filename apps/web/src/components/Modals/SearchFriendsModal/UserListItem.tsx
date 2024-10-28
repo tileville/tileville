@@ -1,9 +1,12 @@
+import { PRIMARY_BUTTON_STYLES } from "@/constants";
+import { UpdateIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 
 type UserListItemType = {
   avatar_url: string;
   username: string;
   handleFollow: () => void;
+  handleUnfollow: () => void;
   isLoading: boolean;
   currentWalletAddress: string;
   userWalletAddress: string;
@@ -14,11 +17,10 @@ export const UserListItem = ({
   avatar_url,
   username,
   handleFollow,
+  handleUnfollow,
   isLoading,
   isFollowing,
 }: UserListItemType) => {
-  //TODO: code to check if the current user is already following the user or not
-
   return (
     <div key={username} className="flex items-center gap-4">
       <div>
@@ -36,11 +38,30 @@ export const UserListItem = ({
 
       <div className="ms-auto">
         {isFollowing ? (
-          <button className="border border-black p-2">Remove</button>
+          <button
+            className={`${PRIMARY_BUTTON_STYLES} min-w-[128px]`}
+            onClick={handleUnfollow}
+            disabled={isLoading}
+          >
+            Remove
+            {isLoading && (
+              <span className="absolute right-5 top-1/2 -translate-y-1/2">
+                <UpdateIcon className="animate-spin" />
+              </span>
+            )}
+          </button>
         ) : (
-          <button className="border border-black p-2" onClick={handleFollow}>
+          <button
+            className={`${PRIMARY_BUTTON_STYLES} relative min-w-[128px]`}
+            onClick={handleFollow}
+            disabled={isLoading}
+          >
             Follow
-            {isLoading && "...."}
+            {isLoading && (
+              <span className="absolute right-5 top-1/2 -translate-y-1/2">
+                <UpdateIcon className="animate-spin" />
+              </span>
+            )}
           </button>
         )}
       </div>
