@@ -30,6 +30,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const payload = await request.json();
   const { wallet_address, code } = payload;
+  // console.log("redeem voucher post api payload", { wallet_address, code });
 
   const { data, error } = await supabase
     .from("voucher_codes")
@@ -40,8 +41,13 @@ export async function POST(request: NextRequest) {
     })
     .eq("code", code)
     .eq("is_redeemed", false)
+    .select("id")
     .single();
-  if (error) throw error;
+  if (error) {
+    console.log("redeem voucher post api error", error);
+    throw error;
+  }
+  // console.log("===data===", data);
   const res = !!data ? true : false;
-  if (data) return Response.json({ status: res });
+  return Response.json({ status: res });
 }

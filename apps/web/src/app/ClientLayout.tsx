@@ -29,9 +29,12 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   {
     process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true" &&
       useEffect(() => {
-        vConsole = new VConsole();
+        if (typeof window !== "undefined") {
+          vConsole = new VConsole();
+        }
+
         return () => {
-          vConsole && vConsole.destroy();
+          if (typeof window !== "undefined") vConsole?.destroy();
         };
       }, []);
   }
