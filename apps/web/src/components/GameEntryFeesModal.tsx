@@ -67,8 +67,8 @@ export const GameEntryFeesModal = ({
       type: vocherValidationResponse.isValid
         ? "VOUCHER"
         : competition.participation_fee === 0
-        ? "FREE"
-        : "NETWORK",
+          ? "FREE"
+          : "NETWORK",
       code: voucherCode,
     });
 
@@ -156,14 +156,12 @@ export const GameEntryFeesModal = ({
             </div>
           )}
           {vocherValidationResponse.isValid ? (
-            <p className="text-primary">
+            <span className="text-primary">
               Voucher code is valid. click on redeem code button to join the
               competition for free.
-            </p>
+            </span>
           ) : (
-            <p>
-              <p className="text-red-500">{vocherValidationResponse.message}</p>
-            </p>
+            <span className="text-red-500">{vocherValidationResponse.message}</span>
           )}
         </Dialog.Description>
 
