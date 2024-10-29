@@ -2,7 +2,8 @@ import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 import { withAuth } from "../../authMiddleware";
 
-export async function handler(request: NextRequest) {
+// Changed from export async function to const
+const postHandler = async (request: NextRequest) => {
   try {
     const { follower_wallet, target_wallet } = await request.json();
 
@@ -19,7 +20,7 @@ export async function handler(request: NextRequest) {
       );
     }
 
-    // Get current followers and following lists
+    // Rest of your code stays exactly the same...
     const { data: targetProfile, error: targetError } = await supabase
       .from("player_profile")
       .select("followers")
@@ -75,6 +76,6 @@ export async function handler(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+};
 
-export const POST = withAuth(handler);
+export const POST = withAuth(postHandler);

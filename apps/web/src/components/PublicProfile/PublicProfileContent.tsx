@@ -8,9 +8,9 @@ import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal"
 import { useGetConnections, usePublicProfile } from "@/db/react-query-hooks";
 
 export const PublicProfileContent = ({
-  params,
+  params = {handle: "B62qk1KqJq2m59NJuPmHHWDFsejzc21Hr8gcHqWYfhM51dwpsVxtEQS"},
 }: {
-  params: { handle: string };
+  params?: { handle: string };
 }) => {
   const networkStore = useNetworkStore();
 

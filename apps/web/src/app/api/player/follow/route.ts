@@ -5,7 +5,7 @@ import { withAuth } from "../../authMiddleware";
 //  follower_wallet: person who is doing the following
 //  target_wallet: person who is being followed by the follower_wallet
 
-export async function handler(request: NextRequest) {
+const postHandler = async (request: NextRequest) => {
   try {
     const { follower_wallet, target_wallet } = await request.json();
 
@@ -78,4 +78,4 @@ export async function handler(request: NextRequest) {
   }
 }
 
-export const POST = withAuth(handler);
+export const POST = withAuth(postHandler);
