@@ -71,3 +71,16 @@ type User = {
   username: string;
   avatar_url: string;
 };
+
+interface PublicProfile {
+  wallet_address: string;
+  username?: string;
+  fullname?: string;
+  avatar_url?: string;
+  followers?: string[];
+  following?: string[];
+  twitter_username?: string | null;
+  telegram_username?: string | null;
+  discord_username?: string | null;
+  email_address?: string | null;
+}

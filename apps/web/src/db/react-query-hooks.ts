@@ -36,6 +36,7 @@ import {
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
+import { PublicProfile } from "@/types";
 
 export const useSendEmail = ({
   onSuccess,
@@ -585,3 +586,28 @@ export function useGetAllUsers(currentWallet: string) {
     enabled: !!currentWallet,
   });
 }
+
+interface PublicProfileResponse {
+  status: boolean;
+  data: PublicProfile;
+}
+
+export const usePublicProfile = (wallet_address: string) => {
+  return useQuery<PublicProfileResponse, Error>(
+    ["public-profile", wallet_address],
+    async () => {
+      const response = await fetch(
+        `/api/player/public?wallet_address=${wallet_address}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch public profile");
+      }
+      return response.json();
+    },
+    {
+      enabled: !!wallet_address, // Only fetch when wallet_address is available
+      staleTime: 1000 * 60 * 5, // data fresh for 5 minutes
+      cacheTime: 1000 * 60 * 30, // cache data for 30 minutes
+    }
+  );
+};
