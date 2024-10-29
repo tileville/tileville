@@ -61,7 +61,7 @@ export const MobileNavBar = () => {
         className={`fixed right-0 z-30 flex h-screen flex-col justify-between bg-white transition-transform ${sidebarOpen ? "translate-x-0" : "translate-x-[100vw]"
           }`}
       >
-        <ul className="flex flex-col gap-2 p-4">
+        <ul className="flex flex-col gap-2 p-4 overflow-auto">
           <li>
             <div>
               <button
