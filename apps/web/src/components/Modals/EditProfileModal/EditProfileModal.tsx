@@ -185,6 +185,8 @@ export const EditProfileModal = ({
               </p>
 
               <div className="mt-6 flex flex-col gap-4 text-2xl">
+                {/* // TODO: For the next three div put content in the Array and render them
+                    // TODO: with map */}
                 <div className="flex items-center gap-6">
                   <div className="flex items-center gap-1">
                     <div>
@@ -215,7 +217,6 @@ export const EditProfileModal = ({
                     </div>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-6">
                   <div className="flex items-center gap-1">
                     <div>
@@ -246,7 +247,6 @@ export const EditProfileModal = ({
                     </div>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-6">
                   <div className="flex items-center gap-1">
                     <div>
