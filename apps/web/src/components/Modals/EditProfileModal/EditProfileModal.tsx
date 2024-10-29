@@ -10,6 +10,7 @@ import {
 import { IFormInput } from "@/app/profile/ProfileContent";
 import { Spinner } from "../../common/Spinner";
 import { WhyToolTip } from "./whyToolTip";
+import ToggleSwitch from "@/components/common/ToggleSwitch";
 
 type EditProfileModalType = {
   closeModal: () => void;
@@ -26,6 +27,9 @@ type EditProfileModalType = {
   avatarUrl: string;
   isLoading: boolean;
 };
+
+const INPUT_PRIMARY_CLASSES =
+  "border-primary min-h-10 h-[60px] w-full rounded-md border-2 bg-transparent px-2 font-medium outline-none placeholder:text-primary/30";
 
 export const EditProfileModal = ({
   closeModal,
@@ -53,20 +57,18 @@ export const EditProfileModal = ({
         </button>
       }
     >
-      <div className="relative max-h-full w-full max-w-md">
-        <div className="relative p-4 md:p-5">
-          <InfoCircledIcon
-            width={48}
-            height={48}
-            color="#9ca3af"
-            className="mx-auto mb-4"
-          />
-          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
-            Please Complete Your Profile.
+      <div className="relative mx-auto max-h-full w-full max-w-[1052px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">
+        <div className="relative mx-auto max-w-[856px] p-4 md:p-5">
+          <h3 className="mb-5 text-center text-4xl font-normal text-black">
+            <span>Edit your Profile </span>
+
             <WhyToolTip />
           </h3>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="left-left">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="left-left text-2xl text-black"
+          >
             <div className="">
               <div
                 className="group relative mx-auto h-20 w-20 rounded-full"
@@ -86,17 +88,17 @@ export const EditProfileModal = ({
                 </span>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-              <div>
-                <label htmlFor="firstName" className="block">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+              <div className="col-span-2">
+                <label htmlFor="firstName" className="mb-2 block">
                   First Name
-                  <span className="text-sm text-red-500">*</span>
+                  <span className="text-2xl text-red-500">*</span>
                 </label>
 
                 <div>
                   <input
                     type="text"
-                    className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
+                    className={INPUT_PRIMARY_CLASSES}
                     placeholder="First Name"
                     {...register("firstName", {
                       required: true,
@@ -104,39 +106,38 @@ export const EditProfileModal = ({
                   />
                 </div>
 
-                <span
-                  className={`${firstNameError ? "opacity-100" : ""
-                    } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
-                >
-                  First Name is required..
-                </span>
+                {firstNameError && (
+                  <span className="mt-1 block text-sm text-red-500">
+                    First Name is required..
+                  </span>
+                )}
               </div>
 
-              <div>
-                <label htmlFor="lastName" className="block">
+              <div className="col-span-2">
+                <label htmlFor="lastName" className="mb-2 block">
                   Last Name
                 </label>
 
                 <div>
                   <input
                     type="text"
-                    className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
+                    className={INPUT_PRIMARY_CLASSES}
                     id="lastName"
                     placeholder="Last Name"
                     {...register("lastName")}
                   />
                 </div>
               </div>
-              <div className="col-span-2">
-                <label htmlFor="username" className="block">
+              <div className="">
+                <label htmlFor="username" className="mb-2 block">
                   Username
-                  <span className="text-sm text-red-500">*</span>
+                  <span className="text-2xl text-red-500">*</span>
                 </label>
 
                 <div>
                   <input
                     type="text"
-                    className="border-primary-30 min-h-10 h-10 w-full rounded-md border bg-transparent px-2 font-medium outline-none placeholder:text-primary/30"
+                    className={INPUT_PRIMARY_CLASSES}
                     id="username"
                     placeholder="Username"
                     {...register("username", {
@@ -146,11 +147,112 @@ export const EditProfileModal = ({
                 </div>
 
                 <span
-                  className={`${userNameError ? "opacity-100" : ""
-                    } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+                  className={`${
+                    userNameError ? "opacity-100" : ""
+                  } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
                 >
                   {userNameErrorMsg}
                 </span>
+              </div>
+
+              <div className="">
+                <label htmlFor="username" className="mb-2 block">
+                  Email
+                  <span className="text-2xl text-red-500">*</span>
+                </label>
+
+                <div>
+                  <input
+                    type="text"
+                    className={INPUT_PRIMARY_CLASSES}
+                    id="email"
+                    placeholder="Email"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <h3 className="text-2xl font-bold">Social Media Links</h3>
+              <p className="text-xl text-[#FF5151]">
+                at least provide us with one social link.
+              </p>
+
+              <div className="mt-6 flex flex-col gap-4 text-2xl">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-1">
+                    <div>
+                      <Image
+                        src="/icons/x.svg"
+                        width={60}
+                        height={60}
+                        alt="x"
+                      />
+                    </div>
+                    <p>Twitter</p>
+                  </div>
+                  <div className="flex flex-1 items-center gap-3">
+                    <div className="w-full">
+                      <input
+                        type="text"
+                        className={`${INPUT_PRIMARY_CLASSES} w-full`}
+                      />
+                    </div>
+                    <div>
+                      <ToggleSwitch />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-1">
+                    <div>
+                      <Image
+                        src="/icons/telegram.svg"
+                        width={60}
+                        height={60}
+                        alt="x"
+                      />
+                    </div>
+                    <p>Telegram</p>
+                  </div>
+                  <div className="flex flex-1 items-center gap-3">
+                    <div className="w-full">
+                      <input
+                        type="text"
+                        className={`${INPUT_PRIMARY_CLASSES} w-full`}
+                      />
+                    </div>
+                    <div>
+                      <ToggleSwitch />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-1">
+                    <div>
+                      <Image
+                        src="/icons/discord.svg"
+                        width={60}
+                        height={60}
+                        alt="x"
+                      />
+                    </div>
+                    <p>Discord</p>
+                  </div>
+                  <div className="flex flex-1 items-center gap-3">
+                    <div className="w-full">
+                      <input
+                        type="text"
+                        className={`${INPUT_PRIMARY_CLASSES} w-full`}
+                      />
+                    </div>
+                    <div>
+                      <ToggleSwitch />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -169,7 +271,7 @@ export const EditProfileModal = ({
                 disabled={isLoading}
               >
                 Submit
-                {isLoading && <Spinner className="align-middle ms-5" />}
+                {isLoading && <Spinner className="ms-5 align-middle" />}
               </button>
             </div>
           </form>
