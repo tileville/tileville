@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+interface ToggleSwitchProps {
+  isPublic: boolean;
+  onChange: (isPublic: boolean) => void;
+}
 
-const ToggleSwitch = () => {
-  const [isPublic, setIsPublic] = useState(true);
-
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isPublic, onChange }) => {
   return (
     <div className="flex flex-col items-center gap-2 text-center">
       <button
         type="button"
-        onClick={() => setIsPublic(!isPublic)}
+        onClick={() => onChange(!isPublic)}
         className="relative h-9 w-[84px] rounded-[5px] bg-[#748A5B] transition-colors duration-200 ease-in-out"
         aria-pressed={isPublic}
       >
@@ -17,7 +18,7 @@ const ToggleSwitch = () => {
           }`}
         />
       </button>
-      <div className="text-sm  text-[#474444] whitespace-nowrap min-w-[106px]">
+      <div className="min-w-[106px] whitespace-nowrap text-sm text-[#474444]">
         Visibility : {isPublic ? "Public" : "Private"}
       </div>
     </div>

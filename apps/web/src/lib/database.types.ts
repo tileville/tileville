@@ -93,30 +93,42 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          discord_username: Json
+          email_address: Json
           followers: string[]
           following: string[]
           fullname: string | null
           id: number
+          telegram_username: Json
+          twitter_username: Json
           username: string
           wallet_address: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          discord_username?: Json
+          email_address?: Json
           followers?: string[]
           following?: string[]
           fullname?: string | null
           id?: number
+          telegram_username?: Json
+          twitter_username?: Json
           username: string
           wallet_address: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          discord_username?: Json
+          email_address?: Json
           followers?: string[]
           following?: string[]
           fullname?: string | null
           id?: number
+          telegram_username?: Json
+          twitter_username?: Json
           username?: string
           wallet_address?: string
         }

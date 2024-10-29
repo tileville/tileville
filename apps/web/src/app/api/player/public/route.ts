@@ -21,6 +21,8 @@ interface PlayerProfile {
   followers?: string[];
   following?: string[];
   twitter_username?: SocialField | null;
+  telegram_username?: SocialField | null;
+  discord_username?: SocialField | null;
   email_address?: EmailField | null;
 }
 
@@ -33,6 +35,8 @@ interface PublicPlayerProfile {
   followers?: string[];
   following?: string[];
   twitter_username?: string | null;
+  telegram_username?: string | null;
+  discord_username?: string | null;
   email_address?: string | null;
 }
 
@@ -41,6 +45,12 @@ function getPublicProfile(profile: PlayerProfile): PublicPlayerProfile {
     ...profile,
     twitter_username: profile.twitter_username?.isPublic
       ? profile.twitter_username.username
+      : null,
+    telegram_username: profile.telegram_username?.isPublic
+      ? profile.telegram_username.username
+      : null,
+    discord_username: profile.discord_username?.isPublic
+      ? profile.discord_username.username
       : null,
     email_address: profile.email_address?.isPublic
       ? profile.email_address.email
@@ -65,6 +75,8 @@ export async function GET(request: NextRequest) {
         followers,
         following,
         twitter_username,
+        telegram_username,
+        discord_username,
         email_address
       `
         )

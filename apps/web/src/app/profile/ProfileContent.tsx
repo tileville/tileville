@@ -22,6 +22,22 @@ export interface IFormInput {
   lastName: string;
   username: string;
   avatar_url: string;
+  twitter_username: {
+    username: string;
+    isPublic: boolean;
+  };
+  telegram_username: {
+    username: string;
+    isPublic: boolean;
+  };
+  discord_username: {
+    username: string;
+    isPublic: boolean;
+  };
+  email_address: {
+    username: string;
+    isPublic: boolean;
+  };
 }
 
 export default function Profile({ initialTab }: { initialTab: string }) {
@@ -33,6 +49,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
   const { data: profileData, refetch } = useProfileLazyQuery(
     networkStore?.address || ""
   );
+
   const {
     register,
     handleSubmit,
@@ -46,6 +63,22 @@ export default function Profile({ initialTab }: { initialTab: string }) {
       lastName: (profileData?.fullname ?? "").split(" ")[1],
       username: profileData?.username || "",
       avatar_url: profileData?.avatar_url || "/img/avatars/defaultImg.webp",
+      twitter_username: {
+        username: "",
+        isPublic: false,
+      },
+      telegram_username: {
+        username: "",
+        isPublic: false,
+      },
+      discord_username: {
+        username: "",
+        isPublic: false,
+      },
+      email_address: {
+        username: "",
+        isPublic: false,
+      },
     },
   });
 
@@ -54,18 +87,40 @@ export default function Profile({ initialTab }: { initialTab: string }) {
 
   useEffect(() => {
     if (profileData) {
-      const { fullname, username, avatar_url } = profileData;
+      const {
+        fullname,
+        username,
+        avatar_url,
+        twitter_username,
+        telegram_username,
+        discord_username,
+        email_address,
+      } = profileData;
       setValue("firstName", (fullname ?? "").split(" ")[0]);
       setValue("lastName", (fullname ?? "").split(" ")[1]);
       setValue("avatar_url", avatar_url ?? "/img/avatars/defaultImg.webp");
       setValue("username", username ?? "");
+
+      if (twitter_username) {
+        setValue("twitter_username", twitter_username);
+      }
+      if (telegram_username) {
+        setValue("telegram_username", telegram_username);
+      }
+      if (discord_username) {
+        setValue("discord_username", discord_username);
+      }
+      if (email_address) {
+        setValue("email_address", email_address);
+      }
     }
   }, [profileData, setValue]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
     const isExistApiResponse = await fetch(
-      `/api/player_profile/is_username_exist?username=${data.username}&userId=${profileData?.id || ""
+      `/api/player_profile/is_username_exist?username=${data.username}&userId=${
+        profileData?.id || ""
       }`
     );
 
@@ -86,6 +141,10 @@ export default function Profile({ initialTab }: { initialTab: string }) {
         username: data.username,
         fullname: `${data.firstName} ${data.lastName}`,
         avatar_url: data.avatar_url,
+        twitter_username: data.twitter_username,
+        telegram_username: data.telegram_username,
+        discord_username: data.discord_username,
+        email_address: data.email_address,
       }),
       closeModal()
     );
@@ -125,7 +184,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
 
   if (!networkStore.address) {
     return (
-      <div className="flex w-full min-h-screen items-center justify-center p-8">
+      <div className="flex min-h-screen w-full items-center justify-center p-8">
         <button
           className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
           onClick={() => {
@@ -181,6 +240,8 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                       handleToggle={handleToggle}
                       avatarUrl={avatarUrl}
                       isLoading={isLoading}
+                      watch={watch}
+                      setValue={setValue}
                     />
                   </div>
                 </>

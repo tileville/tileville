@@ -127,26 +127,47 @@ export const useProfile = ({
   onError?: (error: unknown) => void;
 }) => {
   const toastRef = useRef<string | null>(null);
+
+  interface ProfileMutationInput {
+    wallet_address: string;
+    username: string;
+    fullname: string;
+    avatar_url: string;
+    twitter_username?: {
+      username: string | null;
+      isPublic: boolean;
+    };
+    telegram_username?: {
+      username: string | null;
+      isPublic: boolean;
+    };
+    discord_username?: {
+      username: string | null;
+      isPublic: boolean;
+    };
+    email_address?: {
+      username: string | null;
+      isPublic: boolean;
+    };
+  }
+
   return useMutation(
-    async (item: {
-      wallet_address: string;
-      username: string;
-      fullname: string;
-      avatar_url: string;
-    }) => {
+    async (item: ProfileMutationInput) => {
       return fetch("/api/player_profile", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(item),
       }).then((res) => res.json());
     },
     {
       onMutate: () => {
-        // Optional: Uncomment the line below to show a loading toast
-        // toastRef.current = toast.loading('Saving leaderboard data...');
+        toastRef.current = toast.loading("Saving profile data...");
         onMutate?.();
       },
       onSuccess: () => {
-        toast.success("profile data saved successfully", {
+        toast.success("Profile data saved successfully", {
           id: toastRef.current ?? undefined,
         });
 

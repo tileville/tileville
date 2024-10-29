@@ -6,6 +6,8 @@ import {
   SubmitHandler,
   UseFormHandleSubmit,
   UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
 } from "react-hook-form";
 import { IFormInput } from "@/app/profile/ProfileContent";
 import { Spinner } from "../../common/Spinner";
@@ -26,6 +28,8 @@ type EditProfileModalType = {
   handleToggle: () => void;
   avatarUrl: string;
   isLoading: boolean;
+  watch: UseFormWatch<IFormInput>;
+  setValue: UseFormSetValue<IFormInput>;
 };
 
 const INPUT_PRIMARY_CLASSES =
@@ -45,6 +49,8 @@ export const EditProfileModal = ({
   handleToggle,
   avatarUrl,
   isLoading,
+  watch,
+  setValue,
 }: EditProfileModalType) => {
   return (
     <Modal
@@ -196,10 +202,16 @@ export const EditProfileModal = ({
                       <input
                         type="text"
                         className={`${INPUT_PRIMARY_CLASSES} w-full`}
+                        {...register("twitter_username.username")}
                       />
                     </div>
                     <div>
-                      <ToggleSwitch />
+                      <ToggleSwitch
+                        isPublic={watch("twitter_username.isPublic")}
+                        onChange={(value) =>
+                          setValue("twitter_username.isPublic", value)
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -221,10 +233,16 @@ export const EditProfileModal = ({
                       <input
                         type="text"
                         className={`${INPUT_PRIMARY_CLASSES} w-full`}
+                        {...register("telegram_username.username")}
                       />
                     </div>
                     <div>
-                      <ToggleSwitch />
+                      <ToggleSwitch
+                        isPublic={watch("telegram_username.isPublic")}
+                        onChange={(value) =>
+                          setValue("telegram_username.isPublic", value)
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -246,10 +264,16 @@ export const EditProfileModal = ({
                       <input
                         type="text"
                         className={`${INPUT_PRIMARY_CLASSES} w-full`}
+                        {...register("discord_username.username")}
                       />
                     </div>
                     <div>
-                      <ToggleSwitch />
+                      <ToggleSwitch
+                        isPublic={watch("discord_username.isPublic")}
+                        onChange={(value) =>
+                          setValue("discord_username.isPublic", value)
+                        }
+                      />
                     </div>
                   </div>
                 </div>
