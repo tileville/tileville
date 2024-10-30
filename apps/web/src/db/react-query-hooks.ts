@@ -520,9 +520,11 @@ export function useFollowUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["connections"] });
+      queryClient.invalidateQueries({ queryKey: ["all-users"] });
     },
   });
 }
+
 export function useUnfollowUser() {
   const queryClient = useQueryClient();
 
@@ -564,6 +566,7 @@ export function useUnfollowUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["connections"] });
+      queryClient.invalidateQueries({ queryKey: ["all-users"] });
     },
   });
 }
@@ -606,8 +609,8 @@ export const usePublicProfile = (wallet_address: string) => {
     },
     {
       enabled: !!wallet_address, // Only fetch when wallet_address is available
-      staleTime: 1000 * 60 * 5, // data fresh for 5 minutes
-      cacheTime: 1000 * 60 * 30, // cache data for 30 minutes
+      // staleTime: 1000 * 60 * 5, // data fresh for 5 minutes
+      // cacheTime: 1000 * 60 * 30, // cache data for 30 minutes
     }
   );
 };

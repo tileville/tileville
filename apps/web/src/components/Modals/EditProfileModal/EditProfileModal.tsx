@@ -1,4 +1,4 @@
-import { CameraIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { CameraIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { Modal } from "@/components/common/Modal";
 import Image from "next/image";
 import {
@@ -33,7 +33,7 @@ type EditProfileModalType = {
 };
 
 const INPUT_PRIMARY_CLASSES =
-  "border-primary min-h-10 h-[60px] w-full rounded-md border-2 bg-transparent px-2 font-medium outline-none placeholder:text-primary/30";
+  "border-primary min-h-10 h-[54px] w-full rounded-md border-2 bg-transparent px-2 font-medium outline-none placeholder:text-primary/30";
 
 export const EditProfileModal = ({
   closeModal,
@@ -63,9 +63,9 @@ export const EditProfileModal = ({
         </button>
       }
     >
-      <div className="relative mx-auto max-h-full w-full max-w-[1052px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">
-        <div className="relative mx-auto max-w-[856px] p-4 md:p-5">
-          <h3 className="mb-5 text-center text-4xl font-normal text-black">
+      <div className="relative mx-auto max-h-full w-full max-w-[819px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">
+        <div className="relative mx-auto max-w-[717px] p-4 md:p-5">
+          <h3 className="mb-5 text-center text-2xl font-bold text-black">
             <span>Edit your Profile </span>
 
             <WhyToolTip />
@@ -77,7 +77,7 @@ export const EditProfileModal = ({
           >
             <div className="">
               <div
-                className="group relative mx-auto h-20 w-20 rounded-full"
+                className="group relative mx-auto h-[140px] w-[140px] rounded-full"
                 onClick={handleToggle}
               >
                 <Image
@@ -95,7 +95,7 @@ export const EditProfileModal = ({
               </div>
             </div>
             <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-              <div className="col-span-2">
+              <div>
                 <label htmlFor="firstName" className="mb-2 block">
                   First Name
                   <span className="text-2xl text-red-500">*</span>
@@ -119,7 +119,7 @@ export const EditProfileModal = ({
                 )}
               </div>
 
-              <div className="col-span-2">
+              <div>
                 <label htmlFor="lastName" className="mb-2 block">
                   Last Name
                 </label>
@@ -180,15 +180,15 @@ export const EditProfileModal = ({
 
             <div className="mt-8">
               <h3 className="text-2xl font-bold">Social Media Links</h3>
-              <p className="text-xl text-[#FF5151]">
+              <p className="text-base text-[#C60000]">
                 at least provide us with one social link.
               </p>
 
               <div className="mt-6 flex flex-col gap-4 text-2xl">
                 {/* // TODO: For the next three div put content in the Array and render them
                     // TODO: with map */}
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-1">
+                <div className="grid grid-cols-12 items-center gap-6">
+                  <div className="col-span-3 flex items-center gap-1">
                     <div>
                       <Image
                         src="/icons/x.svg"
@@ -199,10 +199,11 @@ export const EditProfileModal = ({
                     </div>
                     <p>Twitter</p>
                   </div>
-                  <div className="flex flex-1 items-center gap-3">
+                  <div className="col-span-9 flex flex-1 items-center gap-3">
                     <div className="w-full">
                       <input
                         type="text"
+                        placeholder="username"
                         className={`${INPUT_PRIMARY_CLASSES} w-full`}
                         {...register("twitter_username.username")}
                       />
@@ -217,8 +218,8 @@ export const EditProfileModal = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-1">
+                <div className="grid grid-cols-12 items-center gap-6">
+                  <div className="col-span-3 flex items-center gap-1">
                     <div>
                       <Image
                         src="/icons/telegram.svg"
@@ -229,10 +230,11 @@ export const EditProfileModal = ({
                     </div>
                     <p>Telegram</p>
                   </div>
-                  <div className="flex flex-1 items-center gap-3">
+                  <div className="col-span-9 flex flex-1 items-center gap-3">
                     <div className="w-full">
                       <input
                         type="text"
+                        placeholder="username"
                         className={`${INPUT_PRIMARY_CLASSES} w-full`}
                         {...register("telegram_username.username")}
                       />
@@ -247,8 +249,8 @@ export const EditProfileModal = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-1">
+                <div className="grid grid-cols-12 items-center gap-6">
+                  <div className="col-span-3 flex items-center gap-1">
                     <div>
                       <Image
                         src="/icons/discord.svg"
@@ -259,10 +261,11 @@ export const EditProfileModal = ({
                     </div>
                     <p>Discord</p>
                   </div>
-                  <div className="flex flex-1 items-center gap-3">
+                  <div className="col-span-9 flex flex-1 items-center gap-3">
                     <div className="w-full">
                       <input
                         type="text"
+                        placeholder="username"
                         className={`${INPUT_PRIMARY_CLASSES} w-full`}
                         {...register("discord_username.username")}
                       />
@@ -282,24 +285,28 @@ export const EditProfileModal = ({
 
             <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
               <button
-                className="h-10 rounded-full border-primary bg-primary/30 px-5 py-2 text-sm font-medium hover:bg-primary/50"
+                className="h-[65px] rounded-lg border border-primary bg-primary/30 px-5 py-2 text-2xl font-medium text-white hover:bg-primary/50"
                 onClick={closeModal}
                 type="button"
               >
-                No, cancel
+                cancel
               </button>
 
               <button
-                className="rounded-full bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
+                className="h-[65px] rounded-lg bg-primary px-3 text-2xl font-medium text-white hover:bg-primary/90"
                 type="submit"
                 disabled={isLoading}
               >
-                Submit
+                Save Changes
                 {isLoading && <Spinner className="ms-5 align-middle" />}
               </button>
             </div>
           </form>
         </div>
+
+        <button className="absolute right-6 top-6" onClick={closeModal}>
+          <Cross1Icon width={24} height={24} />
+        </button>
       </div>
     </Modal>
   );

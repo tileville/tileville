@@ -97,14 +97,14 @@ export default function SearchFriendsModal({
       </Dialog.Trigger>
 
       <Dialog.Content
-        className="relative !max-w-[500px] !bg-[#99B579]"
+        className="relative !max-w-[500px] !bg-[#99B579] !p-8"
         size="1"
       >
         <Dialog.Title className="text-2xl font-bold">
           Search For Friends
         </Dialog.Title>
 
-        <p>Suggested people based on your activity</p>
+        <p className="mb-4">Suggested people</p>
         <ul className="flex flex-col gap-4">
           {users.map((user: User) => {
             const isFollowing = followingAddresses.includes(

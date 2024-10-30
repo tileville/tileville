@@ -6,9 +6,12 @@ import { Connections } from "./Connections";
 import { ProfileBasicInfo } from "./ProfileBasicInfo";
 import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
 import { useGetConnections, usePublicProfile } from "@/db/react-query-hooks";
+import { Spinner } from "../common/Spinner";
 
 export const PublicProfileContent = ({
-  params = {handle: "B62qk1KqJq2m59NJuPmHHWDFsejzc21Hr8gcHqWYfhM51dwpsVxtEQS"},
+  params = {
+    handle: "",
+  },
 }: {
   params?: { handle: string };
 }) => {
@@ -26,7 +29,7 @@ export const PublicProfileContent = ({
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        Loading...
+        <Spinner />
       </div>
     );
   }
@@ -41,7 +44,7 @@ export const PublicProfileContent = ({
 
   const profile = profileData.data;
 
-  console.log("PUBLIC" , profile)
+  console.log("PUBLIC", profile);
 
   if (!profile) {
     return (
@@ -58,15 +61,15 @@ export const PublicProfileContent = ({
           <div className="grid grid-cols-12 gap-3">
             <div className="col-span-12 md:col-span-6 xl:col-span-3">
               <ProfileBasicInfo
-              avatar_url={profile.avatar_url}
-              username={profile.username || ""}
-              fullName={profile.fullName|| ""}
-              walletAddress={profile.wallet_address|| ""}
-              followersCount={profile.followers.length}
-              followingCount={profile.following.length}
-              discordUsername={profile.discordUsername}
-              telegramUsername={profile.telegramUsername}
-              twitterUsername={profile.twitterUsername}
+                avatar_url={profile.avatar_url}
+                username={profile.username || ""}
+                fullName={profile.fullname || ""}
+                walletAddress={profile.wallet_address || ""}
+                followersCount={profile.followers?.length || 0}
+                followingCount={profile.following?.length || 0}
+                discordUsername={profile.discord_username || null}
+                telegramUsername={profile.telegram_username || null}
+                twitterUsername={profile.twitter_username || null}
               />
             </div>
 

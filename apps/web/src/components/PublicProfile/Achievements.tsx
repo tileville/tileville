@@ -34,7 +34,7 @@ const ACHIEVEMENTS_DATA = [
   {
     id: 6,
     iconUrl: "/icons/star.png",
-    heading: "30th",
+    heading: "10th",
     subHeading: "Rank",
   },
 ];
