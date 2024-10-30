@@ -57,7 +57,17 @@ export const PublicProfileContent = ({
         <div className="mx-auto max-w-[1280px] font-roboto">
           <div className="grid grid-cols-12 gap-3">
             <div className="col-span-12 md:col-span-6 xl:col-span-3">
-              <ProfileBasicInfo />
+              <ProfileBasicInfo
+              avatar_url={profile.avatar_url}
+              username={profile.username || ""}
+              fullName={profile.fullName|| ""}
+              walletAddress={profile.wallet_address|| ""}
+              followersCount={profile.followers.length}
+              followingCount={profile.following.length}
+              discordUsername={profile.discordUsername}
+              telegramUsername={profile.telegramUsername}
+              twitterUsername={profile.twitterUsername}
+              />
             </div>
 
             <div className="col-span-12 md:col-span-6 xl:col-span-5">

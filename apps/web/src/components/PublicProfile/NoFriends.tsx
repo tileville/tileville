@@ -14,9 +14,8 @@ export const NoFriends = ({}) => {
 
       <div>
         <h3>
-          You don&apos;t have any <br /> friends
+          User don&apos;t have any <br /> friends
         </h3>
-        <button className="border border-black p-2">Find Friends</button>
       </div>
     </div>
   );

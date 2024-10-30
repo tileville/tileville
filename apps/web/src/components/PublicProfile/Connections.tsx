@@ -106,7 +106,7 @@ export const Connections = ({
                 "Loading please wait"
               ) : followers.length <= 0 ? (
                 <li className="text-xm font-bold">
-                  You do not have any followers yet!
+                  User do not have any followers yet!
                 </li>
               ) : (
                 followers.map((follower: any) => {
