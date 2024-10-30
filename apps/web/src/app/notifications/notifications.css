@@ -1,0 +1,21 @@
+@layer components {
+  .notification-center-wrapper > div {
+    @apply h-full !w-full;
+  }
+
+  div[data-test-id='layout-wrapper'] {
+    @apply grid h-full grid-rows-[55px_1fr_auto] py-2;
+  }
+
+  div[data-test-id='unseen-count-label'] {
+    @apply h-7 w-7 font-sans;
+  }
+}
+
+.infinite-scroll-component {
+  @apply !h-[600px] xl:!h-[530px] [@media(max-width:560px)]:!h-[400px];
+}
+
+.infinite-scroll-component > div {
+  @apply border border-solid border-gray-3;
+}
