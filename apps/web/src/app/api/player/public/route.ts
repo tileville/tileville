@@ -61,13 +61,10 @@ function getPublicProfile(profile: PlayerProfile): PublicPlayerProfile {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const wallet_address = searchParams.get("wallet_address") || "";
+  const username = searchParams.get("username") || "";
 
   try {
-    const { data, error }: PostgrestSingleResponse<PlayerProfile> =
-      await supabase
-        .from("player_profile")
-        .select(
-          `
+    let query = supabase.from("player_profile").select(`
         wallet_address,
         username,
         fullname,
@@ -78,17 +75,33 @@ export async function GET(request: NextRequest) {
         telegram_username,
         discord_username,
         email_address
-      `
-        )
-        .eq("wallet_address", wallet_address)
-        .single();
+      `);
+
+    // Determine which identifier to use
+    if (wallet_address) {
+      query = query.eq("wallet_address", wallet_address);
+    } else if (username) {
+      query = query.ilike("username", username); // Case-insensitive username search
+    } else {
+      return Response.json(
+        { status: false, message: "No identifier provided" },
+        { status: 400 }
+      );
+    }
+
+    const { data, error }: PostgrestSingleResponse<PlayerProfile> =
+      await query.single();
 
     if (error || !data) {
       return Response.json(
-        { status: false, message: "Player profile not found" },
+        {
+          status: false,
+          message: `Player profile not found for ${wallet_address || username}`,
+        },
         { status: 404 }
       );
     }
+
     console.log("all DATA", data);
     const publicData = getPublicProfile(data);
     console.log("PUBLIC DATA", publicData);

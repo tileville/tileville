@@ -595,22 +595,47 @@ interface PublicProfileResponse {
   data: PublicProfile;
 }
 
-export const usePublicProfile = (wallet_address: string) => {
+interface ProfileIdentifier {
+  value: string;
+  type: "wallet_address" | "username";
+}
+
+export const usePublicProfile = (identifier: string) => {
+  // Determine if the identifier is a wallet address or username
+  const getIdentifierType = (id: string): ProfileIdentifier => {
+    const isWalletAddress = id.startsWith("B62q");
+    return {
+      value: id,
+      type: isWalletAddress ? "wallet_address" : "username",
+    };
+  };
+
+  const profileIdentifier = getIdentifierType(identifier);
+
   return useQuery<PublicProfileResponse, Error>(
-    ["public-profile", wallet_address],
+    ["public-profile", profileIdentifier],
     async () => {
-      const response = await fetch(
-        `/api/player/public?wallet_address=${wallet_address}`
-      );
+      const queryParam =
+        profileIdentifier.type === "wallet_address"
+          ? `wallet_address=${profileIdentifier.value}`
+          : `username=${profileIdentifier.value}`;
+
+      const response = await fetch(`/api/player/public?${queryParam}`);
+
       if (!response.ok) {
         throw new Error("Failed to fetch public profile");
       }
+
       return response.json();
     },
     {
-      enabled: !!wallet_address, // Only fetch when wallet_address is available
-      // staleTime: 1000 * 60 * 5, // data fresh for 5 minutes
-      // cacheTime: 1000 * 60 * 30, // cache data for 30 minutes
+      enabled: !!identifier, // Only fetch when identifier is available
+      staleTime: 1000 * 60 * 5, // data fresh for 5 minutes
+      cacheTime: 1000 * 60 * 30, // cache data for 30 minutes
+      retry: 1, // Only retry once if failed
+      onError: (error) => {
+        console.error("Profile fetch error:", error);
+      },
     }
   );
 };
