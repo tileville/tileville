@@ -17,14 +17,16 @@ export const PublicProfileContent = ({
 }) => {
   const networkStore = useNetworkStore();
 
-  const { data: connections, isLoading: connectionsLoading } =
-    useGetConnections(networkStore.address || "");
-
   const {
     data: profileData,
     isLoading,
     error,
   } = usePublicProfile(params.handle);
+
+  const profile = profileData?.data;
+
+  const { data: connections, isLoading: connectionsLoading } =
+    useGetConnections(profile?.wallet_address || "");
 
   if (isLoading) {
     return (
@@ -41,8 +43,6 @@ export const PublicProfileContent = ({
       </div>
     );
   }
-
-  const profile = profileData.data;
 
   console.log("PUBLIC", profile);
 
@@ -79,7 +79,7 @@ export const PublicProfileContent = ({
 
             <div className="col-span-12 grid gap-4 md:col-span-6 xl:col-span-4">
               <Connections
-                walletAddress={networkStore.address || ""}
+                currentWalletAddress={profile.wallet_address || ""}
                 isLoading={connectionsLoading}
                 following={connections?.following}
                 followers={connections?.followers}

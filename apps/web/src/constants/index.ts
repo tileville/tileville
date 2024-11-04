@@ -452,3 +452,5 @@ export const TABLE_SKELETON_CONTENT = [
 
 export const PRIMARY_BUTTON_STYLES =
   "w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D]";
+
+export const FOLLOWING_BTN = `${PRIMARY_BUTTON_STYLES} hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922]`;
