@@ -58,7 +58,7 @@ export const MobileNavBar = () => {
       </div>
 
       <nav
-        className={`fixed right-0 z-30 flex h-screen flex-col justify-between bg-white transition-transform ${sidebarOpen ? "translate-x-0" : "translate-x-[100vw]"
+        className={`fixed right-0 z-30 flex h-screen flex-col justify-between bg-[#BCD4A1] transition-transform ${sidebarOpen ? "translate-x-0" : "translate-x-[100vw]"
           }`}
       >
         <ul className="flex flex-col gap-2 p-4 overflow-auto">
