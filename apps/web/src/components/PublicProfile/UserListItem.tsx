@@ -11,8 +11,10 @@ type UserListItemType = {
     wallet_address: string;
     avatar_url: string;
     username: string;
+    fullname: string;
   };
   isFollowing: boolean;
+  isFollowsYou: boolean;
   loggedInUserWalletAddress: string;
   className?: string;
 };
@@ -20,6 +22,7 @@ type UserListItemType = {
 export const UserListItem = ({
   userInfo,
   isFollowing,
+  isFollowsYou,
   loggedInUserWalletAddress,
   className = "",
 }: UserListItemType) => {
@@ -74,7 +77,17 @@ export const UserListItem = ({
           />
         </div>
 
-        <p className="text-xl">{userInfo.username}</p>
+        <div>
+          <p className="text-xl">{userInfo.fullname}</p>
+          <div className="flex items-center gap-1">
+            <p className="text-xs text-[#626262]">@{userInfo.username}</p>
+            {isFollowsYou && (
+              <span className="block bg-[#A5BC8B] text-xs text-primary px-1 py-[1px] rounded-[2px]">
+                follows you
+              </span>
+            )}
+          </div>
+        </div>
 
         {!isCurrentUser && (
           <button

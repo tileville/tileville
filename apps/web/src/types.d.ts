@@ -69,6 +69,7 @@ type Connection = {
 type User = {
   wallet_address: string;
   username: string;
+  fullname: string;
   avatar_url: string;
 };
 

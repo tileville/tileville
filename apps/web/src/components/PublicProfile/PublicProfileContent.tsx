@@ -43,6 +43,12 @@ export const PublicProfileContent = ({
     ) || []
   );
 
+  const loggedInUserFollowers = new Set<string>(
+    loggedInUserConnections?.followers?.map(
+      (f: Connection) => f.wallet_address
+    ) || []
+  );
+
   if (isLoading || loggedInUserLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -96,6 +102,7 @@ export const PublicProfileContent = ({
               <Connections
                 loggedInUserWalletAddress={networkStore.address || ""}
                 loggedInUserFollowing={loggedInUserFollowing}
+                loggedInUserFollowers={loggedInUserFollowers}
                 isLoading={connectionsLoading}
                 following={connections?.following}
                 followers={connections?.followers}
@@ -104,6 +111,7 @@ export const PublicProfileContent = ({
                 walletAddress={networkStore.address || ""}
                 loggedInUserWalletAddress={networkStore.address || ""}
                 loggedInUserFollowing={loggedInUserFollowing}
+                loggedInUserFollowers={loggedInUserFollowers}
               />
             </div>
 

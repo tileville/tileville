@@ -10,12 +10,14 @@ type SearchFriendsModalProps = {
   walletAddress: string;
   loggedInUserWalletAddress: string;
   loggedInUserFollowing: Set<string>;
+  loggedInUserFollowers: Set<string>;
 };
 
 export default function SearchFriendsModal({
   walletAddress,
   loggedInUserWalletAddress,
   loggedInUserFollowing,
+  loggedInUserFollowers,
 }: SearchFriendsModalProps) {
   const { data: users, isLoading, error } = useGetAllUsers(walletAddress);
 
@@ -81,8 +83,10 @@ export default function SearchFriendsModal({
                     wallet_address: user.wallet_address,
                     avatar_url: user.avatar_url,
                     username: user.username,
+                    fullname: user.fullname,
                   }}
                   isFollowing={loggedInUserFollowing.has(user.wallet_address)}
+                  isFollowsYou={loggedInUserFollowers.has(user.wallet_address)}
                   loggedInUserWalletAddress={loggedInUserWalletAddress}
                 />
               </li>

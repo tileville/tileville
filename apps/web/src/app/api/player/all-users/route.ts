@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     const { data: users, error } = await supabase
       .from("player_profile")
-      .select("wallet_address, username, avatar_url")
+      .select("wallet_address, username, avatar_url ,fullname")
       .neq("wallet_address", currentWallet);
 
     if (error) throw error;

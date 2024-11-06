@@ -132,7 +132,6 @@ export const ProfileBasicInfo = ({
               </button>
             </div>
 
-            {/* //TODO: I think we will not show balance in the user public profile we are not saving it in db  */}
             <div className={BADGE_BASE_CLASSES}>
               <span className="flex items-center gap-1">
                 Balance :

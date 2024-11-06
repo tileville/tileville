@@ -10,6 +10,7 @@ type ConnectionsType = {
   followers: Connection[];
   loggedInUserWalletAddress: string;
   loggedInUserFollowing: Set<string>;
+  loggedInUserFollowers: Set<string>;
 };
 
 export const Connections = ({
@@ -18,6 +19,7 @@ export const Connections = ({
   followers,
   loggedInUserWalletAddress,
   loggedInUserFollowing,
+  loggedInUserFollowers,
 }: ConnectionsType) => {
   return (
     <div className="w-full rounded-xl bg-primary/20 p-4 text-black backdrop-blur-sm">
@@ -52,8 +54,12 @@ export const Connections = ({
                         wallet_address: user.wallet_address,
                         avatar_url: user.avatar_url,
                         username: user.username,
+                        fullname: user.fullname,
                       }}
                       isFollowing={loggedInUserFollowing.has(
+                        user.wallet_address
+                      )}
+                      isFollowsYou={loggedInUserFollowers.has(
                         user.wallet_address
                       )}
                       loggedInUserWalletAddress={loggedInUserWalletAddress}
@@ -82,8 +88,12 @@ export const Connections = ({
                         wallet_address: user.wallet_address,
                         avatar_url: user.avatar_url,
                         username: user.username,
+                        fullname: user.fullname,
                       }}
                       isFollowing={loggedInUserFollowing.has(
+                        user.wallet_address
+                      )}
+                      isFollowsYou={loggedInUserFollowers.has(
                         user.wallet_address
                       )}
                       loggedInUserWalletAddress={loggedInUserWalletAddress}
