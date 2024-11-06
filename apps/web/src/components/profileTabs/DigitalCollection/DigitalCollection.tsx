@@ -44,6 +44,7 @@ export default function DigitalCollection({
                   nftImg={nft.image}
                   externalUrl={nft.external_url}
                   nftProperties={nft.properties}
+                  isOwner={isOwner}
                 />
                 <Dialog.Close>
                   <button className="absolute right-4 top-4">

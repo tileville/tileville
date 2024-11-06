@@ -24,6 +24,7 @@ type NFTModalContentType = {
   externalUrl: string;
   nftHash: string;
   nftProperties: AttributesDataType;
+  isOwner: boolean;
 };
 
 export const NFTModalContent = ({
@@ -33,6 +34,7 @@ export const NFTModalContent = ({
   externalUrl,
   nftHash,
   nftProperties,
+  isOwner,
 }: NFTModalContentType) => {
   return (
     <div className="grid md:grid-cols-2">
@@ -133,6 +135,7 @@ export const NFTModalContent = ({
           externalUrl={externalUrl}
           nftHash={nftHash}
           nftName={nftName}
+          isOwner={isOwner}
         />
       </div>
     </div>
