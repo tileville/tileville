@@ -104,14 +104,19 @@ export const PrimaryButton = ({
   );
 };
 
-
-export const MobileNavButton = ({ text, onClickHandler }: { text: string, onClickHandler: () => void }) => {
+export const MobileNavButton = ({
+  text,
+  onClickHandler,
+}: {
+  text: string;
+  onClickHandler: () => void;
+}) => {
   return (
     <button
-      className="bg-primary-30 w-full block p-[5px] text-left font-semibold uppercase text-primary outline-none outline-offset-0 focus:border-primary shadow-[0_0_8px_hsl(var(--primary))] outline-1 outline-primary border-primary"
+      className="bg-primary-30 block w-full rounded-[5px] py-[5px] px-6 text-left text-xl font-bold uppercase text-primary outline-none outline-2 outline-offset-0 outline-primary"
       onClick={onClickHandler}
     >
       {text}
     </button>
-  )
-}
+  );
+};

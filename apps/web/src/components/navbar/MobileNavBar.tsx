@@ -6,7 +6,11 @@ import {
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MediaPlayer } from "../MediaPlayer/page";
-import { BACKGROUND_PATHS_HEADER, HIDE_BACK_BUTTON_PATHS, MOB_NAV_MENU_ITEMS } from "@/constants";
+import {
+  BACKGROUND_PATHS_HEADER,
+  HIDE_BACK_BUTTON_PATHS,
+  MOB_NAV_MENU_ITEMS,
+} from "@/constants";
 import { MobileNavButton, PrimaryButton } from "../PrimaryButton";
 import clsx from "clsx";
 import {
@@ -26,8 +30,9 @@ export const MobileNavBar = () => {
   return (
     <div className="">
       <div
-        className={`fixed left-0 right-0 top-0 z-20 flex w-full items-center justify-between p-2 ${isHeaderWithBg && "bg-[#a4b881]"
-          }`}
+        className={`fixed left-0 right-0 top-0 z-20 flex w-full items-center justify-between p-2 ${
+          isHeaderWithBg && "bg-[#a4b881]"
+        }`}
       >
         {!isHideBackBtn && (
           <PrimaryButton
@@ -58,10 +63,11 @@ export const MobileNavBar = () => {
       </div>
 
       <nav
-        className={`fixed right-0 z-30 flex h-screen flex-col justify-between bg-white transition-transform ${sidebarOpen ? "translate-x-0" : "translate-x-[100vw]"
-          }`}
+        className={`fixed right-0 z-30 flex h-screen flex-col justify-between bg-[#BCD4A1] transition-transform ${
+          sidebarOpen ? "translate-x-0" : "translate-x-[100vw]"
+        }`}
       >
-        <ul className="flex flex-col gap-2 p-4 overflow-auto">
+        <ul className="flex flex-col gap-2 overflow-auto p-4">
           <li>
             <div>
               <button
@@ -80,25 +86,21 @@ export const MobileNavBar = () => {
               <MediaPlayer />
             </div>
           </li>
-          <li className="mt-5">
-            <BugReportBtn />
-          </li>
-          <li>
-            <XFollowBtn />
-          </li>
-          <li>
-            <JoinDiscordBtn />
+          <li className="my-5">
+            <div className="flex items-center gap-2 whitespace-nowrap">
+              <BugReportBtn />
+              <XFollowBtn />
+              <JoinDiscordBtn />
+            </div>
           </li>
 
           {MOB_NAV_MENU_ITEMS.map((button) => (
-            <li className="w-full"
-              key={button.key}
-            >
+            <li className="w-full" key={button.key}>
               <MobileNavButton
                 text={button.name}
                 onClickHandler={() => {
-                  setSidebarOpen(!sidebarOpen)
-                  router.push(`${button.href}`)
+                  setSidebarOpen(!sidebarOpen);
+                  router.push(`${button.href}`);
                 }}
               />
             </li>
