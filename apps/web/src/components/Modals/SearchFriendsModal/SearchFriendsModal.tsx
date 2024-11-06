@@ -104,7 +104,26 @@ export default function SearchFriendsModal({
           Search For Friends
         </Dialog.Title>
 
-        <p className="mb-4">Suggested people</p>
+        <div className="relative mb-10 w-full">
+          <div className="absolute left-2 top-1/2 -translate-y-1/2">
+            <Image
+              src="/icons/searchBordered.svg"
+              width={20}
+              height={20}
+              alt="search"
+            />
+          </div>
+          <input
+            type="text"
+            className="w-full rounded-lg bg-[#748A5B] py-2 pl-10 pr-2 font-semibold outline outline-[#38830A] placeholder:text-[#90B27B]"
+            placeholder="Enter name or username"
+          />
+        </div>
+
+        <Dialog.Description>
+          <span className="mb-4 block font-bold text-xl">Suggested people</span>
+        </Dialog.Description>
+
         <ul className="flex flex-col gap-4">
           {users.map((user: User) => {
             const isFollowing = followingAddresses.includes(
