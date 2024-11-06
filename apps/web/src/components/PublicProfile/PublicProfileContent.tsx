@@ -66,8 +66,8 @@ export const PublicProfileContent = ({
     <div>
       <div className="fade-slide-in p-4 pb-24 pt-12 md:pt-40">
         <div className="mx-auto max-w-[1280px] font-roboto">
-          <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-12 md:col-span-6 xl:col-span-3">
+          <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-3">
+            <div className="col-[span_24_/_span_24] md:col-span-12 xl:col-[span_7_/_span_7]">
               <ProfileBasicInfo
                 avatar_url={profile.avatar_url}
                 username={profile.username || ""}
@@ -83,11 +83,11 @@ export const PublicProfileContent = ({
               />
             </div>
 
-            <div className="col-span-12 md:col-span-6 xl:col-span-5">
+            <div className="col-[span_24_/_span_24] md:col-span-12 xl:col-[span_9_/_span_9]">
               <Achievements />
             </div>
 
-            <div className="col-span-12 grid gap-4 md:col-span-6 xl:col-span-4">
+            <div className="col-[span_24_/_span_24] grid gap-4 md:col-[span_12_/_span_12] xl:col-[span_8_/_span_8]">
               <Connections
                 loggedInUserWalletAddress={networkStore.address || ""}
                 loggedInUserFollowing={loggedInUserFollowing}

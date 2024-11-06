@@ -639,3 +639,53 @@ export const usePublicProfile = (identifier: string) => {
     }
   );
 };
+
+interface BalanceResponse {
+  success: boolean;
+  data?: {
+    balance: string;
+    blockHeight: number;
+    nonce: number;
+    delegate: string;
+    publicKey: string;
+  };
+  error?: string;
+}
+
+export const useBlockberryBalance = (walletAddress: string) => {
+  return useQuery<BalanceResponse, Error>({
+    queryKey: ["blockberry-balance", walletAddress],
+    queryFn: async () => {
+      try {
+        const response = await fetch(
+          `${BLOCKBERRY_MAINNET_BASE_URL}/v1/accounts/${walletAddress}`,
+          {
+            headers: {
+              accept: "application/json",
+              "x-api-key": BLOCKBERRY_API_KEY,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        return {
+          success: true,
+          data,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : "An error occurred",
+        };
+      }
+    },
+    enabled: !!walletAddress, // Only run query if wallet address is provided
+    refetchInterval: 30000,
+    staleTime: 15000, // Consider data stale after 15 seconds
+    retry: 3, // Retry failed requests 3 times
+  });
+};

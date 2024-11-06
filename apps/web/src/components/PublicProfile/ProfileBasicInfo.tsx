@@ -1,11 +1,16 @@
 import { FOLLOWING_BTN_LG, PRIMARY_BUTTON_STYLES_LG } from "@/constants";
-import { useFollowUser, useUnfollowUser } from "@/db/react-query-hooks";
+import {
+  useBlockberryBalance,
+  useFollowUser,
+  useUnfollowUser,
+} from "@/db/react-query-hooks";
 import { copyToClipBoard, formatAddress } from "@/lib/helpers";
 import { CopyIcon, Pencil1Icon, UpdateIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Skeleton } from "@radix-ui/themes";
 
 const BADGE_BASE_CLASSES =
   "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
@@ -42,6 +47,12 @@ export const ProfileBasicInfo = ({
 
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
+
+  const {
+    data: BalanceData,
+    isLoading: isFetchingBalance,
+    error,
+  } = useBlockberryBalance(walletAddress);
 
   const handleFollowAction = async () => {
     if (!loggedInUserWalletAddress) {
@@ -122,11 +133,20 @@ export const ProfileBasicInfo = ({
             </div>
 
             {/* //TODO: I think we will not show balance in the user public profile we are not saving it in db  */}
-            {/* <div className={BADGE_BASE_CLASSES}>
-              <span>
-                Balance :<span className="text-[#010201]">200 MINA</span>
+            <div className={BADGE_BASE_CLASSES}>
+              <span className="flex items-center gap-1">
+                Balance :
+                <span className="text-[#010201]">
+                  {isFetchingBalance ? (
+                    <Skeleton className="h-2 w-12" />
+                  ) : (
+                    `${(Number(BalanceData?.data?.balance) * 10 ** 9).toFixed(
+                      2
+                    )} MINA`
+                  )}
+                </span>
               </span>
-            </div> */}
+            </div>
           </div>
 
           <div className="flex items-center justify-between gap-3 text-xs">
