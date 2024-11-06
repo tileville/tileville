@@ -97,7 +97,8 @@ export const PublicProfileContent = ({
               />
               <SearchFriendsModal
                 walletAddress={networkStore.address || ""}
-                followingAddresses={profile?.following || []}
+                loggedInUserWalletAddress={networkStore.address || ""}
+                loggedInUserFollowing={loggedInUserFollowing}
               />
             </div>
           </div>
