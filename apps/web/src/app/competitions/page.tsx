@@ -20,7 +20,7 @@ export default function Competitions() {
 
   return (
     <>
-      <div className="mx-auto max-w-[1280px] pt-4">
+      <div className="mx-auto max-w-[1280px] pt-4 pb-12">
         <CompetitionsHeader />
 
         <div className="mt-0 grid grid-cols-1 gap-3 px-3 md:mt-5 md:pb-20">

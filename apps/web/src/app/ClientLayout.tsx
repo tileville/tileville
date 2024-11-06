@@ -7,6 +7,9 @@ import { MobileNavBar } from "@/components/navbar/MobileNavBar";
 import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
+import MobileBanner from "@/components/MainMenu/MobileBanner";
+import VConsole from "vconsole";
+let vConsole: any;
 
 const queryClient = new QueryClient();
 const StoreProtokitUpdater = dynamic(
@@ -23,6 +26,18 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true") {
+      if (typeof window !== "undefined") {
+        vConsole = new VConsole();
+      }
+
+      return () => {
+        if (typeof window !== "undefined") vConsole?.destroy();
+      };
+    }
+  }, []);
+
   const renderNavBar = () => {
     if (!isClient) return null; // Don't render anything on the server
     if (isMobile || isTablet) {
@@ -34,7 +49,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
 
   const renderFooter = () => {
     if (isMobile || isTablet) {
-      return "";
+      return <MobileBanner />;
     } else {
       return <Footer />;
     }
