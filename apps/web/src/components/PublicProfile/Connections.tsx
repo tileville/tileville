@@ -6,14 +6,14 @@ import { FollowingListItem } from "./FollowingListItem";
 import { FollowerListItem } from "./FollowerListItem";
 
 type ConnectionsType = {
-  currentWalletAddress: string;
+  profileWalletAddress: string;
   isLoading: boolean;
   following: Connection[];
   followers: Connection[];
 };
 
 export const Connections = ({
-  currentWalletAddress,
+  profileWalletAddress,
   isLoading,
   following,
   followers,
@@ -50,7 +50,7 @@ export const Connections = ({
                   return (
                     <li key={following.username}>
                       <FollowingListItem
-                        currentWalletAddress={currentWalletAddress}
+                        profileWalletAddress={profileWalletAddress}
                         followingWalletAddress={following.wallet_address}
                         followingAvatarUrl={following.avatar_url}
                         followingUsername={following.username}
@@ -81,7 +81,7 @@ export const Connections = ({
                     <li key={follower.username}>
                       {isAlreadyFollowing ? (
                         <FollowingListItem
-                          currentWalletAddress={currentWalletAddress}
+                          profileWalletAddress={profileWalletAddress}
                           followingWalletAddress={follower.wallet_address}
                           followingAvatarUrl={follower.avatar_url}
                           followingUsername={follower.username}
@@ -91,7 +91,7 @@ export const Connections = ({
                           followerAvatarUrl={follower.avatar_url}
                           followerUsername={follower.username}
                           followerWalletAddress={follower.wallet_address}
-                          currentWalletAddress={currentWalletAddress}
+                          profileWalletAddress={profileWalletAddress}
                         />
                       )}
                     </li>

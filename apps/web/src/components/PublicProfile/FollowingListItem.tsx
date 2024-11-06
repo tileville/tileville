@@ -10,21 +10,21 @@ type FollowingBtnType = {
   followingWalletAddress: string;
   followingAvatarUrl: string;
   followingUsername: string;
-  currentWalletAddress: string;
+  profileWalletAddress: string;
 };
 
 export const FollowingListItem = ({
   followingWalletAddress,
   followingAvatarUrl,
   followingUsername,
-  currentWalletAddress,
+  profileWalletAddress,
 }: FollowingBtnType) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const unfollowMutation = useUnfollowUser();
 
   const handleUnfollow = async (targetWallet: string) => {
-    if (!currentWalletAddress) {
+    if (!profileWalletAddress) {
       toast.error("Please connect your wallet first");
       return;
     }
@@ -32,7 +32,7 @@ export const FollowingListItem = ({
     setIsLoading(true);
     try {
       await unfollowMutation.mutateAsync({
-        follower_wallet: currentWalletAddress,
+        follower_wallet: profileWalletAddress,
         target_wallet: targetWallet,
       });
 
@@ -44,9 +44,9 @@ export const FollowingListItem = ({
     }
   };
 
-  const isCurrentUser = currentWalletAddress === followingWalletAddress;
+  const isCurrentUser = profileWalletAddress === followingWalletAddress;
   console.log("currentuser", isCurrentUser);
-  console.log("currentWalletAddress", currentWalletAddress);
+  console.log("profileWalletAddress", profileWalletAddress);
   console.log("followingWalletAddress", followingWalletAddress);
   return (
     <Link href={`/u/${followingWalletAddress}`}>

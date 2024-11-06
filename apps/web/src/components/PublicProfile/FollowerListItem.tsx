@@ -10,20 +10,20 @@ type FollowerListItemType = {
   followerWalletAddress: string;
   followerAvatarUrl: string;
   followerUsername: string;
-  currentWalletAddress: string;
+  profileWalletAddress: string;
 };
 
 export const FollowerListItem = ({
   followerWalletAddress,
   followerAvatarUrl,
   followerUsername,
-  currentWalletAddress,
+  profileWalletAddress,
 }: FollowerListItemType) => {
   const [isLoading, setIsLoading] = useState(false);
   const followMutation = useFollowUser();
 
   const handleFollow = async (targetWallet: string) => {
-    if (!currentWalletAddress) {
+    if (!profileWalletAddress) {
       toast.error("Please connect your wallet first");
       return;
     }
@@ -32,7 +32,7 @@ export const FollowerListItem = ({
 
     try {
       await followMutation.mutateAsync({
-        follower_wallet: currentWalletAddress,
+        follower_wallet: profileWalletAddress,
         target_wallet: targetWallet,
       });
 
@@ -44,7 +44,7 @@ export const FollowerListItem = ({
     }
   };
 
-  const isCurrentUser = currentWalletAddress === followerWalletAddress;
+  const isCurrentUser = profileWalletAddress === followerWalletAddress;
 
   return (
     <Link href={`/u/${followerWalletAddress}`}>
