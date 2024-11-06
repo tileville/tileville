@@ -6,19 +6,19 @@ import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-type FollowBtnType = {
+type FollowerListItemType = {
   followerWalletAddress: string;
   followerAvatarUrl: string;
   followerUsername: string;
   currentWalletAddress: string;
 };
 
-export const FollowBtn = ({
+export const FollowerListItem = ({
   followerWalletAddress,
   followerAvatarUrl,
   followerUsername,
   currentWalletAddress,
-}: FollowBtnType) => {
+}: FollowerListItemType) => {
   const [isLoading, setIsLoading] = useState(false);
   const followMutation = useFollowUser();
 

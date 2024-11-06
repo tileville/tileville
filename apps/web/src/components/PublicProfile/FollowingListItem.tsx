@@ -13,7 +13,7 @@ type FollowingBtnType = {
   currentWalletAddress: string;
 };
 
-export const FollowingBtn = ({
+export const FollowingListItem = ({
   followingWalletAddress,
   followingAvatarUrl,
   followingUsername,
@@ -45,6 +45,9 @@ export const FollowingBtn = ({
   };
 
   const isCurrentUser = currentWalletAddress === followingWalletAddress;
+  console.log("currentuser", isCurrentUser);
+  console.log("currentWalletAddress", currentWalletAddress);
+  console.log("followingWalletAddress", followingWalletAddress);
   return (
     <Link href={`/u/${followingWalletAddress}`}>
       <div className="flex items-center gap-4">

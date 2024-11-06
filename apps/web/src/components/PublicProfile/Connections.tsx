@@ -2,8 +2,8 @@
 import { Tabs } from "@radix-ui/themes";
 import { NoFriends } from "./NoFriends";
 import { Connection } from "@/types";
-import { FollowingBtn } from "./FollowingBtn";
-import { FollowBtn } from "./FollowBtn";
+import { FollowingListItem } from "./FollowingListItem";
+import { FollowerListItem } from "./FollowerListItem";
 
 type ConnectionsType = {
   currentWalletAddress: string;
@@ -18,6 +18,8 @@ export const Connections = ({
   following,
   followers,
 }: ConnectionsType) => {
+  const followingAddresses = new Set(following?.map((f) => f.wallet_address));
+
   return (
     <div className="w-full rounded-xl bg-primary/20 p-4 text-black backdrop-blur-sm">
       <Tabs.Root defaultValue="following">
@@ -47,7 +49,7 @@ export const Connections = ({
                 following.map((following: Connection) => {
                   return (
                     <li key={following.username}>
-                      <FollowingBtn
+                      <FollowingListItem
                         currentWalletAddress={currentWalletAddress}
                         followingWalletAddress={following.wallet_address}
                         followingAvatarUrl={following.avatar_url}
@@ -66,19 +68,32 @@ export const Connections = ({
               {isLoading ? (
                 "Loading please wait"
               ) : followers.length <= 0 ? (
-                <li className="text-xm font-bold">
+                <li className="text-xm text-center font-bold">
                   User do not have any followers yet!
                 </li>
               ) : (
                 followers.map((follower: Connection) => {
+                  const isAlreadyFollowing = followingAddresses.has(
+                    follower.wallet_address
+                  );
+
                   return (
                     <li key={follower.username}>
-                      <FollowBtn
-                        followerAvatarUrl={follower.avatar_url}
-                        followerUsername={follower.username}
-                        followerWalletAddress={follower.wallet_address}
-                        currentWalletAddress={currentWalletAddress}
-                      />
+                      {isAlreadyFollowing ? (
+                        <FollowingListItem
+                          currentWalletAddress={currentWalletAddress}
+                          followingWalletAddress={follower.wallet_address}
+                          followingAvatarUrl={follower.avatar_url}
+                          followingUsername={follower.username}
+                        />
+                      ) : (
+                        <FollowerListItem
+                          followerAvatarUrl={follower.avatar_url}
+                          followerUsername={follower.username}
+                          followerWalletAddress={follower.wallet_address}
+                          currentWalletAddress={currentWalletAddress}
+                        />
+                      )}
                     </li>
                   );
                 })
