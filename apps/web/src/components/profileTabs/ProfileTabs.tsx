@@ -38,7 +38,7 @@ export const ProfileTabs = ({ walletAddress, initialTab }: ProfileTabsType) => {
 
       <Box pt="3">
         <Tabs.Content value="collection">
-          <DigitalCollection walletAddress={walletAddress} />
+          <DigitalCollection walletAddress={walletAddress} isOwner={true} />
         </Tabs.Content>
 
         <Tabs.Content value="active-games">

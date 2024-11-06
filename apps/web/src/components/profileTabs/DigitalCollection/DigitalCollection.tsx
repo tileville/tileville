@@ -10,10 +10,12 @@ import { NFTModalContent } from "./NFTModalContent";
 
 type DigitalCollectionType = {
   walletAddress: string;
+  isOwner: boolean;
 };
 
 export default function DigitalCollection({
   walletAddress,
+  isOwner,
 }: DigitalCollectionType) {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: walletAddress,
@@ -55,7 +57,7 @@ export default function DigitalCollection({
       ) : (
         <div className="flex items-center justify-center pt-8">
           <h2 className="text-2xl font-semibold">
-            You do not own any Collection right now
+            {isOwner ? "You" : "User"} do not own any Collection right now
           </h2>
         </div>
       )}

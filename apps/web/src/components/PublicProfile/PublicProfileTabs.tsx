@@ -19,12 +19,14 @@ type PublicProfileTabsProps = {
   walletAddress: string;
   initialTab?: string;
   username: string;
+  loggedInUserWalletAddress: string;
 };
 
 const PublicProfileTabs = ({
   walletAddress,
   initialTab = "collection",
   username,
+  loggedInUserWalletAddress,
 }: PublicProfileTabsProps) => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const router = useRouter();
@@ -48,7 +50,10 @@ const PublicProfileTabs = ({
 
       <Box pt="3">
         <Tabs.Content value="collection">
-          <DigitalCollection walletAddress={walletAddress} />
+          <DigitalCollection
+            walletAddress={walletAddress}
+            isOwner={loggedInUserWalletAddress === walletAddress}
+          />
         </Tabs.Content>
 
         <Tabs.Content value="past-games">

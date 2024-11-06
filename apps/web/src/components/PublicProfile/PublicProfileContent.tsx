@@ -109,6 +109,7 @@ export const PublicProfileContent = ({
 
             <div className="col-[span_24_/_span_24] xl:col-[span_17_/_span_17]">
               <PublicProfileTabs
+                loggedInUserWalletAddress={networkStore.address || ""}
                 walletAddress={profile.wallet_address}
                 initialTab={initialTab}
                 username={profile.username || ""}
