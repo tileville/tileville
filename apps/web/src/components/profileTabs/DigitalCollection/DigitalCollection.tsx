@@ -3,15 +3,21 @@ import {
   useFetchNFTSAlgolia,
   AlgoliaHitResponse,
 } from "@/hooks/useFetchNFTSAlgolia";
-import { useNetworkStore } from "@/lib/stores/network";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog } from "@radix-ui/themes";
 import { NFTModalTriggerContent } from "./NFTModalTriggerContent";
 import { NFTModalContent } from "./NFTModalContent";
 
-export default function DigitalCollection() {
-  const { address } = useNetworkStore();
-  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({ owner: address });
+type DigitalCollectionType = {
+  walletAddress: string;
+};
+
+export default function DigitalCollection({
+  walletAddress,
+}: DigitalCollectionType) {
+  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
+    owner: walletAddress,
+  });
 
   return (
     <>
