@@ -7,6 +7,7 @@ import { ProfileBasicInfo } from "./ProfileBasicInfo";
 import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
 import { useGetConnections, usePublicProfile } from "@/db/react-query-hooks";
 import { Spinner } from "../common/Spinner";
+import { Connection } from "@/types";
 
 export const PublicProfileContent = ({
   params = {
@@ -28,7 +29,16 @@ export const PublicProfileContent = ({
   const { data: connections, isLoading: connectionsLoading } =
     useGetConnections(profile?.wallet_address || "");
 
-  if (isLoading) {
+  const { data: loggedInUserConnections, isLoading: loggedInUserLoading } =
+    useGetConnections(networkStore.address || "");
+
+  const loggedInUserFollowing = new Set<string>(
+    loggedInUserConnections?.following?.map(
+      (f: Connection) => f.wallet_address
+    ) || []
+  );
+
+  if (isLoading || loggedInUserLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Spinner />
@@ -43,8 +53,6 @@ export const PublicProfileContent = ({
       </div>
     );
   }
-
-  console.log("PUBLIC", profile);
 
   if (!profile) {
     return (
@@ -79,8 +87,8 @@ export const PublicProfileContent = ({
 
             <div className="col-span-12 grid gap-4 md:col-span-6 xl:col-span-4">
               <Connections
-                profileWalletAddress={profile.wallet_address || ""}
                 loggedInUserWalletAddress={networkStore.address || ""}
+                loggedInUserFollowing={loggedInUserFollowing}
                 isLoading={connectionsLoading}
                 following={connections?.following}
                 followers={connections?.followers}

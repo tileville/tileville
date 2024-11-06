@@ -2,26 +2,23 @@
 import { Tabs } from "@radix-ui/themes";
 import { NoFriends } from "./NoFriends";
 import { Connection } from "@/types";
-import { FollowingListItem } from "./FollowingListItem";
-import { FollowerListItem } from "./FollowerListItem";
+import { UserListItem } from "./UserListItem";
 
 type ConnectionsType = {
-  profileWalletAddress: string;
   isLoading: boolean;
   following: Connection[];
   followers: Connection[];
   loggedInUserWalletAddress: string;
+  loggedInUserFollowing: Set<string>;
 };
 
 export const Connections = ({
-  profileWalletAddress,
   isLoading,
   following,
   followers,
   loggedInUserWalletAddress,
+  loggedInUserFollowing,
 }: ConnectionsType) => {
-  const followingAddresses = new Set(following?.map((f) => f.wallet_address));
-
   return (
     <div className="w-full rounded-xl bg-primary/20 p-4 text-black backdrop-blur-sm">
       <Tabs.Root defaultValue="following">
@@ -48,23 +45,26 @@ export const Connections = ({
               ) : following.length <= 0 ? (
                 <NoFriends />
               ) : (
-                following.map((following: Connection) => {
-                  return (
-                    <li key={following.username}>
-                      <FollowingListItem
-                        profileWalletAddress={profileWalletAddress}
-                        followingWalletAddress={following.wallet_address}
-                        followingAvatarUrl={following.avatar_url}
-                        followingUsername={following.username}
-                        loggedInUserWalletAddress={loggedInUserWalletAddress}
-                      />
-                    </li>
-                  );
-                })
+                following.map((user: Connection) => (
+                  <li key={user.username}>
+                    <UserListItem
+                      userInfo={{
+                        wallet_address: user.wallet_address,
+                        avatar_url: user.avatar_url,
+                        username: user.username,
+                      }}
+                      isFollowing={loggedInUserFollowing.has(
+                        user.wallet_address
+                      )}
+                      loggedInUserWalletAddress={loggedInUserWalletAddress}
+                    />
+                  </li>
+                ))
               )}
             </ul>
           </div>
         </Tabs.Content>
+
         <Tabs.Content value="followers">
           <div className="pt-3">
             <ul className="flex flex-col gap-1">
@@ -75,33 +75,21 @@ export const Connections = ({
                   User do not have any followers yet!
                 </li>
               ) : (
-                followers.map((follower: Connection) => {
-                  const isAlreadyFollowing = followingAddresses.has(
-                    follower.wallet_address
-                  );
-
-                  return (
-                    <li key={follower.username}>
-                      {isAlreadyFollowing ? (
-                        <FollowingListItem
-                          profileWalletAddress={profileWalletAddress}
-                          followingWalletAddress={follower.wallet_address}
-                          followingAvatarUrl={follower.avatar_url}
-                          followingUsername={follower.username}
-                          loggedInUserWalletAddress={loggedInUserWalletAddress}
-                        />
-                      ) : (
-                        <FollowerListItem
-                          followerAvatarUrl={follower.avatar_url}
-                          followerUsername={follower.username}
-                          followerWalletAddress={follower.wallet_address}
-                          profileWalletAddress={profileWalletAddress}
-                          loggedInUserWalletAddress={loggedInUserWalletAddress}
-                        />
+                followers.map((user: Connection) => (
+                  <li key={user.username}>
+                    <UserListItem
+                      userInfo={{
+                        wallet_address: user.wallet_address,
+                        avatar_url: user.avatar_url,
+                        username: user.username,
+                      }}
+                      isFollowing={loggedInUserFollowing.has(
+                        user.wallet_address
                       )}
-                    </li>
-                  );
-                })
+                      loggedInUserWalletAddress={loggedInUserWalletAddress}
+                    />
+                  </li>
+                ))
               )}
             </ul>
           </div>
