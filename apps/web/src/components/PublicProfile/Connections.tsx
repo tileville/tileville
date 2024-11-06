@@ -10,6 +10,7 @@ type ConnectionsType = {
   isLoading: boolean;
   following: Connection[];
   followers: Connection[];
+  loggedInUserWalletAddress: string;
 };
 
 export const Connections = ({
@@ -17,6 +18,7 @@ export const Connections = ({
   isLoading,
   following,
   followers,
+  loggedInUserWalletAddress,
 }: ConnectionsType) => {
   const followingAddresses = new Set(following?.map((f) => f.wallet_address));
 
@@ -54,6 +56,7 @@ export const Connections = ({
                         followingWalletAddress={following.wallet_address}
                         followingAvatarUrl={following.avatar_url}
                         followingUsername={following.username}
+                        loggedInUserWalletAddress={loggedInUserWalletAddress}
                       />
                     </li>
                   );
@@ -85,6 +88,7 @@ export const Connections = ({
                           followingWalletAddress={follower.wallet_address}
                           followingAvatarUrl={follower.avatar_url}
                           followingUsername={follower.username}
+                          loggedInUserWalletAddress={loggedInUserWalletAddress}
                         />
                       ) : (
                         <FollowerListItem
@@ -92,6 +96,7 @@ export const Connections = ({
                           followerUsername={follower.username}
                           followerWalletAddress={follower.wallet_address}
                           profileWalletAddress={profileWalletAddress}
+                          loggedInUserWalletAddress={loggedInUserWalletAddress}
                         />
                       )}
                     </li>

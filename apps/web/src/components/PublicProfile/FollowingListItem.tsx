@@ -11,6 +11,7 @@ type FollowingBtnType = {
   followingAvatarUrl: string;
   followingUsername: string;
   profileWalletAddress: string;
+  loggedInUserWalletAddress: string;
 };
 
 export const FollowingListItem = ({
@@ -18,6 +19,7 @@ export const FollowingListItem = ({
   followingAvatarUrl,
   followingUsername,
   profileWalletAddress,
+  loggedInUserWalletAddress,
 }: FollowingBtnType) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,10 +46,7 @@ export const FollowingListItem = ({
     }
   };
 
-  const isCurrentUser = profileWalletAddress === followingWalletAddress;
-  console.log("currentuser", isCurrentUser);
-  console.log("profileWalletAddress", profileWalletAddress);
-  console.log("followingWalletAddress", followingWalletAddress);
+  const isCurrentUser = loggedInUserWalletAddress === followingWalletAddress;
   return (
     <Link href={`/u/${followingWalletAddress}`}>
       <div className="flex items-center gap-4">

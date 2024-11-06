@@ -11,6 +11,7 @@ type FollowerListItemType = {
   followerAvatarUrl: string;
   followerUsername: string;
   profileWalletAddress: string;
+  loggedInUserWalletAddress: string;
 };
 
 export const FollowerListItem = ({
@@ -18,6 +19,7 @@ export const FollowerListItem = ({
   followerAvatarUrl,
   followerUsername,
   profileWalletAddress,
+  loggedInUserWalletAddress,
 }: FollowerListItemType) => {
   const [isLoading, setIsLoading] = useState(false);
   const followMutation = useFollowUser();
@@ -44,7 +46,7 @@ export const FollowerListItem = ({
     }
   };
 
-  const isCurrentUser = profileWalletAddress === followerWalletAddress;
+  const isCurrentUser = loggedInUserWalletAddress === followerWalletAddress;
 
   return (
     <Link href={`/u/${followerWalletAddress}`}>

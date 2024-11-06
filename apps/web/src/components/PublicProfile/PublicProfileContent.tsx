@@ -80,6 +80,7 @@ export const PublicProfileContent = ({
             <div className="col-span-12 grid gap-4 md:col-span-6 xl:col-span-4">
               <Connections
                 profileWalletAddress={profile.wallet_address || ""}
+                loggedInUserWalletAddress={networkStore.address || ""}
                 isLoading={connectionsLoading}
                 following={connections?.following}
                 followers={connections?.followers}
