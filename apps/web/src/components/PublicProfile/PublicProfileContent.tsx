@@ -78,6 +78,8 @@ export const PublicProfileContent = ({
                 discordUsername={profile.discord_username || null}
                 telegramUsername={profile.telegram_username || null}
                 twitterUsername={profile.twitter_username || null}
+                isFollowing={loggedInUserFollowing.has(profile.wallet_address)}
+                loggedInUserWalletAddress={networkStore.address || ""}
               />
             </div>
 

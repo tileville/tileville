@@ -1,7 +1,11 @@
+import { FOLLOWING_BTN_LG, PRIMARY_BUTTON_STYLES_LG } from "@/constants";
+import { useFollowUser, useUnfollowUser } from "@/db/react-query-hooks";
 import { copyToClipBoard, formatAddress } from "@/lib/helpers";
-import { CopyIcon, Pencil1Icon } from "@radix-ui/react-icons";
+import { CopyIcon, Pencil1Icon, UpdateIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const BADGE_BASE_CLASSES =
   "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
@@ -16,6 +20,8 @@ type ProfileBasicInfoType = {
   discordUsername: string | null;
   telegramUsername: string | null;
   twitterUsername: string | null;
+  isFollowing: boolean;
+  loggedInUserWalletAddress: string;
 };
 
 export const ProfileBasicInfo = ({
@@ -28,10 +34,49 @@ export const ProfileBasicInfo = ({
   discordUsername,
   telegramUsername,
   twitterUsername,
+  isFollowing,
+  loggedInUserWalletAddress,
 }: ProfileBasicInfoType) => {
-  console.log("wallet address", walletAddress);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const followMutation = useFollowUser();
+  const unfollowMutation = useUnfollowUser();
+
+  const handleFollowAction = async () => {
+    if (!loggedInUserWalletAddress) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      if (isFollowing) {
+        await unfollowMutation.mutateAsync({
+          follower_wallet: loggedInUserWalletAddress,
+          target_wallet: walletAddress,
+        });
+        toast.success("Successfully unfollowed user");
+      } else {
+        await followMutation.mutateAsync({
+          follower_wallet: loggedInUserWalletAddress,
+          target_wallet: walletAddress,
+        });
+        toast.success("Successfully followed user");
+      }
+    } catch (error: any) {
+      toast.error(
+        error.message || `Failed to ${isFollowing ? "unfollow" : "follow"} user`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const isCurrentUser = loggedInUserWalletAddress === walletAddress;
+
   return (
-    <div className="h-full w-full rounded-xl bg-primary/20 px-2 py-4 backdrop-blur-sm">
+    <div className="flex h-full w-full flex-col rounded-xl bg-primary/20 px-2 py-4 backdrop-blur-sm">
       {/* //TODO: don't remove below code it will come when users is the user himself */}
       {/* <div className="mb-8 flex justify-end">
         <button className={BADGE_BASE_CLASSES}>
@@ -138,6 +183,32 @@ export const ProfileBasicInfo = ({
           >
             <Image src="/icons/x.svg" width={20} height={20} alt="x" />
           </Link>
+        )}
+      </div>
+
+      <div className="mt-auto w-full">
+        {!isCurrentUser && (
+          <button
+            type="button"
+            className={`${
+              isFollowing ? FOLLOWING_BTN_LG : PRIMARY_BUTTON_STYLES_LG
+            } relative ms-auto`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onClick={(e) => {
+              e.preventDefault();
+              handleFollowAction();
+            }}
+            disabled={isLoading}
+          >
+            {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
+
+            {isLoading && (
+              <span className="absolute right-4 top-1/2 -translate-y-1/2">
+                <UpdateIcon className="animate-spin" />
+              </span>
+            )}
+          </button>
         )}
       </div>
     </div>
