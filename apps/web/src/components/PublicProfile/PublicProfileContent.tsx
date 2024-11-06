@@ -8,6 +8,8 @@ import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal"
 import { useGetConnections, usePublicProfile } from "@/db/react-query-hooks";
 import { Spinner } from "../common/Spinner";
 import { Connection } from "@/types";
+import PublicProfileTabs from "./PublicProfileTabs";
+import { useSearchParams } from "next/navigation";
 
 export const PublicProfileContent = ({
   params = {
@@ -16,6 +18,9 @@ export const PublicProfileContent = ({
 }: {
   params?: { handle: string };
 }) => {
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get("tab") || "collection";
+
   const networkStore = useNetworkStore();
 
   const {
@@ -99,6 +104,14 @@ export const PublicProfileContent = ({
                 walletAddress={networkStore.address || ""}
                 loggedInUserWalletAddress={networkStore.address || ""}
                 loggedInUserFollowing={loggedInUserFollowing}
+              />
+            </div>
+
+            <div className="col-[span_24_/_span_24] xl:col-[span_17_/_span_17]">
+              <PublicProfileTabs
+                walletAddress={profile.wallet_address}
+                initialTab={initialTab}
+                username={profile.username || ""}
               />
             </div>
           </div>

@@ -62,7 +62,7 @@ export const UserListItem = ({
   const isCurrentUser = loggedInUserWalletAddress === userInfo.wallet_address;
 
   return (
-    <Link href={`/u/${userInfo.wallet_address}`} className={className}>
+    <Link href={`/u/${userInfo.username}`} className={className}>
       <div className="flex items-center gap-4">
         <div className="h-[50px] w-[50px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
           <Image
