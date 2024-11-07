@@ -33,20 +33,21 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   const renderFooter = () => {
+    if (!isClient) return null;
     if (isMobile || isTablet) {
-      return "";
-    } else {
-      return <Footer />;
+      return null;
     }
+    return <Footer />;
   };
+
   return (
     <JotaiProvider>
       <StoreProtokitUpdater />
       <QueryClientProvider client={queryClient}>
-        {renderNavBar()}
+          {renderNavBar()}
         <div className="mx-auto max-h-[calc(100vh-200px)]"></div>
-        {children}
-        {renderFooter()}
+            {children}
+          {renderFooter()}
       </QueryClientProvider>
     </JotaiProvider>
   );
