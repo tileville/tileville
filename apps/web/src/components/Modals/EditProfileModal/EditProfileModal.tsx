@@ -1,4 +1,4 @@
-import { CameraIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { CameraIcon, Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import { Modal } from "@/components/common/Modal";
 import Image from "next/image";
 import {
@@ -13,6 +13,7 @@ import { IFormInput } from "@/app/profile/ProfileContent";
 import { Spinner } from "../../common/Spinner";
 import { WhyToolTip } from "./whyToolTip";
 import ToggleSwitch from "@/components/common/ToggleSwitch";
+import { BADGE_BASE_CLASSES } from "@/constants";
 
 type EditProfileModalType = {
   closeModal: () => void;
@@ -62,9 +63,14 @@ export const EditProfileModal = ({
       setIsOpen={setModalOpen}
       onClose={closeModal}
       trigger={
-        <button className="text-sm text-black/60 underline">
-          {isProfileIncomplete ? "Complete Profile" : "Edit Profile"}
-        </button>
+          <button className={`${BADGE_BASE_CLASSES} absolute top-3 right-3 z-10`}>
+            <span>
+              {isProfileIncomplete ? "Complete Profile" : "Edit Profile"}
+            </span>
+            <span className="text-white">
+              <Pencil1Icon />
+            </span>
+          </button>
       }
     >
       <div className="relative mx-auto max-h-full w-full max-w-[819px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">

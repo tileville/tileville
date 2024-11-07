@@ -89,16 +89,6 @@ export const ProfileBasicInfo = ({
 
   return (
     <div className="flex h-full w-full flex-col rounded-xl bg-primary/20 px-2 py-4 backdrop-blur-sm">
-      {/* //TODO: don't remove below code it will come when users is the user himself */}
-      {/* <div className="mb-8 flex justify-end">
-        <button className={BADGE_BASE_CLASSES}>
-          <span>Edit Profile</span>
-          <span className="text-white">
-            <Pencil1Icon />
-          </span>
-        </button>
-      </div> */}
-
       <div className="mb-4 flex items-start gap-3">
         {avatar_url && (
           <div className="h-[100px] w-[100px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">

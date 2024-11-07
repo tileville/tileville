@@ -16,6 +16,7 @@ import { useSearchParams } from "next/navigation";
 import { ProfileBasicInfoPLaceholder } from "./Placeholders/ProfileBasicInfoPlaceholder";
 import { ConnectionsPlaceholder } from "./Placeholders/ConnectionsPlaceholder";
 import { useEffect, useState } from "react";
+import EditProfileModalWrap from "./EditProfileModalWrap";
 
 export const PublicProfileContent = ({
   params = {
@@ -115,23 +116,26 @@ export const PublicProfileContent = ({
               {isLoading || loggedInUserLoading ? (
                 <ProfileBasicInfoPLaceholder />
               ) : (
-                <ProfileBasicInfo
-                  avatar_url={profileData?.avatar_url}
-                  username={profileData?.username || ""}
-                  fullName={profileData?.fullname || ""}
-                  walletAddress={profileData?.wallet_address || ""}
-                  followersCount={profileData?.followers?.length || 0}
-                  followingCount={profileData?.following?.length || 0}
-                  discordUsername={profileData?.discord_username || null}
-                  telegramUsername={profileData?.telegram_username || null}
-                  twitterUsername={profileData?.twitter_username || null}
-                  isFollowing={loggedInUserFollowing.has(
-                    profileData?.wallet_address || ""
-                  )}
-                  loggedInUserWalletAddress={networkStore.address || ""}
-                  // isProfileOwner={isProfileOwner}
-                  // emailAddress={profileData?.email_address || null}
-                />
+                <>
+                  <EditProfileModalWrap />
+                  <ProfileBasicInfo
+                    avatar_url={profileData?.avatar_url}
+                    username={profileData?.username || ""}
+                    fullName={profileData?.fullname || ""}
+                    walletAddress={profileData?.wallet_address || ""}
+                    followersCount={profileData?.followers?.length || 0}
+                    followingCount={profileData?.following?.length || 0}
+                    discordUsername={profileData?.discord_username || null}
+                    telegramUsername={profileData?.telegram_username || null}
+                    twitterUsername={profileData?.twitter_username || null}
+                    isFollowing={loggedInUserFollowing.has(
+                      profileData?.wallet_address || ""
+                    )}
+                    loggedInUserWalletAddress={networkStore.address || ""}
+                    // isProfileOwner={isProfileOwner}
+                    // emailAddress={profileData?.email_address || null}
+                  />
+                </>
               )}
             </div>
 
