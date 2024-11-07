@@ -147,7 +147,7 @@ export const useProfile = ({
       isPublic: boolean;
     };
     email_address?: {
-      username: string | null;
+      email: string | null;
       isPublic: boolean;
     };
   }

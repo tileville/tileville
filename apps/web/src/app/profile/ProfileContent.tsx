@@ -35,7 +35,7 @@ export interface IFormInput {
     isPublic: boolean;
   };
   email_address: {
-    username: string;
+    email: string;
     isPublic: boolean;
   };
 }
@@ -76,7 +76,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
         isPublic: false,
       },
       email_address: {
-        username: "",
+        email: "",
         isPublic: false,
       },
     },
@@ -235,6 +235,8 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                       firstNameError={errors.firstName}
                       userNameError={errors.username}
                       userNameErrorMsg={errors.username?.message}
+                      emailError={errors.email_address?.email}
+                      emailErrorMsg={errors.email_address?.email?.message}
                       onSubmit={onSubmit}
                       handleSubmit={handleSubmit}
                       handleToggle={handleToggle}

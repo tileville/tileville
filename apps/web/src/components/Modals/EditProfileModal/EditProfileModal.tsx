@@ -22,6 +22,8 @@ type EditProfileModalType = {
   register: UseFormRegister<IFormInput>;
   firstNameError: FieldError | undefined;
   userNameError: FieldError | undefined;
+  emailError: FieldError | undefined;
+  emailErrorMsg: string | undefined;
   userNameErrorMsg: string | undefined;
   onSubmit: SubmitHandler<IFormInput>;
   handleSubmit: UseFormHandleSubmit<IFormInput, undefined>;
@@ -43,6 +45,8 @@ export const EditProfileModal = ({
   register,
   firstNameError,
   userNameError,
+  emailError,
+  emailErrorMsg,
   userNameErrorMsg,
   onSubmit,
   handleSubmit,
@@ -169,12 +173,27 @@ export const EditProfileModal = ({
 
                 <div>
                   <input
-                    type="text"
+                    type="email"
                     className={INPUT_PRIMARY_CLASSES}
                     id="email"
                     placeholder="Email"
+                    {...register("email_address.email", {
+                      required: true,
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
+                    })}
                   />
                 </div>
+
+                <span
+                  className={`${
+                    emailError ? "opacity-100" : ""
+                  } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+                >
+                  {emailErrorMsg}
+                </span>
               </div>
             </div>
 
