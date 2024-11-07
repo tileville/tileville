@@ -117,7 +117,8 @@ export const PublicProfileContent = ({
                 <ProfileBasicInfoPLaceholder />
               ) : (
                 <>
-                  <EditProfileModalWrap />
+                  {isProfileOwner && <EditProfileModalWrap />}
+
                   <ProfileBasicInfo
                     avatar_url={profileData?.avatar_url}
                     username={profileData?.username || ""}
