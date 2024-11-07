@@ -5,6 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const currentWallet = searchParams.get("wallet_address");
+    const searchQuery = searchParams.get("search") || "";
 
     if (!currentWallet) {
       return Response.json(
@@ -16,10 +17,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data: users, error } = await supabase
+    let query = supabase
       .from("player_profile")
-      .select("wallet_address, username, avatar_url ,fullname")
+      .select("wallet_address, username, avatar_url , fullname")
       .neq("wallet_address", currentWallet);
+
+    if (searchQuery) {
+      query = query.or(
+        `username.ilike.%${searchQuery}%,fullname.ilike.%${searchQuery}%`
+      );
+    }
+
+    const { data: users, error } = await query;
 
     if (error) throw error;
 

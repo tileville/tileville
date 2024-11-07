@@ -571,12 +571,14 @@ export function useUnfollowUser() {
   });
 }
 
-export function useGetAllUsers(currentWallet: string) {
+export function useGetAllUsers(currentWallet: string, searchQuery = "") {
   return useQuery({
-    queryKey: ["all-users", currentWallet],
+    queryKey: ["all-users", currentWallet, searchQuery],
     queryFn: async () => {
       const response = await fetch(
-        `/api/player/all-users?wallet_address=${currentWallet}`
+        `/api/player/all-users?wallet_address=${currentWallet}&search=${encodeURIComponent(
+          searchQuery
+        )}`
       );
       const data = await response.json();
 
