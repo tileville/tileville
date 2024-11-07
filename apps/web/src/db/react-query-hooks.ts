@@ -642,6 +642,39 @@ export const usePublicProfile = (identifier: string) => {
   );
 };
 
+export const usePrivateProfile = (walletAddress: string) => {
+  return useQuery(
+    ["private-profile", walletAddress],
+    async () => {
+      const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+      if (!authSignature) {
+        throw new Error("Auth signature missing!");
+      }
+
+      const response = await fetch(
+        `/api/player/private?wallet_address=${walletAddress}`,
+        {
+          headers: {
+            "Auth-Signature": authSignature,
+            "Wallet-Address": walletAddress,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch private profile");
+      }
+
+      return response.json();
+    },
+    {
+      enabled: !!walletAddress,
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+    }
+  );
+};
+
 interface BalanceResponse {
   success: boolean;
   data?: {

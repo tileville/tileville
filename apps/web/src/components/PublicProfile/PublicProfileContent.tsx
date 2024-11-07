@@ -5,12 +5,17 @@ import { Achievements } from "./Achievements";
 import { Connections } from "./Connections";
 import { ProfileBasicInfo } from "./ProfileBasicInfo";
 import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
-import { useGetConnections, usePublicProfile } from "@/db/react-query-hooks";
+import {
+  useGetConnections,
+  usePrivateProfile,
+  usePublicProfile,
+} from "@/db/react-query-hooks";
 import { Connection } from "@/types";
 import PublicProfileTabs from "./PublicProfileTabs";
 import { useSearchParams } from "next/navigation";
 import { ProfileBasicInfoPLaceholder } from "./Placeholders/ProfileBasicInfoPlaceholder";
 import { ConnectionsPlaceholder } from "./Placeholders/ConnectionsPlaceholder";
+import { useEffect, useState } from "react";
 
 export const PublicProfileContent = ({
   params = {
@@ -21,19 +26,30 @@ export const PublicProfileContent = ({
 }) => {
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") || "collection";
-
   const networkStore = useNetworkStore();
+  const [isProfileOwner, setIsProfileOwner] = useState(false);
 
   const {
-    data: profileData,
-    isLoading,
-    error,
+    data: publicProfileData,
+    isLoading: isPublicLoading,
+    error: publicError,
   } = usePublicProfile(params.handle);
 
-  const profile = profileData?.data;
+  const publicProfile = publicProfileData?.data;
+
+  useEffect(() => {
+    if (publicProfile?.wallet_address && networkStore.address) {
+      setIsProfileOwner(publicProfile.wallet_address === networkStore.address);
+    }
+  }, [publicProfile?.wallet_address, networkStore.address]);
+
+  const { data: privateProfileData, isLoading: isPrivateLoading } =
+    usePrivateProfile(
+      isProfileOwner ? publicProfile?.wallet_address || "" : ""
+    );
 
   const { data: connections, isLoading: connectionsLoading } =
-    useGetConnections(profile?.wallet_address || "");
+    useGetConnections(publicProfile?.wallet_address || "");
 
   const { data: loggedInUserConnections, isLoading: loggedInUserLoading } =
     useGetConnections(networkStore.address || "");
@@ -50,15 +66,39 @@ export const PublicProfileContent = ({
     ) || []
   );
 
-  if (error) {
+  const profileData = isProfileOwner
+    ? {
+        ...publicProfile,
+        ...(privateProfileData?.data || {}),
+        // Override social accounts with private data if available
+        discord_username:
+          privateProfileData?.data?.social_accounts?.discord.username ||
+          publicProfile?.discord_username,
+        telegram_username:
+          privateProfileData?.data?.social_accounts?.telegram.username ||
+          publicProfile?.telegram_username,
+        twitter_username:
+          privateProfileData?.data?.social_accounts?.twitter.username ||
+          publicProfile?.twitter_username,
+        email_address:
+          privateProfileData?.data?.email_address.email ||
+          publicProfile?.email_address,
+      }
+    : publicProfile;
+
+  console.log("COMPLETE PROFILE DATA", profileData);
+
+  if (publicError) {
     return (
       <div className="flex min-h-screen items-center justify-center text-red-500">
-        {error.message}
+        {publicError.message}
       </div>
     );
   }
 
-  if (!isLoading && !loggedInUserLoading && !profile) {
+  const isLoading = isPublicLoading || (isProfileOwner && isPrivateLoading);
+
+  if (!isLoading && !loggedInUserLoading && !profileData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         Profile not found
@@ -76,19 +116,21 @@ export const PublicProfileContent = ({
                 <ProfileBasicInfoPLaceholder />
               ) : (
                 <ProfileBasicInfo
-                  avatar_url={profile?.avatar_url}
-                  username={profile?.username || ""}
-                  fullName={profile?.fullname || ""}
-                  walletAddress={profile?.wallet_address || ""}
-                  followersCount={profile?.followers?.length || 0}
-                  followingCount={profile?.following?.length || 0}
-                  discordUsername={profile?.discord_username || null}
-                  telegramUsername={profile?.telegram_username || null}
-                  twitterUsername={profile?.twitter_username || null}
+                  avatar_url={profileData?.avatar_url}
+                  username={profileData?.username || ""}
+                  fullName={profileData?.fullname || ""}
+                  walletAddress={profileData?.wallet_address || ""}
+                  followersCount={profileData?.followers?.length || 0}
+                  followingCount={profileData?.following?.length || 0}
+                  discordUsername={profileData?.discord_username || null}
+                  telegramUsername={profileData?.telegram_username || null}
+                  twitterUsername={profileData?.twitter_username || null}
                   isFollowing={loggedInUserFollowing.has(
-                    profile?.wallet_address || ""
+                    profileData?.wallet_address || ""
                   )}
                   loggedInUserWalletAddress={networkStore.address || ""}
+                  // isProfileOwner={isProfileOwner}
+                  // emailAddress={profileData?.email_address || null}
                 />
               )}
             </div>
@@ -126,9 +168,9 @@ export const PublicProfileContent = ({
               ) : (
                 <PublicProfileTabs
                   loggedInUserWalletAddress={networkStore.address || ""}
-                  walletAddress={profile?.wallet_address || ""}
+                  walletAddress={profileData?.wallet_address || ""}
                   initialTab={initialTab}
-                  username={profile?.username || ""}
+                  username={profileData?.username || ""}
                 />
               )}
             </div>
