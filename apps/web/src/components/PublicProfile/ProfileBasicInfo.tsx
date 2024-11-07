@@ -114,7 +114,7 @@ export const ProfileBasicInfo = ({
         <div className="flex flex-col gap-2">
           <div>
             <h2 className="text-2xl font-bold text-[#224D08]">{fullName}</h2>
-            <p className="text-xs text-[#747474]">{username}</p>
+            <p className="text-xs text-[#747474]">@{username}</p>
           </div>
 
           <div className="flex items-center gap-3">
