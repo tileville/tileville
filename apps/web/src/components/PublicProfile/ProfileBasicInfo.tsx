@@ -1,4 +1,8 @@
-import { FOLLOWING_BTN_LG, PRIMARY_BUTTON_STYLES_LG } from "@/constants";
+import {
+  BADGE_BASE_CLASSES,
+  FOLLOWING_BTN_LG,
+  PRIMARY_BUTTON_STYLES_LG,
+} from "@/constants";
 import {
   useBlockberryBalance,
   useFollowUser,
@@ -11,9 +15,6 @@ import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Skeleton } from "@radix-ui/themes";
-
-const BADGE_BASE_CLASSES =
-  "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
 
 type ProfileBasicInfoType = {
   avatar_url: string | undefined;
