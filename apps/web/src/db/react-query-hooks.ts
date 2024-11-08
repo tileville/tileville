@@ -242,7 +242,6 @@ export const useProfileLazyQuery = (walletAddress: string) => {
     enabled: !!walletAddress,
     staleTime: 0,
     cacheTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: true,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["public-profile"] });
     },

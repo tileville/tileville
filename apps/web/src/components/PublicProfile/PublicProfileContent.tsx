@@ -17,6 +17,9 @@ import { ProfileBasicInfoPLaceholder } from "./Placeholders/ProfileBasicInfoPlac
 import { ConnectionsPlaceholder } from "./Placeholders/ConnectionsPlaceholder";
 import { useEffect, useState } from "react";
 import EditProfileModalWrap from "./EditProfileModalWrap";
+import { useAuthSignature } from "@/hooks/useAuthSignature";
+import { LockClosedIcon } from "@radix-ui/react-icons";
+import { BADGE_BASE_CLASSES } from "@/constants";
 
 export const PublicProfileContent = ({
   params = {
@@ -29,6 +32,7 @@ export const PublicProfileContent = ({
   const initialTab = searchParams.get("tab") || "collection";
   const networkStore = useNetworkStore();
   const [isProfileOwner, setIsProfileOwner] = useState(false);
+  const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
   const {
     data: publicProfileData,
@@ -112,12 +116,28 @@ export const PublicProfileContent = ({
       <div className="fade-slide-in p-4 pb-24 pt-12 md:pt-40">
         <div className="mx-auto max-w-[1280px] font-roboto">
           <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-3">
-            <div className="col-[span_24_/_span_24] md:col-span-12 xl:col-[span_7_/_span_7]">
+            <div className="relative col-[span_24_/_span_24] md:col-span-12 xl:col-[span_7_/_span_7]">
               {isLoading || loggedInUserLoading ? (
                 <ProfileBasicInfoPLaceholder />
               ) : (
                 <>
-                  {isProfileOwner && <EditProfileModalWrap />}
+                  {isProfileOwner && accountAuthSignature && (
+                    <EditProfileModalWrap />
+                  )}
+
+                  {!accountAuthSignature && (
+                    <button
+                      className={`${BADGE_BASE_CLASSES} absolute right-3 top-3 z-10`}
+                      onClick={async () => {
+                        await validateOrSetSignature();
+                      }}
+                    >
+                      <span>Sign in</span>
+                      <span className="text-white">
+                        <LockClosedIcon />
+                      </span>
+                    </button>
+                  )}
 
                   <ProfileBasicInfo
                     avatar_url={profileData?.avatar_url}
