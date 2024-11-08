@@ -182,14 +182,12 @@ export const PublicProfileContent = ({
                     following={connections?.following}
                     followers={connections?.followers}
                   />
-                  {networkStore.address && accountAuthSignature && (
-                    <SearchFriendsModal
-                      walletAddress={networkStore.address}
-                      loggedInUserWalletAddress={networkStore.address}
-                      loggedInUserFollowing={loggedInUserFollowing}
-                      loggedInUserFollowers={loggedInUserFollowers}
-                    />
-                  )}
+                  <SearchFriendsModal
+                    walletAddress={networkStore.address || ""}
+                    loggedInUserWalletAddress={networkStore.address || ""}
+                    loggedInUserFollowing={loggedInUserFollowing}
+                    loggedInUserFollowers={loggedInUserFollowers}
+                  />
                 </>
               )}
             </div>

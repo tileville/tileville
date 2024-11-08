@@ -6,23 +6,25 @@ import { useGetAllUsers } from "@/db/react-query-hooks";
 import { User } from "@/types";
 import { UserListItem } from "@/components/PublicProfile/UserListItem";
 import { useDebounce } from "react-use";
+import { useNetworkStore } from "@/lib/stores/network";
 
 type SearchFriendsModalProps = {
-  walletAddress: string;
-  loggedInUserWalletAddress: string;
-  loggedInUserFollowing: Set<string>;
-  loggedInUserFollowers: Set<string>;
+  walletAddress?: string;
+  loggedInUserWalletAddress?: string;
+  loggedInUserFollowing?: Set<string>;
+  loggedInUserFollowers?: Set<string>;
 };
 
 export default function SearchFriendsModal({
-  walletAddress,
-  loggedInUserWalletAddress,
-  loggedInUserFollowing,
-  loggedInUserFollowers,
+  walletAddress = "",
+  loggedInUserWalletAddress = "",
+  loggedInUserFollowing = new Set(),
+  loggedInUserFollowers = new Set(),
 }: SearchFriendsModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const networkStore = useNetworkStore();
 
   useDebounce(
     () => {
@@ -33,10 +35,7 @@ export default function SearchFriendsModal({
     [searchQuery]
   );
 
-  const { data: users = [], isLoading } = useGetAllUsers(
-    walletAddress,
-    debouncedQuery
-  );
+  const { data: users = [], isLoading } = useGetAllUsers("all", debouncedQuery);
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +49,49 @@ export default function SearchFriendsModal({
     setSearchQuery("");
     setDebouncedQuery("");
   }, []);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="flex min-h-[200px] items-center justify-center">
+          <UpdateIcon className="h-6 w-6 animate-spin" />
+        </div>
+      );
+    }
+
+    if (users.length === 0) {
+      return (
+        <div className="flex min-h-[200px] items-center justify-center text-center">
+          <div>
+            <p className="text-lg font-medium">No users found</p>
+            <p className="text-sm text-black/60">
+              Try searching with a different name or username
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <ul className="flex max-h-[400px] flex-col gap-4 overflow-y-auto">
+        {users.map((user: User) => (
+          <li key={user.username}>
+            <UserListItem
+              userInfo={{
+                wallet_address: user.wallet_address,
+                avatar_url: user.avatar_url,
+                username: user.username,
+                fullname: user.fullname,
+              }}
+              isFollowing={loggedInUserFollowing.has(user.wallet_address)}
+              isFollowsYou={loggedInUserFollowers.has(user.wallet_address)}
+              loggedInUserWalletAddress={loggedInUserWalletAddress}
+            />
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <Dialog.Root>
@@ -111,7 +153,7 @@ export default function SearchFriendsModal({
         </div>
 
         <Dialog.Description>
-          <div className="mb-4 flex items-center justify-between">
+          <span className="mb-4 flex items-center justify-between">
             <span className="text-xl font-bold">
               {debouncedQuery
                 ? `Search Results (${users.length})`
@@ -122,41 +164,10 @@ export default function SearchFriendsModal({
                 <UpdateIcon className="animate-spin" /> Searching...
               </span>
             )}
-          </div>
+          </span>
         </Dialog.Description>
 
-        {isLoading ? (
-          <div className="flex min-h-[200px] items-center justify-center">
-            <UpdateIcon className="h-6 w-6 animate-spin" />
-          </div>
-        ) : users.length === 0 ? (
-          <div className="flex min-h-[200px] items-center justify-center text-center">
-            <div>
-              <p className="text-lg font-medium">No users found</p>
-              <p className="text-sm text-black/60">
-                Try searching with a different name or username
-              </p>
-            </div>
-          </div>
-        ) : (
-          <ul className="flex max-h-[400px] flex-col gap-4 overflow-y-auto">
-            {users.map((user: User) => (
-              <li key={user.username}>
-                <UserListItem
-                  userInfo={{
-                    wallet_address: user.wallet_address,
-                    avatar_url: user.avatar_url,
-                    username: user.username,
-                    fullname: user.fullname,
-                  }}
-                  isFollowing={loggedInUserFollowing.has(user.wallet_address)}
-                  isFollowsYou={loggedInUserFollowers.has(user.wallet_address)}
-                  loggedInUserWalletAddress={loggedInUserWalletAddress}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
+        {renderContent()}
 
         <Dialog.Close>
           <button className="absolute right-4 top-4">
