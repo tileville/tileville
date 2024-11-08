@@ -218,13 +218,12 @@ export const useNFTEntries = ({
   );
 };
 export const useProfileLazyQuery = (walletAddress: string) => {
-  // const { accountAuthSignature: authSignature } = useAuthSignature();
+  const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () => {
       const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
-      console.log({ authSignature });
       if (!authSignature) {
         console.warn("Auth signature missing in storage");
         throw new Error("Auth signature missing!");
@@ -241,9 +240,14 @@ export const useProfileLazyQuery = (walletAddress: string) => {
         });
     },
     enabled: !!walletAddress,
+    staleTime: 0,
+    cacheTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: true,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["public-profile"] });
+    },
   });
 };
-
 export const useLeaderboardEntries = (competition_key: string) => {
   return useQuery({
     queryKey: ["leaderboard_entries", competition_key],
