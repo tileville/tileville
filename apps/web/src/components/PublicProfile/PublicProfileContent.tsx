@@ -45,12 +45,18 @@ export const PublicProfileContent = ({
   useEffect(() => {
     if (publicProfile?.wallet_address && networkStore.address) {
       setIsProfileOwner(publicProfile.wallet_address === networkStore.address);
+    } else {
+      setIsProfileOwner(false);
     }
   }, [publicProfile?.wallet_address, networkStore.address]);
 
+  const shouldFetchPrivateData = Boolean(
+    networkStore.address && accountAuthSignature && isProfileOwner
+  );
+
   const { data: privateProfileData, isLoading: isPrivateLoading } =
     usePrivateProfile(
-      isProfileOwner ? publicProfile?.wallet_address || "" : ""
+      shouldFetchPrivateData ? publicProfile?.wallet_address || "" : ""
     );
 
   const { data: connections, isLoading: connectionsLoading } =
@@ -71,27 +77,25 @@ export const PublicProfileContent = ({
     ) || []
   );
 
-  const profileData = isProfileOwner
-    ? {
-        ...publicProfile,
-        ...(privateProfileData?.data || {}),
-        // Override social accounts with private data if available
-        discord_username:
-          privateProfileData?.data?.social_accounts?.discord.username ||
-          publicProfile?.discord_username,
-        telegram_username:
-          privateProfileData?.data?.social_accounts?.telegram.username ||
-          publicProfile?.telegram_username,
-        twitter_username:
-          privateProfileData?.data?.social_accounts?.twitter.username ||
-          publicProfile?.twitter_username,
-        email_address:
-          privateProfileData?.data?.email_address.email ||
-          publicProfile?.email_address,
-      }
-    : publicProfile;
-
-  console.log("COMPLETE PROFILE DATA", profileData);
+  const profileData =
+    shouldFetchPrivateData && privateProfileData?.data
+      ? {
+          ...publicProfile,
+          ...privateProfileData.data,
+          discord_username:
+            privateProfileData.data.social_accounts?.discord.username ||
+            publicProfile?.discord_username,
+          telegram_username:
+            privateProfileData.data.social_accounts?.telegram.username ||
+            publicProfile?.telegram_username,
+          twitter_username:
+            privateProfileData.data.social_accounts?.twitter.username ||
+            publicProfile?.twitter_username,
+          email_address:
+            privateProfileData.data.email_address.email ||
+            publicProfile?.email_address,
+        }
+      : publicProfile;
 
   if (publicError) {
     return (
@@ -101,9 +105,10 @@ export const PublicProfileContent = ({
     );
   }
 
-  const isLoading = isPublicLoading || (isProfileOwner && isPrivateLoading);
+  const isLoading =
+    isPublicLoading || (shouldFetchPrivateData && isPrivateLoading);
 
-  if (!isLoading && !loggedInUserLoading && !profileData) {
+  if (!isLoading && !profileData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         Profile not found
@@ -117,7 +122,7 @@ export const PublicProfileContent = ({
         <div className="mx-auto max-w-[1280px] font-roboto">
           <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-3">
             <div className="relative col-[span_24_/_span_24] md:col-span-12 xl:col-[span_7_/_span_7]">
-              {isLoading || loggedInUserLoading ? (
+              {isLoading ? (
                 <ProfileBasicInfoPLaceholder />
               ) : (
                 <>
@@ -125,7 +130,7 @@ export const PublicProfileContent = ({
                     <EditProfileModalWrap />
                   )}
 
-                  {!accountAuthSignature && (
+                  {networkStore.address && !accountAuthSignature && (
                     <button
                       className={`${BADGE_BASE_CLASSES} absolute right-3 top-3 z-10`}
                       onClick={async () => {
@@ -153,7 +158,7 @@ export const PublicProfileContent = ({
                       profileData?.wallet_address || ""
                     )}
                     loggedInUserWalletAddress={networkStore.address || ""}
-                    // isProfileOwner={isProfileOwner}
+                    isProfileOwner={isProfileOwner}
                     // emailAddress={profileData?.email_address || null}
                   />
                 </>
@@ -165,7 +170,7 @@ export const PublicProfileContent = ({
             </div>
 
             <div className="col-[span_24_/_span_24] grid gap-4 md:col-[span_12_/_span_12] xl:col-[span_8_/_span_8]">
-              {loggedInUserLoading ? (
+              {connectionsLoading ? (
                 <ConnectionsPlaceholder />
               ) : (
                 <>
@@ -177,12 +182,14 @@ export const PublicProfileContent = ({
                     following={connections?.following}
                     followers={connections?.followers}
                   />
-                  <SearchFriendsModal
-                    walletAddress={networkStore.address || ""}
-                    loggedInUserWalletAddress={networkStore.address || ""}
-                    loggedInUserFollowing={loggedInUserFollowing}
-                    loggedInUserFollowers={loggedInUserFollowers}
-                  />
+                  {networkStore.address && accountAuthSignature && (
+                    <SearchFriendsModal
+                      walletAddress={networkStore.address}
+                      loggedInUserWalletAddress={networkStore.address}
+                      loggedInUserFollowing={loggedInUserFollowing}
+                      loggedInUserFollowers={loggedInUserFollowers}
+                    />
+                  )}
                 </>
               )}
             </div>

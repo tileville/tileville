@@ -28,6 +28,7 @@ type ProfileBasicInfoType = {
   twitterUsername: string | null;
   isFollowing: boolean;
   loggedInUserWalletAddress: string;
+  isProfileOwner: boolean;
 };
 
 export const ProfileBasicInfo = ({
@@ -42,6 +43,7 @@ export const ProfileBasicInfo = ({
   twitterUsername,
   isFollowing,
   loggedInUserWalletAddress,
+  isProfileOwner,
 }: ProfileBasicInfoType) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -84,8 +86,6 @@ export const ProfileBasicInfo = ({
       setIsLoading(false);
     }
   };
-
-  const isCurrentUser = loggedInUserWalletAddress === walletAddress;
 
   return (
     <div className="flex h-full w-full flex-col rounded-xl bg-primary/20 px-2 py-4 backdrop-blur-sm">
@@ -197,7 +197,7 @@ export const ProfileBasicInfo = ({
       </div>
 
       <div className="mt-auto w-full">
-        {!isCurrentUser && (
+        {!isProfileOwner && (
           <button
             type="button"
             className={`${
