@@ -166,7 +166,10 @@ export const PublicProfileContent = ({
             </div>
 
             <div className="col-[span_24_/_span_24] md:col-span-12 xl:col-[span_9_/_span_9]">
-              <Achievements />
+              <Achievements
+                highestScore={profileData?.highest_score}
+                isPublicLoading={isPublicLoading}
+              />
             </div>
 
             <div className="col-[span_24_/_span_24] grid gap-4 md:col-[span_12_/_span_12] xl:col-[span_8_/_span_8]">

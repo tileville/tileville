@@ -24,6 +24,7 @@ interface PlayerProfile {
   telegram_username?: SocialField | null;
   discord_username?: SocialField | null;
   email_address?: EmailField | null;
+  highest_score?: number;
 }
 
 // Public Profile (after transformation)
@@ -38,6 +39,7 @@ interface PublicPlayerProfile {
   telegram_username?: string | null;
   discord_username?: string | null;
   email_address?: string | null;
+  highest_score?: number;
 }
 
 function getPublicProfile(profile: PlayerProfile): PublicPlayerProfile {
@@ -89,10 +91,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data, error }: PostgrestSingleResponse<PlayerProfile> =
-      await query.single();
+    const {
+      data: profileData,
+      error: profileError,
+    }: PostgrestSingleResponse<PlayerProfile> = await query.single();
 
-    if (error || !data) {
+    if (profileError || !profileData) {
       return Response.json(
         {
           status: false,
@@ -102,9 +106,26 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log("all DATA", data);
-    const publicData = getPublicProfile(data);
-    console.log("PUBLIC DATA", publicData);
+    const { data: scoresData, error: scoresError } = await supabase
+      .from("game_scores")
+      .select("score")
+      .eq("wallet_address", profileData.wallet_address)
+      .order("score", { ascending: false })
+      .limit(1);
+
+    if (scoresError) {
+      console.error("Error fetching highest score:", scoresError);
+    }
+
+    const highestScore =
+      scoresData && scoresData.length > 0 ? scoresData[0].score : 0;
+
+    const profileWithScore = {
+      ...profileData,
+      highest_score: highestScore,
+    };
+
+    const publicData = getPublicProfile(profileWithScore);
 
     return Response.json(
       {
