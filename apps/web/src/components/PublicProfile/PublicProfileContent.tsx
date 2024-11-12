@@ -169,6 +169,7 @@ export const PublicProfileContent = ({
               <Achievements
                 highestScore={profileData?.highest_score}
                 isPublicLoading={isPublicLoading}
+                totalGames={profileData?.total_games}
               />
             </div>
 

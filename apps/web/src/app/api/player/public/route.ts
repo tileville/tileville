@@ -12,6 +12,11 @@ interface EmailField {
   isPublic: boolean;
 }
 
+interface GameStats {
+  highest_score: number;
+  total_games: number;
+}
+
 // Private/Full Profile
 interface PlayerProfile {
   wallet_address: string;
@@ -25,6 +30,7 @@ interface PlayerProfile {
   discord_username?: SocialField | null;
   email_address?: EmailField | null;
   highest_score?: number;
+  total_games?: number;
 }
 
 // Public Profile (after transformation)
@@ -40,6 +46,7 @@ interface PublicPlayerProfile {
   discord_username?: string | null;
   email_address?: string | null;
   highest_score?: number;
+  total_games?: number;
 }
 
 function getPublicProfile(profile: PlayerProfile): PublicPlayerProfile {
@@ -58,6 +65,44 @@ function getPublicProfile(profile: PlayerProfile): PublicPlayerProfile {
       ? profile.email_address.email
       : null,
   };
+}
+
+async function fetchGameStats(wallet_address: string): Promise<GameStats> {
+  try {
+    const { data: scoresData, error: scoresError } = await supabase
+      .from("game_scores")
+      .select("score")
+      .eq("wallet_address", wallet_address)
+      .order("score", { ascending: false })
+      .limit(1);
+
+    if (scoresError) {
+      console.error("Error fetching highest score:", scoresError);
+      throw scoresError;
+    }
+
+    const { count: totalGames, error: countError } = await supabase
+      .from("game_scores")
+      .select("*", { count: "exact", head: true })
+      .eq("wallet_address", wallet_address);
+
+    if (countError) {
+      console.error("Error fetching total games:", countError);
+      throw countError;
+    }
+
+    return {
+      highest_score:
+        scoresData && scoresData.length > 0 ? scoresData[0].score : 0,
+      total_games: totalGames || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching game stats:", error);
+    return {
+      highest_score: 0,
+      total_games: 0,
+    };
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -106,26 +151,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data: scoresData, error: scoresError } = await supabase
-      .from("game_scores")
-      .select("score")
-      .eq("wallet_address", profileData.wallet_address)
-      .order("score", { ascending: false })
-      .limit(1);
+    const gameStats = await fetchGameStats(profileData.wallet_address);
 
-    if (scoresError) {
-      console.error("Error fetching highest score:", scoresError);
-    }
-
-    const highestScore =
-      scoresData && scoresData.length > 0 ? scoresData[0].score : 0;
-
-    const profileWithScore = {
+    const profileWithStats = {
       ...profileData,
-      highest_score: highestScore,
+      highest_score: gameStats.highest_score,
+      total_games: gameStats.total_games,
     };
 
-    const publicData = getPublicProfile(profileWithScore);
+    const publicData = getPublicProfile(profileWithStats);
 
     return Response.json(
       {

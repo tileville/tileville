@@ -2,7 +2,8 @@ import { Skeleton } from "@radix-ui/themes";
 import Image from "next/image";
 
 type AchievementsProps = {
-  highestScore?: number;
+  highestScore: number;
+  totalGames: number;
   isPublicLoading: boolean;
 };
 
@@ -10,7 +11,8 @@ const ACHIEVEMENTS_DATA = [
   {
     id: 1,
     iconUrl: "/icons/badge.png",
-    getHeading: (highestScore?: number) => highestScore?.toString() || "0",
+    getHeading: (stats: Partial<AchievementsProps>) =>
+      stats.highestScore?.toString() || "0",
     subHeading: "Highest score",
   },
   {
@@ -34,7 +36,8 @@ const ACHIEVEMENTS_DATA = [
   {
     id: 5,
     iconUrl: "/icons/game.png",
-    getHeading: () => "23",
+    getHeading: (stats: Partial<AchievementsProps>) =>
+      stats.totalGames?.toString() || "0",
     subHeading: "Total games",
   },
   {
@@ -47,6 +50,7 @@ const ACHIEVEMENTS_DATA = [
 
 export const Achievements = ({
   highestScore,
+  totalGames,
   isPublicLoading,
 }: AchievementsProps) => {
   return (
@@ -75,7 +79,7 @@ export const Achievements = ({
                   {isPublicLoading ? (
                     <Skeleton className="h-10 w-20" />
                   ) : (
-                    achievement.getHeading(highestScore)
+                    achievement.getHeading({ highestScore, totalGames })
                   )}
                 </p>
                 <p className="text-sm lg:text-xl">{achievement.subHeading}</p>
