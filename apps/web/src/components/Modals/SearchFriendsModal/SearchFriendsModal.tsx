@@ -6,7 +6,6 @@ import { useGetAllUsers } from "@/db/react-query-hooks";
 import { User } from "@/types";
 import { UserListItem } from "@/components/PublicProfile/UserListItem";
 import { useDebounce } from "react-use";
-import { useNetworkStore } from "@/lib/stores/network";
 
 type SearchFriendsModalProps = {
   walletAddress?: string;
@@ -24,7 +23,6 @@ export default function SearchFriendsModal({
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const networkStore = useNetworkStore();
 
   useDebounce(
     () => {
@@ -35,7 +33,10 @@ export default function SearchFriendsModal({
     [searchQuery]
   );
 
-  const { data: users = [], isLoading } = useGetAllUsers("all", debouncedQuery);
+  const { data: users = [], isLoading } = useGetAllUsers(
+    walletAddress ? walletAddress : "all",
+    debouncedQuery
+  );
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
