@@ -3,46 +3,44 @@ import { FaceIcon, StarFilledIcon } from "@radix-ui/react-icons";
 
 export const FooterContent = () => {
   return (
-    <div className="flex flex-col items-end gap-1 p-2">
-      <div className="flex items-center gap-4">
+    <div className="flex flex-col gap-1 p-2 max-w-screen-xl mx-auto">
+      <div className="flex flex-wrap items-center gap-2 justify-end">
         <a
           href={GAME_ROADMAP_URL}
           target="_blank"
-          className="flex items-center gap-2 text-xs underline"
+          className="text-xs hover:opacity-80 underline inline-flex items-center gap-2 transition-opacity"
         >
-          <span>Game roadmap</span>
+          Game roadmap
         </a>
 
         <a
           href={GITHUB_URL}
           target="_blank"
-          className="flex items-center gap-1 text-xs underline"
+          className="text-xs hover:opacity-80 underline inline-flex items-center gap-2 transition-opacity"
         >
-          <span>Star us on github</span>
-          <StarFilledIcon />
+          Star us on github
+          <StarFilledIcon className="w-4 h-4" />
         </a>
 
         <a
           href={FEEDBACK_FORM_URL}
           target="_blank"
-          className="flex items-center gap-1 text-xs underline"
+          className="text-xs hover:opacity-80 underline inline-flex items-center gap-2 transition-opacity"
         >
-          <span>Share Feedback</span>
-          <FaceIcon />
+          Share Feedback
+          <FaceIcon className="w-4 h-4" />
         </a>
       </div>
 
-      <div className="text-xs">
-        <span>
-          TileVille was inspired by Six Sided Streets made by{" "}
-          <a
-            target="_blank"
-            href="https://csklimowski.itch.io/"
-            className="underline"
-          >
-            Chris Klimowski
-          </a>
-        </span>
+      <div className="text-xs text-right">
+        TileVille was inspired by Six Sided Streets made by{" "}
+        <a
+          href="https://csklimowski.itch.io/"
+          target="_blank"
+          className="underline hover:opacity-80 transition-opacity"
+        >
+          Chris Klimowski
+        </a>
       </div>
     </div>
   );
