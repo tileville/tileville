@@ -357,24 +357,27 @@ export const TABS_HEADINGS = [
   {
     value: "collection",
     text: "Digital Collection",
+    showOnPublicProfile: true,
   },
   {
     value: "active-games",
     text: "Active Games",
+    showOnPublicProfile: false,
   },
-
   {
     value: "past-games",
     text: "Past Games",
+    showOnPublicProfile: true,
   },
-
   {
     value: "transactions",
     text: "transactions",
+    showOnPublicProfile: false,
   },
   {
     value: "preferences",
     text: "Preferences",
+    showOnPublicProfile: false,
   },
 ];
 

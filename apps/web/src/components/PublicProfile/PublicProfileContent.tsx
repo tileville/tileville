@@ -201,10 +201,10 @@ export const PublicProfileContent = ({
                 "Profile data loading..."
               ) : (
                 <PublicProfileTabs
-                  loggedInUserWalletAddress={networkStore.address || ""}
                   walletAddress={profileData?.wallet_address || ""}
                   initialTab={initialTab}
                   username={profileData?.username || ""}
+                  isProfileOwner={isProfileOwner}
                 />
               )}
             </div>
