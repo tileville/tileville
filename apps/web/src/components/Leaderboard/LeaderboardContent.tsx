@@ -163,14 +163,19 @@ export default function LeaderboardContent() {
                           name: competition.name,
                         })
                       }
-                      className="!md:h-8 !h-auto py-2 hover:bg-primary"
+                      className={`!md:h-8 !h-auto py-2 mt-1 transition-colors ${selectedCompetition?.id === competition.id
+                          ? "bg-primary text-white" // Selected state
+                          : "hover:bg-primary hover:text-white" // Hover state
+                        }`}
                     >
-                      {competitionNameLoading ? (
-                        <Skeleton className="h-3 w-full" />
-                      ) : (
-                        competition.name
-                      )}
+                      <div className="flex items-center justify-between px-2 w-full">
+                        <span>{competition.name}</span>
+                        {selectedCompetition?.id === competition.id && (
+                          <span className="text-sm">✓</span>
+                        )}
+                      </div>
                     </DropdownMenu.Item>
+
                   ))
                 )}
               </DropdownMenu.Content>
