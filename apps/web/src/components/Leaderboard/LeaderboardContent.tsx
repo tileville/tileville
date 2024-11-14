@@ -47,15 +47,37 @@ export default function LeaderboardContent() {
     isLoading: competitionNameLoading,
   } = useCompetitionsName();
 
-  const [selectedCompetition, setSelectedCompetition] =
-    useState<SelectedCompetition>({
-      id: 3,
-      name: "Hero's Tileville League",
-      competition_key: "heros_tileville",
-    } as SelectedCompetition);
+  const [selectedCompetition, setSelectedCompetition] = useState<SelectedCompetition | null>(null);
 
+  // Add useEffect to set initial competition when data is loaded
+  useEffect(() => {
+    if (competitionData && competitionData.length > 0) {
+      // If there's a competition in URL params, use that
+      if (competitionParam) {
+        const matchedCompetition = competitionData.find(
+          (comp) => comp.unique_keyname === competitionParam
+        );
+        if (matchedCompetition) {
+          setSelectedCompetition({
+            id: matchedCompetition.id,
+            name: matchedCompetition.name,
+            competition_key: matchedCompetition.unique_keyname,
+          });
+        }
+      } else {
+        // If no competition in URL params, use the first competition from the list
+        setSelectedCompetition({
+          id: competitionData[0].id,
+          name: competitionData[0].name,
+          competition_key: competitionData[0].unique_keyname,
+        });
+      }
+    }
+  }, [competitionData, competitionParam]);
+
+  // Modify the useLeaderboardEntries call to only fetch when selectedCompetition exists
   const { data: leaderboardData = [], isLoading } = useLeaderboardEntries(
-    selectedCompetition.competition_key
+    selectedCompetition?.competition_key || ''
   );
 
   useEffect(() => {
@@ -102,13 +124,12 @@ export default function LeaderboardContent() {
             </p>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <button className="border-primary-30  flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
-                  {isLoading ? (
+                <button className="border-primary-30 flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
+                  {isLoading || !selectedCompetition ? (
                     <Skeleton className="h-5 w-full" />
                   ) : (
                     <span className="truncate">{selectedCompetition.name}</span>
                   )}
-
                   <span>
                     <Image
                       src="icons/topBottomArrows.svg"
