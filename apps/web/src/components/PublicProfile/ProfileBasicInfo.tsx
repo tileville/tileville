@@ -1,3 +1,11 @@
+import { useState } from "react";
+import { copyToClipBoard, formatAddress } from "@/lib/helpers";
+import Image from "next/image";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { Skeleton } from "@radix-ui/themes";
+import { CopyIcon, UpdateIcon } from "@radix-ui/react-icons";
 import {
   BADGE_BASE_CLASSES,
   FOLLOWING_BTN_LG,
@@ -8,13 +16,6 @@ import {
   useFollowUser,
   useUnfollowUser,
 } from "@/db/react-query-hooks";
-import { copyToClipBoard, formatAddress } from "@/lib/helpers";
-import { CopyIcon, Pencil1Icon, UpdateIcon } from "@radix-ui/react-icons";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { Skeleton } from "@radix-ui/themes";
 
 type ProfileBasicInfoType = {
   avatar_url: string | undefined;
@@ -29,6 +30,7 @@ type ProfileBasicInfoType = {
   isFollowing: boolean;
   loggedInUserWalletAddress: string;
   isProfileOwner: boolean;
+  emailAddress: string;
 };
 
 export const ProfileBasicInfo = ({
@@ -44,6 +46,7 @@ export const ProfileBasicInfo = ({
   isFollowing,
   loggedInUserWalletAddress,
   isProfileOwner,
+  emailAddress,
 }: ProfileBasicInfoType) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -158,6 +161,32 @@ export const ProfileBasicInfo = ({
       </div>
 
       <div className="flex justify-end gap-4">
+        {emailAddress && (
+          <Tooltip.Provider delayDuration={200}>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <button>
+                  <Image
+                    src="/icons/email.svg"
+                    width={20}
+                    height={20}
+                    alt="x"
+                  />
+                </button>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  className="max-w-[250px] rounded-[5px] bg-[#90AA70] px-1 py-[2px] shadow-sm text-[#435133] text-[10px]"
+                  sideOffset={5}
+                >
+                  {emailAddress}
+                  <Tooltip.Arrow className="TooltipArrow" />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        )}
+
         {discordUsername && (
           <Link
             target="_blank"
@@ -171,7 +200,6 @@ export const ProfileBasicInfo = ({
             />
           </Link>
         )}
-
         {telegramUsername && (
           <Link
             target="_blank"
@@ -185,7 +213,6 @@ export const ProfileBasicInfo = ({
             />
           </Link>
         )}
-
         {twitterUsername && (
           <Link
             target="_blank"

@@ -159,7 +159,7 @@ export const PublicProfileContent = ({
                     )}
                     loggedInUserWalletAddress={networkStore.address || ""}
                     isProfileOwner={isProfileOwner}
-                    // emailAddress={profileData?.email_address || null}
+                    emailAddress={profileData?.email_address || null}
                   />
                 </>
               )}
