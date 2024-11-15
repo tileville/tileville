@@ -62,7 +62,7 @@ export default function Transactions({ walletAddress }: TransactionsProps) {
                 <span>{selectedFilter}</span>
                 <span>
                   <Image
-                    src="icons/topBottomArrows.svg"
+                    src="/icons/topBottomArrows.svg"
                     width={24}
                     height={24}
                     alt="arrows"
