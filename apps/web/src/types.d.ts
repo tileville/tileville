@@ -84,4 +84,5 @@ interface PublicProfile {
   telegram_username?: string | null;
   discord_username?: string | null;
   email_address?: string | null;
+  total_rewards?: number;
 }

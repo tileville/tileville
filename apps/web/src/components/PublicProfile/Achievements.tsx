@@ -4,6 +4,7 @@ import Image from "next/image";
 type AchievementsProps = {
   highestScore: number;
   totalGames: number;
+  totalRewards: number;
   isPublicLoading: boolean;
 };
 
@@ -18,7 +19,8 @@ const ACHIEVEMENTS_DATA = [
   {
     id: 2,
     iconUrl: "/icons/coins.png",
-    getHeading: () => "$100",
+    getHeading: (stats: Partial<AchievementsProps>) =>
+      `${stats.totalRewards?.toString() || "0"} MINA`,
     subHeading: "Total Rewards",
   },
   {
@@ -52,6 +54,7 @@ export const Achievements = ({
   highestScore,
   totalGames,
   isPublicLoading,
+  totalRewards,
 }: AchievementsProps) => {
   return (
     <div className="h-full w-full text-black">
@@ -79,7 +82,11 @@ export const Achievements = ({
                   {isPublicLoading ? (
                     <Skeleton className="h-10 w-20" />
                   ) : (
-                    achievement.getHeading({ highestScore, totalGames })
+                    achievement.getHeading({
+                      highestScore,
+                      totalGames,
+                      totalRewards,
+                    })
                   )}
                 </p>
                 <p className="text-sm lg:text-xl">{achievement.subHeading}</p>

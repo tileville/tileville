@@ -31,6 +31,7 @@ interface PlayerProfile {
   email_address?: EmailField | null;
   highest_score?: number;
   total_games?: number;
+  total_rewards?: number;
 }
 
 // Public Profile (after transformation)
@@ -47,6 +48,7 @@ interface PublicPlayerProfile {
   email_address?: string | null;
   highest_score?: number;
   total_games?: number;
+  total_rewards?: number;
 }
 
 function getPublicProfile(profile: PlayerProfile): PublicPlayerProfile {
@@ -121,7 +123,8 @@ export async function GET(request: NextRequest) {
         twitter_username,
         telegram_username,
         discord_username,
-        email_address
+        email_address,
+        total_rewards
       `);
 
     // Determine which identifier to use
