@@ -80,11 +80,10 @@ export default function Marketplace() {
               return (
                 <li key={option.id}>
                   <button
-                    className={`flex h-10 w-10 items-center justify-center hover:opacity-80 ${
-                      selectedToggle === option.id
+                    className={`flex h-10 w-10 items-center justify-center hover:opacity-80 ${selectedToggle === option.id
                         ? "bg-primary"
                         : "bg-primary/30"
-                    }`}
+                      }`}
                     onClick={() => {
                       setRenderStyle(option.gridApplyClass);
                       setSelectedToggle(option.id);
@@ -138,13 +137,19 @@ export default function Marketplace() {
                   <DropdownMenu.Item
                     key={option.id}
                     onClick={() => handleSortChange(option.text)}
-                    className="hover:bg-primary"
+                    className={clsx(
+                      "hover:bg-primary mt-1",
+                      selectedItem === option.text
+                        ? "bg-primary text-white"
+                        : ""
+                    )}
                   >
                     {option.text}
                   </DropdownMenu.Item>
                 );
               })}
             </DropdownMenu.Content>
+
           </DropdownMenu.Root>
         </div>
         <div className="overflow-auto">
