@@ -284,7 +284,7 @@ export const NAVIGATION_MENU_ITEMS = [
     name: "User Profile",
     key: 3,
     targetBlank: false,
-    href: COLLECTION_URL,
+    href: "/profile",
   },
   {
     name: "NFTS MARKETPLACE",
