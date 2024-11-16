@@ -16,6 +16,7 @@ import {
   useFollowUser,
   useUnfollowUser,
 } from "@/db/react-query-hooks";
+import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
 
 type ProfileBasicInfoType = {
   avatar_url: string | undefined;
@@ -31,6 +32,8 @@ type ProfileBasicInfoType = {
   loggedInUserWalletAddress: string;
   isProfileOwner: boolean;
   emailAddress: string;
+  loggedInUserFollowing?: Set<string>;
+  loggedInUserFollowers?: Set<string>;
 };
 
 export const ProfileBasicInfo = ({
@@ -47,6 +50,8 @@ export const ProfileBasicInfo = ({
   loggedInUserWalletAddress,
   isProfileOwner,
   emailAddress,
+  loggedInUserFollowing,
+  loggedInUserFollowers,
 }: ProfileBasicInfoType) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -176,7 +181,7 @@ export const ProfileBasicInfo = ({
               </Tooltip.Trigger>
               <Tooltip.Portal>
                 <Tooltip.Content
-                  className="max-w-[250px] rounded-[5px] bg-[#90AA70] px-1 py-[2px] shadow-sm text-[#435133] text-[10px]"
+                  className="max-w-[250px] rounded-[5px] bg-[#90AA70] px-1 py-[2px] text-[10px] text-[#435133] shadow-sm"
                   sideOffset={5}
                 >
                   {emailAddress}
@@ -224,7 +229,7 @@ export const ProfileBasicInfo = ({
       </div>
 
       <div className="mt-auto w-full">
-        {!isProfileOwner && (
+        {!isProfileOwner ? (
           <button
             type="button"
             className={`${
@@ -246,6 +251,13 @@ export const ProfileBasicInfo = ({
               </span>
             )}
           </button>
+        ) : (
+          <SearchFriendsModal
+            walletAddress={walletAddress}
+            loggedInUserWalletAddress={loggedInUserWalletAddress}
+            loggedInUserFollowing={loggedInUserFollowing}
+            loggedInUserFollowers={loggedInUserFollowers}
+          />
         )}
       </div>
     </div>

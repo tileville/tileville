@@ -4,7 +4,6 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { Achievements } from "./Achievements";
 import { Connections } from "./Connections";
 import { ProfileBasicInfo } from "./ProfileBasicInfo";
-import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
 import {
   useGetConnections,
   usePrivateProfile,
@@ -160,6 +159,8 @@ export const PublicProfileContent = ({
                     loggedInUserWalletAddress={networkStore.address || ""}
                     isProfileOwner={isProfileOwner}
                     emailAddress={profileData?.email_address || null}
+                    loggedInUserFollowing={loggedInUserFollowing}
+                    loggedInUserFollowers={loggedInUserFollowers}
                   />
                 </>
               )}
@@ -185,12 +186,6 @@ export const PublicProfileContent = ({
                     isLoading={connectionsLoading}
                     following={connections?.following}
                     followers={connections?.followers}
-                  />
-                  <SearchFriendsModal
-                    walletAddress={networkStore.address || ""}
-                    loggedInUserWalletAddress={networkStore.address || ""}
-                    loggedInUserFollowing={loggedInUserFollowing}
-                    loggedInUserFollowers={loggedInUserFollowers}
                   />
                 </>
               )}

@@ -6,6 +6,7 @@ import { useGetAllUsers } from "@/db/react-query-hooks";
 import { User } from "@/types";
 import { UserListItem } from "@/components/PublicProfile/UserListItem";
 import { useDebounce } from "react-use";
+import { PRIMARY_BUTTON_STYLES_LG } from "@/constants";
 
 type SearchFriendsModalProps = {
   walletAddress?: string;
@@ -97,7 +98,7 @@ export default function SearchFriendsModal({
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <div className="w-full rounded-xl bg-primary/20 p-6 text-xl text-black backdrop-blur-sm">
+        {/* <div className="w-full rounded-xl bg-primary/20 p-6 text-xl text-black backdrop-blur-sm">
           <h3 className="mb-3 font-bold">Add Friends</h3>
 
           <div className="flex items-center gap-3">
@@ -113,7 +114,20 @@ export default function SearchFriendsModal({
             <p>Find Friends</p>
             <p className="ms-auto">&gt;</p>
           </div>
-        </div>
+        </div> */}
+        <button
+          className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center gap-3 rounded-[10px]`}
+        >
+          <span>
+            <Image
+              src="/icons/search.svg"
+              width={20}
+              height={20}
+              alt="search"
+            />
+          </span>
+          <span>search friends</span>
+        </button>
       </Dialog.Trigger>
 
       <Dialog.Content
