@@ -727,3 +727,39 @@ export const useBlockberryBalance = (walletAddress: string) => {
     retry: 3, // Retry failed requests 3 times
   });
 };
+
+interface UsernameResponse {
+  status: boolean;
+  data?: {
+    username: string;
+  };
+  message?: string;
+}
+
+export const useUsername = (walletAddress: string | undefined) => {
+  return useQuery({
+    queryKey: ["username", walletAddress],
+    queryFn: async (): Promise<string | null> => {
+      if (!walletAddress) return null;
+
+      try {
+        const response = await fetch(
+          `/api/player/username?wallet_address=${walletAddress}`
+        );
+        const data: UsernameResponse = await response.json();
+
+        if (!data.status || !data.data?.username) {
+          return null;
+        }
+
+        return data.data.username;
+      } catch (error) {
+        console.error("Error fetching username:", error);
+        return null;
+      }
+    },
+    enabled: !!walletAddress,
+    staleTime: 5 * 60 * 1000, // Consider username fresh for 5 minutes
+    cacheTime: 30 * 60 * 1000, // Cache username for 30 minutes
+  });
+};
