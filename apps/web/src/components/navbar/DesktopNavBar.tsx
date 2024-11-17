@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { useMountedState } from "react-use";
-import { ChevronLeftIcon, DiscordLogoIcon } from "@radix-ui/react-icons";
+import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { PrimaryButton } from "../PrimaryButton";
 import { MediaPlayer } from "../MediaPlayer/page";
 import { useNetworkStore } from "@/lib/stores/network";
@@ -15,6 +15,7 @@ import {
   useFetchTransactions,
   useMainnetTransactionsStatus,
   useProfileLazyQuery,
+  useUsername,
 } from "@/db/react-query-hooks";
 import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
@@ -42,6 +43,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     "PENDING"
   );
   const { validateOrSetSignature } = useAuthSignature();
+  const { data: username } = useUsername(networkStore?.address);
   const isMounted = useMountedState();
 
   useMainnetTransactionsStatus(
@@ -154,7 +156,11 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             {isMounted() &&
               (networkStore.walletConnected && networkStore.address ? (
                 <>
-                  <Link href="/profile">
+                  <Link
+                    href={`u/${
+                      username ? `${username}` : networkStore.address
+                    }`}
+                  >
                     <AccountCard text={formatAddress(networkStore.address)} />
                   </Link>
 
