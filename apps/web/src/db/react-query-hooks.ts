@@ -763,3 +763,20 @@ export const useUsername = (walletAddress: string | undefined) => {
     cacheTime: 30 * 60 * 1000, // Cache username for 30 minutes
   });
 };
+
+export function useTotalWins(wallet_address: string) {
+  return useQuery({
+    queryKey: ["total-wins", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/total-wins?wallet_address=${wallet_address}`
+      );
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+      return data.total_wins;
+    },
+    enabled: !!wallet_address,
+  });
+}

@@ -172,6 +172,7 @@ export const PublicProfileContent = ({
                 isPublicLoading={isPublicLoading}
                 totalGames={profileData?.total_games}
                 totalRewards={profileData?.total_rewards}
+                walletAddress={profileData?.wallet_address}
               />
             </div>
 

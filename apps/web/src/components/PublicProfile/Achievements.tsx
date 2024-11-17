@@ -1,14 +1,16 @@
 import { Skeleton } from "@radix-ui/themes";
 import Image from "next/image";
+import { useTotalWins } from "@/db/react-query-hooks";
 
 type AchievementsProps = {
   highestScore: number;
   totalGames: number;
   totalRewards: number;
   isPublicLoading: boolean;
+  walletAddress: string;
 };
 
-const ACHIEVEMENTS_DATA = [
+const getAchievementsData = (totalWins: number | undefined) => [
   {
     id: 1,
     iconUrl: "/icons/badge.png",
@@ -26,7 +28,7 @@ const ACHIEVEMENTS_DATA = [
   {
     id: 3,
     iconUrl: "/icons/trophy.png",
-    getHeading: () => "5",
+    getHeading: () => totalWins?.toString() || "0",
     subHeading: "Total Wins",
   },
   {
@@ -55,11 +57,18 @@ export const Achievements = ({
   totalGames,
   isPublicLoading,
   totalRewards,
+  walletAddress,
 }: AchievementsProps) => {
+  const { data: totalWins, isLoading: isWinsLoading } =
+    useTotalWins(walletAddress);
+
+  const isLoading = isPublicLoading || isWinsLoading;
+  const achievementsData = getAchievementsData(totalWins);
+
   return (
     <div className="h-full w-full text-black">
       <div className="grid h-full grid-cols-2 gap-3">
-        {ACHIEVEMENTS_DATA.map((achievement) => {
+        {achievementsData.map((achievement) => {
           return (
             <div
               className="flex items-center gap-4 rounded-xl bg-primary/20 p-4 backdrop-blur-sm"
@@ -79,7 +88,7 @@ export const Achievements = ({
               </div>
               <div>
                 <p className="text-xl font-bold leading-tight lg:text-[2rem]">
-                  {isPublicLoading ? (
+                  {isLoading ? (
                     <Skeleton className="h-10 w-20" />
                   ) : (
                     achievement.getHeading({
