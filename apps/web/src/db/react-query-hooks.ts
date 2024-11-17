@@ -626,18 +626,25 @@ export const usePublicProfile = (identifier: string) => {
           : `username=${profileIdentifier.value}`;
 
       const response = await fetch(`/api/player/public?${queryParam}`);
+      const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 404) {
+          return {
+            status: false,
+            data: null,
+          };
+        }
         throw new Error("Failed to fetch public profile");
       }
 
-      return response.json();
+      return data;
     },
     {
-      enabled: !!identifier, // Only fetch when identifier is available
-      staleTime: 1000 * 60 * 5, // data fresh for 5 minutes
-      cacheTime: 1000 * 60 * 30, // cache data for 30 minutes
-      retry: 1, // Only retry once if failed
+      enabled: !!identifier,
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 30,
+      retry: 1,
       onError: (error) => {
         console.error("Profile fetch error:", error);
       },

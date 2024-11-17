@@ -1,4 +1,9 @@
-import { CameraIcon, Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
+import {
+  CameraIcon,
+  Cross1Icon,
+  Pencil1Icon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { Modal } from "@/components/common/Modal";
 import Image from "next/image";
 import {
@@ -33,6 +38,7 @@ type EditProfileModalType = {
   isLoading: boolean;
   watch: UseFormWatch<IFormInput>;
   setValue: UseFormSetValue<IFormInput>;
+  isUserHasProfile: boolean;
 };
 
 const INPUT_PRIMARY_CLASSES =
@@ -56,6 +62,7 @@ export const EditProfileModal = ({
   isLoading,
   watch,
   setValue,
+  isUserHasProfile,
 }: EditProfileModalType) => {
   return (
     <Modal
@@ -63,14 +70,25 @@ export const EditProfileModal = ({
       setIsOpen={setModalOpen}
       onClose={closeModal}
       trigger={
-        <button className={`${BADGE_BASE_CLASSES} absolute right-3 top-3 z-10`}>
-          <span>
-            {isProfileIncomplete ? "Complete Profile" : "Edit Profile"}
-          </span>
-          <span className="text-white">
-            <Pencil1Icon />
-          </span>
-        </button>
+        <>
+          {isUserHasProfile ? (
+            <button
+              className={`${BADGE_BASE_CLASSES} absolute right-3 top-3 z-10`}
+            >
+              <span>
+                {isProfileIncomplete ? "Complete Profile" : "Edit Profile"}
+              </span>
+              <span className="text-white">
+                <Pencil1Icon />
+              </span>
+            </button>
+          ) : (
+            <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90">
+              <PlusIcon />
+              Create Profile
+            </button>
+          )}
+        </>
       }
     >
       <div className="relative mx-auto max-h-full w-full max-w-[600px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">

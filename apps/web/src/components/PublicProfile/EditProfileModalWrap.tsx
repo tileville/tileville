@@ -32,7 +32,13 @@ export interface IFormInput {
   };
 }
 
-export default function EditProfileModalWrap() {
+type EditProfileModalWrapType = {
+  isUserHasProfile: boolean;
+};
+
+export default function EditProfileModalWrap({
+  isUserHasProfile,
+}: EditProfileModalWrapType) {
   const [modalOpen, setModalOpen] = useState(false);
   const [rightSlider, setRightSlider] = useState(false);
   useObserveMinaBalance();
@@ -207,6 +213,7 @@ export default function EditProfileModalWrap() {
         isLoading={isLoading}
         watch={watch}
         setValue={setValue}
+        isUserHasProfile={isUserHasProfile}
       />
       <RightSideBar handleToggle={handleToggle} rightSlider={rightSlider}>
         <ProfileSideBar handleToggle={handleToggle} selectImage={selectImage} />
