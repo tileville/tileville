@@ -41,7 +41,7 @@ export const Connections = ({
 
         <Tabs.Content value="following">
           <div className="pt-3">
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-1 max-h-[280px] overflow-auto pr-1">
               {isLoading ? (
                 "Loading please wait"
               ) : following.length <= 0 ? (
@@ -73,7 +73,7 @@ export const Connections = ({
 
         <Tabs.Content value="followers">
           <div className="pt-3">
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-1 max-h-[280px] overflow-auto pr-1">
               {isLoading ? (
                 "Loading please wait"
               ) : followers.length <= 0 ? (

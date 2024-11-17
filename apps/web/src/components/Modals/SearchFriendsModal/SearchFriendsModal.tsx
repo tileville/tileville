@@ -75,7 +75,7 @@ export default function SearchFriendsModal({
     }
 
     return (
-      <ul className="flex max-h-[400px] flex-col gap-4 overflow-y-auto">
+      <ul className="flex max-h-[400px] flex-col gap-4 overflow-y-auto pr-1">
         {users.map((user: User) => (
           <li key={user.username}>
             <UserListItem
