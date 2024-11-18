@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Cross1Icon, UpdateIcon } from "@radix-ui/react-icons";
+import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog } from "@radix-ui/themes";
 import Image from "next/image";
 import { useGetAllUsers } from "@/db/react-query-hooks";
@@ -7,6 +7,7 @@ import { User } from "@/types";
 import { UserListItem } from "@/components/PublicProfile/UserListItem";
 import { useDebounce } from "react-use";
 import { PRIMARY_BUTTON_STYLES_LG } from "@/constants";
+import { Spinner2 } from "@/components/common/Spinner";
 
 type SearchFriendsModalProps = {
   walletAddress?: string;
@@ -56,7 +57,7 @@ export default function SearchFriendsModal({
     if (isLoading) {
       return (
         <div className="flex min-h-[200px] items-center justify-center">
-          <UpdateIcon className="h-6 w-6 animate-spin" />
+          <Spinner2 />
         </div>
       );
     }
@@ -176,7 +177,7 @@ export default function SearchFriendsModal({
             </span>
             {isSearching && (
               <span className="flex items-center gap-2 text-sm">
-                <UpdateIcon className="animate-spin" /> Searching...
+                <Spinner2 /> Searching...
               </span>
             )}
           </span>

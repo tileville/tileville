@@ -5,7 +5,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Skeleton } from "@radix-ui/themes";
-import { CopyIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { CopyIcon } from "@radix-ui/react-icons";
 import {
   BADGE_BASE_CLASSES,
   FOLLOWING_BTN_LG,
@@ -18,6 +18,7 @@ import {
   useUnfollowUser,
 } from "@/db/react-query-hooks";
 import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
+import { Spinner2 } from "../common/Spinner";
 
 type ProfileBasicInfoType = {
   avatar_url: string | undefined;
@@ -235,10 +236,14 @@ export const ProfileBasicInfo = ({
       </div>
       <div>
         {competitonsLoading ? (
-          "loading"
+          <div className="flex items-center justify-center p-3">
+            <Spinner2 />
+          </div>
         ) : !pastCompetitions?.competitions ||
           pastCompetitions.competitions.length <= 0 ? (
-          <h3 className="text-center text-xl mt-2 font-semibold">No past games found</h3>
+          <h3 className="mt-2 text-center text-xl font-semibold">
+            No past games found
+          </h3>
         ) : (
           <div>
             <h3 className="text-base font-bold text-[#435133]">Past Games</h3>
@@ -285,7 +290,7 @@ export const ProfileBasicInfo = ({
 
             {isLoading && (
               <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                <UpdateIcon className="animate-spin" />
+                <Spinner2 size={18} />
               </span>
             )}
           </button>

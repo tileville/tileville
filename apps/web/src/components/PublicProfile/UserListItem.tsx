@@ -1,10 +1,10 @@
 import { FOLLOWING_BTN, PRIMARY_BUTTON_STYLES } from "@/constants";
 import { useFollowUser, useUnfollowUser } from "@/db/react-query-hooks";
-import { UpdateIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Spinner2 } from "../common/Spinner";
 
 type UserListItemType = {
   userInfo: {
@@ -82,7 +82,7 @@ export const UserListItem = ({
           <div className="flex items-center gap-1">
             <p className="text-xs text-[#626262]">@{userInfo.username}</p>
             {isFollowsYou && (
-              <span className="block bg-[#A5BC8B] text-xs text-primary px-1 py-[1px] rounded-[2px]">
+              <span className="block rounded-[2px] bg-[#A5BC8B] px-1 py-[1px] text-xs text-primary">
                 follows you
               </span>
             )}
@@ -107,7 +107,7 @@ export const UserListItem = ({
 
             {isLoading && (
               <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                <UpdateIcon className="animate-spin" />
+                <Spinner2 size={14} />
               </span>
             )}
           </button>
