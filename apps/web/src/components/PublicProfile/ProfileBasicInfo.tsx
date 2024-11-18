@@ -69,7 +69,6 @@ export const ProfileBasicInfo = ({
   const { data: pastCompetitions, isLoading: competitonsLoading } =
     usePastCompetitions(walletAddress);
 
-  if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   const handleFollowAction = async () => {
@@ -239,7 +238,7 @@ export const ProfileBasicInfo = ({
           "loading"
         ) : !pastCompetitions?.competitions ||
           pastCompetitions.competitions.length <= 0 ? (
-          "No past games found"
+          <h3 className="text-center text-xl mt-2 font-semibold">No past games found</h3>
         ) : (
           <div>
             <h3 className="text-base font-bold text-[#435133]">Past Games</h3>
@@ -249,10 +248,10 @@ export const ProfileBasicInfo = ({
                   <div key={competition.competitionKey} className="w-full">
                     <Link
                       href={`/leaderboard?competition=${competition.competitionKey}`}
-                      className="w-full rounded-[10px] shadow-[0px_4px_4px_0px_#00000040] h-20 block"
+                      className="block h-20 w-full rounded-[10px] shadow-[0px_4px_4px_0px_#00000040]"
                     >
                       <Image
-                        className="h-full w-full object-cover rounded-[10px]"
+                        className="h-full w-full rounded-[10px] object-cover"
                         width={100}
                         height={100}
                         src={competition.posterUrl}
@@ -271,8 +270,9 @@ export const ProfileBasicInfo = ({
         {!isProfileOwner ? (
           <button
             type="button"
-            className={`${isFollowing ? FOLLOWING_BTN_LG : PRIMARY_BUTTON_STYLES_LG
-              } relative ms-auto`}
+            className={`${
+              isFollowing ? FOLLOWING_BTN_LG : PRIMARY_BUTTON_STYLES_LG
+            } relative ms-auto`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={(e) => {
