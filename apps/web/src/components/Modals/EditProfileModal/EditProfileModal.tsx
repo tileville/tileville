@@ -92,7 +92,7 @@ export const EditProfileModal = ({
       }
     >
       <div className="relative mx-auto max-h-full w-full max-w-[600px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">
-        <div className="relative  px-4 md:p-12">
+        <div className="relative  px-4 py-6 md:p-12">
           <div className="mx-auto max-w-[524px]">
             <h3 className="mb-5 text-center text-2xl font-bold text-black">
               <span>Edit your Profile </span>
@@ -228,7 +228,7 @@ export const EditProfileModal = ({
                   at least provide us with one social link.
                 </p>
 
-                <div className="mt-6 flex flex-col gap-4 text-xl">
+                <div className="mt-6 flex flex-col gap-4 text-lg  md:text-xl">
                   {/* // TODO: For the next three div put content in the Array and render them
                     // TODO: with map */}
                   <div className="grid grid-cols-12 items-center">
@@ -243,7 +243,7 @@ export const EditProfileModal = ({
                       </div>
                       <p>Twitter</p>
                     </div>
-                    <div className="col-span-8 flex flex-1 items-center gap-3">
+                    <div className="col-span-8 flex flex-1 items-center gap-1 md:gap-3">
                       <div className="w-full">
                         <input
                           type="text"
@@ -274,7 +274,7 @@ export const EditProfileModal = ({
                       </div>
                       <p>Telegram</p>
                     </div>
-                    <div className="col-span-8 flex flex-1 items-center gap-3">
+                    <div className="col-span-8 flex flex-1 items-center gap-1 md:gap-3">
                       <div className="w-full">
                         <input
                           type="text"
@@ -305,7 +305,7 @@ export const EditProfileModal = ({
                       </div>
                       <p>Discord</p>
                     </div>
-                    <div className="col-span-8 flex flex-1 items-center gap-3">
+                    <div className="col-span-8 flex flex-1 items-center gap-1 md:gap-3">
                       <div className="w-full">
                         <input
                           type="text"
@@ -329,7 +329,7 @@ export const EditProfileModal = ({
 
               <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
                 <button
-                  className="h-[40px] rounded-lg border border-primary bg-primary/30 px-5 py-1 text-xl text-white hover:bg-primary/50"
+                  className="h-[40px] rounded-lg border border-primary bg-primary/30 px-5 py-1 text-lg text-white hover:bg-primary/50 md:text-xl"
                   onClick={closeModal}
                   type="button"
                 >
@@ -337,7 +337,7 @@ export const EditProfileModal = ({
                 </button>
 
                 <button
-                  className="h-[40px] rounded-lg bg-primary px-3 text-xl text-white hover:bg-primary/90"
+                  className="h-[40px] rounded-lg bg-primary px-3 text-lg text-white hover:bg-primary/90 md:text-xl"
                   type="submit"
                   disabled={isLoading}
                 >

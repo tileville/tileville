@@ -2,7 +2,7 @@ import { Skeleton } from "@radix-ui/themes";
 
 export const ConnectionsPlaceholder = () => {
   return (
-    <div className="w-full rounded-xl bg-primary/20 p-4 text-black backdrop-blur-sm">
+    <div className="w-full rounded-xl bg-primary/20 p-2 text-black backdrop-blur-sm md:p-4">
       <div className="flex justify-around gap-4">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="h-8 w-32" />

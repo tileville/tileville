@@ -234,7 +234,7 @@ export const ProfileBasicInfo = ({
           </Link>
         )}
       </div>
-      <div>
+      <div className="mb-3">
         {competitonsLoading ? (
           <div className="flex items-center justify-center p-3">
             <Spinner2 />

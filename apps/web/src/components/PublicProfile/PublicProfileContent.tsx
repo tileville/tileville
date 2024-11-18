@@ -19,7 +19,6 @@ import EditProfileModalWrap from "./EditProfileModalWrap";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { BADGE_BASE_CLASSES } from "@/constants";
-import { Spinner } from "../common/Spinner";
 import { PublicProfileTabsPlaceholder } from "./Placeholders/PublicProfileTabsPlaceholder";
 
 export const PublicProfileContent = ({

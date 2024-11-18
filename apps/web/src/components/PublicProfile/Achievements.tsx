@@ -21,8 +21,12 @@ const getAchievementsData = (totalWins: number | undefined) => [
   {
     id: 2,
     iconUrl: "/icons/coins.png",
-    getHeading: (stats: Partial<AchievementsProps>) =>
-      `${stats.totalRewards?.toString() || "0"} MINA`,
+    getHeading: (stats: Partial<AchievementsProps>) => (
+      <>
+        {stats.totalRewards?.toString() || "0"}
+        <span className="text-[10px] font-normal text-[#515151]">MINA</span>
+      </>
+    ),
     subHeading: "Total Rewards",
   },
   {

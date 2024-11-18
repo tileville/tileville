@@ -132,7 +132,7 @@ export default function SearchFriendsModal({
       </Dialog.Trigger>
 
       <Dialog.Content
-        className="relative !max-w-[500px] !bg-[#99B579] !p-8"
+        className="relative !max-w-[500px] !bg-[#99B579] p-4 md:!p-8"
         size="1"
       >
         <Dialog.Title className="text-2xl font-bold">

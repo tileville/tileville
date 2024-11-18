@@ -22,7 +22,7 @@ export const Connections = ({
   loggedInUserFollowers,
 }: ConnectionsType) => {
   return (
-    <div className="w-full rounded-xl bg-primary/20 p-4 text-black backdrop-blur-sm">
+    <div className="w-full rounded-xl bg-primary/20 p-2 md:p-4 text-black backdrop-blur-sm">
       <Tabs.Root defaultValue="following">
         <Tabs.List className="mt-4 whitespace-nowrap">
           <Tabs.Trigger
