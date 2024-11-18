@@ -244,6 +244,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
                       isLoading={isLoading}
                       watch={watch}
                       setValue={setValue}
+                      isUserHasProfile={true}
                     />
                   </div>
                 </>
