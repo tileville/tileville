@@ -17,9 +17,10 @@ import { ConnectionsPlaceholder } from "./Placeholders/ConnectionsPlaceholder";
 import { useEffect, useState } from "react";
 import EditProfileModalWrap from "./EditProfileModalWrap";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { LockClosedIcon, PlusIcon } from "@radix-ui/react-icons";
+import { LockClosedIcon } from "@radix-ui/react-icons";
 import { BADGE_BASE_CLASSES } from "@/constants";
 import { Spinner } from "../common/Spinner";
+import { PublicProfileTabsPlaceholder } from "./Placeholders/PublicProfileTabsPlaceholder";
 
 export const PublicProfileContent = ({
   params = {
@@ -82,21 +83,21 @@ export const PublicProfileContent = ({
   const profileData =
     shouldFetchPrivateData && privateProfileData?.data
       ? {
-        ...publicProfile,
-        ...privateProfileData.data,
-        discord_username:
-          privateProfileData.data.social_accounts?.discord.username ||
-          publicProfile?.discord_username,
-        telegram_username:
-          privateProfileData.data.social_accounts?.telegram.username ||
-          publicProfile?.telegram_username,
-        twitter_username:
-          privateProfileData.data.social_accounts?.twitter.username ||
-          publicProfile?.twitter_username,
-        email_address:
-          privateProfileData.data.email_address.email ||
-          publicProfile?.email_address,
-      }
+          ...publicProfile,
+          ...privateProfileData.data,
+          discord_username:
+            privateProfileData.data.social_accounts?.discord.username ||
+            publicProfile?.discord_username,
+          telegram_username:
+            privateProfileData.data.social_accounts?.telegram.username ||
+            publicProfile?.telegram_username,
+          twitter_username:
+            privateProfileData.data.social_accounts?.twitter.username ||
+            publicProfile?.twitter_username,
+          email_address:
+            privateProfileData.data.email_address.email ||
+            publicProfile?.email_address,
+        }
       : publicProfile;
 
   if (publicError) {
@@ -218,11 +219,7 @@ export const PublicProfileContent = ({
 
             <div className="col-[span_24_/_span_24] xl:col-[span_17_/_span_17]">
               {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div>
-                    <Spinner />
-                  </div>
-                </div>
+                <PublicProfileTabsPlaceholder />
               ) : (
                 <PublicProfileTabs
                   walletAddress={
