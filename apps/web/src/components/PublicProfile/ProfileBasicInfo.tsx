@@ -14,6 +14,7 @@ import {
 import {
   useBlockberryBalance,
   useFollowUser,
+  usePastCompetitions,
   useUnfollowUser,
 } from "@/db/react-query-hooks";
 import SearchFriendsModal from "../Modals/SearchFriendsModal/SearchFriendsModal";
@@ -64,6 +65,12 @@ export const ProfileBasicInfo = ({
     isLoading: isFetchingBalance,
     error,
   } = useBlockberryBalance(walletAddress);
+
+  const { data: pastCompetitions, isLoading: competitonsLoading } =
+    usePastCompetitions(walletAddress);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   const handleFollowAction = async () => {
     if (!loggedInUserWalletAddress) {
@@ -227,14 +234,45 @@ export const ProfileBasicInfo = ({
           </Link>
         )}
       </div>
+      <div>
+        {competitonsLoading ? (
+          "loading"
+        ) : !pastCompetitions?.competitions ||
+          pastCompetitions.competitions.length <= 0 ? (
+          "No past games found"
+        ) : (
+          <div>
+            <h3 className="text-base font-bold text-[#435133]">Past Games</h3>
+            <div className="grid max-w-full grid-cols-3 gap-3 overflow-auto">
+              {pastCompetitions?.competitions?.map((competition) => {
+                return (
+                  <div key={competition.competitionKey} className="w-full">
+                    <Link
+                      href={`/leaderboard?competition=${competition.competitionKey}`}
+                      className="w-full rounded-[10px] shadow-[0px_4px_4px_0px_#00000040] h-20 block"
+                    >
+                      <Image
+                        className="h-full w-full object-cover rounded-[10px]"
+                        width={100}
+                        height={100}
+                        src={competition.posterUrl}
+                        alt={competition.posterUrl}
+                      />
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
 
       <div className="mt-auto w-full">
         {!isProfileOwner ? (
           <button
             type="button"
-            className={`${
-              isFollowing ? FOLLOWING_BTN_LG : PRIMARY_BUTTON_STYLES_LG
-            } relative ms-auto`}
+            className={`${isFollowing ? FOLLOWING_BTN_LG : PRIMARY_BUTTON_STYLES_LG
+              } relative ms-auto`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={(e) => {

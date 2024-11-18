@@ -787,3 +787,44 @@ export function useTotalWins(wallet_address: string) {
     enabled: !!wallet_address,
   });
 }
+
+interface PastCompetition {
+  competitionKey: string;
+  posterUrl: string;
+}
+
+interface PastCompetitionsResponse {
+  success: boolean;
+  competitions: PastCompetition[];
+  message?: string;
+}
+
+export function usePastCompetitions(wallet_address: string) {
+  return useQuery<PastCompetitionsResponse, Error>({
+    queryKey: ["past-competitions", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/past-competitions?wallet_address=${wallet_address}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch past competitions");
+      }
+
+      return response.json();
+    },
+    enabled: Boolean(wallet_address), // Only run query if wallet address exists
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache data for 30 minutes
+    retry: 2, // Retry failed requests twice
+    select: (data) => ({
+      ...data,
+      competitions: data.competitions.sort((a, b) =>
+        a.competitionKey.localeCompare(b.competitionKey)
+      ), // Sort competitions by key
+    }),
+    onError: (error) => {
+      console.error("Error fetching past competitions:", error);
+    },
+  });
+}
