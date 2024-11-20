@@ -3,7 +3,26 @@ const { withSentryConfig } = require('@sentry/nextjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['oqymtqolwjujkayjyxdt.supabase.co', 'gateway.pinata.cloud' , "zptezhitdheckajmdwip.supabase.co"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'oqymtqolwjujkayjyxdt.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'gateway.pinata.cloud',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'zptezhitdheckajmdwip.supabase.co',
+        port: '',
+        pathname: '/**',
+      }
+    ],
   },
   reactStrictMode: true,
   output: "standalone",
@@ -42,8 +61,7 @@ module.exports = withSentryConfig(nextConfig, {
   project: 'tileville',
   authToken: process.env.SENTRY_AUTH_TOKEN || "",
   silent: true,
-  silent: true,
   disableServerWebpackPlugin: true,
   disableClientWebpackPlugin: true,
   telemetry: false
-})
+});
