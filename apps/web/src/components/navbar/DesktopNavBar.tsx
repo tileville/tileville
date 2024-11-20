@@ -157,7 +157,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
               (networkStore.walletConnected && networkStore.address ? (
                 <>
                   <Link
-                    href={`u/${
+                    href={`/u/${
                       username ? `${username}` : networkStore.address
                     }`}
                   >
