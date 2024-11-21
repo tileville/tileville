@@ -177,7 +177,9 @@ export const ProfileBasicInfo = ({
           <Tooltip.Provider delayDuration={200}>
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
-                <button>
+                <button
+                   className="hover:scale-110 transition-all"
+                >
                   <Image
                     src="/icons/email.svg"
                     width={20}
@@ -203,6 +205,7 @@ export const ProfileBasicInfo = ({
           <Link
             target="_blank"
             href={`https://discord.com/users/${discordUsername}`}
+            className="hover:scale-110 transition-all"
           >
             <Image
               src="/icons/discord.svg"
@@ -216,6 +219,7 @@ export const ProfileBasicInfo = ({
           <Link
             target="_blank"
             href={`https://t.me/${telegramUsername.replace("@", "")}`}
+            className="hover:scale-110 transition-all"
           >
             <Image
               src="/icons/telegram.svg"
@@ -229,6 +233,7 @@ export const ProfileBasicInfo = ({
           <Link
             target="_blank"
             href={`https://twitter.com/${twitterUsername.replace("@", "")}`}
+            className="hover:scale-110 transition-all"
           >
             <Image src="/icons/x.svg" width={20} height={20} alt="x" />
           </Link>

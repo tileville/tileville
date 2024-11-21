@@ -117,7 +117,7 @@ export default function SearchFriendsModal({
           </div>
         </div> */}
         <button
-          className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center gap-3 rounded-[10px]`}
+          className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center gap-3 rounded-[10px] hover:scale-105 transition-transform`}
         >
           <span>
             <Image
