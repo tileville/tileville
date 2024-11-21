@@ -127,9 +127,6 @@ importers:
       o1js:
         specifier: npm:o1js@1.6.0
         version: 1.6.0
-      o1js-pack:
-        specifier: ^0.5.0
-        version: 0.5.4(o1js@1.6.0)
       path:
         specifier: ^0.12.7
         version: 0.12.7
@@ -177,7 +174,7 @@ importers:
         version: 1.0.7(tailwindcss@3.3.3)
       tileville-chain-dev:
         specifier: 0.0.5
-        version: 0.0.5(bullmq@3.15.8)(ts-pattern@4.3.0)
+        version: link:../../packages/chain
       truncate-middle:
         specifier: ^1.0.6
         version: 1.0.6
@@ -11396,14 +11393,6 @@ packages:
     resolution: {integrity: sha512-QK0sRs7MKv0tKe1+5uZIQk/C8XGza4DAnztJG8iD+TpJIORARrCxczA738awHrZoHeTjSSoHqao2teO0dC/gFQ==}
     dev: false
 
-  /o1js-pack@0.5.4(o1js@1.6.0):
-    resolution: {integrity: sha512-qcrLVWNmB3Rw8IgNacWEP/Zk+IUVUvbcMxmmEWSvXSQ3hI+OxWOkGq60CXB7gjMlXYsJhUZ67zZABWt5uOxyYQ==}
-    peerDependencies:
-      o1js: ^0.16.2
-    dependencies:
-      o1js: 1.6.0
-    dev: false
-
   /o1js@1.6.0:
     resolution: {integrity: sha512-5pHCM0qIHG+MhLlcRJZRK8YFC7MOCjlxwSYbmrLDKER267eUip7JRDtWATytIRxtCPqOBvqKeJb0hR/mvjWxqg==}
     engines: {node: '>=18.14.0'}
@@ -13268,32 +13257,6 @@ packages:
     dependencies:
       readable-stream: 3.6.2
     dev: true
-
-  /tileville-chain-dev@0.0.5(bullmq@3.15.8)(ts-pattern@4.3.0):
-    resolution: {integrity: sha512-480nv68Yhm1OGITrVFQwA08eqjSLe+6wtfAl3pyEn71asimTr/yh+RVlspVlKPIE99+cwRYvf9uOm+8givAqzw==}
-    dependencies:
-      '@prisma/client': 5.17.0(prisma@5.18.0)
-      '@proto-kit/api': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/common': 0.1.1-develop.833(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/deployment': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/persistance@0.1.1-develop.833)(@proto-kit/sdk@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(bullmq@3.15.8)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/library': 0.1.1-develop.833(patch_hash=ums46ps4t26l3tpfdnuuxqk6rm)(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/module': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/persistance': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/protocol': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(o1js@1.6.0)(ts-pattern@4.3.0)(tsyringe@4.8.0)
-      '@proto-kit/sdk': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/library@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(@proto-kit/sequencer@0.1.1-develop.833)(graphql@16.6.0)(o1js@1.6.0)(tsyringe@4.8.0)
-      '@proto-kit/sequencer': 0.1.1-develop.833(@proto-kit/common@0.1.1-develop.833)(@proto-kit/module@0.1.1-develop.833)(@proto-kit/protocol@0.1.1-develop.833)(o1js@1.6.0)(tsyringe@4.8.0)
-      concurrently: 8.2.2
-      o1js: 1.6.0
-      reflect-metadata: 0.1.14
-      tsyringe: 4.8.0
-    transitivePeerDependencies:
-      - bullmq
-      - encoding
-      - graphql
-      - prisma
-      - supports-color
-      - ts-pattern
-    dev: false
 
   /tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
