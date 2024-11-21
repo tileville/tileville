@@ -2,6 +2,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['supports-color'],
   images: {
     remotePatterns: [
       {
