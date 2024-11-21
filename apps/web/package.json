@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@aurowallet/mina-provider": "1.0.1",
+    "@babel/runtime": "^7.26.0",
     "@novu/node": "^0.24.2",
     "@novu/notification-center": "^0.24.2",
     "@opentelemetry/api": "^1.9.0",
