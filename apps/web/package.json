@@ -14,7 +14,7 @@
     "start": "next start",
     "lint": "next lint",
     "generate:types:local": "export $(cat .env.local | xargs) &&  supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts",
-    "generate:types:prod":"export $(cat .env.production | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts"
+    "generate:types:prod": "export $(cat .env.production | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts"
   },
   "dependencies": {
     "@aurowallet/mina-provider": "1.0.1",
@@ -38,7 +38,6 @@
     "@types/uuid": "^10.0.0",
     "algoliasearch": "^4.24.0",
     "axios": "^1.7.3",
-    "babel-runtime": "^6.26.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.2.6",
@@ -74,7 +73,6 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.24.0",
     "@svgr/webpack": "^6.5.1",
     "@types/eslint": "^8.37.0",
     "@types/luxon": "^3.4.2",
