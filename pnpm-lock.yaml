@@ -128,8 +128,8 @@ importers:
         specifier: npm:o1js@1.6.0
         version: 1.6.0
       o1js-pack:
-        specifier: ^0.5.0
-        version: 0.5.4(o1js@1.6.0)
+        specifier: 0.8.0
+        version: 0.8.0(o1js@1.6.0)
       path:
         specifier: ^0.12.7
         version: 0.12.7
@@ -11396,10 +11396,10 @@ packages:
     resolution: {integrity: sha512-QK0sRs7MKv0tKe1+5uZIQk/C8XGza4DAnztJG8iD+TpJIORARrCxczA738awHrZoHeTjSSoHqao2teO0dC/gFQ==}
     dev: false
 
-  /o1js-pack@0.5.4(o1js@1.6.0):
-    resolution: {integrity: sha512-qcrLVWNmB3Rw8IgNacWEP/Zk+IUVUvbcMxmmEWSvXSQ3hI+OxWOkGq60CXB7gjMlXYsJhUZ67zZABWt5uOxyYQ==}
+  /o1js-pack@0.8.0(o1js@1.6.0):
+    resolution: {integrity: sha512-XXIT+1A5QOc4tqxqV9IYm0jewg/H9eMojSTjQKPMT0RDBO9Eg7qZnrorMFC84DoCuDcReag5NLo4sAEMed3qyg==}
     peerDependencies:
-      o1js: ^0.16.2
+      o1js: ^2.0.0
     dependencies:
       o1js: 1.6.0
     dev: false
