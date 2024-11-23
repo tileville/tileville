@@ -253,6 +253,7 @@ export const BACKGROUND_PATHS_HEADER = [
   "/competitions",
   "/leaderboard",
   "/faq",
+  "/u/"
 ];
 export const NAVIGATION_MENU_ITEMS = [
   {

@@ -92,7 +92,7 @@ export const EditProfileModal = ({
       }
     >
       <div className="relative mx-auto max-h-full w-full max-w-[600px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">
-        <div className="relative  px-4 py-6 md:p-12">
+        <div className="relative px-4 py-6 md:px-12 md:py-8">
           <div className="mx-auto max-w-[524px]">
             <h3 className="mb-5 text-center text-2xl font-bold text-black">
               <span>Edit your Profile </span>

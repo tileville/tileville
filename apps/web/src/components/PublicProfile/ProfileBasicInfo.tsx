@@ -179,6 +179,12 @@ export const ProfileBasicInfo = ({
               <Tooltip.Trigger asChild>
                 <button
                    className="hover:scale-110 transition-all"
+                   onClick={() => {
+                    copyToClipBoard({
+                      toCopyContent: emailAddress,
+                      copiedType: "Email address",
+                    });
+                  }}
                 >
                   <Image
                     src="/icons/email.svg"

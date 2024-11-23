@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner2 } from "@/components/common/Spinner";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -29,5 +30,7 @@ export default function Profile() {
     );
   }
 
-  return <div>Redirecting...</div>;
+  return  <div className="min-h-screen flex items-center justify-center w-full">
+    <Spinner2 />
+  </div>;
 }
