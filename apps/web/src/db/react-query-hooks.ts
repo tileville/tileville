@@ -3,7 +3,12 @@
 /* ==================== */
 
 import { supabaseUserClientComponentClient } from "@/supabase-clients/supabaseUserClientComponentClient";
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import {
@@ -31,6 +36,7 @@ import {
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
+import { PublicProfile } from "@/types";
 
 export const useSendEmail = ({
   onSuccess,
@@ -122,26 +128,47 @@ export const useProfile = ({
   onError?: (error: unknown) => void;
 }) => {
   const toastRef = useRef<string | null>(null);
+
+  interface ProfileMutationInput {
+    wallet_address: string;
+    username: string;
+    fullname: string;
+    avatar_url: string;
+    twitter_username?: {
+      username: string | null;
+      isPublic: boolean;
+    };
+    telegram_username?: {
+      username: string | null;
+      isPublic: boolean;
+    };
+    discord_username?: {
+      username: string | null;
+      isPublic: boolean;
+    };
+    email_address?: {
+      email: string | null;
+      isPublic: boolean;
+    };
+  }
+
   return useMutation(
-    async (item: {
-      wallet_address: string;
-      username: string;
-      fullname: string;
-      avatar_url: string;
-    }) => {
+    async (item: ProfileMutationInput) => {
       return fetch("/api/player_profile", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(item),
       }).then((res) => res.json());
     },
     {
       onMutate: () => {
-        // Optional: Uncomment the line below to show a loading toast
-        // toastRef.current = toast.loading('Saving leaderboard data...');
+        toastRef.current = toast.loading("Saving profile data...");
         onMutate?.();
       },
       onSuccess: () => {
-        toast.success("profile data saved successfully", {
+        toast.success("Profile data saved successfully", {
           id: toastRef.current ?? undefined,
         });
 
@@ -191,13 +218,12 @@ export const useNFTEntries = ({
   );
 };
 export const useProfileLazyQuery = (walletAddress: string) => {
-  // const { accountAuthSignature: authSignature } = useAuthSignature();
+  const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ["user_profile", walletAddress],
     queryFn: async () => {
       const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
-      console.log({ authSignature });
       if (!authSignature) {
         console.warn("Auth signature missing in storage");
         throw new Error("Auth signature missing!");
@@ -214,9 +240,13 @@ export const useProfileLazyQuery = (walletAddress: string) => {
         });
     },
     enabled: !!walletAddress,
+    staleTime: 0,
+    cacheTime: 1000 * 60 * 5,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["public-profile"] });
+    },
   });
 };
-
 export const useLeaderboardEntries = (competition_key: string) => {
   return useQuery({
     queryKey: ["leaderboard_entries", competition_key],
@@ -434,3 +464,367 @@ export const useGlobalConfig = (config_name: string) => {
       })
   );
 };
+
+export function useGetConnections(wallet_address: string) {
+  return useQuery({
+    queryKey: ["connections", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/connections?wallet_address=${wallet_address}`
+      );
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+      return data.data;
+    },
+    enabled: !!wallet_address,
+  });
+}
+
+export function useFollowUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      follower_wallet,
+      target_wallet,
+    }: {
+      follower_wallet: string;
+      target_wallet: string;
+    }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
+      console.log("target wallet", target_wallet);
+      console.log("follower_wallet", follower_wallet);
+      try {
+        const response = await fetch("/api/player/follow", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Wallet-Address": follower_wallet,
+            "Auth-Signature": authSignature,
+          },
+          body: JSON.stringify({
+            follower_wallet,
+            target_wallet,
+          }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+          throw new Error(data.error);
+        }
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connections"] });
+      queryClient.invalidateQueries({ queryKey: ["all-users"] });
+    },
+  });
+}
+
+export function useUnfollowUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      follower_wallet,
+      target_wallet,
+    }: {
+      follower_wallet: string;
+      target_wallet: string;
+    }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
+      console.log("target wallet", target_wallet);
+      console.log("follower_wallet", follower_wallet);
+      try {
+        const response = await fetch("/api/player/unfollow", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Wallet-Address": follower_wallet,
+            "Auth-Signature": authSignature,
+          },
+          body: JSON.stringify({
+            follower_wallet,
+            target_wallet,
+          }),
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+          throw new Error(data.error);
+        }
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connections"] });
+      queryClient.invalidateQueries({ queryKey: ["all-users"] });
+    },
+  });
+}
+
+export function useGetAllUsers(currentWallet: string, searchQuery = "") {
+  return useQuery({
+    queryKey: ["all-users", currentWallet, searchQuery],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/all-users?wallet_address=${currentWallet}&search=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+
+      return data.data;
+    },
+    enabled: !!currentWallet,
+  });
+}
+
+interface PublicProfileResponse {
+  status: boolean;
+  data: PublicProfile;
+}
+
+interface ProfileIdentifier {
+  value: string;
+  type: "wallet_address" | "username";
+}
+
+export const usePublicProfile = (identifier: string) => {
+  // Determine if the identifier is a wallet address or username
+  const getIdentifierType = (id: string): ProfileIdentifier => {
+    const isWalletAddress = id.startsWith("B62q");
+    return {
+      value: id,
+      type: isWalletAddress ? "wallet_address" : "username",
+    };
+  };
+
+  const profileIdentifier = getIdentifierType(identifier);
+
+  return useQuery<PublicProfileResponse, Error>(
+    ["public-profile", profileIdentifier],
+    async () => {
+      const queryParam =
+        profileIdentifier.type === "wallet_address"
+          ? `wallet_address=${profileIdentifier.value}`
+          : `username=${profileIdentifier.value}`;
+
+      const response = await fetch(`/api/player/public?${queryParam}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return {
+            status: false,
+            data: null,
+          };
+        }
+        throw new Error("Failed to fetch public profile");
+      }
+
+      return data;
+    },
+    {
+      enabled: !!identifier,
+      staleTime: 1000 * 60 * 5,
+      cacheTime: 1000 * 60 * 30,
+      retry: 1,
+      onError: (error) => {
+        console.error("Profile fetch error:", error);
+      },
+    }
+  );
+};
+
+export const usePrivateProfile = (walletAddress: string) => {
+  return useQuery(
+    ["private-profile", walletAddress],
+    async () => {
+      const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+      if (!authSignature) {
+        throw new Error("Auth signature missing!");
+      }
+
+      const response = await fetch(
+        `/api/player/private?wallet_address=${walletAddress}`,
+        {
+          headers: {
+            "Auth-Signature": authSignature,
+            "Wallet-Address": walletAddress,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch private profile");
+      }
+
+      return response.json();
+    },
+    {
+      enabled: !!walletAddress,
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+    }
+  );
+};
+
+interface BalanceResponse {
+  success: boolean;
+  data?: {
+    balance: string;
+    blockHeight: number;
+    nonce: number;
+    delegate: string;
+    publicKey: string;
+  };
+  error?: string;
+}
+
+export const useBlockberryBalance = (walletAddress: string) => {
+  return useQuery<BalanceResponse, Error>({
+    queryKey: ["blockberry-balance", walletAddress],
+    queryFn: async () => {
+      try {
+        const response = await fetch(
+          `${BLOCKBERRY_MAINNET_BASE_URL}/v1/accounts/${walletAddress}`,
+          {
+            headers: {
+              accept: "application/json",
+              "x-api-key": BLOCKBERRY_API_KEY,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        return {
+          success: true,
+          data,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : "An error occurred",
+        };
+      }
+    },
+    enabled: !!walletAddress, // Only run query if wallet address is provided
+    refetchInterval: 30000,
+    staleTime: 15000, // Consider data stale after 15 seconds
+    retry: 3, // Retry failed requests 3 times
+  });
+};
+
+interface UsernameResponse {
+  status: boolean;
+  data?: {
+    username: string;
+  };
+  message?: string;
+}
+
+export const useUsername = (walletAddress: string | undefined) => {
+  return useQuery({
+    queryKey: ["username", walletAddress],
+    queryFn: async (): Promise<string | null> => {
+      if (!walletAddress) return null;
+
+      try {
+        const response = await fetch(
+          `/api/player/username?wallet_address=${walletAddress}`
+        );
+        const data: UsernameResponse = await response.json();
+
+        if (!data.status || !data.data?.username) {
+          return null;
+        }
+
+        return data.data.username;
+      } catch (error) {
+        console.error("Error fetching username:", error);
+        return null;
+      }
+    },
+    enabled: !!walletAddress,
+    staleTime: 5 * 60 * 1000, // Consider username fresh for 5 minutes
+    cacheTime: 30 * 60 * 1000, // Cache username for 30 minutes
+  });
+};
+
+export function useTotalWins(wallet_address: string) {
+  return useQuery({
+    queryKey: ["total-wins", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/total-wins?wallet_address=${wallet_address}`
+      );
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error);
+      }
+      return data.total_wins;
+    },
+    enabled: !!wallet_address,
+  });
+}
+
+interface PastCompetition {
+  competitionKey: string;
+  posterUrl: string;
+}
+
+interface PastCompetitionsResponse {
+  success: boolean;
+  competitions: PastCompetition[];
+  message?: string;
+}
+
+export function usePastCompetitions(wallet_address: string) {
+  return useQuery<PastCompetitionsResponse, Error>({
+    queryKey: ["past-competitions", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/player/past-competitions?wallet_address=${wallet_address}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch past competitions");
+      }
+
+      return response.json();
+    },
+    enabled: Boolean(wallet_address), // Only run query if wallet address exists
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // Cache data for 30 minutes
+    retry: 2, // Retry failed requests twice
+    select: (data) => ({
+      ...data,
+      competitions: data.competitions.sort((a, b) =>
+        a.competitionKey.localeCompare(b.competitionKey)
+      ), // Sort competitions by key
+    }),
+    onError: (error) => {
+      console.error("Error fetching past competitions:", error);
+    },
+  });
+}

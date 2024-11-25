@@ -1,7 +1,7 @@
+"use client";
 import React from "react";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Lottie from "react-lottie";
+import { useLottie } from "lottie-react";
+
 
 export const LottieAnimation = ({
   animationData,
@@ -17,7 +17,8 @@ export const LottieAnimation = ({
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  return <Lottie options={defaultOptions} />;
+  const { View } = useLottie(defaultOptions);
+  return <>{View}</>;
 };
 
 export default LottieAnimation;

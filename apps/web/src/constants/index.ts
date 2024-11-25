@@ -253,6 +253,7 @@ export const BACKGROUND_PATHS_HEADER = [
   "/competitions",
   "/leaderboard",
   "/faq",
+  "/u/"
 ];
 export const NAVIGATION_MENU_ITEMS = [
   {
@@ -284,7 +285,7 @@ export const NAVIGATION_MENU_ITEMS = [
     name: "User Profile",
     key: 3,
     targetBlank: false,
-    href: COLLECTION_URL,
+    href: "/profile",
   },
   {
     name: "NFTS MARKETPLACE",
@@ -357,24 +358,27 @@ export const TABS_HEADINGS = [
   {
     value: "collection",
     text: "Digital Collection",
+    showOnPublicProfile: true,
   },
   {
     value: "active-games",
     text: "Active Games",
+    showOnPublicProfile: false,
   },
-
   {
     value: "past-games",
     text: "Past Games",
+    showOnPublicProfile: true,
   },
-
   {
     value: "transactions",
     text: "transactions",
+    showOnPublicProfile: false,
   },
   {
     value: "preferences",
     text: "Preferences",
+    showOnPublicProfile: false,
   },
 ];
 
@@ -449,3 +453,16 @@ export const TABLE_SKELETON_CONTENT = [
   "7asdfasdfs0",
   "70",
 ];
+
+export const PRIMARY_BUTTON_STYLES =
+  "w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-105 transition-transform";
+
+export const PRIMARY_BUTTON_STYLES_LG =
+  "w-full border border-primary bg-[#93B068] py-2 px-2 text-base font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-[1.02] transition-transform";
+
+export const FOLLOWING_BTN_LG = `${PRIMARY_BUTTON_STYLES_LG} hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-[1.02] transition-transform`;
+
+export const FOLLOWING_BTN = `${PRIMARY_BUTTON_STYLES} hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-105 transition-transform bg-transparent`;
+
+export const BADGE_BASE_CLASSES =
+  "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";

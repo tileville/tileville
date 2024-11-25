@@ -38,7 +38,7 @@ export const Modal = ({
             exit={{ opacity: 0 }}
             transition={{ type: "spring", duration: 0.4, bounce: 0 }}
             className={
-              "fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center backdrop-blur-md px-6"
+              "fixed left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center px-6 backdrop-blur-md"
             }
             onClick={
               isDismissible
@@ -55,46 +55,10 @@ export const Modal = ({
             }
           >
             <div
-              className={
-                "bg-bg-dark relative flex flex-col rounded-[5px] bg-white/40 shadow-md"
-              }
+              className={"bg-bg-dark relative flex w-full flex-col"}
               onClick={(e) => e.stopPropagation()}
             >
               {children}
-              {isDismissible && (
-                <div
-                  className={
-                    "absolute right-4 top-4 z-50 cursor-pointer hover:opacity-80"
-                  }
-                  onClick={
-                    setIsOpen
-                      ? () => {
-                          setIsOpen(false);
-                          onClose && onClose();
-                        }
-                      : () => {
-                          setIsOpenUncontrolled(false);
-                          onClose && onClose();
-                        }
-                  }
-                >
-                  <svg
-                    className="h-3 w-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                    />
-                  </svg>
-                </div>
-              )}
             </div>
           </motion.div>
         )}

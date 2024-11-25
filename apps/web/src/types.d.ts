@@ -58,3 +58,31 @@ type Competition = {
   speed_duration: number;
   currency_symbol: string;
 };
+
+type Connection = {
+  wallet_address: string;
+  username: string;
+  fullname: string;
+  avatar_url: string;
+};
+
+type User = {
+  wallet_address: string;
+  username: string;
+  fullname: string;
+  avatar_url: string;
+};
+
+interface PublicProfile {
+  wallet_address: string;
+  username?: string;
+  fullname?: string;
+  avatar_url?: string;
+  followers?: string[];
+  following?: string[];
+  twitter_username?: string | null;
+  telegram_username?: string | null;
+  discord_username?: string | null;
+  email_address?: string | null;
+  total_rewards?: number;
+}

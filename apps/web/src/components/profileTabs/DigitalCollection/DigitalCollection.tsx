@@ -3,15 +3,23 @@ import {
   useFetchNFTSAlgolia,
   AlgoliaHitResponse,
 } from "@/hooks/useFetchNFTSAlgolia";
-import { useNetworkStore } from "@/lib/stores/network";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog } from "@radix-ui/themes";
 import { NFTModalTriggerContent } from "./NFTModalTriggerContent";
 import { NFTModalContent } from "./NFTModalContent";
 
-export default function DigitalCollection() {
-  const { address } = useNetworkStore();
-  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({ owner: address });
+type DigitalCollectionType = {
+  walletAddress: string;
+  isOwner: boolean;
+};
+
+export default function DigitalCollection({
+  walletAddress,
+  isOwner,
+}: DigitalCollectionType) {
+  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
+    owner: walletAddress,
+  });
 
   return (
     <>
@@ -36,6 +44,7 @@ export default function DigitalCollection() {
                   nftImg={nft.image}
                   externalUrl={nft.external_url}
                   nftProperties={nft.properties}
+                  isOwner={isOwner}
                 />
                 <Dialog.Close>
                   <button className="absolute right-4 top-4">
@@ -49,7 +58,7 @@ export default function DigitalCollection() {
       ) : (
         <div className="flex items-center justify-center pt-8">
           <h2 className="text-2xl font-semibold">
-            You do not own any Collection right now
+            {isOwner ? "You" : "User"} do not own any Collection right now
           </h2>
         </div>
       )}
