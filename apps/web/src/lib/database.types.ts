@@ -100,6 +100,7 @@ export type Database = {
           fullname: string | null
           id: number
           telegram_username: Json
+          total_rewards: number
           twitter_username: Json
           username: string
           wallet_address: string
@@ -114,6 +115,7 @@ export type Database = {
           fullname?: string | null
           id?: number
           telegram_username?: Json
+          total_rewards?: number
           twitter_username?: Json
           username: string
           wallet_address: string
@@ -128,6 +130,7 @@ export type Database = {
           fullname?: string | null
           id?: number
           telegram_username?: Json
+          total_rewards?: number
           twitter_username?: Json
           username?: string
           wallet_address?: string
