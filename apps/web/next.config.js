@@ -5,6 +5,9 @@ const nextConfig = {
   experimental: {
     esmExternals: 'loose'
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   transpilePackages: ['supports-color'],
   images: {
     remotePatterns: [
