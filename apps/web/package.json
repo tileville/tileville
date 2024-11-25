@@ -17,7 +17,7 @@
     "generate:types:prod": "export $(cat .env.production | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts"
   },
   "dependencies": {
-    "@aurowallet/mina-provider": "1.0.1",
+    "@aurowallet/mina-provider": "1.0.6",
     "@babel/runtime": "^7.26.0",
     "@novu/node": "^0.24.2",
     "@novu/notification-center": "^0.24.2",
