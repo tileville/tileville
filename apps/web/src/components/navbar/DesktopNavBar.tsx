@@ -31,6 +31,7 @@ import {
   JoinDiscordBtn,
   XFollowBtn,
 } from "../NavButtons/NavButtons";
+import { NotificationsPopover } from "./NotificationsPopover";
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");
@@ -213,6 +214,10 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
                   />
                 </Link>
               ))}
+          </div>
+
+          <div>
+            <NotificationsPopover />
           </div>
         </div>
       </div>
