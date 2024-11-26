@@ -12,6 +12,7 @@ import { HeaderCard } from "@/components/common/HeaderCard";
 import NetworkPicker from "@/components/common/NetworkPicker";
 import AccountCard from "@/components/common/AccountCard";
 import {
+  useAddNovuSubscriber,
   useFetchTransactions,
   useMainnetTransactionsStatus,
   useProfileLazyQuery,
@@ -57,6 +58,11 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
   const { phClient } = usePosthogEvents();
+  const addNovuSubscriber = useAddNovuSubscriber({
+    onError: (error) => {
+      console.error("Failed to add Novu subscriber:", error);
+    },
+  });
   useEffect(() => {
     if (!walletInstalled()) return;
     if (autoConnect) {
@@ -67,46 +73,64 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   }, []);
 
   useEffect(() => {
-    if (networkStore.walletConnected && isFetched) {
-      validateOrSetSignature();
-      phClient.identify(networkStore.address, { username: data?.username });
-      // This is not working. debug this.
-      // addNovuSubscriber(networkStore.address!, {
-      //   username: data?.username,
-      //   email: data?.email || "",
-      //   fullname: data?.fullname || "",
-      // });
-      anonymousSignIn()
-        .then(() => {
-          console.log("anonymous login done");
-        })
-        .catch(() => {
-          console.log("failed to do anonymous login");
-        });
-    }
-    if (
-      networkStore.walletConnected &&
-      isFetched &&
-      (!data?.fullname || !data?.username)
-    ) {
-      //Log entry
-      // Show modal
-      toast(
-        <div>
-          Hey there! It looks like you haven&apos;t completed your profile yet.
-          Please{" "}
-          <a href="/profile" className="text-blue-950 underline">
-            complete it now
-          </a>{" "}
-          to get the most out of our platform
-        </div>,
-        {
-          duration: 6000,
+    const initializeUser = async () => {
+      if (networkStore.walletConnected && isFetched && data) {
+        try {
+          await validateOrSetSignature();
+
+          phClient.identify(networkStore.address, { username: data?.username });
+
+          try {
+            await addNovuSubscriber.mutateAsync({
+              walletAddress: networkStore.address!,
+              username: data?.username,
+              email: data?.email_address?.email || "",
+              fullname: data?.fullname || "",
+            });
+          } catch (novuError) {
+            console.error("Error adding Novu subscriber:", novuError);
+          }
+
+          try {
+            await anonymousSignIn();
+            console.log("Anonymous login completed");
+          } catch (loginError) {
+            console.warn("Failed to complete anonymous login:", loginError);
+          }
+
+          if (!data?.fullname || !data?.username) {
+            toast(
+              <div>
+                Hey there! It looks like you haven&apos;t completed your profile
+                yet. Please{" "}
+                <a href="/profile" className="text-blue-950 underline">
+                  complete it now
+                </a>{" "}
+                to get the most out of our platform
+              </div>,
+              {
+                duration: 6000,
+              }
+            );
+          }
+        } catch (error) {
+          console.error("Error during user initialization:", error);
+          toast.error(
+            "There was an error initializing your profile. Please try refreshing the page."
+          );
         }
-      );
-    }
+      }
+    };
+
+    initializeUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [networkStore.walletConnected, data, isFetched]);
+  }, [
+    networkStore.walletConnected,
+    data,
+    isFetched,
+    // addNovuSubscriber.mutateAsync,
+    // addNovuSubscriber,
+  ]);
 
   const handleFocus = (index: number) => {
     setFocusedButtonIndex(index);
