@@ -1,16 +1,23 @@
 "use client";
+import React from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
 import { NFTModal } from "@/components/NFTModal";
-import { useNFTEntries } from "@/db/react-query-hooks";
+import { useNFTEntries, useMinatyNFTEntries } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import { Pagination } from "@/components/common/Pagination";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 import clsx from "clsx";
-import { SORT_OPTIONS, TOGGLE_GROUP_OPTIONS } from "@/constants";
+import {
+  NFT_COLLECTIONS,
+  NFTCollectionType,
+  SORT_OPTIONS,
+  TOGGLE_GROUP_OPTIONS,
+} from "@/constants";
 import { TraitsInfoBtn } from "@/components/Marketplace/TraitsInfoBtn";
+import CollectionSelector from "@/components/Marketplace/CollectionSelector";
 
 export default function Marketplace() {
   const [selectedItem, setSelectedItem] =
@@ -25,11 +32,29 @@ export default function Marketplace() {
     TOGGLE_GROUP_OPTIONS[0].gridApplyClass
   );
 
-  const { data, isLoading, isError, error } = useNFTEntries({
+  const [selectedCollection, setSelectedCollection] =
+    useState<NFTCollectionType>(NFT_COLLECTIONS.TILEVILLE);
+
+  const { data: tilevilleData, isLoading: tilevilleLoading } = useNFTEntries({
     sortOrder,
     searchTerm: activeSearchTerm,
     currentPage,
   });
+
+  const { data: minatyData, isLoading: minatyLoading } = useMinatyNFTEntries({
+    sortOrder,
+    searchTerm,
+    currentPage,
+  });
+
+  const displayData = React.useMemo(() => {
+    if (selectedCollection === NFT_COLLECTIONS.TILEVILLE) {
+      return tilevilleData;
+    }
+
+    return minatyData;
+  }, [selectedCollection, tilevilleData, minatyData]);
+
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
 
   const debouncedSearch = useMemo(() => {
@@ -41,7 +66,7 @@ export default function Marketplace() {
         setCurrentPage(1);
       }, 300);
     };
-  }, []); // Empty dependency array as this function doesn't depend on any props or state
+  }, []);
 
   useEffect(() => {
     debouncedSearch(searchTerm);
@@ -63,10 +88,14 @@ export default function Marketplace() {
     }
   };
 
-  if (isError) {
+  if (tilevilleLoading || minatyLoading) {
+    return <MarketplaceLoading />;
+  }
+
+  if (tilevilleData?.nfts.length === 0 && minatyData?.nfts.length === 0) {
     return (
-      <div className="py-40 text-center">
-        Error: {(error as { message: string }).message}
+      <div className="py-36 text-center">
+        <h2 className="text-center text-3xl font-semibold">No Results Found</h2>
       </div>
     );
   }
@@ -75,15 +104,21 @@ export default function Marketplace() {
     <div className="relative p-4 pb-0 pt-12 md:pb-28 md:pt-20">
       <div className="mx-auto max-w-[1280px] pt-3">
         <div className="mb-8 flex flex-wrap gap-3">
+          <CollectionSelector
+            selectedCollection={selectedCollection}
+            onSelect={setSelectedCollection}
+          />
+
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
             {TOGGLE_GROUP_OPTIONS.map((option) => {
               return (
                 <li key={option.id}>
                   <button
-                    className={`flex h-10 w-10 items-center justify-center hover:opacity-80 ${selectedToggle === option.id
+                    className={`flex h-10 w-10 items-center justify-center hover:opacity-80 ${
+                      selectedToggle === option.id
                         ? "bg-primary"
                         : "bg-primary/30"
-                      }`}
+                    }`}
                     onClick={() => {
                       setRenderStyle(option.gridApplyClass);
                       setSelectedToggle(option.id);
@@ -138,7 +173,7 @@ export default function Marketplace() {
                     key={option.id}
                     onClick={() => handleSortChange(option.text)}
                     className={clsx(
-                      "hover:bg-primary mt-1",
+                      "mt-1 hover:bg-primary",
                       selectedItem === option.text
                         ? "bg-primary text-white"
                         : ""
@@ -149,7 +184,6 @@ export default function Marketplace() {
                 );
               })}
             </DropdownMenu.Content>
-
           </DropdownMenu.Root>
         </div>
         <div className="overflow-auto">
@@ -169,7 +203,7 @@ export default function Marketplace() {
           )}
 
           <div className="mb-16">
-            {data?.nfts.length === 0 ? (
+            {displayData?.nfts.length === 0 ? (
               <div className="py-36 text-center">
                 <h2 className="text-center text-3xl font-semibold">
                   No Results Found
@@ -180,11 +214,11 @@ export default function Marketplace() {
             )}
 
             <div className={`${renderStyle} pr-2 text-lg`}>
-              {isLoading ? (
+              {tilevilleLoading || minatyLoading ? (
                 <MarketplaceLoading />
               ) : (
                 <>
-                  {data?.nfts.map((nft) => {
+                  {displayData?.nfts.map((nft: any) => {
                     return (
                       <NFTModal
                         traits={nft.traits}
@@ -199,6 +233,7 @@ export default function Marketplace() {
                         algoliaHitData={mintNFTHitsResponse.find(
                           ({ name }) => name === nft.name
                         )}
+                        collection={selectedCollection}
                       />
                     );
                   })}
@@ -210,7 +245,7 @@ export default function Marketplace() {
 
         <Pagination
           currentPage={currentPage}
-          totalCount={data?.count || 0}
+          totalCount={displayData.count}
           onPageChange={(page) => {
             setCurrentPage(page);
           }}

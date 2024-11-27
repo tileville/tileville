@@ -464,3 +464,23 @@ export const FOLLOWING_BTN = `${PRIMARY_BUTTON_STYLES} hover:text-[#830A0A] hove
 
 export const BADGE_BASE_CLASSES =
   "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
+
+export type NFTCollection =
+  (typeof NFT_COLLECTIONS)[keyof typeof NFT_COLLECTIONS];
+
+export const NFT_COLLECTIONS = {
+  ALL: "ALL",
+  TILEVILLE: "TILEVILLE",
+  MINATY: "MINATY",
+} as const;
+
+export type NFTCollectionType = keyof typeof NFT_COLLECTIONS;
+
+export const MINATY_CATEGORIES = {
+  ALL: "ALL",
+  FOUNDER: "FOUNDER",
+  DESIGNER: "DESIGNER",
+  SOLDIER: "SOLDIER",
+  GUARDIAN: "GUARDIAN",
+  TOTEM: "TOTEM",
+} as const;

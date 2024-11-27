@@ -6,7 +6,12 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
 import { useNetworkStore, useMintNFT } from "@/lib/stores/network";
-import { COLLECTION_URL, INITIAL_MINT_RESPONSE, isMockEnv } from "@/constants";
+import {
+  COLLECTION_URL,
+  INITIAL_MINT_RESPONSE,
+  isMockEnv,
+  NFTCollectionType,
+} from "@/constants";
 import Link from "next/link";
 import { isFuture } from "date-fns";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -32,6 +37,7 @@ export const NFTModal = ({
   renderStyle,
   nftID,
   algoliaHitData,
+  collection,
 }: {
   traits: Json;
   img_url: string;
@@ -42,6 +48,7 @@ export const NFTModal = ({
   renderStyle: string;
   ownerAddress: string | null;
   algoliaHitData: AlgoliaHitResponse | undefined;
+  collection: NFTCollectionType;
 }) => {
   // Function to parse traits
   const [mintLoading, setMintLoading] = useState(false);
@@ -307,7 +314,7 @@ export const NFTModal = ({
                     />
                   )}
               </Flex>
-              <TraitsSection traits={traits} />
+              <TraitsSection traits={traits} collection={collection} />
             </div>
           </div>
           <Dialog.Close>
