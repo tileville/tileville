@@ -828,3 +828,62 @@ export function usePastCompetitions(wallet_address: string) {
     },
   });
 }
+
+// Add this to react-query-hooks.ts
+
+export const useTelegramVerify = ({
+  onSuccess,
+  onMutate,
+  onError,
+}: {
+  onSuccess?: () => void;
+  onMutate?: () => void;
+  onError?: (error: unknown) => void;
+}) => {
+  const toastRef = useRef<string | null>(null);
+
+  return useMutation(
+    async ({
+      chatId,
+      walletAddress,
+    }: {
+      chatId: string;
+      walletAddress: string;
+    }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+      return fetch("/api/telegram/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Auth-Signature": authSignature,
+          "Wallet-Address": walletAddress,
+        },
+        body: JSON.stringify({
+          chatId,
+          walletAddress,
+        }),
+      }).then((res) => res.json());
+    },
+    {
+      onMutate: () => {
+        toastRef.current = toast.loading("Verifying your account...");
+        onMutate?.();
+      },
+      onSuccess: () => {
+        toast.success("Successfully verified your telegram account!", {
+          id: toastRef.current ?? undefined,
+        });
+        toastRef.current = null;
+        onSuccess?.();
+      },
+      onError: (error) => {
+        toast.error(String(error), {
+          id: toastRef.current ?? undefined,
+        });
+        toastRef.current = null;
+        onError?.(error);
+      },
+    }
+  );
+};
