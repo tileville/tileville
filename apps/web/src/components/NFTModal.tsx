@@ -266,6 +266,7 @@ export const NFTModal = ({
                 <MintBtn
                   isMintingDisabled={isMintingDisabled}
                   isMintingStyledDisabled={
+                    collection === "MINATY" ||
                     isMintingDisabled ||
                     mintLoading ||
                     !!algoliaHitData ||
