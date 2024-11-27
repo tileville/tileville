@@ -158,6 +158,30 @@ export type Database = {
         }
         Relationships: []
       }
+      telegram_auth: {
+        Row: {
+          authenticated: boolean
+          chat_id: string | null
+          created_at: string
+          id: number
+          wallet_address: string | null
+        }
+        Insert: {
+          authenticated?: boolean
+          chat_id?: string | null
+          created_at?: string
+          id?: number
+          wallet_address?: string | null
+        }
+        Update: {
+          authenticated?: boolean
+          chat_id?: string | null
+          created_at?: string
+          id?: number
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
       tileville_builder_nfts: {
         Row: {
           created_at: string
