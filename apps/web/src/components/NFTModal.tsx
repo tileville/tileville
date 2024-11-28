@@ -11,6 +11,7 @@ import {
   INITIAL_MINT_RESPONSE,
   isMockEnv,
   NFTCollectionType,
+  NFTCategory,
 } from "@/constants";
 import Link from "next/link";
 import { isFuture } from "date-fns";
@@ -38,6 +39,7 @@ export const NFTModal = ({
   nftID,
   algoliaHitData,
   collection,
+  NFTCategory,
 }: {
   traits: Json;
   img_url: string;
@@ -49,6 +51,7 @@ export const NFTModal = ({
   ownerAddress: string | null;
   algoliaHitData: AlgoliaHitResponse | undefined;
   collection: NFTCollectionType;
+  NFTCategory: NFTCategory | null;
 }) => {
   // Function to parse traits
   const [mintLoading, setMintLoading] = useState(false);
@@ -315,7 +318,11 @@ export const NFTModal = ({
                     />
                   )}
               </Flex>
-              <TraitsSection traits={traits} collection={collection} />
+              <TraitsSection
+                traits={traits}
+                collection={collection}
+                category={NFTCategory}
+              />
             </div>
           </div>
           <Dialog.Close>

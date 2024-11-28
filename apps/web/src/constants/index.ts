@@ -5,6 +5,14 @@ import {
   LightningBoltIcon,
   StarFilledIcon,
   ThickArrowUpIcon,
+  HeartFilledIcon,
+  LayersIcon,
+  CrossCircledIcon,
+  ArrowRightIcon,
+  MixerHorizontalIcon,
+  DrawingPinIcon,
+  HomeIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 
 import PersonWaiting from "../../public/lotties/personWaiting.json";
@@ -484,3 +492,205 @@ export const MINATY_CATEGORIES = {
   GUARDIAN: "GUARDIAN",
   TOTEM: "TOTEM",
 } as const;
+
+// Add these interfaces in your constants file where NFT_ATTRIBUTES is defined
+interface BaseNFTAttributes {
+  description: string;
+  traits: Record<
+    string,
+    {
+      Icon: React.ComponentType<IconProps>;
+      description: string;
+      values: Record<string, string>;
+    }
+  >;
+}
+
+interface FounderAttributes extends BaseNFTAttributes {
+  uniqueFeatures: string[];
+  founderMessage: string;
+}
+
+interface DesignerAttributes extends BaseNFTAttributes {
+  uniqueFeatures: string[];
+  designerMessage: string;
+}
+
+interface SoldierAttributes extends BaseNFTAttributes {
+  designPhilosophy: string;
+}
+
+interface GuardianAttributes extends BaseNFTAttributes {
+  designPhilosophy: string;
+}
+
+interface TotemAttributes extends BaseNFTAttributes {
+  designPhilosophy: string;
+}
+
+export type NFTAttributeType = {
+  FOUNDER: FounderAttributes;
+  DESIGNER: DesignerAttributes;
+  SOLDIER: SoldierAttributes;
+  GUARDIAN: GuardianAttributes;
+  TOTEM: TotemAttributes;
+};
+
+export type NFTCategory =
+  | "TILEVILLE"
+  | "FOUNDER"
+  | "DESIGNER"
+  | "SOLDIER"
+  | "GUARDIAN"
+  | "TOTEM";
+
+export const NFT_ATTRIBUTES: NFTAttributeType = {
+  FOUNDER: {
+    description:
+      "Minaty 0101 is not just an NFT; it embodies the very essence of the vision that drives the Minaty project. As a unique and non-transferable piece, it symbolizes the presence, conviction, and leadership of the founder.",
+    uniqueFeatures: [
+      "Founder's Identity: Exclusively reserved for its creator, never to be sold or traded",
+      "Symbol of Leadership: A testament to guidance and innovation",
+      "Vision and Values: Champion of digital freedom and privacy",
+    ],
+    founderMessage:
+      "Minaty 0101 is more than just an NFT. It is my personal emblem, a proof of my commitment to the Minaty community, and an expression of my values as a leader in this digital revolution.",
+    traits: {
+      "Leadership Role": {
+        Icon: PersonIcon,
+        description: "Represents the founder's leadership responsibility",
+        values: {
+          "Project Creator":
+            "The original creator and visionary of the Minaty project",
+          "Vision Bearer": "Carries and upholds the project's core values",
+          "Community Pioneer": "First mover and leader in the Minaty ecosystem",
+        },
+      },
+      "Vision Alignment": {
+        Icon: LightningBoltIcon,
+        description: "Core principles and mission alignment",
+        values: {
+          "Privacy Champion": "Leading the charge for digital privacy",
+          "Innovation Driver": "Pushing boundaries in Web3",
+          "Community Builder": "Fostering a strong, united community",
+        },
+      },
+      "Commitment Level": {
+        Icon: HeartFilledIcon,
+        description: "Level of dedication to the project",
+        values: {
+          "Eternal Guardian": "Permanent commitment to project success",
+          "Vision Keeper": "Maintains project direction and values",
+        },
+      },
+    },
+  },
+  DESIGNER: {
+    description:
+      "Minaty 0102 captures the innovative spirit and artistic prowess of the designer behind the Minaty project. As a unique and non-transferable piece, it celebrates the creative genius that shapes visual aspects and designs.",
+    uniqueFeatures: [
+      "Designer's Signature: Exclusively reserved for the designer",
+      "Symbol of Creativity: Beacon of innovation in Web3",
+      "Artistic Vision: Fusion of art and technology",
+    ],
+    designerMessage:
+      "Minaty 0102 is more than just an NFT. It is a testament to the fusion of art and technology, embodying my commitment to pushing creative limits.",
+    traits: {
+      "Creative Role": {
+        Icon: LayersIcon,
+        description: "Designer's creative position",
+        values: {
+          "Lead Artist": "Primary creative force",
+          "Vision Architect": "Shapes project aesthetics",
+        },
+      },
+      "Design Philosophy": {
+        Icon: StarFilledIcon,
+        description: "Core design principles",
+        values: {
+          "Innovation Master": "Pushes creative boundaries",
+          "Aesthetic Pioneer": "Defines visual language",
+        },
+      },
+    },
+  },
+  SOLDIER: {
+    description:
+      "The Minaty Soldiers are the first pillars of this community; they are the most numerous and the bravest defenders of privacy. Warriors who are unafraid to be part of an army spreading the vision of Mina Protocol and the Minatys.",
+    designPhilosophy:
+      "The design of the soldiers remains very minimalist, reflecting unwavering integrity and efficiency. No ornaments, just their masks and headgear, ready to march into battle.",
+    traits: {
+      "Soldier Rank": {
+        Icon: ArrowRightIcon,
+        description: "Military position within Minaty",
+        values: {
+          Private: "Frontline privacy defender",
+          Sergeant: "Experienced community warrior",
+          Lieutenant: "Veteran privacy guardian",
+        },
+      },
+      "Battle Focus": {
+        Icon: CrossCircledIcon,
+        description: "Area of privacy defense",
+        values: {
+          "Privacy Sentinel": "Guards community privacy",
+          "Protocol Warrior": "Champions Mina Protocol",
+          "Community Scout": "Expands ecosystem reach",
+        },
+      },
+    },
+  },
+  GUARDIAN: {
+    description:
+      "The Guardians are mediators and protectors. They support the soldiers in their journeys, spreading the vision of Minatys and Mina Protocol with wisdom and dedication.",
+    designPhilosophy:
+      "The design of the Guardians is more striking, with ornaments and jewelry signifying their ranks and giving an undeniable respect to their wise words.",
+    traits: {
+      "Guardian Role": {
+        Icon: MixerHorizontalIcon,
+        description: "Protection and mediation duties",
+        values: {
+          "Wisdom Keeper": "Preserves community knowledge",
+          "Peace Mediator": "Resolves conflicts",
+          "Protection Sage": "Guards community values",
+        },
+      },
+      "Wisdom Level": {
+        Icon: DrawingPinIcon,
+        description: "Level of guardian expertise",
+        values: {
+          "Master Guardian": "Highest level of wisdom",
+          "Elder Protector": "Experienced community guide",
+          "Rising Mediator": "Developing guardian",
+        },
+      },
+    },
+  },
+  TOTEM: {
+    description:
+      "The Totems are the great sages of the community, preserving the balance between the communities; they are the point of reference for all. They have attained the status of Totem animals, allowing them to feel the power of freedom and privacy.",
+    designPhilosophy:
+      "The design of the Totems is very recognizable and symbolizes great virtues. Adorned with various pieces of jewelry, their headgear is a crown symbolizing the achievement of their freedom goals.",
+    traits: {
+      "Totem Spirit": {
+        Icon: HomeIcon,
+        description: "Animal spirit connection",
+        values: {
+          Wolf: "Leadership and loyalty to the pack",
+          Eagle: "Vision and freedom in heights",
+          Bear: "Strength and wisdom in nature",
+          Fox: "Cunning and adaptability",
+        },
+      },
+      "Wisdom Rank": {
+        Icon: ThickArrowUpIcon,
+        description: "Level of spiritual attainment",
+        values: {
+          "Grand Sage": "Supreme spiritual guide",
+          "Elder Totem": "Experienced wisdom keeper",
+          "Rising Spirit": "Emerging spiritual leader",
+        },
+      },
+    },
+  },
+};
