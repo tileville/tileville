@@ -828,3 +828,58 @@ export function usePastCompetitions(wallet_address: string) {
     },
   });
 }
+
+interface NovuSubscriberData {
+  walletAddress: string;
+  username?: string;
+  email?: string;
+  fullname?: string;
+}
+
+interface NovuResponse {
+  success: boolean;
+  message?: string;
+}
+
+export const useAddNovuSubscriber = ({
+  onSuccess,
+  onError,
+  onMutate,
+}: {
+  onSuccess?: (data: NovuResponse) => void;
+  onError?: (error: unknown) => void;
+  onMutate?: () => void;
+} = {}) => {
+  return useMutation({
+    mutationFn: async (data: NovuSubscriberData): Promise<NovuResponse> => {
+      const response = await fetch('/api/novu/subscriber', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        console.log('Successfully added Novu subscriber');
+      } else {
+        console.warn('Failed to add Novu subscriber:', data.message);
+      }
+      onSuccess?.(data);
+    },
+    onError: (error) => {
+      console.error('Error adding Novu subscriber:', error);
+      onError?.(error);
+    },
+    onMutate,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * Math.pow(2, attemptIndex), 30000),
+  });
+};
