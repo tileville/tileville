@@ -4,13 +4,16 @@ import { supabaseServiceClient as supabase } from "@/db/config/server";
 export async function POST(request: NextRequest) {
   const payload = await request.json();
   console.log("payload", payload);
-  const { name } = payload;
+  const { name = "" }: { name: string } = payload;
 
   console.log({ name });
 
   try {
+    const tableName = name.toLowerCase().includes("minaty")
+      ? "minaty_nfts"
+      : "tileville_builder_nfts";
     const { data: nftData, error: nftFetchError } = await supabase
-      .from("tileville_builder_nfts")
+      .from(tableName)
       .select("*")
       .eq("name", name);
     if (nftFetchError) {
