@@ -478,11 +478,12 @@ export type NFTCollection =
 
 export const NFT_COLLECTIONS = {
   ALL: "ALL",
-  TILEVILLE: "TILEVILLE",
-  MINATY: "MINATY",
+  TILEVILLE: "Tileville",
+  MINATY: "Minaty",
 } as const;
 
-export type NFTCollectionType = keyof typeof NFT_COLLECTIONS;
+//TODO: Derive this value from `NFT_COLLECTIONS`
+export type NFTCollectionType = "ALL" | "Tileville" | "Minaty";
 
 export const MINATY_CATEGORIES = {
   ALL: "ALL",

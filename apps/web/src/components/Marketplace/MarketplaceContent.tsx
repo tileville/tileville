@@ -276,7 +276,9 @@ export default function MarketplaceContent() {
                       )}
                       collection={selectedCollection}
                       NFTCategory={
-                        selectedCollection === "MINATY" ? nft.category : null
+                        selectedCollection === NFT_COLLECTIONS.MINATY
+                          ? nft.category
+                          : null
                       }
                     />
                   );

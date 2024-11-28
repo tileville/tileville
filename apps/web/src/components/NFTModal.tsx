@@ -12,6 +12,7 @@ import {
   isMockEnv,
   NFTCollectionType,
   NFTCategory,
+  NFT_COLLECTIONS,
 } from "@/constants";
 import Link from "next/link";
 import { isFuture } from "date-fns";
@@ -114,6 +115,7 @@ export const NFTModal = ({
   }
 
   const handleMint = async (nft_id: number) => {
+    //TODO: UNCOMMENT THIS BEFORE COMMITTING
     if (networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
       await switchNetwork(MAINNET_NETWORK);
       return;
@@ -140,6 +142,7 @@ export const NFTModal = ({
     try {
       const response = await mintNft({
         nft_id,
+        collection: collection,
       });
 
       console.log("186 response", response);
@@ -269,7 +272,8 @@ export const NFTModal = ({
                 <MintBtn
                   isMintingDisabled={isMintingDisabled}
                   isMintingStyledDisabled={
-                    collection === "MINATY" ||
+                    //TODO: UNCOMMENT THIS BEFORE COMMITTING
+                    collection === NFT_COLLECTIONS.MINATY ||
                     isMintingDisabled ||
                     mintLoading ||
                     !!algoliaHitData ||

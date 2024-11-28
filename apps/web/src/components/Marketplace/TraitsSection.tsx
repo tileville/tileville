@@ -8,6 +8,7 @@ import {
   NFTCollectionType,
   NFT_ATTRIBUTES,
   NFTCategory,
+  NFT_COLLECTIONS,
 } from "@/constants";
 import { Json } from "@/lib/database.types";
 
@@ -22,7 +23,7 @@ export const TraitsSection = ({
   collection,
   category,
 }: TraitsSectionType) => {
-  if (collection === "TILEVILLE") {
+  if (collection === NFT_COLLECTIONS.TILEVILLE) {
     const parsedTraits = Array.isArray(traits)
       ? traits.filter(
           (trait): trait is { key: string; value: string } =>
@@ -72,7 +73,11 @@ export const TraitsSection = ({
   }
 
   // Handle Minaty Collection
-  if (collection === "MINATY" && category && category in NFT_ATTRIBUTES) {
+  if (
+    collection === NFT_COLLECTIONS.MINATY &&
+    category &&
+    category in NFT_ATTRIBUTES
+  ) {
     const categoryData =
       NFT_ATTRIBUTES[category as keyof typeof NFT_ATTRIBUTES];
 

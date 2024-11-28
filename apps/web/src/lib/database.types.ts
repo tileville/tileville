@@ -110,7 +110,7 @@ export type Database = {
           name: string
           nft_id?: number | null
           owner_address?: string | null
-          price?: number
+          price: number
           traits?: Json | null
           txn_hash?: string | null
         }
