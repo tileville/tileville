@@ -115,7 +115,6 @@ export const NFTModal = ({
   }
 
   const handleMint = async (nft_id: number) => {
-    //TODO: UNCOMMENT THIS BEFORE COMMITTING
     if (networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
       await switchNetwork(MAINNET_NETWORK);
       return;
@@ -272,8 +271,6 @@ export const NFTModal = ({
                 <MintBtn
                   isMintingDisabled={isMintingDisabled}
                   isMintingStyledDisabled={
-                    //TODO: UNCOMMENT THIS BEFORE COMMITTING
-                    collection === NFT_COLLECTIONS.MINATY ||
                     isMintingDisabled ||
                     mintLoading ||
                     !!algoliaHitData ||
@@ -284,6 +281,7 @@ export const NFTModal = ({
                   handleMint={handleMint}
                   nftID={nftID}
                   collection={collection}
+                  currentUserAddress={networkStore.address || ""}
                 />
 
                 {isAvailableToPurchase && (

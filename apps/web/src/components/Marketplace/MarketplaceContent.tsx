@@ -68,7 +68,12 @@ export default function MarketplaceContent() {
       : minatyData;
   }, [selectedCollection, tilevilleData, minatyData]);
 
-  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({});
+  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
+    queryText:
+      selectedCollection === "Tileville"
+        ? "Tileville Builder"
+        : selectedCollection,
+  });
 
   const updateSearchParams = useCallback(
     (newParams: Record<string, string>) => {

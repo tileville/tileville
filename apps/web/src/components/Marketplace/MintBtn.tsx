@@ -7,6 +7,7 @@ import {
   NFT_COLLECTIONS,
   NFTCollectionType,
 } from "@/constants";
+import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
 type MintBtnType = {
   isMintingDisabled: boolean;
@@ -16,6 +17,11 @@ type MintBtnType = {
   handleMint: (nftId: number) => Promise<void>;
   nftID: number;
   collection: NFTCollectionType;
+  currentUserAddress: string;
+};
+
+const hasMinatyNFT = (nfts: Array<any>) => {
+  return nfts.some((nft) => nft.name.toLowerCase().includes("minaty"));
 };
 
 export const MintBtn = ({
@@ -26,27 +32,39 @@ export const MintBtn = ({
   handleMint,
   nftID,
   collection,
+  currentUserAddress,
 }: MintBtnType) => {
   const networkStore = useNetworkStore();
+
+  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
+    owner: currentUserAddress,
+    queryText: "MINATY",
+  });
 
   const isMinatyNFT = collection === NFT_COLLECTIONS.MINATY;
   const isInPresaleList =
     isMinatyNFT && networkStore.address
       ? MINATY_PRESALE_ADDRESS.includes(networkStore.address)
-      : true; // Default to true for non-MINATY NFTs
+      : true;
 
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
 
-  // Only apply presale restriction for MINATY NFTs
+  const userHasMinatyNFT =
+    isMinatyNFT && mintNFTHitsResponse && hasMinatyNFT(mintNFTHitsResponse);
+
   const isButtonDisabled = isMinatyNFT
-    ? isMintingStyledDisabled || !isInPresaleList || isNotForSoldNFT
+    ? isMintingStyledDisabled ||
+      !isInPresaleList ||
+      isNotForSoldNFT ||
+      userHasMinatyNFT
     : isMintingStyledDisabled;
 
-  // Only show presale message for MINATY NFTs
   const displayText =
     isMinatyNFT && !isInPresaleList && networkStore.address
       ? "Not Eligible for Presale"
+      : isMinatyNFT && userHasMinatyNFT
+      ? "Already Own MINATY NFT"
       : btnText;
 
   return (
@@ -74,40 +92,48 @@ export const MintBtn = ({
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          {window.mina?.isPallad && (
+          {(window.mina?.isPallad || userHasMinatyNFT) && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
             >
-              <div className="max-w-md">
-                <p className="mb-2 font-bold">
-                  Pallad wallet is not supported yet. Please use Auro wallet
-                  instead.
-                </p>
-                <ol className="mb-2 list-inside list-decimal text-sm">
-                  <li>
-                    Open a new tab and go to{" "}
-                    <span className="rounded bg-gray-200 px-1 font-mono">
-                      chrome://extensions
-                    </span>
-                  </li>
-                  <li>
-                    Find &quot;Pallad Wallet&quot; in your list of extensions
-                  </li>
-                  <li>Toggle the switch to disable it</li>
-                </ol>
-                <div className="mt-2 text-sm">
-                  <a
-                    href="https://chromewebstore.google.com/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    Get Auro Wallet
-                  </a>
+              {userHasMinatyNFT ? (
+                <div className="max-w-md">
+                  <p className="mb-2 font-bold">
+                    You already own a MINATY NFT. Only one MINATY NFT is allowed
+                    per wallet.
+                  </p>
                 </div>
-              </div>
-
+              ) : (
+                <div className="max-w-md">
+                  <p className="mb-2 font-bold">
+                    Pallad wallet is not supported yet. Please use Auro wallet
+                    instead.
+                  </p>
+                  <ol className="mb-2 list-inside list-decimal text-sm">
+                    <li>
+                      Open a new tab and go to{" "}
+                      <span className="rounded bg-gray-200 px-1 font-mono">
+                        chrome://extensions
+                      </span>
+                    </li>
+                    <li>
+                      Find &quot;Pallad Wallet&quot; in your list of extensions
+                    </li>
+                    <li>Toggle the switch to disable it</li>
+                  </ol>
+                  <div className="mt-2 text-sm">
+                    <a
+                      href="https://chromewebstore.google.com/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      Get Auro Wallet
+                    </a>
+                  </div>
+                </div>
+              )}
               <Tooltip.Arrow className="TooltipArrow" />
             </Tooltip.Content>
           )}

@@ -241,7 +241,7 @@ export const ATTRIBUTES_DATA: AttributesDataType = {
     },
   },
 };
-
+//TODO: MOVE THIS DATA TO CONFIG
 export const TILEVILLE_BUILDER_NFT_DESCRIPTION =
   "This NFT is part of our first edition of TileVille Builders.";
 
@@ -548,6 +548,7 @@ export type NFTCategory =
   | "GUARDIAN"
   | "TOTEM";
 
+//TODO: MOVE THIS DATA TO CONFIG
 export const NFT_ATTRIBUTES: NFTAttributeType = {
   FOUNDER: {
     description:
@@ -699,6 +700,7 @@ export const NFT_ATTRIBUTES: NFTAttributeType = {
   },
 };
 
+//TODO: MOVE THIS DATA TO CONFIG
 export const MINATY_PRESALE_ADDRESS = [
   "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
   "B62qjVJaep32TVSpCb5kKFmKrPBC2jGaGjWbvqonRhM6bjsz1HqAuje",
@@ -729,5 +731,7 @@ export const MINATY_PRESALE_ADDRESS = [
   "B62qpkmDotVj6GzQwN9PHnN6f8kMEj4YBA1szDxFjhDidozqUe28ped",
   "B62qjVDADqsQgy947pST1SnNHFBbBabWyZDBqANoEWtiJPFqvEYxRNv",
   "B62qim68fAnL33h3xXC62Bw9119pC1DKm4WeGzqh6EFjbBqVYqn8q6a",
-  // "B62qk1KqJq2m59NJuPmHHWDFsejzc21Hr8gcHqWYfhM51dwpsVxtEQS",
+  // LAST TWO ADDRESSES ARE OF DEVELOPERS FOR TESTING
+  "B62qk1KqJq2m59NJuPmHHWDFsejzc21Hr8gcHqWYfhM51dwpsVxtEQS",
+  "B62qrDNwVuFRKNpHiacEPEJsJgYaViKiuRjuuFGYsspt4wgeLJ8g3ty",
 ];

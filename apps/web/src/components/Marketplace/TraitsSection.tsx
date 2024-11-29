@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { TraitsInfoCard } from "./TraitsInfoCard";
-import { MinatyTraitCard } from "./MinatyTraitCard";
 import { Dialog } from "@radix-ui/themes";
 import {
   ATTRIBUTES_DATA,
@@ -18,24 +17,42 @@ type TraitsSectionType = {
   category: NFTCategory | null;
 };
 
+type Trait = {
+  key: string;
+  value: string;
+};
+
+const parseTraits = (traits: Json): Trait[] => {
+  if (!traits) return [];
+  
+  if (Array.isArray(traits)) {
+    return traits.filter((trait): trait is Trait =>
+      typeof trait === "object" &&
+      trait !== null &&
+      "key" in trait &&
+      "value" in trait &&
+      typeof trait.key === "string" &&
+      typeof trait.value === "string"
+    );
+  }
+  
+  if (typeof traits === "object" && traits !== null) {
+    return Object.entries(traits).map(([key, value]) => ({
+      key,
+      value: String(value)
+    }));
+  }
+  
+  return [];
+};
+
 export const TraitsSection = ({
   traits,
   collection,
   category,
 }: TraitsSectionType) => {
   if (collection === NFT_COLLECTIONS.TILEVILLE) {
-    const parsedTraits = Array.isArray(traits)
-      ? traits.filter(
-          (trait): trait is { key: string; value: string } =>
-            typeof trait === "object" &&
-            trait !== null &&
-            "key" in trait &&
-            "value" in trait
-        )
-      : Object.entries(traits || {}).map(([key, value]) => ({
-          key,
-          value: String(value),
-        }));
+    const parsedTraits = parseTraits(traits);
 
     return (
       <div className="mt-4 rounded-md">
@@ -78,8 +95,8 @@ export const TraitsSection = ({
     category &&
     category in NFT_ATTRIBUTES
   ) {
-    const categoryData =
-      NFT_ATTRIBUTES[category as keyof typeof NFT_ATTRIBUTES];
+    const parsedTraits = parseTraits(traits);
+    const categoryData = NFT_ATTRIBUTES[category as keyof typeof NFT_ATTRIBUTES];
 
     return (
       <div className="mt-4 space-y-6">
@@ -116,19 +133,20 @@ export const TraitsSection = ({
         {/* Traits */}
         <div>
           <h3 className="mb-4 font-semibold">Traits</h3>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {Object.entries(categoryData.traits).map(
-              ([traitKey, traitData]) => (
-                <MinatyTraitCard
-                  key={traitKey}
-                  traitKey={traitKey}
-                  traitIcon={traitData.Icon}
-                  traitValue={Object.keys(traitData.values)[0]}
-                  description={traitData.description}
-                  value={Object.values(traitData.values)[0]}
-                />
-              )
-            )}
+          <div className="">
+            <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 text-center text-xs">
+              {parsedTraits.map((trait) => (
+                <li 
+                  key={trait.key}
+                  className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-black/70">{trait.key}</span>
+                  </div>
+                  <div className="text-md font-semibold">{trait.value}</div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
