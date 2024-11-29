@@ -3,7 +3,11 @@
 import { NextRequest } from "next/server";
 import { fetchNFTImageUrl } from "./server-utils";
 // import { withAuth } from "../authMiddleware";
-import { NFT_COLLECTIONS, NFT_DESCRIPTION } from "@/constants";
+import {
+  MINATY_NFT_DESCRIPTION,
+  NFT_COLLECTIONS,
+  TILEVILLE_BUILDER_NFT_DESCRIPTION,
+} from "@/constants";
 import { error } from "console";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { CHAIN_NAME, MINANFT_CONTRACT_ADDRESS, ProofOfNFT } from "./constants";
@@ -24,6 +28,11 @@ const postHandler = async (request: NextRequest) => {
     collection === NFT_COLLECTIONS.MINATY
       ? "minaty_nfts"
       : "tileville_builder_nfts";
+
+  const description =
+    collection === NFT_COLLECTIONS.MINATY
+      ? MINATY_NFT_DESCRIPTION
+      : TILEVILLE_BUILDER_NFT_DESCRIPTION;
   // const authSignature = request.headers.get("Auth-Signature");
 
   // console.log({ wallet_address, nft_id, txn_hash, authSignature });
@@ -88,7 +97,7 @@ const postHandler = async (request: NextRequest) => {
         name,
         image_signed_url: image_url,
         collection,
-        description: NFT_DESCRIPTION,
+        description,
         price: 0,
         owner_address: wallet_address,
         keys: modified_traits,

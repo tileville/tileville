@@ -242,8 +242,11 @@ export const ATTRIBUTES_DATA: AttributesDataType = {
   },
 };
 
-export const NFT_DESCRIPTION =
+export const TILEVILLE_BUILDER_NFT_DESCRIPTION =
   "This NFT is part of our first edition of TileVille Builders.";
+
+export const MINATY_NFT_DESCRIPTION =
+  "This NFT is part of Minaty nfts collection";
 
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
