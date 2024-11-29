@@ -35,9 +35,12 @@ export const MintBtn = ({
       ? MINATY_PRESALE_ADDRESS.includes(networkStore.address)
       : true; // Default to true for non-MINATY NFTs
 
+  const isNotForSoldNFT =
+    collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
+
   // Only apply presale restriction for MINATY NFTs
   const isButtonDisabled = isMinatyNFT
-    ? isMintingStyledDisabled || !isInPresaleList
+    ? isMintingStyledDisabled || !isInPresaleList || isNotForSoldNFT
     : isMintingStyledDisabled;
 
   // Only show presale message for MINATY NFTs
