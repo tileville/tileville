@@ -283,6 +283,7 @@ export const NFTModal = ({
                   btnText={getMINTText(Number(price))}
                   handleMint={handleMint}
                   nftID={nftID}
+                  collection={collection}
                 />
 
                 {isAvailableToPurchase && (

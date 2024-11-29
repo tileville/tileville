@@ -1,6 +1,12 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
+import { useNetworkStore } from "@/lib/stores/network";
+import {
+  MINATY_PRESALE_ADDRESS,
+  NFT_COLLECTIONS,
+  NFTCollectionType,
+} from "@/constants";
 
 type MintBtnType = {
   isMintingDisabled: boolean;
@@ -9,6 +15,7 @@ type MintBtnType = {
   btnText: string;
   handleMint: (nftId: number) => Promise<void>;
   nftID: number;
+  collection: NFTCollectionType;
 };
 
 export const MintBtn = ({
@@ -18,29 +25,49 @@ export const MintBtn = ({
   btnText,
   handleMint,
   nftID,
+  collection,
 }: MintBtnType) => {
+  const networkStore = useNetworkStore();
+
+  const isMinatyNFT = collection === NFT_COLLECTIONS.MINATY;
+  const isInPresaleList =
+    isMinatyNFT && networkStore.address
+      ? MINATY_PRESALE_ADDRESS.includes(networkStore.address)
+      : true; // Default to true for non-MINATY NFTs
+
+  // Only apply presale restriction for MINATY NFTs
+  const isButtonDisabled = isMinatyNFT
+    ? isMintingStyledDisabled || !isInPresaleList
+    : isMintingStyledDisabled;
+
+  // Only show presale message for MINATY NFTs
+  const displayText =
+    isMinatyNFT && !isInPresaleList && networkStore.address
+      ? "Not Eligible for Presale"
+      : btnText;
+
   return (
     <Tooltip.Provider delayDuration={100}>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <button
             className={clsx({
-              "relative h-10 rounded-md border-primary  px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed ":
+              "relative h-10 rounded-md border-primary px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed":
                 true,
               "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
-                isMintingStyledDisabled,
+                isButtonDisabled,
               "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
-                !isMintingDisabled,
+                !isMintingDisabled && (!isMinatyNFT || isInPresaleList),
             })}
             onClick={() => handleMint(nftID)}
-            disabled={isMintingStyledDisabled}
+            disabled={isButtonDisabled}
           >
             {mintLoading && (
               <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
                 <Spinner />
               </span>
             )}
-            {btnText}
+            {displayText}
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
