@@ -6,7 +6,14 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
 import { useNetworkStore, useMintNFT } from "@/lib/stores/network";
-import { COLLECTION_URL, INITIAL_MINT_RESPONSE, isMockEnv } from "@/constants";
+import {
+  COLLECTION_URL,
+  INITIAL_MINT_RESPONSE,
+  isMockEnv,
+  NFTCollectionType,
+  NFTCategory,
+  NFT_COLLECTIONS,
+} from "@/constants";
 import Link from "next/link";
 import { isFuture } from "date-fns";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -32,6 +39,8 @@ export const NFTModal = ({
   renderStyle,
   nftID,
   algoliaHitData,
+  collection,
+  NFTCategory,
 }: {
   traits: Json;
   img_url: string;
@@ -42,6 +51,8 @@ export const NFTModal = ({
   renderStyle: string;
   ownerAddress: string | null;
   algoliaHitData: AlgoliaHitResponse | undefined;
+  collection: NFTCollectionType;
+  NFTCategory: NFTCategory | null;
 }) => {
   // Function to parse traits
   const [mintLoading, setMintLoading] = useState(false);
@@ -130,6 +141,7 @@ export const NFTModal = ({
     try {
       const response = await mintNft({
         nft_id,
+        collection: collection,
       });
 
       console.log("186 response", response);
@@ -268,6 +280,8 @@ export const NFTModal = ({
                   btnText={getMINTText(Number(price))}
                   handleMint={handleMint}
                   nftID={nftID}
+                  collection={collection}
+                  currentUserAddress={networkStore.address || ""}
                 />
 
                 {isAvailableToPurchase && (
@@ -307,7 +321,11 @@ export const NFTModal = ({
                     />
                   )}
               </Flex>
-              <TraitsSection traits={traits} />
+              <TraitsSection
+                traits={traits}
+                collection={collection}
+                category={NFTCategory}
+              />
             </div>
           </div>
           <Dialog.Close>
