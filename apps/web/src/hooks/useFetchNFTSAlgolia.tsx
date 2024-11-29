@@ -87,10 +87,14 @@ type FetchOptions = {
   queryText?: string;
   owner?: string;
 };
+
 export const useFetchNFTSAlgolia = (options: FetchOptions) => {
-  // console.log({ options });
   const [response, setResponse] = useState<AlgoliaHitResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [error, setError] = useState<Error | null>(null); // Optional: Add error state
+
   useEffect(() => {
+    setIsLoading(true); // Set loading to true when starting the fetch
     searchJobs({
       query: options.queryText || "Tileville Builder",
       hitsPerPage: 100,
@@ -99,16 +103,24 @@ export const useFetchNFTSAlgolia = (options: FetchOptions) => {
       ...(options.owner ? { owner: options.owner } : {}),
     })
       .then((resp: any) => {
-        // console.log("Algolia response", resp);
         const hits: AlgoliaHitResponse[] = resp.hits;
         setResponse(hits);
+        setError(null);
       })
       .catch((error) => {
         console.log("algolia error", error);
         setResponse([]);
+        setError(error);
+      })
+      .finally(() => {
+        setIsLoading(false); // Set loading to false when fetch completes
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [options.owner, options.queryText]); // Added dependencies properly
 
-  return { mintNFTHitsResponse: response, searchJobs };
+  return {
+    mintNFTHitsResponse: response,
+    searchJobs,
+    isLoading,
+    error, // Optional: return error state
+  };
 };

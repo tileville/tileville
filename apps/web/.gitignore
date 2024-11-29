@@ -26,3 +26,4 @@ dist-ssr
 private.md
 .env.production
 .env.backup
+*.http

@@ -228,7 +228,13 @@ export const useMintNFT = () => {
   const setMintProgress = useSetAtom(mintProgressAtom);
   const { mintMINANFTHelper } = useMintMINANFT();
 
-  const mintNft = async ({ nft_id }: { nft_id: number }) => {
+  const mintNft = async ({
+    nft_id,
+    collection,
+  }: {
+    nft_id: number;
+    collection: string;
+  }) => {
     if (!networkStore.address) {
       networkStore.connectWallet(false);
       return null;
@@ -239,6 +245,7 @@ export const useMintNFT = () => {
         body: JSON.stringify({
           wallet_address: networkStore.address,
           nft_id,
+          collection,
         }),
         headers: {
           "Auth-Signature": "abv1",

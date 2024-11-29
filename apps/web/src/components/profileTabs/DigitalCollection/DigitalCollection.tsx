@@ -7,6 +7,7 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog } from "@radix-ui/themes";
 import { NFTModalTriggerContent } from "./NFTModalTriggerContent";
 import { NFTModalContent } from "./NFTModalContent";
+import { Spinner2 } from "@/components/common/Spinner";
 
 type DigitalCollectionType = {
   walletAddress: string;
@@ -17,16 +18,37 @@ export default function DigitalCollection({
   walletAddress,
   isOwner,
 }: DigitalCollectionType) {
-  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
+  const { mintNFTHitsResponse: minatyNfts = [], isLoading: isMinatyLoading } =
+    useFetchNFTSAlgolia({
+      owner: walletAddress,
+      queryText: "MINATY",
+    });
+
+  const {
+    mintNFTHitsResponse: tilevilleNfts = [],
+    isLoading: isTilevilleLoading,
+  } = useFetchNFTSAlgolia({
     owner: walletAddress,
+    queryText: "TILEVILLE BUILDER",
   });
+
+  const isLoading = isMinatyLoading || isTilevilleLoading;
+  const totalNfts = [...minatyNfts, ...tilevilleNfts];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Spinner2 />
+      </div>
+    );
+  }
 
   return (
     <>
-      {mintNFTHitsResponse && mintNFTHitsResponse.length > 0 ? (
+      {totalNfts.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {mintNFTHitsResponse.map((nft: AlgoliaHitResponse) => (
-            <Dialog.Root key={nft.jobId}>
+          {totalNfts.map((nft: AlgoliaHitResponse) => (
+            <Dialog.Root key={nft.jobId || nft.hash}>
               <Dialog.Trigger>
                 <div>
                   <NFTModalTriggerContent

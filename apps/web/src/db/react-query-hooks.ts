@@ -829,8 +829,6 @@ export function usePastCompetitions(wallet_address: string) {
   });
 }
 
-// Add this to react-query-hooks.ts
-
 export const useTelegramVerify = ({
   onSuccess,
   onMutate,
@@ -884,6 +882,36 @@ export const useTelegramVerify = ({
         toastRef.current = null;
         onError?.(error);
       },
+    }
+  );
+};
+
+export const useMinatyNFTEntries = ({
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+}) => {
+  return useQuery(
+    ["minaty_nfts", sortOrder, searchTerm, currentPage],
+    async () => {
+      const params = [
+        `sortOrder=${sortOrder}`,
+        `searchTerm=${encodeURIComponent(searchTerm)}`,
+        `currentPage=${currentPage}`,
+      ].join("&");
+
+      const response = await fetch(`/api/minaty-nfts?${params}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+    {
+      keepPreviousData: true,
     }
   );
 };
