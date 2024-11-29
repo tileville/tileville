@@ -89,6 +89,45 @@ export type Database = {
         }
         Relationships: []
       }
+      minaty_nfts: {
+        Row: {
+          category: Database["public"]["Enums"]["nft_category"]
+          created_at: string
+          id: number
+          img_url: string
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["nft_category"]
+          created_at?: string
+          id?: number
+          img_url: string
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["nft_category"]
+          created_at?: string
+          id?: number
+          img_url?: string
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Relationships: []
+      }
       player_profile: {
         Row: {
           avatar_url: string | null
@@ -379,7 +418,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      nft_category: "FOUNDER" | "DESIGNER" | "SOLDIER" | "GUARDIAN" | "TOTEM"
     }
     CompositeTypes: {
       [_ in never]: never
