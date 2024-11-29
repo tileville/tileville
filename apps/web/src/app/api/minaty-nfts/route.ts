@@ -1,25 +1,24 @@
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 
+const PAGE_SIZE = 20;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const sortOrder = searchParams.get("sortOrder") || "desc";
   const searchTerm = searchParams.get("searchTerm") || "";
   const currentPage = parseInt(searchParams.get("currentPage") || "1");
-  const pageSize = 20;
-  const offset = (currentPage - 1) * pageSize;
+  const offset = (currentPage - 1) * PAGE_SIZE;
 
   try {
-    const query = supabase
-      .from("minaty_nfts")
-      .select("*", { count: "exact" });
+    const query = supabase.from("minaty_nfts").select("*", { count: "exact" });
 
     if (searchTerm) {
       query.ilike("name", `%${searchTerm}%`);
     }
 
     query.order("price", { ascending: sortOrder === "asc" });
-    query.range(offset, offset + pageSize - 1);
+    query.range(offset, offset + PAGE_SIZE - 1);
 
     const { data, error, count } = await query;
 
