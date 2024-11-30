@@ -37,27 +37,42 @@ const verifyHandler = async (request: NextRequest) => {
     }
 
     // Create or update telegram auth record
-    const { error: upsertError } = await supabase
-      .from("telegram_auth")
-      .upsert({
-        chat_id: chatId,
-        wallet_address: walletAddress,
-        authenticated: true,
-      })
-      .select()
-      .single();
+    try {
+      const { error: upsertError } = await supabase
+        .from("telegram_auth")
+        .upsert({
+          chat_id: chatId,
+          wallet_address: walletAddress,
+          authenticated: true,
+        })
+        .select()
+        .single();
 
-    if (upsertError) throw upsertError;
+      console.log("UPSERT ERROR", upsertError);
+      if (upsertError) throw upsertError;
+    } catch (err) {
+      console.log("ERROR SENDING DATA TO DB", err);
+    }
 
-    // TODO: Call admin API to update bot state
-    // const adminResponse = await fetch("ADMIN_API_URL", {
-    //   method: "POST",
-    //   headers: {
-    //     "Authorization": `Bearer ${process.env.ADMIN_API_TOKEN}`,
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({ chatId, walletAddress })
-    // });
+    // TODO: Call admin API to update bot state\
+    console.log("FLOW GOING HERE");
+
+    try {
+      await fetch(
+        "http://localhost:3001/api/telegram/verify",
+        // "https://4546-2405-201-3007-4185-d46-3f5b-d6b3-f016.ngrok-free.app/api/telegram/verify",
+        {
+          method: "POST",
+          headers: {
+            "x-admin-token": process.env.ADMIN_API_TOKEN!,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ chatId }),
+        }
+      );
+    } catch (err) {
+      console.log("Error sending req to telegram bot", err);
+    }
 
     return Response.json({ success: true });
   } catch (error: any) {
