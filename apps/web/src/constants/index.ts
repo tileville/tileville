@@ -737,3 +737,5 @@ export const MINATY_PRESALE_ADDRESS = [
   "B62qqCtdu2g7bLGUEJH4KmR5GxG7kFMFNDc8MVW91azwhsAmMdYfeoy",
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
 ];
+
+export const TILEVILLE_BOT_URL = "https://t.me/tileville_mayor_bot";

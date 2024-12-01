@@ -5,7 +5,7 @@ import {
 import clsx, { ClassValue } from "clsx";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
-import { TREASURY_ADDRESS } from "@/constants";
+import { TILEVILLE_BOT_URL, TREASURY_ADDRESS } from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
 
 export function walletInstalled() {
@@ -221,3 +221,7 @@ export async function copyToClipBoard({
     });
   }
 }
+
+export const redirectToTelegramBot = () => {
+  window.location.href = TILEVILLE_BOT_URL;
+};
