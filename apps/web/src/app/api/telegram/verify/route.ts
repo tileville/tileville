@@ -59,7 +59,8 @@ const verifyHandler = async (request: NextRequest) => {
 
     try {
       await fetch(
-        "http://localhost:3001/api/telegram/verify",
+        //TODO: Change the URL where mayor bot or admin portal is running
+        "http://localhost:3000/api/telegram/verify",
         // "https://4546-2405-201-3007-4185-d46-3f5b-d6b3-f016.ngrok-free.app/api/telegram/verify",
         {
           method: "POST",
