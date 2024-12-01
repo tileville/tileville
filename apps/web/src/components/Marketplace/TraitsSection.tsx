@@ -24,25 +24,26 @@ type Trait = {
 
 const parseTraits = (traits: Json): Trait[] => {
   if (!traits) return [];
-  
+
   if (Array.isArray(traits)) {
-    return traits.filter((trait): trait is Trait =>
-      typeof trait === "object" &&
-      trait !== null &&
-      "key" in trait &&
-      "value" in trait &&
-      typeof trait.key === "string" &&
-      typeof trait.value === "string"
+    return traits.filter(
+      (trait): trait is Trait =>
+        typeof trait === "object" &&
+        trait !== null &&
+        "key" in trait &&
+        "value" in trait &&
+        typeof trait.key === "string" &&
+        typeof trait.value === "string"
     );
   }
-  
+
   if (typeof traits === "object" && traits !== null) {
     return Object.entries(traits).map(([key, value]) => ({
       key,
-      value: String(value)
+      value: String(value),
     }));
   }
-  
+
   return [];
 };
 
@@ -96,7 +97,8 @@ export const TraitsSection = ({
     category in NFT_ATTRIBUTES
   ) {
     const parsedTraits = parseTraits(traits);
-    const categoryData = NFT_ATTRIBUTES[category as keyof typeof NFT_ATTRIBUTES];
+    const categoryData =
+      NFT_ATTRIBUTES[category as keyof typeof NFT_ATTRIBUTES];
 
     return (
       <div className="mt-4 space-y-6">
@@ -105,38 +107,14 @@ export const TraitsSection = ({
           <p className="text-sm leading-relaxed text-gray-700">
             {categoryData.description}
           </p>
-
-          {/* Unique Features if available */}
-          {"uniqueFeatures" in categoryData && categoryData.uniqueFeatures && (
-            <div className="space-y-2">
-              <h4 className="font-medium">Unique Features</h4>
-              <ul className="list-inside list-disc space-y-1 text-sm text-gray-600">
-                {categoryData.uniqueFeatures.map(
-                  (feature: string, index: number) => (
-                    <li key={index}>{feature}</li>
-                  )
-                )}
-              </ul>
-            </div>
-          )}
-
-          {/* Design Philosophy if available */}
-          {"designPhilosophy" in categoryData &&
-            categoryData.designPhilosophy && (
-              <div className="rounded-lg bg-primary/5 p-4">
-                <p className="text-sm italic text-gray-700">
-                  {categoryData.designPhilosophy}
-                </p>
-              </div>
-            )}
         </div>
         {/* Traits */}
         <div>
           <h3 className="mb-4 font-semibold">Traits</h3>
           <div className="">
-            <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 text-center text-xs">
+            <ul className="grid grid-cols-1 gap-4 text-center text-xs md:grid-cols-2">
               {parsedTraits.map((trait) => (
-                <li 
+                <li
                   key={trait.key}
                   className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
                 >

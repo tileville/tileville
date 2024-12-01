@@ -33,10 +33,12 @@ import {
   ACCOUNT_AUTH_LOCAL_KEY,
   BLOCKBERRY_API_KEY,
   BLOCKBERRY_MAINNET_BASE_URL,
+  isMockEnv,
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { PublicProfile } from "@/types";
+import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
 
 export const useSendEmail = ({
   onSuccess,
@@ -455,7 +457,7 @@ export const useGlobalConfig = (config_name: string) => {
   return useQuery(["global_config", config_name], () =>
     fetchGlobalConfig(config_name)
       .then((response) => {
-        const config = response.config_values as { [key: string]: any };
+        const config = isMockEnv() ? MOCK_GLOBAL_CONFIG :  response.config_values as { [key: string]: any };
         setGlobalConfig({ ...globalConfig, ...config });
         return response;
       })

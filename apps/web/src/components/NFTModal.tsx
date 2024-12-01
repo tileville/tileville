@@ -12,10 +12,9 @@ import {
   isMockEnv,
   NFTCollectionType,
   NFTCategory,
-  NFT_COLLECTIONS,
 } from "@/constants";
 import Link from "next/link";
-import { isFuture } from "date-fns";
+import { getTime, isFuture } from "date-fns";
 import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { StepProgressBar } from "./ProgressBar";
@@ -29,6 +28,7 @@ import { MintBtn } from "./Marketplace/MintBtn";
 import { TraitsSection } from "./Marketplace/TraitsSection";
 import { AlreadyMintedContent } from "./Marketplace/AlreadyMintedContent";
 import { NFTModalTriggerContent } from "./Marketplace/NFTModalTriggerContent";
+import { CountdownTimer } from "./common/CountdownTimer";
 
 export const NFTModal = ({
   traits,
@@ -69,6 +69,10 @@ export const NFTModal = ({
   const { switchNetwork } = useSwitchNetwork();
   const [mintKey] = useLocalStorage("MINTING_ENABLE", "");
 
+  const collectionConfig = globalConfig?.nft_collections_config?.[collection] || {}
+  const nftMintStartDate = collectionConfig?.nft_mint_start_date_time_utc || new Date(2024, 0, 1)
+  const isMintingNotStarted = isFuture(nftMintStartDate)
+
   useEffect(() => {
     if (nftMintResponse.state === "active") {
       if (nftMintResponse.success) {
@@ -104,18 +108,16 @@ export const NFTModal = ({
   let isMintingDisabled: boolean;
   if (window.mina?.isPallad) {
     isMintingDisabled = true;
-  } else if (isMockEnv()) {
-    isMintingDisabled = false;
   } else if (mintKey) {
     isMintingDisabled = false;
-  } else if (isFuture(globalConfig.nft_mint_start_date)) {
+  } else if (isMintingNotStarted) {
     isMintingDisabled = true;
   } else {
     isMintingDisabled = false;
   }
 
   const handleMint = async (nft_id: number) => {
-    if (networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
+    if (!isMockEnv() && networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
       await switchNetwork(MAINNET_NETWORK);
       return;
     }
@@ -268,6 +270,11 @@ export const NFTModal = ({
                 </span>
               </div>
               <Flex direction="column" gap="3" mt="4" justify="center">
+              {isMintingNotStarted && (
+                  <CountdownTimer
+                    initialTime={getTime(nftMintStartDate)}
+                  />
+                )}
                 <MintBtn
                   isMintingDisabled={isMintingDisabled}
                   isMintingStyledDisabled={

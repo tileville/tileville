@@ -1,8 +1,9 @@
 import React from "react";
-import { UseQueryResult } from "@tanstack/react-query";
 import { TraitsInfoTooltip } from "./TraitsInfoTooltip";
-import { useGlobalConfig } from "@/db/react-query-hooks";
 import { Json } from "@/lib/database.types"; // Import the Json type from your database types
+import { useAtomValue } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
+import { NFT_COLLECTIONS } from "@/constants";
 
 type TraitsIntoCardType = {
   traitKey: string;
@@ -31,6 +32,8 @@ interface GlobalConfig {
   config_values: Json;
 }
 
+
+//TODO: This component is currently tied to Tileville NFT collection. Needs to make this generic to support other collections as well
 export const TraitsInfoCard = ({
   traitKey,
   traitIcon,
@@ -38,11 +41,8 @@ export const TraitsInfoCard = ({
   description,
   value,
 }: TraitsIntoCardType) => {
-  const configData: UseQueryResult<void | GlobalConfig, unknown> =
-    useGlobalConfig("config_v1");
-  const configValues = configData.data?.config_values as
-    | ConfigValues
-    | undefined;
+  const globalConfig = useAtomValue(globalConfigAtom)
+  const configValues = globalConfig?.nft_collections_config?.[NFT_COLLECTIONS.TILEVILLE]
   const rarityData = configValues?.traits_rarity_counts;
   const traitCount = rarityData?.[traitKey]?.[traitValue as string] ?? 0;
   const totalNFTCount = parseInt(configValues?.total_nft_count || "0", 10);
