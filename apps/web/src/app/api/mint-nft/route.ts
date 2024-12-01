@@ -51,7 +51,7 @@ const postHandler = async (request: NextRequest) => {
       );
     }
 
-    const image_url = await fetchNFTImageUrl(nft_id);
+    const image_url = await fetchNFTImageUrl(nft_id,collection);
     if (!image_url) {
       return Response.json(
         {
