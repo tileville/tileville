@@ -6,8 +6,14 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { useTelegramVerify } from "@/db/react-query-hooks";
 import toast from "react-hot-toast";
-import { PRIMARY_BUTTON_STYLES_LG, TILEVILLE_BOT_URL } from "@/constants";
+import {
+  AURO_WALLET_VERIFY_PAGE_DEEP_LINK,
+  PRIMARY_BUTTON_STYLES_LG,
+  TILEVILLE_BOT_URL,
+} from "@/constants";
 import { redirectToTelegramBot } from "@/lib/helpers";
+import { isMobile } from "react-device-detect";
+import Link from "next/link";
 
 export default function VerifyContent() {
   const searchParams = useSearchParams();
@@ -53,7 +59,7 @@ export default function VerifyContent() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center font-roboto">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 font-roboto">
       <div className="w-full max-w-[588px] rounded-xl bg-[#99B579] px-8 py-12 text-center shadow-[0px_4px_4px_0px_#00000040]">
         {success ? (
           <>
@@ -64,18 +70,18 @@ export default function VerifyContent() {
             <p className="mb-6 text-xl text-[#494949]">
               Your wallet has been verified. Redirecting you to the bot...
             </p>
-            <a
+            <Link
               href={TILEVILLE_BOT_URL}
-              className={`${PRIMARY_BUTTON_STYLES_LG}  flex min-h-[64px] items-center justify-center`}
+              className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center md:min-h-[64px]`}
             >
               Return to BOT
-            </a>
+            </Link>
           </>
         ) : (
           <>
             <h1 className="mb-6 text-[28px] font-bold">Verify Your Account</h1>
 
-            <p className="mb-6 text-xl text-[#494949]">
+            <p className="mb-3 text-sm text-[#494949] md:mb-6 md:text-xl">
               Connect your wallet and complete the account verification on
               TileVille.
             </p>
@@ -83,7 +89,7 @@ export default function VerifyContent() {
             {!networkStore.address ? (
               <button
                 onClick={() => networkStore.connectWallet(false)}
-                className={`${PRIMARY_BUTTON_STYLES_LG} min-h-[64px]`}
+                className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
               >
                 Connect Wallet
               </button>
@@ -96,9 +102,32 @@ export default function VerifyContent() {
                 {verifyMutation.isLoading ? "Verifying..." : "Verify"}
               </button>
             )}
+
+            {isMobile && (
+              <div className="">
+                <p className="mb-3 mt-12 text-sm text-[#494949] md:mb-6 md:text-xl">
+                  Seems like you have opened this link in mobile. To verify
+                  please verify with Auro wallet
+                </p>
+
+                <Link
+                  className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center md:min-h-[64px]`}
+                  href={AURO_WALLET_VERIFY_PAGE_DEEP_LINK}
+                >
+                  Verify with auro wallet
+                </Link>
+              </div>
+            )}
           </>
         )}
       </div>
+
+      {isMobile && (
+        <p className="mt-12">
+          Note: If you want to verify with Auro Wallet extension, please open
+          link in a desktop browser
+        </p>
+      )}
     </div>
   );
 }
