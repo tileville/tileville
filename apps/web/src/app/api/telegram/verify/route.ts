@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { withAuth } from "../../authMiddleware";
+import { ADMIN_API_URL } from "@/constants";
 
 const verifyHandler = async (request: NextRequest) => {
   try {
@@ -58,19 +59,14 @@ const verifyHandler = async (request: NextRequest) => {
     console.log("FLOW GOING HERE");
 
     try {
-      await fetch(
-        //TODO: Change the URL where mayor bot or admin portal is running
-        "http://localhost:3000/api/telegram/verify",
-        // "https://4546-2405-201-3007-4185-d46-3f5b-d6b3-f016.ngrok-free.app/api/telegram/verify",
-        {
-          method: "POST",
-          headers: {
-            "x-admin-token": process.env.ADMIN_API_TOKEN!,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ chatId }),
-        }
-      );
+      await fetch(`${ADMIN_API_URL}/api/telegram/verify`, {
+        method: "POST",
+        headers: {
+          "x-admin-token": process.env.ADMIN_API_TOKEN!,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chatId }),
+      });
     } catch (err) {
       console.log("Error sending req to telegram bot", err);
     }
