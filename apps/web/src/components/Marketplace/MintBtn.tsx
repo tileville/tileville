@@ -3,11 +3,12 @@ import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
 import { useNetworkStore } from "@/lib/stores/network";
 import {
-  MINATY_PRESALE_ADDRESS,
   NFT_COLLECTIONS,
   NFTCollectionType,
 } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
+import { useAtomValue } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
 
 type MintBtnType = {
   isMintingDisabled: boolean;
@@ -35,6 +36,10 @@ export const MintBtn = ({
   currentUserAddress,
 }: MintBtnType) => {
   const networkStore = useNetworkStore();
+  const globalConfig = useAtomValue(globalConfigAtom)
+  const minatyConfig = globalConfig?.nft_collections_config?.[NFT_COLLECTIONS.MINATY] || {}
+  const whitelistedAddresses = minatyConfig.whitelisted_addresses || []
+
 
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress,
@@ -44,7 +49,7 @@ export const MintBtn = ({
   const isMinatyNFT = collection === NFT_COLLECTIONS.MINATY;
   const isInPresaleList =
     isMinatyNFT && networkStore.address
-      ? MINATY_PRESALE_ADDRESS.includes(networkStore.address)
+      ? whitelistedAddresses.includes(networkStore.address)
       : true;
 
   const isNotForSoldNFT =
