@@ -541,6 +541,13 @@ export class MainScene extends Scene {
     const competitionKey = this.game.registry.get("competitionKey");
 
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
+    const handleSendGroupMessage = this.game.registry.get(
+      "handleSendGroupMessage"
+    );
+
+    if (isDemoGame && this.score > 5) {
+      handleSendGroupMessage(this.score);
+    }
 
     if (isSpeedVersion) {
       this.timedEvent?.remove();

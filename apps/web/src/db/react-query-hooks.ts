@@ -457,7 +457,9 @@ export const useGlobalConfig = (config_name: string) => {
   return useQuery(["global_config", config_name], () =>
     fetchGlobalConfig(config_name)
       .then((response) => {
-        const config = isMockEnv() ? MOCK_GLOBAL_CONFIG :  response.config_values as { [key: string]: any };
+        const config = isMockEnv()
+          ? MOCK_GLOBAL_CONFIG
+          : (response.config_values as { [key: string]: any });
         setGlobalConfig({ ...globalConfig, ...config });
         return response;
       })
@@ -916,4 +918,21 @@ export const useMinatyNFTEntries = ({
       keepPreviousData: true,
     }
   );
+};
+
+export const useSendGroupMessage = () => {
+  return useMutation({
+    mutationFn: async ({ message }: { message: string }) => {
+      const response = await fetch("/api/telegram/group-message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+        }),
+      });
+      return response.json();
+    },
+  });
 };

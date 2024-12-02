@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
-import { useSaveScore } from "@/db/react-query-hooks";
+import { useSaveScore, useSendGroupMessage } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
 
@@ -30,6 +30,17 @@ export const PhaserLayer = ({
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
+  const sendGroupMessageMutation = useSendGroupMessage();
+
+  const handleSendGroupMessage = useCallback(
+    (score: number) => {
+      const message = `🎮 Wow! A player just scored ${score} points in TileVille demo mode! 🎯\n\nCan you beat this score? Try now at https://tileville.xyz`;
+      sendGroupMessageMutation.mutate({
+        message,
+      });
+    },
+    [sendGroupMessageMutation]
+  );
 
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
@@ -93,6 +104,7 @@ export const PhaserLayer = ({
     game.registry.set("scoreTweetContent", scoreTweetContent);
     game.registry.set("isSpeedVersion", isSpeedVersion);
     game.registry.set("speedDuration", speedDuration);
+    game.registry.set("handleSendGroupMessage", handleSendGroupMessage); //
 
     return () => {
       game.destroy(true);
