@@ -2,9 +2,14 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
-import { useSaveScore, useSendGroupMessage } from "@/db/react-query-hooks";
+import {
+  useSaveScore,
+  useSendGroupMessage,
+  useUsername,
+} from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
+import { formatAddress } from "@/lib/helpers";
 
 type PhaserLayerProps = {
   isDemoGame: boolean;
@@ -32,16 +37,22 @@ export const PhaserLayer = ({
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
   const sendGroupMessageMutation = useSendGroupMessage();
 
+  const { data: username } = useUsername(address);
+
   const handleSendGroupMessage = useCallback(
     (score: number) => {
-      const message = `🎮 Wow! A player just scored ${score} points in TileVille demo mode! 🎯\n\nCan you beat this score? Try now at https://tileville.xyz`;
+      const message = username
+        ? `🎮 Wow! ${username} [https://www.tileville.xyz/u/${username}] just scored ${score} points in TileVille demo mode! 🎯\n\nCan you beat this score? Try now at https://tileville.xyz`
+        : `🎮 Wow! ${formatAddress(
+            address
+          )} A player just scored ${score} points in TileVille demo mode! 🎯\n\nCan you beat this score? Try now at https://tileville.xyz`;
+
       sendGroupMessageMutation.mutate({
         message,
       });
     },
-    [sendGroupMessageMutation]
+    [sendGroupMessageMutation, address, username]
   );
-
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
       console.log("Game score saved Successfully!");
