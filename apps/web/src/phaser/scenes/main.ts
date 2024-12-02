@@ -545,7 +545,7 @@ export class MainScene extends Scene {
       "handleSendGroupMessage"
     );
 
-    if (isDemoGame && this.score > 5) {
+    if (isDemoGame && this.score > 95) {
       handleSendGroupMessage(this.score);
     }
 
