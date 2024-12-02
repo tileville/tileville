@@ -300,7 +300,8 @@ export const useMainnetTransactionsStatus = (
             console.log("blockberry api response");
             if (
               res.blockConfirmationsCount >= 1 ||
-              res.txStatus === "applied"
+              res.txStatus === "applied" ||
+              res.txStatus === "buffered"
             ) {
               return updateTransactionLog(txn_hash, {
                 txn_status: "CONFIRMED",
@@ -457,7 +458,9 @@ export const useGlobalConfig = (config_name: string) => {
   return useQuery(["global_config", config_name], () =>
     fetchGlobalConfig(config_name)
       .then((response) => {
-        const config = isMockEnv() ? MOCK_GLOBAL_CONFIG :  response.config_values as { [key: string]: any };
+        const config = isMockEnv()
+          ? MOCK_GLOBAL_CONFIG
+          : (response.config_values as { [key: string]: any });
         setGlobalConfig({ ...globalConfig, ...config });
         return response;
       })
