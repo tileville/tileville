@@ -42,7 +42,7 @@ export const MintBtn = ({
 
 
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
-    owner: currentUserAddress,
+    owner: currentUserAddress || "none",
     queryText: "MINATY",
   });
 
