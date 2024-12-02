@@ -14,6 +14,7 @@ import {
 import { redirectToTelegramBot } from "@/lib/helpers";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function VerifyContent() {
   const searchParams = useSearchParams();
@@ -79,6 +80,14 @@ export default function VerifyContent() {
           </>
         ) : (
           <>
+            <div className="">
+              <Image
+                src="/img/gifs/mayor.gif"
+                width={200}
+                height={200}
+                alt="mayor"
+              />
+            </div>
             <h1 className="mb-6 text-[28px] font-bold">Verify Your Account</h1>
 
             <p className="mb-3 text-sm text-[#494949] md:mb-6 md:text-xl">
