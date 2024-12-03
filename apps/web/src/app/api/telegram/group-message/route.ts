@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { message } = await request.json();
+    const { message, groupTopicId } = await request.json();
 
     const response = await fetch(
       `${ADMIN_API_URL}/api/telegram/group-message`,
@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           message,
+          groupTopicId,
         }),
       }
     );

@@ -9,7 +9,7 @@ import {
 } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
-import { formatAddress } from "@/lib/helpers";
+import { formatGameAnnouncement } from "@/lib/helpers";
 
 type PhaserLayerProps = {
   isDemoGame: boolean;
@@ -38,22 +38,25 @@ export const PhaserLayer = ({
   const sendGroupMessageMutation = useSendGroupMessage();
 
   const { data: username } = useUsername(address);
-  console.log("USERNAME", username);
 
-  const handleSendGroupMessage = useCallback(
-    (score: number) => {
-      const message = username
-        ? `🎮 Wow! [${username}](https://www.tileville.xyz/u/${username}) just scored ${score} points in TileVille demo mode! 🎯\n\nCan you beat this score? Try now at https://tileville.xyz`
-        : `🎮 Wow! \`${formatAddress(
-            address
-          )}\` just scored ${score} points in TileVille demo mode! 🎯\n\nCan you beat this score? Try now at https://tileville.xyz`;
+  const handleSendGroupMessageDemo = useCallback(
+    (score: number, groupTopicId: string) => {
+      const message = formatGameAnnouncement({
+        username,
+        address,
+        score,
+        isDemoGame,
+        competitionKey,
+      });
 
       sendGroupMessageMutation.mutate({
         message,
+        groupTopicId,
       });
     },
-    [sendGroupMessageMutation, address, username]
+    [username, address, isDemoGame, competitionKey, sendGroupMessageMutation]
   );
+
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
       console.log("Game score saved Successfully!");
@@ -116,7 +119,7 @@ export const PhaserLayer = ({
     game.registry.set("scoreTweetContent", scoreTweetContent);
     game.registry.set("isSpeedVersion", isSpeedVersion);
     game.registry.set("speedDuration", speedDuration);
-    game.registry.set("handleSendGroupMessage", handleSendGroupMessage); //
+    game.registry.set("handleSendGroupMessageDemo", handleSendGroupMessageDemo); //
 
     return () => {
       game.destroy(true);

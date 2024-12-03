@@ -923,7 +923,13 @@ export const useMinatyNFTEntries = ({
 
 export const useSendGroupMessage = () => {
   return useMutation({
-    mutationFn: async ({ message }: { message: string }) => {
+    mutationFn: async ({
+      message,
+      groupTopicId,
+    }: {
+      message: string;
+      groupTopicId: string;
+    }) => {
       const response = await fetch("/api/telegram/group-message", {
         method: "POST",
         headers: {
@@ -931,6 +937,7 @@ export const useSendGroupMessage = () => {
         },
         body: JSON.stringify({
           message,
+          groupTopicId,
         }),
       });
       return response.json();
