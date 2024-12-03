@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { TREASURY_ADDRESS } from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
+import { isMobile } from "react-device-detect";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -145,6 +146,8 @@ export async function sendPayment({
   const nonceResponse = await fetch(`/api/nonce?wallet_address=${from}`);
   const nonce = await nonceResponse.json();
   console.log("nonce", nonce);
+  console.log("from", from);
+  console.log("amount", amount);
   if (!nonce.success) {
     throw new Error("failed to fetch nonce");
     return;
@@ -158,8 +161,9 @@ export async function sendPayment({
     nonce: nonce.nonce,
     from: from,
   };
-
-  if (window.mina?.isPallad) {
+  console.log("window mina", window.mina, isMobile);
+  if (window.mina?.isPallad && !isMobile) {
+    console.log("pallad wallet ");
     const signedTransactionResponse = async () => {
       const response = await (window as any).mina.request({
         method: "mina_signTransaction",
@@ -182,15 +186,19 @@ export async function sendPayment({
     return response.result.hash;
   } else {
     try {
+      console.log("SENDING PAYMENT BY AURO");
       const data: SendTransactionResult | ProviderError = await (
         window as any
       )?.mina?.sendPayment({
         amount: amount,
         to: TREASURY_ADDRESS,
         memo: `Pay ${amount} by auro wallet.`,
+        nonce: nonce.nonce,
+        fee: 100_000_000,
       });
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
+      console.error(`Txn failed with error ${err.toString()}. report a bug`);
       toast(`Txn failed with error ${err.toString()}. report a bug`);
     }
   }
