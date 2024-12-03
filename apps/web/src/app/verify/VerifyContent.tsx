@@ -64,6 +64,14 @@ export default function VerifyContent() {
       <div className="w-full max-w-[588px] rounded-xl bg-[#99B579] px-8 py-12 text-center shadow-[0px_4px_4px_0px_#00000040]">
         {success ? (
           <>
+            <div className="flex items-center justify-center">
+              <Image
+                src="/img/gifs/congrats.gif"
+                width={165}
+                height={165}
+                alt="congrats"
+              />
+            </div>
             <h1 className="mb-6 text-[28px] font-bold">
               Account Connected Successfully !!
             </h1>
@@ -80,11 +88,11 @@ export default function VerifyContent() {
           </>
         ) : (
           <>
-            <div className="">
+            <div className="flex items-center justify-center">
               <Image
                 src="/img/gifs/mayor.gif"
-                width={200}
-                height={200}
+                width={165}
+                height={165}
                 alt="mayor"
               />
             </div>
