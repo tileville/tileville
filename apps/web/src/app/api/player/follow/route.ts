@@ -1,6 +1,7 @@
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 import { withAuth } from "../../authMiddleware";
+import { sendPersonalNotification } from "../../lib/telegram-notifications";
 
 //  follower_wallet: person who is doing the following
 //  target_wallet: person who is being followed by the follower_wallet
@@ -21,6 +22,21 @@ const postHandler = async (request: NextRequest) => {
       );
     }
 
+    // Get follower's username for notification
+    const { data: followerProfile } = await supabase
+      .from("player_profile")
+      .select("username")
+      .eq("wallet_address", follower_wallet)
+      .single();
+
+    // Get target user's telegram auth
+    const { data: targetTelegramAuth } = await supabase
+      .from("telegram_auth")
+      .select("chat_id")
+      .eq("wallet_address", target_wallet)
+      .eq("authenticated", true)
+      .single();
+
     const { data: targetProfile, error: targetError } = await supabase
       .from("player_profile")
       .select("followers")
@@ -29,7 +45,7 @@ const postHandler = async (request: NextRequest) => {
 
     if (targetError) throw targetError;
 
-    const { data: followerProfile, error: followerError } = await supabase
+    const { data: followerProfile2, error: followerError } = await supabase
       .from("player_profile")
       .select("following")
       .eq("wallet_address", follower_wallet)
@@ -42,7 +58,7 @@ const postHandler = async (request: NextRequest) => {
       newTargetFollowers.push(follower_wallet);
     }
 
-    const newFollowerFollowing = followerProfile.following || [];
+    const newFollowerFollowing = followerProfile2.following || [];
     if (!newFollowerFollowing.includes(target_wallet)) {
       newFollowerFollowing.push(target_wallet);
     }
@@ -59,6 +75,20 @@ const postHandler = async (request: NextRequest) => {
 
     if (updateError || updateFollowerError)
       throw updateError || updateFollowerError;
+
+    // Send notification if target user has telegram connected
+    if (targetTelegramAuth?.chat_id) {
+      const followerName =
+        followerProfile?.username || `Wallet ${follower_wallet.slice(0, 6)}`;
+      const message = `🎯 New Follower Alert!\n\n${followerName} just started following you on TileVille! Check out their profile at https://tileville.xyz/u/${
+        followerProfile?.username || follower_wallet
+      }`;
+
+      await sendPersonalNotification({
+        message,
+        chatIds: [targetTelegramAuth.chat_id],
+      });
+    }
 
     return Response.json({
       success: true,
