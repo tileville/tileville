@@ -199,21 +199,21 @@ export type Database = {
       }
       telegram_auth: {
         Row: {
-          authenticated: boolean
+          authenticated: boolean | null
           chat_id: string | null
           created_at: string
           id: number
           wallet_address: string | null
         }
         Insert: {
-          authenticated?: boolean
+          authenticated?: boolean | null
           chat_id?: string | null
           created_at?: string
           id?: number
           wallet_address?: string | null
         }
         Update: {
-          authenticated?: boolean
+          authenticated?: boolean | null
           chat_id?: string | null
           created_at?: string
           id?: number
