@@ -744,4 +744,4 @@ export const AURO_WALLET_VERIFY_PAGE_DEEP_LINK =
   "https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/main-menu";
 
 export const ADMIN_API_URL =
-  process.env.ADMIN_API_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:3000";

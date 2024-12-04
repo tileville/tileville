@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-token": process.env.ADMIN_API_TOKEN || "",
+          "x-admin-token": process.env.NEXT_PUBLIC_ADMIN_API_TOKEN || "",
         },
         body: JSON.stringify({
           message,

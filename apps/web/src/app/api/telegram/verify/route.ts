@@ -55,14 +55,11 @@ const verifyHandler = async (request: NextRequest) => {
       console.log("ERROR SENDING DATA TO DB", err);
     }
 
-    // TODO: Call admin API to update bot state\
-    console.log("FLOW GOING HERE");
-
     try {
       await fetch(`${ADMIN_API_URL}/api/telegram/verify`, {
         method: "POST",
         headers: {
-          "x-admin-token": process.env.ADMIN_API_TOKEN!,
+          "x-admin-token": process.env.NEXT_PUBLIC_ADMIN_API_TOKEN!,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ chatId }),
