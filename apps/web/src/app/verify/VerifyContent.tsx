@@ -25,9 +25,12 @@ export default function VerifyContent() {
   const verifyMutation = useTelegramVerify({
     onSuccess: () => {
       setSuccess(true);
-      setTimeout(() => {
-        redirectToTelegramBot();
-      }, 1500);
+      {
+        !isMobile &&
+          setTimeout(() => {
+            redirectToTelegramBot();
+          }, 1500);
+      }
     },
     onError: (error) => {
       console.error("Verification failed:", error);
@@ -122,15 +125,14 @@ export default function VerifyContent() {
             {isMobile && (
               <div className="">
                 <p className="mb-3 mt-12 text-sm text-[#494949] md:mb-6 md:text-xl">
-                  Seems like you have opened this link in mobile. To verify
-                  please verify with Auro wallet
+                  To Verify, Please Open this link in Auro Mobile Wallet
                 </p>
 
                 <Link
                   className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center md:min-h-[64px]`}
                   href={generateAuroWalletDeepLink(chatId || "")}
                 >
-                  Verify with auro wallet
+                  Open with Auro Mobile Wallet
                 </Link>
               </div>
             )}
@@ -139,10 +141,7 @@ export default function VerifyContent() {
       </div>
 
       {isMobile && (
-        <p className="mt-12">
-          Note: If you want to verify with Auro Wallet extension, please open
-          link in a desktop browser
-        </p>
+        <p className="mt-12">Note: Ignore if Already open in mobile wallet</p>
       )}
     </div>
   );
