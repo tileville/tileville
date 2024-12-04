@@ -6,12 +6,11 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { useTelegramVerify } from "@/db/react-query-hooks";
 import toast from "react-hot-toast";
+import { PRIMARY_BUTTON_STYLES_LG, TILEVILLE_BOT_URL } from "@/constants";
 import {
-  AURO_WALLET_VERIFY_PAGE_DEEP_LINK,
-  PRIMARY_BUTTON_STYLES_LG,
-  TILEVILLE_BOT_URL,
-} from "@/constants";
-import { redirectToTelegramBot } from "@/lib/helpers";
+  generateAuroWalletDeepLink,
+  redirectToTelegramBot,
+} from "@/lib/helpers";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
 import Image from "next/image";
@@ -129,7 +128,7 @@ export default function VerifyContent() {
 
                 <Link
                   className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center md:min-h-[64px]`}
-                  href={AURO_WALLET_VERIFY_PAGE_DEEP_LINK}
+                  href={generateAuroWalletDeepLink(chatId || "")}
                 >
                   Verify with auro wallet
                 </Link>

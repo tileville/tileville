@@ -252,3 +252,7 @@ export const formatGameAnnouncement = ({
     `Can you beat this score? Try now at https://tileville.xyz`
   );
 };
+
+export const generateAuroWalletDeepLink = (chatId: string) => {
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/verify?chatId=${chatId}`;
+};
