@@ -27,9 +27,9 @@ export default function VerifyContent() {
       setSuccess(true);
       {
         !isMobile &&
-        setTimeout(() => {
-          redirectToTelegramBot();
-        }, 1500);
+          setTimeout(() => {
+            redirectToTelegramBot();
+          }, 1500);
       }
     },
     onError: (error) => {
@@ -138,7 +138,7 @@ export default function VerifyContent() {
         )}
       </div>
 
-      {isMobile && (
+      {isMobile && !success && (
         <p className="mt-12">Note: Ignore if Already open in mobile wallet</p>
       )}
     </div>
