@@ -27,9 +27,9 @@ export default function VerifyContent() {
       setSuccess(true);
       {
         !isMobile &&
-          setTimeout(() => {
-            redirectToTelegramBot();
-          }, 1500);
+        setTimeout(() => {
+          redirectToTelegramBot();
+        }, 1500);
       }
     },
     onError: (error) => {
@@ -44,9 +44,9 @@ export default function VerifyContent() {
     }
   }, [chatId]);
 
-  const handleVerify = async () => {
+  const handleAction = async () => {
     if (!networkStore.address) {
-      toast.error("Please connect your wallet first");
+      networkStore.connectWallet(false);
       return;
     }
 
@@ -59,6 +59,13 @@ export default function VerifyContent() {
       chatId: chatId!,
       walletAddress: networkStore.address,
     });
+  };
+
+  const getButtonText = () => {
+    if (verifyMutation.isLoading) return "Verifying...";
+    if (!networkStore.address) return "Connect Wallet";
+    if (!accountAuthSignature) return "Sign from Wallet";
+    return "Verify";
   };
 
   return (
@@ -105,22 +112,13 @@ export default function VerifyContent() {
               TileVille.
             </p>
 
-            {!networkStore.address ? (
-              <button
-                onClick={() => networkStore.connectWallet(false)}
-                className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
-              >
-                Connect Wallet
-              </button>
-            ) : (
-              <button
-                onClick={handleVerify}
-                disabled={verifyMutation.isLoading}
-                className={PRIMARY_BUTTON_STYLES_LG}
-              >
-                {verifyMutation.isLoading ? "Verifying..." : "Verify"}
-              </button>
-            )}
+            <button
+              onClick={handleAction}
+              disabled={verifyMutation.isLoading}
+              className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
+            >
+              {getButtonText()}
+            </button>
 
             {isMobile && (
               <div className="">
