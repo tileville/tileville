@@ -5,7 +5,7 @@ import {
 import clsx, { ClassValue } from "clsx";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
-import { TREASURY_ADDRESS } from "@/constants";
+import { TILEVILLE_BOT_URL, TREASURY_ADDRESS } from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
 
 export function walletInstalled() {
@@ -221,3 +221,38 @@ export async function copyToClipBoard({
     });
   }
 }
+
+export const redirectToTelegramBot = () => {
+  window.location.href = TILEVILLE_BOT_URL;
+};
+
+export const formatGameAnnouncement = ({
+  username,
+  address,
+  score,
+  isDemoGame,
+  competitionKey,
+}: {
+  username?: string | null;
+  address?: string;
+  score: number;
+  isDemoGame: boolean;
+  competitionKey?: string;
+}): string => {
+  const userIdentifier = username
+    ? `[${username}](https://www.tileville.xyz/u/${username})`
+    : `\`${formatAddress(address)}\``;
+
+  const gameMode = isDemoGame
+    ? `[TileVille demo mode](https://www.tileville.xyz/competitions/demo-game)`
+    : `[${competitionKey}](https://www.tileville.xyz/leaderboard?competition=${competitionKey})`;
+
+  return (
+    `🎮 Wow! ${userIdentifier} just scored ${score} points in ${gameMode} 🎯\n\n` +
+    `Can you beat this score? Try now at https://tileville.xyz`
+  );
+};
+
+export const generateAuroWalletDeepLink = (chatId: string) => {
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/verify?chatId=${chatId}`;
+};

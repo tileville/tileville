@@ -2,9 +2,14 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
-import { useSaveScore } from "@/db/react-query-hooks";
+import {
+  useSaveScore,
+  useSendGroupMessage,
+  useUsername,
+} from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
 import { GameInfoModal } from "@/components/GameInfoModal";
+import { formatGameAnnouncement } from "@/lib/helpers";
 
 type PhaserLayerProps = {
   isDemoGame: boolean;
@@ -30,6 +35,27 @@ export const PhaserLayer = ({
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
+  const sendGroupMessageMutation = useSendGroupMessage();
+
+  const { data: username } = useUsername(address);
+
+  const handleSendGroupMessageDemo = useCallback(
+    (score: number, groupTopicId: string) => {
+      const message = formatGameAnnouncement({
+        username,
+        address,
+        score,
+        isDemoGame,
+        competitionKey,
+      });
+
+      sendGroupMessageMutation.mutate({
+        message,
+        groupTopicId,
+      });
+    },
+    [username, address, isDemoGame, competitionKey, sendGroupMessageMutation]
+  );
 
   const leaderboardMutation = useSaveScore({
     onSuccess: () => {
@@ -93,6 +119,7 @@ export const PhaserLayer = ({
     game.registry.set("scoreTweetContent", scoreTweetContent);
     game.registry.set("isSpeedVersion", isSpeedVersion);
     game.registry.set("speedDuration", speedDuration);
+    game.registry.set("handleSendGroupMessageDemo", handleSendGroupMessageDemo); //
 
     return () => {
       game.destroy(true);
