@@ -1,42 +1,21 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useNetworkStore } from "@/lib/stores/network";
-import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { useTelegramVerify } from "@/db/react-query-hooks";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
 import { PRIMARY_BUTTON_STYLES_LG, TILEVILLE_BOT_URL } from "@/constants";
-import {
-  generateAuroWalletDeepLink,
-  redirectToTelegramBot,
-} from "@/lib/helpers";
+import { generateAuroWalletDeepLink } from "@/lib/helpers";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
 import Image from "next/image";
+import { useWalletVerification } from "@/hooks/useWalletVerification";
+import toast from "react-hot-toast";
 
 export default function VerifyContent() {
   const searchParams = useSearchParams();
   const chatId = searchParams.get("chatId");
-  const networkStore = useNetworkStore();
-  const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
-  const [success, setSuccess] = useState(false);
 
-  const verifyMutation = useTelegramVerify({
-    onSuccess: () => {
-      setSuccess(true);
-      {
-        !isMobile &&
-          setTimeout(() => {
-            redirectToTelegramBot();
-          }, 1500);
-      }
-    },
-    onError: (error) => {
-      console.error("Verification failed:", error);
-      toast.error("Verification failed. Please try again.");
-    },
-  });
+  const { handleVerification, getButtonText, isProcessing, isSuccess } =
+    useWalletVerification(chatId);
 
   useEffect(() => {
     if (!chatId) {
@@ -44,34 +23,10 @@ export default function VerifyContent() {
     }
   }, [chatId]);
 
-  const handleAction = async () => {
-    if (!networkStore.address) {
-      networkStore.connectWallet(false);
-      return;
-    }
-
-    if (!accountAuthSignature) {
-      await validateOrSetSignature();
-      return;
-    }
-
-    verifyMutation.mutate({
-      chatId: chatId!,
-      walletAddress: networkStore.address,
-    });
-  };
-
-  const getButtonText = () => {
-    if (verifyMutation.isLoading) return "Verifying...";
-    if (!networkStore.address) return "Connect Wallet";
-    if (!accountAuthSignature) return "Sign from Wallet";
-    return "Verify";
-  };
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 font-roboto">
       <div className="w-full max-w-[588px] rounded-xl bg-[#99B579] px-8 py-12 text-center shadow-[0px_4px_4px_0px_#00000040]">
-        {success ? (
+        {isSuccess ? (
           <>
             <div className="flex items-center justify-center">
               <Image
@@ -113,8 +68,8 @@ export default function VerifyContent() {
             </p>
 
             <button
-              onClick={handleAction}
-              disabled={verifyMutation.isLoading}
+              onClick={handleVerification}
+              disabled={isProcessing}
               className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
             >
               {getButtonText()}
@@ -138,7 +93,7 @@ export default function VerifyContent() {
         )}
       </div>
 
-      {isMobile && !success && (
+      {isMobile && !isSuccess && (
         <p className="mt-12">Note: Ignore if Already open in mobile wallet</p>
       )}
     </div>
