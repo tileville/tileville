@@ -14,14 +14,27 @@ export default function VerifyContent() {
   const searchParams = useSearchParams();
   const chatId = searchParams.get("chatId");
 
-  const { handleVerification, getButtonText, isProcessing, isSuccess } =
-    useWalletVerification(chatId);
+  const {
+    handleVerification,
+    getButtonText,
+    isProcessing,
+    isSuccess,
+    isAuroWalletBrowser,
+  } = useWalletVerification(chatId);
 
   useEffect(() => {
     if (!chatId) {
       toast.error("Invalid verification link");
     }
   }, [chatId]);
+
+  const handleButtonClick = () => {
+    if (isMobile && !isAuroWalletBrowser) {
+      window.location.href = generateAuroWalletDeepLink(chatId || "");
+    } else {
+      handleVerification();
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 font-roboto">
@@ -63,38 +76,27 @@ export default function VerifyContent() {
             <h1 className="mb-6 text-[28px] font-bold">Verify Your Account</h1>
 
             <p className="mb-3 text-sm text-[#494949] md:mb-6 md:text-xl">
-              Connect your wallet and complete the account verification on
-              TileVille.
+              {isMobile && !isAuroWalletBrowser
+                ? "Please open this link in the Auro Wallet browser to verify your account."
+                : "Connect your wallet and complete the account verification on TileVille."}
             </p>
 
             <button
-              onClick={handleVerification}
+              onClick={handleButtonClick}
               disabled={isProcessing}
               className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
             >
               {getButtonText()}
             </button>
-
-            {isMobile && (
-              <div className="">
-                <p className="mb-3 mt-12 text-sm text-[#494949] md:mb-6 md:text-xl">
-                  To Verify, Please Open this link in Auro Mobile Wallet
-                </p>
-
-                <Link
-                  className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center md:min-h-[64px]`}
-                  href={generateAuroWalletDeepLink(chatId || "")}
-                >
-                  Open with Auro Mobile Wallet
-                </Link>
-              </div>
-            )}
           </>
         )}
       </div>
 
-      {isMobile && !isSuccess && (
-        <p className="mt-12">Note: Ignore if Already open in mobile wallet</p>
+      {!isMobile && !isSuccess && (
+        <p className="mt-12">
+          Note: Please open this link in the Auro Wallet browser to verify your
+          account.
+        </p>
       )}
     </div>
   );
