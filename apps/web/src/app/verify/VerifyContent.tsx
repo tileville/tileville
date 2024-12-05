@@ -14,6 +14,12 @@ export default function VerifyContent() {
   const searchParams = useSearchParams();
   const chatId = searchParams.get("chatId");
 
+  useEffect(() => {
+    if (!window.mina && isMobile) {
+      window.location.href = generateAuroWalletDeepLink(chatId || "");
+    }
+  }, [chatId]);
+
   const { handleVerification, getButtonText, isProcessing, isSuccess } =
     useWalletVerification(chatId);
 
@@ -22,7 +28,6 @@ export default function VerifyContent() {
       toast.error("Invalid verification link");
     }
   }, [chatId]);
-  
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 font-roboto">
