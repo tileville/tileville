@@ -1,14 +1,8 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
-import { useNetworkStore } from "@/lib/stores/network";
-import {
-  NFT_COLLECTIONS,
-  NFTCollectionType,
-} from "@/constants";
+import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
-import { useAtomValue } from "jotai";
-import { globalConfigAtom } from "@/contexts/atoms";
 
 type MintBtnType = {
   isMintingDisabled: boolean;
@@ -35,23 +29,12 @@ export const MintBtn = ({
   collection,
   currentUserAddress,
 }: MintBtnType) => {
-  const networkStore = useNetworkStore();
-  const globalConfig = useAtomValue(globalConfigAtom)
-  const minatyConfig = globalConfig?.nft_collections_config?.[NFT_COLLECTIONS.MINATY] || {}
-  const whitelistedAddresses = minatyConfig.whitelisted_addresses || []
-
-
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
     queryText: "MINATY",
   });
 
   const isMinatyNFT = collection === NFT_COLLECTIONS.MINATY;
-  const isInPresaleList =
-    isMinatyNFT && networkStore.address
-      ? whitelistedAddresses.includes(networkStore.address)
-      : true;
-
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
 
@@ -59,18 +42,11 @@ export const MintBtn = ({
     isMinatyNFT && mintNFTHitsResponse && hasMinatyNFT(mintNFTHitsResponse);
 
   const isButtonDisabled = isMinatyNFT
-    ? isMintingStyledDisabled ||
-      !isInPresaleList ||
-      isNotForSoldNFT ||
-      userHasMinatyNFT
+    ? isMintingStyledDisabled || isNotForSoldNFT || userHasMinatyNFT
     : isMintingStyledDisabled;
 
   const displayText =
-    isMinatyNFT && !isInPresaleList && networkStore.address
-      ? "Not Eligible for Presale"
-      : isMinatyNFT && userHasMinatyNFT
-      ? "Already Own MINATY NFT"
-      : btnText;
+    isMinatyNFT && userHasMinatyNFT ? "Already Own MINATY NFT" : btnText;
 
   return (
     <Tooltip.Provider delayDuration={100}>
@@ -83,7 +59,7 @@ export const MintBtn = ({
               "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
                 isButtonDisabled,
               "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
-                !isMintingDisabled && (!isMinatyNFT || isInPresaleList),
+                !isMintingDisabled,
             })}
             onClick={() => handleMint(nftID)}
             disabled={isButtonDisabled}
