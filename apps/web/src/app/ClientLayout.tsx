@@ -7,6 +7,8 @@ import { MobileNavBar } from "@/components/navbar/MobileNavBar";
 import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
+import VConsole from "vconsole";
+let vConsole: any;
 
 const queryClient = new QueryClient();
 const StoreProtokitUpdater = dynamic(
@@ -21,6 +23,18 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true") {
+      if (typeof window !== "undefined") {
+        vConsole = new VConsole();
+      }
+
+      return () => {
+        if (typeof window !== "undefined") vConsole?.destroy();
+      };
+    }
   }, []);
 
   const renderNavBar = () => {
@@ -44,10 +58,10 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     <JotaiProvider>
       <StoreProtokitUpdater />
       <QueryClientProvider client={queryClient}>
-          {renderNavBar()}
+        {renderNavBar()}
         <div className="mx-auto max-h-[calc(100vh-200px)]"></div>
-            {children}
-          {renderFooter()}
+        {children}
+        {renderFooter()}
       </QueryClientProvider>
     </JotaiProvider>
   );
