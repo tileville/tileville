@@ -14,6 +14,12 @@ export default function VerifyContent() {
   const searchParams = useSearchParams();
   const chatId = searchParams.get("chatId");
 
+  useEffect(() => {
+    if (!window.mina && isMobile) {
+      window.location.href = generateAuroWalletDeepLink(chatId || "");
+    }
+  }, [chatId]);
+
   const { handleVerification, getButtonText, isProcessing, isSuccess } =
     useWalletVerification(chatId);
 
