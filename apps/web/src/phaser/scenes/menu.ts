@@ -20,6 +20,12 @@ const tutorialTypes = [
   [1, 2, 3, 4, 5],
 ];
 
+const currentLevel = 1;
+
+const nextSceneData = {
+  level: currentLevel,
+};
+
 export class MenuScene extends Scene {
   menu: GameObjects.Group | null = null;
   background: GameObjects.Image | null = null;
@@ -35,22 +41,13 @@ export class MenuScene extends Scene {
 
   create() {
     this.cameras.main.setBounds(-1280, 0, 3840, 720);
-    this.cameras.main.setBackgroundColor("rgba(0 , 0 , 0 , 0)");
     this.menu = this.add.group();
-
-    // this.background = this.add.image(360, 360, "page");
-
-    const map_pattern = this.add.image(920, 360, "map_pattern");
-    map_pattern.setScale(0.05);
-    map_pattern.setAlpha(0.3);
 
     const title = this.add.text(140, 150, "TileVille", {
       fontFamily: "monospace",
       fontSize: "70px",
       color: "#000",
     });
-
-    // const title = this.add.bitmapText(50, 150, "font", "TileVille", 70);
 
     const tagline = this.add.text(
       150,
@@ -67,36 +64,26 @@ export class MenuScene extends Scene {
     tagline.setTint(0xffffff);
 
     tagline.setScale(0.3);
+
     this.menu.add(title);
+    this.menu.add(tagline);
     const isDemoGame = this.game.registry.get("isDemoGame");
 
     if (isDemoGame) {
       const demoButtonText = this.add.image(310, 480, "play-free-demo-button");
       demoButtonText.setOrigin(0.5);
 
-      // Make the text interactive
       demoButtonText.setInteractive({
         cursor: "pointer",
-        textDecoration: "underline",
       });
 
       demoButtonText.on("pointerdown", () => {
-        this.cameras.main.pan(-1280, 0, 500, "Linear", true);
+        this.cameras.main.pan(-1405, 0, 500, "Linear", true);
         this.time.addEvent({
           delay: 500,
           callback: this.transition,
           callbackScope: this,
         });
-      });
-
-      demoButtonText.on("pointerover", () => {
-        // demoButtonText.setStyle({ fill: "#000" });
-        demoButtonText.setScale(1.03);
-      });
-
-      demoButtonText.on("pointerout", () => {
-        // demoButtonText.setStyle({ fill: "#000" });
-        demoButtonText.setScale(1);
       });
 
       demoButtonText.on("pointerover", () => {
@@ -117,6 +104,8 @@ export class MenuScene extends Scene {
           ease: "Linear",
         })
       );
+
+      this.menu.add(demoButtonText);
     } else {
       const playButton = this.add.image(300, 400, "play-button");
       playButton.setOrigin(0.5);
@@ -200,24 +189,16 @@ export class MenuScene extends Scene {
 
     this.tutorialPage = 0;
     this.tutorialText = this.add.bitmapText(
-      1280,
+      1405,
       200,
       "font",
       tutorialTexts[0],
       40
     );
-    // this.tutorialButton = new Button(
-    //   this,
-    //   1265,
-    //   550,
-    //   "next_arrow",
-    //   this.nextTutorialPage.bind(this)
-    // );
-    // this.tutorialButton.setOrigin(0, 0.5);
 
     this.previousArrowBtn = new Button(
       this,
-      1370,
+      1490,
       550,
       "next_arrow",
       this.backTutorialPage.bind(this)
@@ -228,14 +209,12 @@ export class MenuScene extends Scene {
 
     this.nextArrowBtn = new Button(
       this,
-      1770,
+      1890,
       550,
       "next_arrow",
       this.nextTutorialPage.bind(this)
     );
     this.nextArrowBtn.setOrigin(0, 0.5);
-
-    // this.tutorialButtonWatchTower.setOrigin(0, 0.5);
 
     for (let r = 0; r < tutorialGrid.length; r++) {
       for (let c = 0; c < tutorialGrid.length; c++) {
@@ -279,30 +258,11 @@ export class MenuScene extends Scene {
 
     this.add.bitmapText(-1160, 30, "font", "0 points", 60);
 
-    const rotateLeftButton = new Button(this, -1185, 180, "rotate", () => {
-      console.log("a");
-    });
-    rotateLeftButton.setFlipX(true);
-    // const rotateRightButton = new Button(this, -935, 180, 'rotate', () => {
-    //   console.log('a');
-    // });
-
     const deckCounterText = this.add.bitmapText(-1050, 620, "font", "25", 60);
     deckCounterText.setOrigin(0.5, 0.45);
 
     const deckCounterImage = this.add.image(-950, 720, "a-shape");
     deckCounterImage.setAlpha(0.5);
-
-    // const ambience = this.sound.add("ambience", {
-    //   loop: true,
-    //   volume: 0,
-    // });
-    // ambience.play();
-    // this.add.tween({
-    //   targets: ambience,
-    //   props: { volume: 0.8 },
-    //   duration: 1000,
-    // });
   }
 
   async play() {
@@ -311,7 +271,7 @@ export class MenuScene extends Scene {
     if (!isGamePlayAllowed) {
       return showGameInfoModalFn();
     }
-    this.cameras.main.pan(-1280, 0, 500, "Linear", true);
+    this.cameras.main.pan(-1405, 0, 500, "Linear", true);
 
     this.time.addEvent({
       delay: 500,
@@ -328,7 +288,7 @@ export class MenuScene extends Scene {
   }
 
   transition() {
-    this.scene.start("main");
+    this.scene.start("main", nextSceneData);
   }
 
   howToPlay() {
@@ -350,7 +310,6 @@ export class MenuScene extends Scene {
       this.tutorialGrid.grid.get(3, 6)?.setVisible(false);
     } else {
       console.log(this.tutorialPage);
-      // this.tutorialButton!.setFrame(this.tutorialPage);
       this.tutorialText!.setText(tutorialTexts[this.tutorialPage]);
       for (const hex of this.tutorialGrid.hexes) {
         hex.setSketchy(
