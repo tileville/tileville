@@ -91,38 +91,38 @@ export type Database = {
       }
       minaty_nfts: {
         Row: {
-          category: Database["public"]["Enums"]["nft_category"]
+          category: Database["public"]["Enums"]["nft_category"] | null
           created_at: string
           id: number
-          img_url: string
-          name: string
+          img_url: string | null
+          name: string | null
           nft_id: number | null
           owner_address: string | null
-          price: number
+          price: number | null
           traits: Json | null
           txn_hash: string | null
         }
         Insert: {
-          category: Database["public"]["Enums"]["nft_category"]
+          category?: Database["public"]["Enums"]["nft_category"] | null
           created_at?: string
           id?: number
-          img_url: string
-          name: string
+          img_url?: string | null
+          name?: string | null
           nft_id?: number | null
           owner_address?: string | null
-          price: number
+          price?: number | null
           traits?: Json | null
           txn_hash?: string | null
         }
         Update: {
-          category?: Database["public"]["Enums"]["nft_category"]
+          category?: Database["public"]["Enums"]["nft_category"] | null
           created_at?: string
           id?: number
-          img_url?: string
-          name?: string
+          img_url?: string | null
+          name?: string | null
           nft_id?: number | null
           owner_address?: string | null
-          price?: number
+          price?: number | null
           traits?: Json | null
           txn_hash?: string | null
         }
@@ -176,6 +176,98 @@ export type Database = {
         }
         Relationships: []
       }
+      pvp_challenge_participants: {
+        Row: {
+          challenge_id: number
+          created_at: string
+          has_played: boolean
+          id: number
+          joined_at: string
+          played_at: string | null
+          score: number | null
+          txn_hash: string | null
+          txn_status: string
+          wallet_address: string
+        }
+        Insert: {
+          challenge_id: number
+          created_at?: string
+          has_played?: boolean
+          id?: number
+          joined_at?: string
+          played_at?: string | null
+          score?: number | null
+          txn_hash?: string | null
+          txn_status?: string
+          wallet_address: string
+        }
+        Update: {
+          challenge_id?: number
+          created_at?: string
+          has_played?: boolean
+          id?: number
+          joined_at?: string
+          played_at?: string | null
+          score?: number | null
+          txn_hash?: string | null
+          txn_status?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pvp_challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "pvp_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pvp_challenges: {
+        Row: {
+          created_at: string
+          created_by: string
+          end_time: string
+          entry_fee: number
+          id: number
+          invite_code: string
+          is_speed_challenge: boolean
+          max_participants: number
+          name: string
+          speed_duration: number | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          end_time?: string
+          entry_fee?: number
+          id?: number
+          invite_code: string
+          is_speed_challenge?: boolean
+          max_participants?: number
+          name: string
+          speed_duration?: number | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          end_time?: string
+          entry_fee?: number
+          id?: number
+          invite_code?: string
+          is_speed_challenge?: boolean
+          max_participants?: number
+          name?: string
+          speed_duration?: number | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       signup_emails: {
         Row: {
           created_at: string
@@ -199,21 +291,21 @@ export type Database = {
       }
       telegram_auth: {
         Row: {
-          authenticated: boolean | null
+          authenticated: boolean
           chat_id: string | null
           created_at: string
           id: number
           wallet_address: string | null
         }
         Insert: {
-          authenticated?: boolean | null
+          authenticated?: boolean
           chat_id?: string | null
           created_at?: string
           id?: number
           wallet_address?: string | null
         }
         Update: {
-          authenticated?: boolean | null
+          authenticated?: boolean
           chat_id?: string | null
           created_at?: string
           id?: number

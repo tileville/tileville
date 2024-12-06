@@ -944,3 +944,74 @@ export const useSendGroupMessage = () => {
     },
   });
 };
+
+export const useCreatedChallenges = (wallet_address: string) => {
+  return useQuery({
+    queryKey: ["created_challenges", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/created?wallet_address=${wallet_address}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch created challenges");
+      }
+      return response.json();
+    },
+    enabled: !!wallet_address,
+  });
+};
+
+export const useAcceptedChallenges = (wallet_address: string) => {
+  return useQuery({
+    queryKey: ["accepted_challenges", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/accepted?wallet_address=${wallet_address}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch accepted challenges");
+      }
+      return response.json();
+    },
+    enabled: !!wallet_address,
+  });
+};
+
+export const useCreateChallenge = (wallet_address: string) => {
+  const queryClient = useQueryClient();
+
+  const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+  if (!authSignature) {
+    console.warn("Auth signature missing in storage");
+    throw new Error("Auth signature missing!");
+  }
+
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      entry_fee: number;
+      end_time: string;
+      max_participants: number;
+      is_speed_challenge: boolean;
+      speed_duration?: number;
+    }) => {
+      const response = await fetch("/api/pvp/challenges", {
+        method: "POST",
+        headers: {
+          "Auth-Signature": authSignature,
+          "Wallet-Address": wallet_address,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["created_challenges"] });
+    },
+  });
+};
