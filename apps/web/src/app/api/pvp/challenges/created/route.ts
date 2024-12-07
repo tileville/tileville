@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const wallet_address = searchParams.get("wallet_address") || "";
 
   try {
-    const { data, error } = await supabase
+    const { data: challenges, error: challengesError } = await supabase
       .from("pvp_challenges")
       .select(
         `
@@ -17,9 +17,28 @@ export async function GET(request: NextRequest) {
       .eq("created_by", wallet_address)
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (challengesError) throw challengesError;
 
-    return Response.json({ success: true, data });
+    // Transform data to match standardized format
+    const formattedData = challenges.map((challenge) => ({
+      challenge: {
+        id: challenge.id,
+        name: challenge.name,
+        created_by: challenge.created_by,
+        invite_code: challenge.invite_code,
+        entry_fee: challenge.entry_fee,
+        end_time: challenge.end_time,
+        max_participants: challenge.max_participants,
+        is_speed_challenge: challenge.is_speed_challenge,
+        speed_duration: challenge.speed_duration,
+        status: challenge.status,
+        created_at: challenge.created_at,
+        updated_at: challenge.updated_at,
+      },
+      participants: challenge.participants || [],
+    }));
+
+    return Response.json({ success: true, data: formattedData });
   } catch (error: any) {
     return Response.json(
       { success: false, error: error.message },

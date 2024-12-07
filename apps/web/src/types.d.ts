@@ -101,3 +101,25 @@ interface Challenge {
   status: string;
   updated_at: string | null;
 }
+
+export type ChallengeParticipant = {
+  id: number;
+  challenge_id: number;
+  wallet_address: string;
+  joined_at: string;
+  played_at: string | null;
+  status: string;
+  score: number | null;
+  has_played: boolean;
+  txn_hash: string | null;
+  txn_status: string;
+  created_at: string;
+};
+
+export type ChallengeResponse = {
+  success: boolean;
+  data: {
+    challenge: Challenge;
+    participants: ChallengeParticipant[];
+  }[];
+};

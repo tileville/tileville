@@ -8,7 +8,7 @@ import {
 } from "@/db/react-query-hooks";
 import { PRIMARY_BUTTON_STYLES_LG } from "@/constants";
 import { CreateChallengeModal } from "@/components/PVP/CreateChallengeModal";
-import { CreatedChallenge } from "@/components/PVP/ChallengesTabs/CreatedChallenge";
+import { ChallengesList } from "@/components/PVP/ChallengesTabs/ChallengesList";
 
 const TABS = [
   { value: "accepted", text: "Accepted Challenges" },
@@ -50,26 +50,16 @@ export default function PVPContent() {
 
           <Box pt="3">
             <Tabs.Content value="accepted">
-              {isLoadingAccepted ? (
-                <div>Loading...</div>
-              ) : acceptedChallenges?.data?.length ? (
-                <div className="grid gap-4">
-                  {/* We'll add ChallengeList component here */}
-                  Accepted Challenges List
-                </div>
-              ) : (
-                <div className="flex min-h-[200px] items-center justify-center text-center">
-                  <p className="text-lg font-medium text-gray-500">
-                    You Have not accepted any challenges yet!
-                  </p>
-                </div>
-              )}
+              <ChallengesList
+                isLoadingAccepted={isLoadingAccepted}
+                challenges={acceptedChallenges}
+              />
             </Tabs.Content>
 
             <Tabs.Content value="created">
-              <CreatedChallenge
+              <ChallengesList
                 isLoadingCreated={isLoadingCreated}
-                createdChallenges={createdChallenges}
+                challenges={createdChallenges}
               />
             </Tabs.Content>
           </Box>
