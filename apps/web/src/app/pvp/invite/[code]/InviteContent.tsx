@@ -10,6 +10,7 @@ import { Spinner2 } from "@/components/common/Spinner";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
+import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
@@ -42,6 +43,8 @@ export default function InviteContent({ code }: { code: string }) {
       toast.error(error.message || "Failed to join challenge");
     }
   };
+
+  console.log("challenge", challenge);
 
   return (
     <Dialog.Root open={true}>
@@ -90,7 +93,9 @@ export default function InviteContent({ code }: { code: string }) {
                 alt="timer"
               /> */}
                   <p className="mt-2 text-sm font-medium">Time remaining</p>
-                  <p>{challenge.data.time_remaining || "59 minutes"}</p>
+                  <p>
+                    <CountdownTimerSmall endTime={challenge.data.end_time} />
+                  </p>
                 </div>
 
                 <div className="flex flex-col items-center rounded-lg bg-[#9AB579] bg-opacity-30 p-4">

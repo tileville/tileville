@@ -123,31 +123,28 @@ export const ChallengeDetails = ({
               </tr>
             </thead>
             <tbody>
-              {participants.map((participant, index) => (
-                <tr key={index} className="border-t border-white/10">
-                  <td className="py-2">{index + 1}</td>
-                  <td>
-                    {participant.wallet_address.slice(0, 6)}...
-                    {participant.wallet_address.slice(-4)}
+              {participants.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="p-4 text-center text-2xl font-bold"
+                  >
+                    No one has joined Yet!
                   </td>
-                  <td>{participant.status}</td>
-                  <td>{participant.score || "-"}</td>
                 </tr>
-              ))}
-              {/* Fill remaining spots with placeholder rows */}
-              {Array.from({
-                length: Math.max(
-                  0,
-                  challenge.max_participants - participants.length
-                ),
-              }).map((_, index) => (
-                <tr key={`empty-${index}`} className="border-t border-white/10">
-                  <td className="py-2">{participants.length + index + 1}</td>
-                  <td>-</td>
-                  <td>Waiting</td>
-                  <td>-</td>
-                </tr>
-              ))}
+              ) : (
+                participants.map((participant, index) => (
+                  <tr key={index} className="border-t border-white/10">
+                    <td className="py-2">{index + 1}</td>
+                    <td>
+                      {participant.wallet_address.slice(0, 6)}...
+                      {participant.wallet_address.slice(-4)}
+                    </td>
+                    <td>{participant.status}</td>
+                    <td>{participant.score || "-"}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
