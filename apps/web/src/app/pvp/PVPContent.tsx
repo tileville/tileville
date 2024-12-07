@@ -8,6 +8,7 @@ import {
 } from "@/db/react-query-hooks";
 import { PRIMARY_BUTTON_STYLES_LG } from "@/constants";
 import { CreateChallengeModal } from "@/components/PVP/CreateChallengeModal";
+import { CreatedChallenge } from "@/components/PVP/ChallengesTabs/CreatedChallenge";
 
 const TABS = [
   { value: "accepted", text: "Accepted Challenges" },
@@ -26,7 +27,7 @@ export default function PVPContent() {
     useCreatedChallenges(networkStore.address || "");
 
   return (
-    <div className="p-4 pb-24 pt-12 md:pt-40">
+    <div className="p-4 pb-24 pt-12 font-roboto md:pt-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-primary">PVP Challenges</h1>
@@ -66,20 +67,10 @@ export default function PVPContent() {
             </Tabs.Content>
 
             <Tabs.Content value="created">
-              {isLoadingCreated ? (
-                <div>Loading...</div>
-              ) : createdChallenges?.data?.length ? (
-                <div className="grid gap-4">
-                  {/* We'll add ChallengeList component here */}
-                  Created Challenges List
-                </div>
-              ) : (
-                <div className="flex min-h-[200px] items-center justify-center text-center">
-                  <p className="text-lg font-medium text-gray-500">
-                    You Have not created any challenges yet!
-                  </p>
-                </div>
-              )}
+              <CreatedChallenge
+                isLoadingCreated={isLoadingCreated}
+                createdChallenges={createdChallenges}
+              />
             </Tabs.Content>
           </Box>
         </Tabs.Root>

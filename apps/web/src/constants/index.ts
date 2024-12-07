@@ -473,6 +473,9 @@ export const FOLLOWING_BTN_LG = `${PRIMARY_BUTTON_STYLES_LG} hover:text-[#830A0A
 
 export const FOLLOWING_BTN = `${PRIMARY_BUTTON_STYLES} hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-105 transition-transform bg-transparent`;
 
+export const PRIMARY_OUTLINE_BUTTON =
+  "min-w-[80px] rounded-lg border border-[#378209] p-1 text-base font-bold text-[#38830A] shadow-[0px_1px_4px_0px_#89AB5D]";
+
 export const BADGE_BASE_CLASSES =
   "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
 

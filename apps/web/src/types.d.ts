@@ -86,3 +86,18 @@ interface PublicProfile {
   email_address?: string | null;
   total_rewards?: number;
 }
+
+interface Challenge {
+  created_at: string;
+  created_by: string;
+  end_time: string;
+  entry_fee: number;
+  id: number;
+  invite_code: string;
+  is_speed_challenge: boolean;
+  max_participants: number;
+  name: string;
+  speed_duration: number | null;
+  status: string;
+  updated_at: string | null;
+}
