@@ -1,5 +1,5 @@
 import { copyToClipBoard } from "@/lib/helpers";
-import { Challenge } from "@/types";
+import { Challenge, ChallengeParticipant } from "@/types";
 import { CopyIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,11 +7,7 @@ import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
-  participants: Array<{
-    username: string;
-    wallet_address: string;
-    status: string;
-  }>;
+  participants: ChallengeParticipant[];
 };
 
 export const ChallengeDetails = ({
@@ -121,18 +117,35 @@ export const ChallengeDetails = ({
             <thead>
               <tr className="text-left">
                 <th>S.N</th>
-                <th>Username</th>
                 <th>Wallet Address</th>
                 <th>Status</th>
+                <th>Score</th>
               </tr>
             </thead>
             <tbody>
               {participants.map((participant, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{participant.username || "-"}</td>
-                  <td>{participant.wallet_address}</td>
+                <tr key={index} className="border-t border-white/10">
+                  <td className="py-2">{index + 1}</td>
+                  <td>
+                    {participant.wallet_address.slice(0, 6)}...
+                    {participant.wallet_address.slice(-4)}
+                  </td>
                   <td>{participant.status}</td>
+                  <td>{participant.score || "-"}</td>
+                </tr>
+              ))}
+              {/* Fill remaining spots with placeholder rows */}
+              {Array.from({
+                length: Math.max(
+                  0,
+                  challenge.max_participants - participants.length
+                ),
+              }).map((_, index) => (
+                <tr key={`empty-${index}`} className="border-t border-white/10">
+                  <td className="py-2">{participants.length + index + 1}</td>
+                  <td>-</td>
+                  <td>Waiting</td>
+                  <td>-</td>
                 </tr>
               ))}
             </tbody>
@@ -142,7 +155,7 @@ export const ChallengeDetails = ({
 
       <div className="mt-6 flex justify-between">
         <button className="rounded-lg bg-primary px-6 py-2 text-white">
-          Play
+          {challenge.status === "PENDING" ? "Play" : "Played"}
         </button>
       </div>
     </div>

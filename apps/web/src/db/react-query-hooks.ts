@@ -37,7 +37,7 @@ import {
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
-import { PublicProfile } from "@/types";
+import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
 
 export const useSendEmail = ({
@@ -945,35 +945,31 @@ export const useSendGroupMessage = () => {
   });
 };
 
-export const useCreatedChallenges = (wallet_address: string) => {
+export const useCreatedChallenges = (walletAddress: string) => {
   return useQuery({
-    queryKey: ["created_challenges", wallet_address],
+    queryKey: ["created-challenges", walletAddress],
     queryFn: async () => {
       const response = await fetch(
-        `/api/pvp/challenges/created?wallet_address=${wallet_address}`
+        `/api/pvp/challenges/created?wallet_address=${walletAddress}`
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch created challenges");
-      }
-      return response.json();
+      const data = await response.json();
+      return data as ChallengeResponse;
     },
-    enabled: !!wallet_address,
+    enabled: !!walletAddress,
   });
 };
 
-export const useAcceptedChallenges = (wallet_address: string) => {
+export const useAcceptedChallenges = (walletAddress: string) => {
   return useQuery({
-    queryKey: ["accepted_challenges", wallet_address],
+    queryKey: ["accepted-challenges", walletAddress],
     queryFn: async () => {
       const response = await fetch(
-        `/api/pvp/challenges/accepted?wallet_address=${wallet_address}`
+        `/api/pvp/challenges/accepted?wallet_address=${walletAddress}`
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch accepted challenges");
-      }
-      return response.json();
+      const data = await response.json();
+      return data as ChallengeResponse;
     },
-    enabled: !!wallet_address,
+    enabled: !!walletAddress,
   });
 };
 

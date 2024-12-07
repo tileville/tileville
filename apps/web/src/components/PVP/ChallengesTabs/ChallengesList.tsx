@@ -8,7 +8,7 @@ import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
 type ChallengesListType = {
   isLoadingCreated?: boolean;
   isLoadingAccepted?: boolean;
-  challenges: ChallengeResponse;
+  challenges?: ChallengeResponse;
 };
 
 export const ChallengesList = ({
@@ -19,25 +19,6 @@ export const ChallengesList = ({
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
     null
   );
-
-  // Mock participants data - replace with actual data from API
-  const mockParticipants = [
-    {
-      username: "Player1",
-      wallet_address: "B62qk...4EV",
-      status: "Ready",
-    },
-    {
-      username: "-",
-      wallet_address: "-",
-      status: "-",
-    },
-    {
-      username: "-",
-      wallet_address: "-",
-      status: "-",
-    },
-  ];
 
   if (isLoadingCreated || isLoadingAccepted) {
     return (
@@ -51,7 +32,8 @@ export const ChallengesList = ({
     return (
       <div className="flex min-h-[200px] items-center justify-center text-center">
         <p className="text-lg font-medium text-gray-500">
-          You Have not created any challenges yet!
+          You Have not {isLoadingCreated ? "created" : "accepted"} any
+          challenges yet!
         </p>
       </div>
     );
@@ -118,7 +100,11 @@ export const ChallengesList = ({
           {selectedChallenge ? (
             <ChallengeDetails
               challenge={selectedChallenge}
-              participants={mockParticipants}
+              participants={
+                challenges.data.find(
+                  (c) => c.challenge.id === selectedChallenge.id
+                )?.participants || []
+              }
             />
           ) : (
             <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-gray-400 p-8 text-center text-gray-500">

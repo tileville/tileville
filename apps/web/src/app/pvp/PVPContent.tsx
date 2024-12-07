@@ -9,6 +9,7 @@ import {
 import { PRIMARY_BUTTON_STYLES_LG } from "@/constants";
 import { CreateChallengeModal } from "@/components/PVP/CreateChallengeModal";
 import { ChallengesList } from "@/components/PVP/ChallengesTabs/ChallengesList";
+import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 const TABS = [
   { value: "accepted", text: "Accepted Challenges" },
@@ -19,12 +20,47 @@ export default function PVPContent() {
   const networkStore = useNetworkStore();
   const [activeTab, setActiveTab] = useState("accepted");
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
   const { data: acceptedChallenges, isLoading: isLoadingAccepted } =
     useAcceptedChallenges(networkStore.address || "");
 
   const { data: createdChallenges, isLoading: isLoadingCreated } =
     useCreatedChallenges(networkStore.address || "");
+
+  const handleCreateChallenge = async () => {
+    if (!networkStore.address) {
+      try {
+        networkStore.connectWallet(false);
+      } catch (error) {
+        console.error(`Failed to connect with wallet`, error);
+      } finally {
+        return;
+      }
+    }
+
+    if (!accountAuthSignature) {
+      await validateOrSetSignature();
+      return;
+    }
+
+    setCreateModalOpen(true);
+  };
+
+  if (!networkStore.address) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-8">
+        <button
+          className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+          onClick={() => {
+            networkStore.connectWallet(false);
+          }}
+        >
+          Connect your wallet first
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 pb-24 pt-12 font-roboto md:pt-40">
@@ -33,7 +69,7 @@ export default function PVPContent() {
           <h1 className="text-2xl font-bold text-primary">PVP Challenges</h1>
           <button
             className={PRIMARY_BUTTON_STYLES_LG}
-            onClick={() => setCreateModalOpen(true)}
+            onClick={handleCreateChallenge}
           >
             Create Challenge
           </button>
@@ -65,10 +101,13 @@ export default function PVPContent() {
           </Box>
         </Tabs.Root>
       </div>
-      <CreateChallengeModal
-        open={createModalOpen}
-        onOpenChange={setCreateModalOpen}
-      />
+
+      {accountAuthSignature && (
+        <CreateChallengeModal
+          open={createModalOpen}
+          onOpenChange={setCreateModalOpen}
+        />
+      )}
     </div>
   );
 }
