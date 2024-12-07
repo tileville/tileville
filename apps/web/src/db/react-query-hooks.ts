@@ -1015,3 +1015,49 @@ export const useCreateChallenge = (wallet_address: string) => {
     },
   });
 };
+
+export const useInviteChallenge = (code: string) => {
+  console.log("USE INVITE CHALLENGE GETTING CALLED");
+  return useQuery({
+    queryKey: ["invite-challenge", code],
+    queryFn: async () => {
+      const response = await fetch(`/api/pvp/challenges/${code}`);
+      const data = await response.json();
+      return data;
+    },
+    enabled: !!code,
+  });
+};
+
+export const useJoinChallenge = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+    }) => {
+      const response = await fetch("/api/pvp/challenges/join", {
+        method: "POST",
+        body: JSON.stringify({ challenge_id, wallet_address }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to join challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate relevant queries to refetch the latest data
+      queryClient.invalidateQueries({ queryKey: ["invite-challenge"] });
+    },
+  });
+};

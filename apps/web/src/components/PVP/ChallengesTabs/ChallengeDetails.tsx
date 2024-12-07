@@ -18,7 +18,7 @@ export const ChallengeDetails = ({
   challenge,
   participants,
 }: ChallengeDetailsProps) => {
-  const inviteLink = `https://www.tileville.xyz/challenge/${challenge.invite_code}`;
+  const inviteLink = `https://www.tileville.xyz/pvp/invite/${challenge.invite_code}`;
 
   return (
     <div className="rounded-lg bg-[#C6E3B1] p-6">
@@ -141,9 +141,6 @@ export const ChallengeDetails = ({
       </div>
 
       <div className="mt-6 flex justify-between">
-        <button className="rounded-lg border border-red-500 px-6 py-2 text-red-500">
-          Leave
-        </button>
         <button className="rounded-lg bg-primary px-6 py-2 text-white">
           Play
         </button>
