@@ -44,8 +44,6 @@ export default function InviteContent({ code }: { code: string }) {
     }
   };
 
-  console.log("challenge", challenge);
-
   return (
     <Dialog.Root open={true}>
       <Dialog.Content className="relative !m-0 !max-w-[500px] !rounded-md !bg-[#C6D4A8] !p-8">

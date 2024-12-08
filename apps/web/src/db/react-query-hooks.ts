@@ -1013,7 +1013,6 @@ export const useCreateChallenge = (wallet_address: string) => {
 };
 
 export const useInviteChallenge = (code: string) => {
-  console.log("USE INVITE CHALLENGE GETTING CALLED");
   return useQuery({
     queryKey: ["invite-challenge", code],
     queryFn: async () => {
@@ -1054,6 +1053,38 @@ export const useJoinChallenge = () => {
     onSuccess: () => {
       // Invalidate relevant queries to refetch the latest data
       queryClient.invalidateQueries({ queryKey: ["invite-challenge"] });
+    },
+  });
+};
+
+export const useSavePvPScore = () => {
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+      score,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+      score: number;
+    }) => {
+      const response = await fetch("/api/pvp/challenges/submit-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Wallet-Address": wallet_address,
+        },
+        body: JSON.stringify({
+          challenge_id,
+          score,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save PVP score");
+      }
+
+      return response.json();
     },
   });
 };
