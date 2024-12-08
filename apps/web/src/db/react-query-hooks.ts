@@ -37,7 +37,7 @@ import {
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
-import { PublicProfile } from "@/types";
+import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
 
 export const useSendEmail = ({
@@ -940,6 +940,150 @@ export const useSendGroupMessage = () => {
           groupTopicId,
         }),
       });
+      return response.json();
+    },
+  });
+};
+
+export const useCreatedChallenges = (walletAddress: string) => {
+  return useQuery({
+    queryKey: ["created-challenges", walletAddress],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/created?wallet_address=${walletAddress}`
+      );
+      const data = await response.json();
+      return data as ChallengeResponse;
+    },
+    enabled: !!walletAddress,
+  });
+};
+
+export const useAcceptedChallenges = (walletAddress: string) => {
+  return useQuery({
+    queryKey: ["accepted-challenges", walletAddress],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/accepted?wallet_address=${walletAddress}`
+      );
+      const data = await response.json();
+      return data as ChallengeResponse;
+    },
+    enabled: !!walletAddress,
+  });
+};
+
+export const useCreateChallenge = (wallet_address: string) => {
+  const queryClient = useQueryClient();
+
+  const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+  if (!authSignature) {
+    console.warn("Auth signature missing in storage");
+    throw new Error("Auth signature missing!");
+  }
+
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      entry_fee: number;
+      end_time: string;
+      max_participants: number;
+      is_speed_challenge: boolean;
+      speed_duration?: number;
+    }) => {
+      const response = await fetch("/api/pvp/challenges", {
+        method: "POST",
+        headers: {
+          "Auth-Signature": authSignature,
+          "Wallet-Address": wallet_address,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["created_challenges"] });
+    },
+  });
+};
+
+export const useInviteChallenge = (code: string) => {
+  return useQuery({
+    queryKey: ["invite-challenge", code],
+    queryFn: async () => {
+      const response = await fetch(`/api/pvp/challenges/${code}`);
+      const data = await response.json();
+      return data;
+    },
+    enabled: !!code,
+  });
+};
+
+export const useJoinChallenge = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+    }) => {
+      const response = await fetch("/api/pvp/challenges/join", {
+        method: "POST",
+        body: JSON.stringify({ challenge_id, wallet_address }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to join challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate relevant queries to refetch the latest data
+      queryClient.invalidateQueries({ queryKey: ["invite-challenge"] });
+    },
+  });
+};
+
+export const useSavePvPScore = () => {
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+      score,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+      score: number;
+    }) => {
+      const response = await fetch("/api/pvp/challenges/submit-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Wallet-Address": wallet_address,
+        },
+        body: JSON.stringify({
+          challenge_id,
+          score,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save PVP score");
+      }
+
       return response.json();
     },
   });
