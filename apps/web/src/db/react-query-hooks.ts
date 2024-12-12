@@ -1068,11 +1068,15 @@ export const useSavePvPScore = () => {
       wallet_address: string;
       score: number;
     }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
       const response = await fetch("/api/pvp/challenges/submit-score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Wallet-Address": wallet_address,
+          "Auth-Signature": authSignature,
         },
         body: JSON.stringify({
           challenge_id,

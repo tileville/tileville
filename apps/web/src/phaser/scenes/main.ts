@@ -66,11 +66,18 @@ export class MainScene extends Scene {
   breakdownHexes: Hex[] = [];
   breakdownTexts: GameObjects.BitmapText[] = [];
 
+  isPvpGame = false;
+  challengeId: number | null = null;
+  pvpGameFinished = false;
+
   constructor() {
     super("main");
   }
 
   create() {
+    this.isPvpGame = this.game.registry.get("isPvpGame") || false;
+    this.challengeId = this.game.registry.get("challengeId") || null;
+
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
 
     this.add.rectangle(640, 360, 1280, 720);
@@ -545,7 +552,7 @@ export class MainScene extends Scene {
       "handleSendGroupMessageDemo"
     );
 
-    if (this.score > 95) {
+    if (this.score > 95 && !this.isPvpGame) {
       isDemoGame
         ? handleSendGroupMessageDemo(
             this.score,
@@ -637,51 +644,57 @@ export class MainScene extends Scene {
     });
 
     let rank, message1, message2;
-    if (this.score === 0) {
-      // Z rank
-      rank = "Rank: Z";
-      message1 = "What!?";
-      message2 = "(That's honestly impressive!)";
-    } else if (this.score < 70) {
-      // E rank
-      rank = "Rank: E";
-      message1 = "Finished!";
-      message2 = "(Next rank at 70 points)";
-    } else if (this.score < 80) {
-      // D rank
-      rank = "Rank: D";
-      message1 = "Not bad!";
-      message2 = "(Next rank at 80 points)";
-    } else if (this.score < 90) {
-      // C rank
-      rank = "Rank: C";
-      message1 = "Good job!";
-      message2 = "(Next rank at 90 points)";
-    } else if (this.score < 100) {
-      // B rank
-      rank = "Rank: B";
-      message1 = "Well done!";
-      message2 = "(Next rank at 100 points)";
-    } else if (this.score < 110) {
-      // A rank
-      rank = "Rank: A";
-      message1 = "Excellent!";
-      message2 = "(Next rank at 110 points)";
-    } else if (this.score < 120) {
-      // A+ rank
-      rank = "Rank: A+";
-      message1 = "Amazing!";
-      message2 = "(Next rank at 120 points)";
-    } else if (this.score < 125) {
-      // S rank
-      rank = "Rank: S";
-      message1 = "Incredible!!";
-      message2 = "(This is the highest rank!)";
+    if (this.isPvpGame) {
+      message1 = "Challenge Complete!";
+      message2 = "Your score has been submitted";
+      rank = `Score: ${this.score}`;
     } else {
-      // S rank (perfect)
-      rank = "Rank: S";
-      message1 = "A perfect score!!";
-      message2 = "(This is the highest rank!)";
+      // Your existing rank logic
+      if (this.score === 0) {
+        rank = "Rank: Z";
+        message1 = "What!?";
+        message2 = "(That's honestly impressive!)";
+      } else if (this.score < 70) {
+        // E rank
+        rank = "Rank: E";
+        message1 = "Finished!";
+        message2 = "(Next rank at 70 points)";
+      } else if (this.score < 80) {
+        // D rank
+        rank = "Rank: D";
+        message1 = "Not bad!";
+        message2 = "(Next rank at 80 points)";
+      } else if (this.score < 90) {
+        // C rank
+        rank = "Rank: C";
+        message1 = "Good job!";
+        message2 = "(Next rank at 90 points)";
+      } else if (this.score < 100) {
+        // B rank
+        rank = "Rank: B";
+        message1 = "Well done!";
+        message2 = "(Next rank at 100 points)";
+      } else if (this.score < 110) {
+        // A rank
+        rank = "Rank: A";
+        message1 = "Excellent!";
+        message2 = "(Next rank at 110 points)";
+      } else if (this.score < 120) {
+        // A+ rank
+        rank = "Rank: A+";
+        message1 = "Amazing!";
+        message2 = "(Next rank at 120 points)";
+      } else if (this.score < 125) {
+        // S rank
+        rank = "Rank: S";
+        message1 = "Incredible!!";
+        message2 = "(This is the highest rank!)";
+      } else {
+        // S rank (perfect)
+        rank = "Rank: S";
+        message1 = "A perfect score!!";
+        message2 = "(This is the highest rank!)";
+      }
     }
 
     this.gameOverText = this.add.bitmapText(1500, 70, "font", message1, 60);
@@ -696,15 +709,17 @@ export class MainScene extends Scene {
     this.nextRankText.setOrigin(0.5);
     this.nextRankText.setDepth(4);
 
-    this.competitionNameText = this.add.bitmapText(
-      1500,
-      570,
-      "font",
-      `Competition Key: ${competitionKey}`,
-      24
-    );
-    this.competitionNameText.setOrigin(0.5);
-    this.competitionNameText.setDepth(4);
+    if (!this.isPvpGame) {
+      this.competitionNameText = this.add.bitmapText(
+        1500,
+        570,
+        "font",
+        `Competition Key: ${competitionKey}`,
+        24
+      );
+      this.competitionNameText.setOrigin(0.5);
+      this.competitionNameText.setDepth(4);
+    }
 
     const currentTime: string = this.getGameStartTime();
     this.currentTimeText = this.add.bitmapText(
@@ -877,13 +892,15 @@ export class MainScene extends Scene {
       ease: PhaserMath.Easing.Quadratic.Out,
     });
 
-    this.tweens.add({
-      targets: [this.competitionNameText, this.currentTimeText],
-      props: { x: 1040 },
-      delay: 1200,
-      duration: 300,
-      ease: PhaserMath.Easing.Quadratic.Out,
-    });
+    if (!this.isPvpGame) {
+      this.tweens.add({
+        targets: [this.competitionNameText, this.currentTimeText],
+        props: { x: 1040 },
+        delay: 1200,
+        duration: 300,
+        ease: PhaserMath.Easing.Quadratic.Out,
+      });
+    }
 
     if (isDemoGame) {
       this.tweens.add({

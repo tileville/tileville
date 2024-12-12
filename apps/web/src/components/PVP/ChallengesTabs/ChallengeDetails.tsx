@@ -4,6 +4,9 @@ import { CopyIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
+import { useNetworkStore } from "@/lib/stores/network";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -14,6 +17,32 @@ export const ChallengeDetails = ({
   challenge,
   participants,
 }: ChallengeDetailsProps) => {
+  const networkStore = useNetworkStore();
+  const router = useRouter();
+  const handlePlayGame = () => {
+    // Find participant's game record
+    const currentParticipant = participants.find(
+      (p) => p.wallet_address === networkStore.address
+    );
+
+    if (!currentParticipant) {
+      toast.error("You haven't joined this challenge yet!");
+      return;
+    }
+
+    if (currentParticipant.has_played) {
+      toast.error("You've already played this challenge!");
+      return;
+    }
+
+    toast(
+      `You have joined the ${challenge.name} Challenge successfully. Redirecting you to the game screen now.`
+    );
+    setTimeout(() => {
+      router.push(`/pvp/${challenge.id}/game`);
+    }, 3000);
+  };
+
   const inviteLink = `https://www.tileville.xyz/pvp/invite/${challenge.invite_code}`;
 
   return (
@@ -151,8 +180,12 @@ export const ChallengeDetails = ({
       </div>
 
       <div className="mt-6 flex justify-between">
-        <button className="rounded-lg bg-primary px-6 py-2 text-white">
-          {challenge.status === "PENDING" ? "Play" : "Played"}
+        <button
+          onClick={handlePlayGame}
+          disabled={challenge.status !== "PENDING"}
+          className="rounded-lg bg-primary px-6 py-2 text-white disabled:opacity-50"
+        >
+          {challenge.status === "PENDING" ? "Play" : "Game Ended"}
         </button>
       </div>
     </div>
