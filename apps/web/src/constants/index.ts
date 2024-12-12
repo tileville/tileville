@@ -21,6 +21,7 @@ import DoneLottie from "../../public/lotties/doneLottie.json";
 import TxnConfirmed from "../../public/lotties/txnConfirmed.json";
 import confusingLottie from "../../public/lotties/confusingLottie.json";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
+import clsx from "clsx";
 
 type AttributeValue = {
   [key: string]: string;
@@ -478,6 +479,14 @@ export const PRIMARY_OUTLINE_BUTTON =
 
 export const BADGE_BASE_CLASSES =
   "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
+
+export const PRIMARY_BUTTON_V2 = clsx(
+  "rounded-md border-2 border-primary",
+  "bg-primary bg-opacity-30",
+  "px-2 text-center text-sm leading-none text-white",
+  "hover:shadow-[0_0_8px_hsl(var(--primary))]",
+  "md:px-[15px] md:text-base"
+);
 
 export type NFTCollection =
   (typeof NFT_COLLECTIONS)[keyof typeof NFT_COLLECTIONS];

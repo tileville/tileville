@@ -6,10 +6,11 @@ import {
   useAcceptedChallenges,
   useCreatedChallenges,
 } from "@/db/react-query-hooks";
-import { PRIMARY_BUTTON_STYLES_LG } from "@/constants";
+import { PRIMARY_BUTTON_V2 } from "@/constants";
 import { CreateChallengeModal } from "@/components/PVP/CreateChallengeModal";
 import { ChallengesList } from "@/components/PVP/ChallengesTabs/ChallengesList";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
+import clsx from "clsx";
 
 const TABS = [
   { value: "accepted", text: "Accepted Challenges" },
@@ -68,17 +69,21 @@ export default function PVPContent() {
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-primary">PVP Challenges</h1>
           <button
-            className={PRIMARY_BUTTON_STYLES_LG}
+            className={clsx(PRIMARY_BUTTON_V2, "py-1")}
             onClick={handleCreateChallenge}
           >
-            Create Challenge
+            + Create Challenge
           </button>
         </div>
 
         <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-          <Tabs.List className="mt-4 whitespace-nowrap">
+          <Tabs.List className="mt-4 whitespace-nowrap !text-xl !text-black">
             {TABS.map((tab) => (
-              <Tabs.Trigger key={tab.value} value={tab.value}>
+              <Tabs.Trigger
+                key={tab.value}
+                value={tab.value}
+                className={`${activeTab === tab.value ? "!font-bold" : ""}`}
+              >
                 {tab.text}
               </Tabs.Trigger>
             ))}

@@ -1,5 +1,6 @@
-import Image from "next/image"
-import Link from "next/link"
+import { PRIMARY_BUTTON_V2 } from "@/constants";
+import Image from "next/image";
+import Link from "next/link";
 
 export const CompetitionsHeader = () => {
   return (
@@ -19,11 +20,11 @@ export const CompetitionsHeader = () => {
         </div>
         <Link
           href="/competitions/demo-game"
-          className="rounded-md border-2 border-primary bg-primary bg-opacity-30 px-2 py-2 text-center font-mono text-sm leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))] md:px-[15px] md:text-base"
+          className={`${PRIMARY_BUTTON_V2} py-2`}
         >
           Play Demo Game
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};

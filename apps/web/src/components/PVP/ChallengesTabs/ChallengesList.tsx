@@ -30,8 +30,8 @@ export const ChallengesList = ({
 
   if (!challenges?.data?.length) {
     return (
-      <div className="flex min-h-[200px] items-center justify-center text-center">
-        <p className="text-lg font-medium text-gray-500">
+      <div className="mt-8 flex  min-h-[135px] items-center justify-center rounded-xl bg-[#B4C28E] text-center">
+        <p className="max-w-[380px] text-2xl font-bold  text-black ">
           You Have not {isLoadingCreated ? "created" : "accepted"} any
           challenges yet!
         </p>
