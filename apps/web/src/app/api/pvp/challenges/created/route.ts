@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     if (challengesError) throw challengesError;
 
-    // Transform data to match standardized format
+    // Transform data to ensure participants is always an array
     const formattedData = challenges.map((challenge) => ({
       challenge: {
         id: challenge.id,
@@ -36,7 +36,12 @@ export async function GET(request: NextRequest) {
         created_at: challenge.created_at,
         updated_at: challenge.updated_at,
       },
-      participants: challenge.participants || [],
+      // Ensure participants is always an array
+      participants: Array.isArray(challenge.participants)
+        ? challenge.participants
+        : challenge.participants
+        ? [challenge.participants]
+        : [],
     }));
 
     return Response.json({ success: true, data: formattedData });

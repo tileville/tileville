@@ -7,37 +7,57 @@ export async function GET(request: NextRequest) {
   const wallet_address = searchParams.get("wallet_address") || "";
 
   try {
-    const { data, error } = await supabase
-      .from("pvp_challenge_participants")
+    // First get all challenges this user has joined
+    const { data: userParticipations, error: participationError } =
+      await supabase
+        .from("pvp_challenge_participants")
+        .select("challenge_id")
+        .eq("wallet_address", wallet_address);
+
+    if (participationError) throw participationError;
+
+    // Get the challenge IDs the user has participated in
+    const challengeIds = userParticipations.map((p) => p.challenge_id);
+
+    if (challengeIds.length === 0) {
+      return Response.json({ success: true, data: [] });
+    }
+
+    // Get all challenges with all their participants
+    const { data: challenges, error: challengesError } = await supabase
+      .from("pvp_challenges")
       .select(
         `
         *,
-        challenge:pvp_challenges(*)
+        participants:pvp_challenge_participants(*)
       `
       )
-      .eq("wallet_address", wallet_address)
-      .order("joined_at", { ascending: false });
+      .in("id", challengeIds)
+      .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (challengesError) throw challengesError;
 
-    // Transform data to match standardized format
-    const formattedData = data.map((participation) => ({
-      challenge: participation.challenge,
-      participants: [
-        {
-          id: participation.id,
-          challenge_id: participation.challenge_id,
-          wallet_address: participation.wallet_address,
-          joined_at: participation.joined_at,
-          played_at: participation.played_at,
-          status: participation.status,
-          score: participation.score,
-          has_played: participation.has_played,
-          txn_hash: participation.txn_hash,
-          txn_status: participation.txn_status,
-          created_at: participation.created_at,
-        },
-      ],
+    // Format the data
+    const formattedData = challenges.map((challenge) => ({
+      challenge: {
+        id: challenge.id,
+        name: challenge.name,
+        created_by: challenge.created_by,
+        invite_code: challenge.invite_code,
+        entry_fee: challenge.entry_fee,
+        end_time: challenge.end_time,
+        max_participants: challenge.max_participants,
+        is_speed_challenge: challenge.is_speed_challenge,
+        speed_duration: challenge.speed_duration,
+        status: challenge.status,
+        created_at: challenge.created_at,
+        updated_at: challenge.updated_at,
+      },
+      participants: Array.isArray(challenge.participants)
+        ? challenge.participants
+        : challenge.participants
+        ? [challenge.participants]
+        : [],
     }));
 
     return Response.json({ success: true, data: formattedData });
