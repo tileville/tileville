@@ -1,6 +1,4 @@
-// src/app/pvp/challengeId/game/page.tsx
-
-("use client");
+"use client";
 import dynamic from "next/dynamic";
 import { Toaster } from "react-hot-toast";
 import LandingBackground from "@/components/LandingBackground";
