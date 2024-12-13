@@ -1,5 +1,5 @@
 import { Dialog } from "@radix-ui/themes";
-import { Cross1Icon } from "@radix-ui/react-icons";
+import { CopyIcon, Cross1Icon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { copyToClipBoard } from "@/lib/helpers";
 
@@ -39,33 +39,34 @@ export const ChallengeCreatedModal = ({
 
   return (
     <Dialog.Root open={open}>
-      <Dialog.Content className="relative !m-0 !max-w-[500px] !rounded-md !bg-[#C6D4A8] !p-8">
+      <Dialog.Content className="relative !m-0 !max-w-[610px] !rounded-md !bg-[#A6B97B] !p-8">
         <div className="flex flex-col items-center gap-6 text-center">
-          {/* <Image
-            src="/icons/party-popper.svg"
+          <Image
+            src="/icons/party-popper.png"
             alt="Success"
             width={64}
             height={64}
-          /> */}
+          />
 
           <div>
-            <h2 className="mb-2 text-2xl font-bold">
+            <h2 className="mb-2 text-[28px] font-bold">
               Challenge successfully created!
             </h2>
-            <p className="text-gray-700">
+            <p className="max-w-sm text-center text-lg text-[#5D6845]">
               Share your challenge and let the competition begin!
             </p>
           </div>
 
           <div className="w-full">
-            <h3 className="mb-2 text-lg font-semibold">Share Invite Link</h3>
-            <div className="flex items-center gap-2 rounded-lg bg-white/20 p-2">
+            <h3 className="mb-2 text-2xl font-bold">Share Invite Link</h3>
+            <div className="flex items-center gap-2 rounded-lg  p-2">
               <input
                 type="text"
                 value={inviteLink}
                 readOnly
-                className="flex-1 bg-transparent px-2"
+                className="min-h-[42px] flex-1 rounded-[5px] border border-[#38830A] bg-transparent px-2 text-center text-base text-black outline-none"
               />
+
               <button
                 onClick={() =>
                   copyToClipBoard({
@@ -73,50 +74,42 @@ export const ChallengeCreatedModal = ({
                     copiedType: "Invite Link",
                   })
                 }
-                className="rounded-md bg-[#38830A] px-4 py-2 text-white hover:bg-[#38830A]/90"
+                className="rounded-md bg-[#38830A] px-4 py-2 text-white hover:bg-[#38830A]/90 flex items-center gap-2 text-base font-bold"
               >
+                <CopyIcon />
                 Copy
               </button>
             </div>
           </div>
 
           <div className="w-full">
-            <h3 className="mb-4 text-lg font-semibold">
+            <h3 className="mb-4 text-xl font-bold">
               Share Invite Link on Socials
             </h3>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => handleShare("twitter")}
-                className="rounded-full bg-black p-3 hover:opacity-90"
-              >
-                <Image src="/icons/x.svg" width={24} height={24} alt="X" />
+            <div className="flex justify-center gap-3">
+              <button onClick={() => handleShare("twitter")}>
+                <Image src="/icons/x.svg" width={40} height={40} alt="X" />
               </button>
-              <button
-                onClick={() => handleShare("telegram")}
-                className="rounded-full bg-[#229ED9] p-3 hover:opacity-90"
-              >
+              <button onClick={() => handleShare("telegram")}>
                 <Image
                   src="/icons/telegram.svg"
-                  width={24}
-                  height={24}
+                  width={40}
+                  height={40}
                   alt="Telegram"
                 />
               </button>
-              <button
-                onClick={() => handleShare("discord")}
-                className="rounded-full bg-[#5865F2] p-3 hover:opacity-90"
-              >
+              <button onClick={() => handleShare("discord")}>
                 <Image
                   src="/icons/discord.svg"
-                  width={24}
-                  height={24}
+                  width={40}
+                  height={40}
                   alt="Discord"
                 />
               </button>
             </div>
           </div>
 
-          <p className="text-sm text-gray-600">
+          <p className="max-w-sm text-sm text-gray-600">
             Note: The challenges you create will be listed under the
             &quot;Created Challenges&quot; section on the PvP page.
           </p>

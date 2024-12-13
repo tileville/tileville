@@ -45,8 +45,6 @@ export const PhaserLayer = ({
   const { data: username } = useUsername(address);
   const pvpScoreMutation = useSavePvPScore();
 
-  console.log("48 data", isPvPGame, challengeId);
-
   const handleSendGroupMessageDemo = useCallback(
     (score: number, groupTopicId: string) => {
       const message = formatGameAnnouncement({

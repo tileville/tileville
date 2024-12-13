@@ -1,7 +1,11 @@
 "use client";
-import { useInviteChallenge, useJoinChallenge } from "@/db/react-query-hooks";
+import {
+  useInviteChallenge,
+  useJoinChallenge,
+  useUsername,
+} from "@/db/react-query-hooks";
 import { useEffect } from "react";
-import { Dialog } from "@radix-ui/themes";
+import { Dialog, Skeleton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { formatAddress } from "@/lib/helpers";
@@ -11,12 +15,16 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
 import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
+import Link from "next/link";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
   const networkStore = useNetworkStore();
   const { data: challenge, isLoading } = useInviteChallenge(code);
   const joinChallengeMutation = useJoinChallenge();
+  const { data: username, isLoading: usernameLoading } = useUsername(
+    challenge?.data?.created_by || ""
+  );
 
   useEffect(() => {
     if (!code) {
@@ -46,23 +54,41 @@ export default function InviteContent({ code }: { code: string }) {
 
   return (
     <Dialog.Root open={true}>
-      <Dialog.Content className="relative !m-0 !max-w-[500px] !rounded-md !bg-[#C6D4A8] !p-8">
-        <div className="flex flex-col items-center gap-4">
-          {/* <Image
-            src="/icons/invitation.svg"
+      <Dialog.Content className="relative !m-0 !min-h-[523px] !max-w-[500px] !rounded-md !bg-[#A6B97B] ">
+        <div className="flex !min-h-[523px] flex-col items-center justify-center gap-4">
+          <Image
+            src="/icons/invitation.png"
             width={80}
             height={80}
             alt="invitation"
-          /> */}
+          />
 
           {isLoading ? (
-            "Loading..."
+            <Spinner2 />
           ) : (
             <>
               <div className="text-center">
                 <h2 className="text-2xl font-bold">
-                  {formatAddress(challenge.data.created_by)}
+                  {/* {usernameLoading ? (
+                    <Skeleton />
+                  ) : (
+                    formatAddress( || "")
+                  )} */}
+
+                  {usernameLoading ? (
+                    <Skeleton />
+                  ) : username ? (
+                    <Link
+                      href={`${window.location.origin}/u/${username}`}
+                      className="underline hover:no-underline"
+                    >
+                      {username}
+                    </Link>
+                  ) : (
+                    formatAddress(challenge.data.created_by)
+                  )}
                 </h2>
+
                 <h3 className="text-xl">Invited You</h3>
               </div>
 
@@ -83,7 +109,7 @@ export default function InviteContent({ code }: { code: string }) {
               </div>
 
               <div className="grid w-full grid-cols-3 gap-4">
-                <div className="flex flex-col items-center rounded-lg bg-[#9AB579] bg-opacity-30 p-4">
+                <div className="flex flex-col items-center rounded-lg border border-[#76993E] bg-[#9AB579] p-4">
                   {/* <Image
                 src="/icons/timer.svg"
                 width={24}
@@ -96,7 +122,7 @@ export default function InviteContent({ code }: { code: string }) {
                   </p>
                 </div>
 
-                <div className="flex flex-col items-center rounded-lg bg-[#9AB579] bg-opacity-30 p-4">
+                <div className="flex flex-col items-center rounded-lg border border-[#76993E] bg-[#9AB579] p-4">
                   {/* <Image
                 src="/icons/mina.svg"
                 width={24}
@@ -108,7 +134,7 @@ export default function InviteContent({ code }: { code: string }) {
                 </div>
 
                 {challenge.data.is_speed_challenge && (
-                  <div className="flex flex-col items-center rounded-lg bg-[#9AB579] bg-opacity-30 p-4">
+                  <div className="flex flex-col items-center rounded-lg border border-[#76993E] bg-[#9AB579] p-4">
                     <Image
                       src="/icons/speed.svg"
                       width={24}

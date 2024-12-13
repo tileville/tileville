@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useCreateChallenge } from "@/db/react-query-hooks";
 import { ChallengeCreatedModal } from "./ChallengeCreatedModal";
+import { PRIMARY_BUTTON_V2_LG } from "@/constants";
+import { SpinnerWhite } from "../common/Spinner";
 
 // Game name suggestions for regeneration
 const GAME_NAMES = [
@@ -209,7 +211,7 @@ export const CreateChallengeModal = ({
                     type="number"
                     min="60"
                     max="300"
-                    className="min-h-10 w-full rounded-md border-2 border-primary bg-transparent px-2 font-medium outline-none"
+                    className={INPUT_CLASS}
                     value={speedDuration}
                     onChange={(e) => setSpeedDuration(Number(e.target.value))}
                     required={isSpeedChallenge}
@@ -220,25 +222,16 @@ export const CreateChallengeModal = ({
 
             <div className="flex justify-end gap-4">
               <button
-                type="button"
-                onClick={() => onOpenChange(false)}
-                className="min-h-10 rounded-md border-2 border-primary bg-transparent px-6 font-medium"
-              >
-                Cancel
-              </button>
-              <button
                 type="submit"
                 disabled={loading}
-                className="min-h-10 relative rounded-md bg-primary px-6 font-medium text-white disabled:opacity-70"
+                className={`${PRIMARY_BUTTON_V2_LG} relative min-h-[50px] w-full`}
               >
                 {loading && (
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <UpdateIcon className="h-5 w-5 animate-spin" />
+                  <span className="absolute right-6 top-1/2  -translate-y-1/2">
+                    <SpinnerWhite size={18} />
                   </span>
                 )}
-                <span className={loading ? "invisible" : ""}>
-                  Create Challenge
-                </span>
+                <span>Create Challenge</span>
               </button>
             </div>
           </form>
