@@ -19,6 +19,35 @@ export const ChallengeDetails = ({
 }: ChallengeDetailsProps) => {
   const networkStore = useNetworkStore();
   const router = useRouter();
+
+  // Function to check if challenge has ended
+  const isChallengeEnded = () => {
+    return new Date(challenge.end_time) < new Date();
+  };
+
+  // Function to check if current user has already played
+  const hasUserPlayed = () => {
+    const currentParticipant = participants.find(
+      (p) => p.wallet_address === networkStore.address
+    );
+    return currentParticipant?.has_played;
+  };
+
+  const getWinner = (): ChallengeParticipant | null => {
+    const playedParticipants = participants.filter((p) => p.has_played);
+    if (playedParticipants.length === 0) return null;
+
+    return playedParticipants.reduce((highest, current) => {
+      if (!highest || (current.score || 0) > (highest.score || 0)) {
+        return current;
+      }
+      return highest;
+    }, playedParticipants[0]);
+  };
+
+  const winner = getWinner();
+  console.log("WINNER", winner);
+
   const handlePlayGame = () => {
     // Find participant's game record
     const currentParticipant = participants.find(
@@ -35,7 +64,12 @@ export const ChallengeDetails = ({
       return;
     }
 
-    toast(
+    if (isChallengeEnded()) {
+      toast.error("This challenge has ended!");
+      return;
+    }
+
+    toast.success(
       `You have joined the ${challenge.name} Challenge successfully. Redirecting you to the game screen now.`
     );
     setTimeout(() => {
@@ -168,6 +202,13 @@ export const ChallengeDetails = ({
                     <td>
                       {participant.wallet_address.slice(0, 6)}...
                       {participant.wallet_address.slice(-4)}
+                      {winner &&
+                        participant.wallet_address ===
+                          winner.wallet_address && (
+                          <span className="ml-2 text-xs font-bold text-green-600">
+                            (Winner!)
+                          </span>
+                        )}
                     </td>
                     <td>{participant.status}</td>
                     <td>{participant.score || "-"}</td>
@@ -179,13 +220,18 @@ export const ChallengeDetails = ({
         </div>
       </div>
 
+      {/* Update the play button */}
       <div className="mt-6 flex justify-between">
         <button
           onClick={handlePlayGame}
-          disabled={challenge.status !== "PENDING"}
-          className="rounded-lg bg-primary px-6 py-2 text-white disabled:opacity-50"
+          disabled={isChallengeEnded() || hasUserPlayed()}
+          className="rounded-lg bg-primary px-6 py-2 text-white  disabled:opacity-50"
         >
-          {challenge.status === "PENDING" ? "Play" : "Game Ended"}
+          {isChallengeEnded()
+            ? "Challenge Ended"
+            : hasUserPlayed()
+            ? "Already Played"
+            : "Play"}
         </button>
       </div>
     </div>
