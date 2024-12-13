@@ -1,6 +1,6 @@
 "use client";
 import { Dialog } from "@radix-ui/themes";
-import { Cross1Icon, UpdateIcon, LoopIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, UpdateIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useCreateChallenge } from "@/db/react-query-hooks";
@@ -17,6 +17,9 @@ const GAME_NAMES = [
   "TileVille Rivals",
   "TileVille Masters",
 ];
+
+const INPUT_CLASS =
+  "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
 
 export const CreateChallengeModal = ({
   open,
@@ -85,32 +88,44 @@ export const CreateChallengeModal = ({
     <>
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
         <Dialog.Content className="relative max-w-[500px] !rounded-md !bg-[#99B579] !p-8">
-          <Dialog.Title className="text-2xl font-bold">
+          <Dialog.Title className="text-center !text-[28px] font-bold">
             Create Challenge
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
             {/* Challenge Name */}
             <div className="relative">
-              <label className="mb-2 block font-medium">
+              <Dialog.Description className="!mb-2 block  !text-2xl font-medium">
                 Challenge Name
-                <span className="text-red-500">*</span>
-              </label>
-              <div className="flex items-center gap-2">
+                <span className="!text-2xl text-red-500">*</span>
+              </Dialog.Description>
+              <div className="relative flex items-center gap-2">
                 <input
                   type="text"
-                  className="min-h-10 w-full rounded-md border-2 border-primary bg-transparent px-2 font-medium outline-none"
+                  className={INPUT_CLASS}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
-                <button
-                  type="button"
-                  onClick={generateRandomName}
-                  className="flex h-10 w-10 items-center justify-center rounded-md border-2 border-primary bg-transparent"
-                >
-                  <LoopIcon />
-                </button>
+                <div className="absolute bottom-0 right-0 top-0 flex items-center justify-center gap-1">
+                  <button
+                    type="button"
+                    onClick={generateRandomName}
+                    className="w-full p-3"
+                  >
+                    <UpdateIcon width={20} height={20} />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setName("");
+                    }}
+                    className="w-full p-3"
+                  >
+                    <Cross1Icon width={20} height={20} />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -125,7 +140,7 @@ export const CreateChallengeModal = ({
                   type="number"
                   min="0"
                   step="1"
-                  className="min-h-10 w-full rounded-md border-2 border-primary bg-transparent px-2 font-medium outline-none"
+                  className={INPUT_CLASS}
                   value={entryFee}
                   onChange={(e) => setEntryFee(Number(e.target.value))}
                   required
@@ -139,7 +154,7 @@ export const CreateChallengeModal = ({
                   <span className="text-red-500">*</span>
                 </label>
                 <select
-                  className="min-h-10 w-full rounded-md border-2 border-primary bg-transparent px-2 font-medium outline-none"
+                  className={INPUT_CLASS}
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
                   required
@@ -160,7 +175,7 @@ export const CreateChallengeModal = ({
                   type="number"
                   min="2"
                   max="10"
-                  className="min-h-10 w-full rounded-md border-2 border-primary bg-transparent px-2 font-medium outline-none"
+                  className={INPUT_CLASS}
                   value={maxParticipants}
                   onChange={(e) => setMaxParticipants(Number(e.target.value))}
                   required
@@ -230,7 +245,7 @@ export const CreateChallengeModal = ({
 
           <Dialog.Close>
             <button className="absolute right-4 top-4">
-              <Cross1Icon />
+              <Cross1Icon width={24} height={24} />
             </button>
           </Dialog.Close>
         </Dialog.Content>
