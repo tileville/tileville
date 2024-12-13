@@ -500,6 +500,13 @@ export const PRIMARY_BUTTON_V2 = clsx(
   "md:px-[15px] md:text-base"
 );
 
+export const PRIMARY_BUTTON_V2_LG = clsx(
+  "rounded-md border-2 border-primary",
+  "bg-primary bg-opacity-30",
+  "px-2 text-center text-xl font-bold leading-none text-white",
+  "md:px-[15px] md:text-2xl"
+);
+
 export type NFTCollection =
   (typeof NFT_COLLECTIONS)[keyof typeof NFT_COLLECTIONS];
 
