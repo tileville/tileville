@@ -267,7 +267,7 @@ export const BACKGROUND_PATHS_HEADER = [
 ];
 export const NAVIGATION_MENU_ITEMS = [
   {
-    name: "Play Game",
+    name: "Join Competition",
     key: 0,
     href: "/competitions",
   },
