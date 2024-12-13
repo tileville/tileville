@@ -33,7 +33,14 @@ export const ChallengeDetails = ({
     return currentParticipant?.has_played;
   };
 
+  const haveAllParticipantsPlayed = () => {
+    return participants.length > 0 && participants.every((p) => p.has_played);
+  };
+
   const getWinner = (): ChallengeParticipant | null => {
+    // Only show winner if challenge ended OR all participants have played
+    if (!isChallengeEnded() && !haveAllParticipantsPlayed()) return null;
+
     const playedParticipants = participants.filter((p) => p.has_played);
     if (playedParticipants.length === 0) return null;
 
@@ -46,7 +53,6 @@ export const ChallengeDetails = ({
   };
 
   const winner = getWinner();
-  console.log("WINNER", winner);
 
   const handlePlayGame = () => {
     // Find participant's game record
