@@ -239,9 +239,11 @@ export const formatGameAnnouncement = ({
   isDemoGame: boolean;
   competitionKey?: string;
 }): string => {
-  const userIdentifier = username
-    ? `[${username}](https://www.tileville.xyz/u/${username})`
-    : `\`${formatAddress(address)}\``;
+  const userIdentifier = address
+    ? username
+      ? `[${username}](https://www.tileville.xyz/u/${username})`
+      : `\`${formatAddress(address)}\``
+    : "Someone";
 
   const gameMode = isDemoGame
     ? `[TileVille demo mode](https://www.tileville.xyz/competitions/demo-game)`
