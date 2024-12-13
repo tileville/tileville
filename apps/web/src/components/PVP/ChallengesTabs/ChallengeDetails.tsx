@@ -86,7 +86,7 @@ export const ChallengeDetails = ({
   const inviteLink = `https://www.tileville.xyz/pvp/invite/${challenge.invite_code}`;
 
   return (
-    <div className="rounded-lg bg-[#C6E3B1] p-6">
+    <div className="rounded-lg bg-[#99B579] p-6 border border-[#38830A]">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-bold">{challenge.name}</h2>
         <p className="text-sm">
@@ -96,20 +96,20 @@ export const ChallengeDetails = ({
       </div>
 
       <div className="mb-8 grid grid-cols-3 gap-4">
-        <div className="flex flex-col items-center rounded-lg bg-white/20 p-4">
+        <div className="flex flex-col items-center rounded-lg bg-[#99B579] border border-[#76993E] p-4">
           {/* <Image src="/icons/timer.svg" width={24} height={24} alt="timer" /> */}
           <p className="mt-2 font-medium">Time remaining</p>
           <CountdownTimerSmall endTime={challenge.end_time} />
         </div>
 
-        <div className="flex flex-col items-center rounded-lg bg-white/20 p-4">
+        <div className="flex flex-col items-center rounded-lg bg-[#99B579] border border-[#76993E] p-4">
           {/* <Image src="/icons/mina.svg" width={24} height={24} alt="mina" /> */}
           <p className="mt-2 font-medium">Entry Fees</p>
           <p>{challenge.entry_fee} MINA</p>
         </div>
 
         {challenge.is_speed_challenge && (
-          <div className="flex flex-col items-center rounded-lg bg-white/20 p-4">
+          <div className="flex flex-col items-center rounded-lg bg-[#99B579] border border-[#76993E] p-4">
             {/* <Image src="/icons/speed.svg" width={24} height={24} alt="speed" /> */}
             <p className="mt-2 font-medium">Speed Challenge</p>
             <p>{challenge.speed_duration} seconds</p>
