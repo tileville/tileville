@@ -9,12 +9,14 @@ type ChallengesListType = {
   isLoadingCreated?: boolean;
   isLoadingAccepted?: boolean;
   challenges?: ChallengeResponse;
+  challengesType: string;
 };
 
 export const ChallengesList = ({
   isLoadingCreated,
   isLoadingAccepted,
   challenges,
+  challengesType,
 }: ChallengesListType) => {
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
     null
@@ -32,8 +34,8 @@ export const ChallengesList = ({
     return (
       <div className="mt-8 flex  min-h-[135px] items-center justify-center rounded-xl bg-[#B4C28E] text-center">
         <p className="max-w-[380px] text-2xl font-bold  text-black ">
-          You Have not {isLoadingCreated ? "created" : "accepted"} any
-          challenges yet!
+          You Have not {challengesType === "created" ? "created" : "accepted"}{" "}
+          any challenges yet!
         </p>
       </div>
     );

@@ -272,47 +272,53 @@ export const NAVIGATION_MENU_ITEMS = [
     href: "/competitions",
   },
   {
-    name: "Guide",
+    name: "PLAYER VS PLAYER",
     key: 1,
+    targetBlank: false,
+    href: "/pvp",
+  },
+  {
+    name: "Guide",
+    key: 2,
     targetBlank: false,
     href: "/guide",
   },
 
   {
     name: "Leaderboard",
-    key: 2,
+    key: 3,
     targetBlank: false,
     href: "/leaderboard",
   },
   {
     name: "Community Section",
-    key: 7,
+    key: 4,
     targetBlank: false,
     href: "/community",
   },
 
   {
     name: "User Profile",
-    key: 3,
+    key: 5,
     targetBlank: false,
     href: "/profile",
   },
   {
     name: "NFTS MARKETPLACE",
-    key: 4,
+    key: 6,
     targetBlank: false,
     href: "/marketplace",
   },
   {
     name: "FAQ",
-    key: 5,
+    key: 7,
     targetBlank: false,
     href: "/faq",
   },
 
   {
     name: "ZKNOID games store",
-    key: 6,
+    key: 8,
     href: "https://app.zknoid.io/",
     targetBlank: true,
   },
@@ -325,40 +331,46 @@ export const MOB_NAV_MENU_ITEMS = [
     href: "/competitions",
   },
   {
-    name: "Guide",
+    name: "PLAYER VS PLAYER",
     key: 1,
+    targetBlank: false,
+    href: "/pvp",
+  },
+  {
+    name: "Guide",
+    key: 2,
     targetBlank: false,
     href: "/guide",
   },
 
   {
     name: "Leaderboard",
-    key: 2,
+    key: 3,
     targetBlank: false,
     href: "/leaderboard",
   },
   {
     name: "Community Section",
-    key: 7,
+    key: 4,
     targetBlank: false,
     href: "/community",
   },
 
   {
     name: "User Profile",
-    key: 3,
+    key: 5,
     targetBlank: false,
     href: COLLECTION_URL,
   },
   {
     name: "NFTS MARKETPLACE",
-    key: 4,
+    key: 6,
     targetBlank: false,
     href: "/marketplace",
   },
   {
     name: "FAQ",
-    key: 5,
+    key: 7,
     targetBlank: false,
     href: "/faq",
   },

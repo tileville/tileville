@@ -94,6 +94,7 @@ export default function PVPContent() {
               <ChallengesList
                 isLoadingAccepted={isLoadingAccepted}
                 challenges={acceptedChallenges}
+                challengesType="accepted"
               />
             </Tabs.Content>
 
@@ -101,6 +102,7 @@ export default function PVPContent() {
               <ChallengesList
                 isLoadingCreated={isLoadingCreated}
                 challenges={createdChallenges}
+                challengesType="created"
               />
             </Tabs.Content>
           </Box>
