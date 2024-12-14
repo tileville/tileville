@@ -1,4 +1,4 @@
-import { copyToClipBoard } from "@/lib/helpers";
+import { copyToClipBoard, formatAddress } from "@/lib/helpers";
 import { Challenge, ChallengeParticipant } from "@/types";
 import { CopyIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
@@ -7,6 +7,8 @@ import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useUsername } from "@/db/react-query-hooks";
+import { Skeleton } from "@radix-ui/themes";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -19,6 +21,9 @@ export const ChallengeDetails = ({
 }: ChallengeDetailsProps) => {
   const networkStore = useNetworkStore();
   const router = useRouter();
+  const { data: createdByUsername, isLoading: usernameLoading } = useUsername(
+    challenge.created_by
+  );
 
   // Function to check if challenge has ended
   const isChallengeEnded = () => {
@@ -86,33 +91,52 @@ export const ChallengeDetails = ({
   const inviteLink = `https://www.tileville.xyz/pvp/invite/${challenge.invite_code}`;
 
   return (
-    <div className="rounded-lg bg-[#99B579] p-6 border border-[#38830A]">
+    <div className="relative rounded-lg border border-[#38830A] bg-[#99B579] p-6">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-bold">{challenge.name}</h2>
-        <p className="text-sm">
-          Challenge Created by: {challenge.created_by.slice(0, 6)}...
-          {challenge.created_by.slice(-4)}
+        <p className="absolute right-2 top-2 flex min-h-[15px] items-center justify-center rounded-[5px] bg-[#90AA70] px-2 text-[10px] font-medium text-[#0D0D0D]">
+          <span className="mr-1">Challenge Created by:</span>
+          {usernameLoading ? (
+            <Skeleton className="h-2 w-20" />
+          ) : createdByUsername ? (
+            <Link
+              href={`${window.location.origin}/u/${createdByUsername}`}
+              className="underline hover:no-underline"
+            >
+              {createdByUsername}
+            </Link>
+          ) : (
+            formatAddress(challenge.created_by)
+          )}
         </p>
       </div>
 
-      <div className="mb-8 grid grid-cols-3 gap-4">
-        <div className="flex flex-col items-center rounded-lg bg-[#99B579] border border-[#76993E] p-4">
-          {/* <Image src="/icons/timer.svg" width={24} height={24} alt="timer" /> */}
-          <p className="mt-2 font-medium">Time remaining</p>
-          <CountdownTimerSmall endTime={challenge.end_time} />
+      <div className="mb-8 grid grid-cols-3 gap-2">
+        <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
+          <div>
+            <Image src="/icons/timer.png" width={27} height={27} alt="timer" />
+          </div>
+          <p className="mb-1 mt-2 text-xl font-bold">Time remaining</p>
+          <div className="mt-auto">
+            <CountdownTimerSmall endTime={challenge.end_time} />
+          </div>
         </div>
 
-        <div className="flex flex-col items-center rounded-lg bg-[#99B579] border border-[#76993E] p-4">
-          {/* <Image src="/icons/mina.svg" width={24} height={24} alt="mina" /> */}
-          <p className="mt-2 font-medium">Entry Fees</p>
-          <p>{challenge.entry_fee} MINA</p>
+        <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
+          <Image src="/icons/cashCoin.png" width={27} height={27} alt="money" />
+          <p className="mb-1 mt-2 text-xl font-bold">
+            Entry <br /> Fees
+          </p>
+          <p className="mt-auto">{challenge.entry_fee} MINA</p>
         </div>
 
         {challenge.is_speed_challenge && (
-          <div className="flex flex-col items-center rounded-lg bg-[#99B579] border border-[#76993E] p-4">
+          <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
             {/* <Image src="/icons/speed.svg" width={24} height={24} alt="speed" /> */}
-            <p className="mt-2 font-medium">Speed Challenge</p>
-            <p>{challenge.speed_duration} seconds</p>
+            <p className="mb-1 mt-2 text-xl font-bold">
+              Speed <br /> Challenge
+            </p>
+            <p className="mt-auto">{challenge.speed_duration} seconds</p>
           </div>
         )}
       </div>

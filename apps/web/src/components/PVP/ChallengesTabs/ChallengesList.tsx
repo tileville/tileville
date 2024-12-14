@@ -47,20 +47,20 @@ export const ChallengesList = ({
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-7">
           <div
-            className={`grid grid-cols-5 py-3 text-base font-semibold text-black`}
+            className={`grid grid-cols-12 py-3 text-base font-semibold text-black`}
           >
-            <div>S.N</div>
-            <div>Challenge Name</div>
-            <div className="text-center">Ends In</div>
-            <div className="text-center">Entry Fees</div>
-            <div className="text-center">Action</div>
+            <div className="col-span-1">S.N</div>
+            <div className="col-span-3">Challenge Name</div>
+            <div className="col-span-3 text-center">Ends In</div>
+            <div className="col-span-3 text-center">Entry Fees</div>
+            <div className="col-span-2 text-center">Action</div>
           </div>
           <div className="h-[2px] w-full rounded-[5px] bg-[#38830A]"></div>
           <div className="py-4">
             <div className="grid gap-4">
               {challenges.data.map((ChallengeData) => (
                 <div
-                  className={`grid w-full cursor-pointer grid-cols-5 rounded-[10px] border border-[#76993E] p-4 ${
+                  className={`grid w-full cursor-pointer grid-cols-12 rounded-[10px] border border-[#76993E] p-4 ${
                     selectedChallenge?.id === ChallengeData.challenge.id
                       ? "border-primary bg-[#99B579] outline outline-2 outline-[#38830A]"
                       : "border-[#76993E]"
@@ -70,17 +70,19 @@ export const ChallengesList = ({
                   }}
                   key={ChallengeData.challenge.id}
                 >
-                  <div>{ChallengeData.challenge.id}</div>
-                  <div>{ChallengeData.challenge.name}</div>
-                  <div className="text-center">
+                  <div className="col-span-1">{ChallengeData.challenge.id}</div>
+                  <div className="col-span-3">
+                    {ChallengeData.challenge.name}
+                  </div>
+                  <div className="col-span-3 text-center">
                     <CountdownTimerSmall
                       endTime={ChallengeData.challenge.end_time}
                     />
                   </div>
-                  <div className="text-center">
+                  <div className="col-span-3 text-center">
                     {ChallengeData.challenge.entry_fee} MINA
                   </div>
-                  <div className="text-center">
+                  <div className="col-span-2 text-center">
                     <button
                       className={PRIMARY_OUTLINE_BUTTON}
                       onClick={() => {
