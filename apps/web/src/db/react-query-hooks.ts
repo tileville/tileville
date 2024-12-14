@@ -1092,3 +1092,19 @@ export const useSavePvPScore = () => {
     },
   });
 };
+
+
+export const useChallengeById = (challengeId: string | number) => {
+  return useQuery({
+    queryKey: ["challenge", challengeId],
+    queryFn: async () => {
+      const response = await fetch(`/api/pvp/challenge/${challengeId}`);
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || "Failed to fetch challenge");
+      }
+      return data;
+    },
+    enabled: !!challengeId,
+  });
+};

@@ -3,8 +3,9 @@ import dynamic from "next/dynamic";
 import { Toaster } from "react-hot-toast";
 import LandingBackground from "@/components/LandingBackground";
 import { useParams } from "next/navigation";
-// import { useInviteChallenge } from "@/db/react-query-hooks";
 import { useNetworkStore } from "@/lib/stores/network";
+import { useChallengeById } from "@/db/react-query-hooks";
+import { Spinner2 } from "@/components/common/Spinner";
 
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
@@ -13,9 +14,9 @@ const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
 export default function PvPChallengePage() {
   const params = useParams<{ challengeId: string }>();
   const networkStore = useNetworkStore();
-  console.log("params", params);
-
-  // const { data: challenge, isLoading } = useInviteChallenge(params.challengeId);
+  const { data: challengeData, isLoading } = useChallengeById(
+    params.challengeId
+  );
 
   if (!networkStore.address) {
     return (
@@ -32,6 +33,46 @@ export default function PvPChallengePage() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Spinner2 />
+      </div>
+    );
+  }
+
+  // Verify the user is a participant
+  const isParticipant = challengeData?.data?.participants?.some(
+    (p: any) => p.wallet_address === networkStore.address
+  );
+
+  if (!isParticipant) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="text-center">
+          <h2 className="mb-4 text-2xl font-bold">Not Authorized</h2>
+          <p>You are not a participant in this challenge.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if user has already played
+  const userParticipant = challengeData?.data?.participants?.find(
+    (p: any) => p.wallet_address === networkStore.address
+  );
+
+  if (userParticipant?.has_played) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="text-center">
+          <h2 className="mb-4 text-2xl font-bold">Already Played</h2>
+          <p>You have already completed this challenge.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[calc(100svh-80px)]">
       <LandingBackground />
@@ -43,12 +84,11 @@ export default function PvPChallengePage() {
             competitionKey=""
             scoreTweetContent=""
             isPvPGame={true}
-            isSpeedVersion={false}
-            speedDuration={120}
+            isSpeedVersion={challengeData?.data?.is_speed_challenge}
+            speedDuration={challengeData?.data?.speed_duration}
             challengeId={+params.challengeId}
-            txnHash={""}
+            txnHash=""
           />
-
           <Toaster />
         </div>
       </div>
