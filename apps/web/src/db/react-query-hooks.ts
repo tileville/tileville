@@ -1106,5 +1106,8 @@ export const useChallengeById = (challengeId: string | number) => {
       return data;
     },
     enabled: !!challengeId,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 };
