@@ -142,13 +142,13 @@ export const ChallengeDetails = ({
       </div>
 
       <div className="mb-6">
-        <h3 className="mb-2 text-lg font-semibold">Share Invite Link</h3>
-        <div className="flex items-center gap-2 rounded-lg bg-white/20 p-2">
+        <h3 className="mb-2 text-base font-medium">Share Invite Link</h3>
+        <div className="relative">
           <input
             type="text"
             value={inviteLink}
             readOnly
-            className="flex-1 bg-transparent px-2"
+            className="min-h-[43px] w-full flex-1 rounded-[10px] border border-[#38830A] bg-transparent pr-14 ps-2 outline-none"
           />
           <button
             onClick={() =>
@@ -157,46 +157,42 @@ export const ChallengeDetails = ({
                 copiedType: "Invite Link",
               })
             }
-            className="rounded-md bg-primary p-2 text-white"
+            className="absolute right-4 top-1/2 -translate-y-1/2"
           >
-            <CopyIcon />
+            <CopyIcon width={26} height={26} />
           </button>
         </div>
       </div>
 
       <div className="mb-6">
-        <h3 className="mb-2 text-lg font-semibold">
+        <h3 className="mb-2 text-base font-medium">
           Share Invite Link on Socials
         </h3>
-        <div className="flex gap-4">
+        <div className="flex gap-2">
           <Link
             href={`https://twitter.com/intent/tweet?text=Join my TileVille challenge! ${inviteLink}`}
             target="_blank"
-            className="rounded-full bg-black p-2"
+            className=""
           >
-            <Image src="/icons/x.svg" width={24} height={24} alt="X" />
+            <Image src="/icons/x.svg" width={43} height={43} alt="X" />
           </Link>
           <Link
             href={`https://t.me/share/url?url=${inviteLink}`}
             target="_blank"
-            className="rounded-full bg-[#229ED9] p-2"
+            className=""
           >
             <Image
               src="/icons/telegram.svg"
-              width={24}
-              height={24}
+              width={43}
+              height={43}
               alt="Telegram"
             />
           </Link>
-          <Link
-            href={`https://discord.com/`}
-            target="_blank"
-            className="rounded-full bg-[#5865F2] p-2"
-          >
+          <Link href={`https://discord.com/`} target="_blank" className="">
             <Image
               src="/icons/discord.svg"
-              width={24}
-              height={24}
+              width={43}
+              height={43}
               alt="Discord"
             />
           </Link>
@@ -204,8 +200,8 @@ export const ChallengeDetails = ({
       </div>
 
       <div>
-        <h3 className="mb-4 text-lg font-semibold">Participants List</h3>
-        <div className="rounded-lg bg-white/20 p-4">
+        <h3 className="mb-4 text-lg font-bold">Participants List</h3>
+        <div className="rounded-lg border border-black/20 p-4 shadow-[0px_4px_4px_0px_#00000040]">
           <table className="w-full">
             <thead>
               <tr className="text-left">
@@ -227,7 +223,7 @@ export const ChallengeDetails = ({
                 </tr>
               ) : (
                 participants.map((participant, index) => (
-                  <tr key={index} className="border-t border-white/10">
+                  <tr key={index} className="border-none">
                     <td className="py-2">{index + 1}</td>
                     <td>
                       {participant.wallet_address.slice(0, 6)}...
@@ -251,7 +247,7 @@ export const ChallengeDetails = ({
       </div>
 
       {/* Update the play button */}
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex justify-end">
         <button
           onClick={handlePlayGame}
           disabled={isChallengeEnded() || hasUserPlayed()}
