@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useUsername } from "@/db/react-query-hooks";
 import { Skeleton } from "@radix-ui/themes";
+import { useAuthSignature } from "@/hooks/useAuthSignature";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -24,6 +25,8 @@ export const ChallengeDetails = ({
   const { data: createdByUsername, isLoading: usernameLoading } = useUsername(
     challenge.created_by
   );
+
+  const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
   // Function to check if challenge has ended
   const isChallengeEnded = () => {
@@ -59,7 +62,11 @@ export const ChallengeDetails = ({
 
   const winner = getWinner();
 
-  const handlePlayGame = () => {
+  const handlePlayGame = async () => {
+    if (!accountAuthSignature) {
+      await validateOrSetSignature();
+      return;
+    }
     // Find participant's game record
     const currentParticipant = participants.find(
       (p) => p.wallet_address === networkStore.address
