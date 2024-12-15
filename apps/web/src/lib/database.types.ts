@@ -271,6 +271,53 @@ export type Database = {
         }
         Relationships: []
       }
+      pvp_transaction_logs: {
+        Row: {
+          amount: number
+          challenge_id: number
+          created_at: string
+          id: number
+          is_game_played: boolean
+          network: string
+          txn_hash: string
+          txn_status: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          amount: number
+          challenge_id: number
+          created_at?: string
+          id?: number
+          is_game_played?: boolean
+          network?: string
+          txn_hash: string
+          txn_status?: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          amount?: number
+          challenge_id?: number
+          created_at?: string
+          id?: number
+          is_game_played?: boolean
+          network?: string
+          txn_hash?: string
+          txn_status?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pvp_transaction_logs_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "pvp_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       signup_emails: {
         Row: {
           created_at: string

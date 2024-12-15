@@ -194,7 +194,7 @@ export async function sendPayment({
       )?.mina?.sendPayment({
         amount: amount,
         to: TREASURY_ADDRESS,
-        memo: `Pay ${amount} by auro wallet.`,
+        memo: memo || `Pay ${amount} by auro wallet.`,
       });
       return (data as SendTransactionResult).hash;
     } catch (err: any) {

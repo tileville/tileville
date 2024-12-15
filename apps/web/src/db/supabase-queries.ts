@@ -1,6 +1,6 @@
 import { AppSupabaseClient, Table } from "@/types";
 import { supabaseUserClientComponentClient as supabase } from "@/supabase-clients/supabaseUserClientComponentClient";
-import { TransactionLog } from "@/lib/types";
+import { PVPTransactionLog, TransactionLog } from "@/lib/types";
 import { NFT_PAGE_SIZE } from "@/constants";
 
 type PlayerProfile = {
@@ -149,6 +149,21 @@ export const addTransactionLog = async (
 ): Promise<Table<"transaction_logs">> => {
   const { data, error } = await supabase
     .from("transaction_logs")
+    .insert(transaction)
+    .select("*")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const addPVPTransactionLog = async (
+  transaction: PVPTransactionLog
+): Promise<Table<"pvp_transaction_logs">> => {
+  const { data, error } = await supabase
+    .from("pvp_transaction_logs")
     .insert(transaction)
     .select("*")
     .single();

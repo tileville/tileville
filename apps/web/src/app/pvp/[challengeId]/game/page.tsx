@@ -1,3 +1,5 @@
+// src/app/pvp/[challengeId]/game/page.tsx
+
 "use client";
 import dynamic from "next/dynamic";
 import { Toaster } from "react-hot-toast";
@@ -6,6 +8,8 @@ import { useParams } from "next/navigation";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useChallengeById } from "@/db/react-query-hooks";
 import { Spinner2 } from "@/components/common/Spinner";
+import { useState } from "react";
+import { PVPEntryFeesModal } from "@/components/PVP/PVPEntryFeesModal";
 
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
@@ -14,6 +18,7 @@ const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
 export default function PvPChallengePage() {
   const params = useParams<{ challengeId: string }>();
   const networkStore = useNetworkStore();
+  const [showEntryFeesModal, setShowEntryFeesModal] = useState(false);
   const { data: challengeData, isLoading } = useChallengeById(
     params.challengeId
   );
@@ -41,7 +46,7 @@ export default function PvPChallengePage() {
     );
   }
 
-  // Verify the user is a participant
+  // First check - Is user a participant in this challenge
   const isParticipant = challengeData?.data?.participants?.some(
     (p: any) => p.wallet_address === networkStore.address
   );
@@ -57,7 +62,7 @@ export default function PvPChallengePage() {
     );
   }
 
-  // Check if user has already played
+  // Second check - Has user already played this game
   const userParticipant = challengeData?.data?.participants?.find(
     (p: any) => p.wallet_address === networkStore.address
   );
@@ -68,6 +73,33 @@ export default function PvPChallengePage() {
         <div className="text-center">
           <h2 className="mb-4 text-2xl font-bold">Already Played</h2>
           <p>You have already completed this challenge.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const hasFeesConfirmed = userParticipant?.txn_status === "CONFIRMED";
+
+  if (!hasFeesConfirmed) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="text-center">
+          <h2 className="mb-4 text-2xl font-bold">Entry Fees Required</h2>
+          <p className="mb-4">
+            Please pay the entry fees to play this challenge.
+          </p>
+          <button
+            className="rounded-lg bg-primary px-6 py-2 text-white hover:bg-primary/90"
+            onClick={() => setShowEntryFeesModal(true)}
+          >
+            Pay Entry Fees
+          </button>
+          <PVPEntryFeesModal
+            open={showEntryFeesModal}
+            handleClose={() => setShowEntryFeesModal(false)}
+            entryFee={challengeData.data.entry_fee}
+            challengeId={params.challengeId}
+          />
         </div>
       </div>
     );
@@ -87,7 +119,7 @@ export default function PvPChallengePage() {
             isSpeedVersion={challengeData?.data?.is_speed_challenge}
             speedDuration={challengeData?.data?.speed_duration}
             challengeId={+params.challengeId}
-            txnHash=""
+            txnHash={userParticipant?.txn_hash || ""}
           />
           <Toaster />
         </div>

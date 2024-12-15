@@ -32,4 +32,14 @@ export type TransactionLog = {
   is_game_played: boolean;
 };
 
+export interface PVPTransactionLog {
+  txn_hash: string;
+  wallet_address: string;
+  network: string;
+  challenge_id: number;
+  txn_status: TransactionStatus;
+  amount: number;
+  is_game_played: boolean;
+}
+
 export type TransactionStatus = "PENDING" | "CONFIRMED" | "FAILED";
