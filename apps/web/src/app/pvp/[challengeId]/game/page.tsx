@@ -6,7 +6,11 @@ import { Toaster } from "react-hot-toast";
 import LandingBackground from "@/components/LandingBackground";
 import { useParams } from "next/navigation";
 import { useNetworkStore } from "@/lib/stores/network";
-import { useChallengeById } from "@/db/react-query-hooks";
+import {
+  useChallengeById,
+  useMainnetPVPTransactionsStatus,
+  usePVPChallengeTransaction,
+} from "@/db/react-query-hooks";
 import { Spinner2 } from "@/components/common/Spinner";
 import { useState } from "react";
 import { PVPEntryFeesModal } from "@/components/PVP/PVPEntryFeesModal";
@@ -21,6 +25,16 @@ export default function PvPChallengePage() {
   const [showEntryFeesModal, setShowEntryFeesModal] = useState(false);
   const { data: challengeData, isLoading } = useChallengeById(
     params.challengeId
+  );
+
+  const { data: challengeTransaction } = usePVPChallengeTransaction(
+    networkStore.address || "",
+    params.challengeId
+  );
+
+  useMainnetPVPTransactionsStatus(
+    challengeTransaction?.txn_hash || "",
+    challengeTransaction?.txn_status
   );
 
   if (!networkStore.address) {
@@ -78,7 +92,7 @@ export default function PvPChallengePage() {
     );
   }
 
-  const hasFeesConfirmed = userParticipant?.txn_status === "CONFIRMED";
+  const hasFeesConfirmed = challengeTransaction?.txn_status === "CONFIRMED";
 
   if (!hasFeesConfirmed) {
     return (
@@ -119,7 +133,7 @@ export default function PvPChallengePage() {
             isSpeedVersion={challengeData?.data?.is_speed_challenge}
             speedDuration={challengeData?.data?.speed_duration}
             challengeId={+params.challengeId}
-            txnHash={userParticipant?.txn_hash || ""}
+            txnHash={challengeTransaction?.txn_hash || ""}
           />
           <Toaster />
         </div>

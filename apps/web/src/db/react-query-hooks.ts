@@ -28,6 +28,8 @@ import {
   isGameAlreadyPlayed,
   fetchGlobalConfig,
   getAllNFTsEntries,
+  updatePVPTransactionLog,
+  fetchPVPChallengeTransaction,
 } from "./supabase-queries";
 import {
   ACCOUNT_AUTH_LOCAL_KEY,
@@ -364,6 +366,50 @@ export const useMainnetTransactionStatusForMint = (txn_hash: string) => {
     {
       enabled: !!txn_hash,
       retry: 5,
+    }
+  );
+};
+
+export const useMainnetPVPTransactionsStatus = (
+  txn_hash: string,
+  txn_status: string | undefined
+) => {
+  return useQuery(
+    ["transaction_status_mainnet_pvp", txn_hash],
+    () =>
+      fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.blockConfirmationsCount >= 1 || res.txStatus === "applied") {
+            return updatePVPTransactionLog(txn_hash, {
+              txn_status: "CONFIRMED",
+            });
+          }
+        }),
+    {
+      staleTime: Infinity,
+      enabled: !!txn_hash && txn_status === "PENDING",
+      retry: 5,
+    }
+  );
+};
+
+export const usePVPChallengeTransaction = (
+  wallet_address: string,
+  challenge_id: string | number
+) => {
+  return useQuery(
+    ["pvp_challenge_transaction", wallet_address, challenge_id],
+    () => fetchPVPChallengeTransaction(wallet_address, challenge_id),
+    {
+      enabled: !!wallet_address && !!challenge_id,
     }
   );
 };
