@@ -193,13 +193,11 @@ export const CreateChallengeModal = ({
                     <option value="72">72 hours</option>
                   </select>
 
-                  <button
-                    type="button"
-                    onClick={() => setEntryFee(entryFee - 1)}
-                    className={`${ARROW_BTN_CLASS} absolute right-2 top-1/2 -translate-y-1/2`}
+                  <span
+                    className={`${ARROW_BTN_CLASS} pointer-events-none absolute right-2 top-1/2  -translate-y-1/2`}
                   >
                     &#9662;
-                  </button>
+                  </span>
                 </div>
               </div>
 
@@ -216,15 +214,34 @@ export const CreateChallengeModal = ({
                           join this challenge"
                   />
                 </div>
-                <input
-                  type="number"
-                  min="2"
-                  max="10"
-                  className={INPUT_CLASS}
-                  value={maxParticipants}
-                  onChange={(e) => setMaxParticipants(Number(e.target.value))}
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="2"
+                    max="10"
+                    className={`${INPUT_CLASS} no-spinner`}
+                    value={maxParticipants}
+                    onChange={(e) => setMaxParticipants(Number(e.target.value))}
+                    required
+                  />
+
+                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setMaxParticipants(maxParticipants + 1)}
+                      className={ARROW_BTN_CLASS}
+                    >
+                      &#9652;
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMaxParticipants(maxParticipants - 1)}
+                      className={ARROW_BTN_CLASS}
+                    >
+                      &#9662;
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Speed Challenge */}
