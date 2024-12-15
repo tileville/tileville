@@ -101,7 +101,7 @@ export const PhaserLayer = ({
           },
           {
             onSuccess: () => {
-              toast.success("PVP game score saved successfully!");
+              console.log("PVP game score saved successfully");
             },
             onError: (error) => {
               toast.error("Failed to save PVP game score");
