@@ -1,7 +1,6 @@
 "use client";
 import { Dialog } from "@radix-ui/themes";
-import { Cross1Icon, InfoCircledIcon, UpdateIcon } from "@radix-ui/react-icons";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { Cross1Icon, UpdateIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useCreateChallenge } from "@/db/react-query-hooks";
@@ -9,6 +8,7 @@ import { ChallengeCreatedModal } from "./ChallengeCreatedModal";
 import { PRIMARY_BUTTON_V2_LG } from "@/constants";
 import { SpinnerWhite } from "../common/Spinner";
 import { generateChallengeName } from "@/lib/helpers";
+import { CustomTooltip } from "../common/CustomTooltip";
 
 const INPUT_CLASS =
   "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
@@ -125,27 +125,10 @@ export const CreateChallengeModal = ({
                     <span className="text-red-500">*</span>
                   </label>
 
-                  <Tooltip.Provider delayDuration={200}>
-                    <Tooltip.Root>
-                      <Tooltip.Trigger asChild>
-                        <InfoCircledIcon
-                          width={16}
-                          height={16}
-                          className="text-black/50 hover:text-black"
-                        />
-                      </Tooltip.Trigger>
-                      <Tooltip.Portal>
-                        <Tooltip.Content
-                          className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                          sideOffset={5}
-                        >
-                          Specify the amount participants need to pay to join
-                          this challenge.
-                          <Tooltip.Arrow className="TooltipArrow" />
-                        </Tooltip.Content>
-                      </Tooltip.Portal>
-                    </Tooltip.Root>
-                  </Tooltip.Provider>
+                  <CustomTooltip
+                    tooltipContent="Specify the amount participants need to pay to join
+                          this challenge."
+                  />
                 </div>
 
                 <input
@@ -167,27 +150,10 @@ export const CreateChallengeModal = ({
                     <span className="text-red-500">*</span>
                   </label>
 
-                  <Tooltip.Provider delayDuration={200}>
-                    <Tooltip.Root>
-                      <Tooltip.Trigger asChild>
-                        <InfoCircledIcon
-                          width={16}
-                          height={16}
-                          className="text-black/50 hover:text-black"
-                        />
-                      </Tooltip.Trigger>
-                      <Tooltip.Portal>
-                        <Tooltip.Content
-                          className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                          sideOffset={5}
-                        >
-                          Specify the time limit for the challenge to end,
-                          ensuring participants have enough time to complete it.
-                          <Tooltip.Arrow className="TooltipArrow" />
-                        </Tooltip.Content>
-                      </Tooltip.Portal>
-                    </Tooltip.Root>
-                  </Tooltip.Provider>
+                  <CustomTooltip
+                    tooltipContent="Specify the time limit for the challenge to end,
+                          ensuring participants have enough time to complete it."
+                  />
                 </div>
 
                 <select
@@ -210,27 +176,10 @@ export const CreateChallengeModal = ({
                     <span className="text-red-500">*</span>
                   </label>
 
-                  <Tooltip.Provider delayDuration={200}>
-                    <Tooltip.Root>
-                      <Tooltip.Trigger asChild>
-                        <InfoCircledIcon
-                          width={16}
-                          height={16}
-                          className="text-black/50 hover:text-black"
-                        />
-                      </Tooltip.Trigger>
-                      <Tooltip.Portal>
-                        <Tooltip.Content
-                          className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                          sideOffset={5}
-                        >
-                          Select the maximum number of participants allowed to
-                          join this challenge
-                          <Tooltip.Arrow className="TooltipArrow" />
-                        </Tooltip.Content>
-                      </Tooltip.Portal>
-                    </Tooltip.Root>
-                  </Tooltip.Provider>
+                  <CustomTooltip
+                    tooltipContent="Select the maximum number of participants allowed to
+                          join this challenge"
+                  />
                 </div>
                 <input
                   type="number"
@@ -248,28 +197,11 @@ export const CreateChallengeModal = ({
                 <div className="mb-2 flex items-center justify-start gap-1 ">
                   <label className="block font-medium">Speed Challenge</label>
 
-                  <Tooltip.Provider delayDuration={200}>
-                    <Tooltip.Root>
-                      <Tooltip.Trigger asChild>
-                        <InfoCircledIcon
-                          width={16}
-                          height={16}
-                          className="text-black/50 hover:text-black"
-                        />
-                      </Tooltip.Trigger>
-                      <Tooltip.Portal>
-                        <Tooltip.Content
-                          className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                          sideOffset={5}
-                        >
-                          Enable this option if the challenge requires
+                  <CustomTooltip
+                    tooltipContent="Enable this option if the challenge requires
                           participants to place all tiles within a specified
-                          time limit.
-                          <Tooltip.Arrow className="TooltipArrow" />
-                        </Tooltip.Content>
-                      </Tooltip.Portal>
-                    </Tooltip.Root>
-                  </Tooltip.Provider>
+                          time limit."
+                  />
                 </div>
                 <div className="flex items-center gap-2">
                   <input
