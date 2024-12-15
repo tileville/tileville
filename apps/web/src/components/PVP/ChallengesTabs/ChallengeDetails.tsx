@@ -87,12 +87,12 @@ export const ChallengeDetails = ({
       return;
     }
 
-    toast.success(
-      `You have joined the ${challenge.name} Challenge successfully. Redirecting you to the game screen now.`
-    );
-    setTimeout(() => {
-      router.push(`/pvp/${challenge.id}/game`);
-    }, 3000);
+    // toast.success(
+    //   `You have joined the ${challenge.name} Challenge successfully. Redirecting you to the game screen now.`
+    // );
+    // setTimeout(() => {
+    router.push(`/pvp/${challenge.id}/game`);
+    // }, 3);
   };
 
   const inviteLink = `https://www.tileville.xyz/pvp/invite/${challenge.invite_code}`;

@@ -55,8 +55,9 @@ export const ChallengesList = ({
             <div className="col-span-3 text-center">Entry Fees</div>
             <div className="col-span-2 text-center">Action</div>
           </div>
+
           <div className="h-[2px] w-full rounded-[5px] bg-[#38830A]"></div>
-          <div className="py-4">
+          <div className="my-4 max-h-[calc(100vh-460px)] overflow-auto pr-4">
             <div className="grid gap-4">
               {challenges.data.map((ChallengeData, index) => (
                 <div

@@ -64,7 +64,7 @@ export default function PVPContent() {
   }
 
   return (
-    <div className="p-4 pb-24 pt-12 font-roboto md:pt-40">
+    <div className="p-4 pb-16 pt-12 font-roboto md:pt-24">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-primary">PVP Challenges</h1>
