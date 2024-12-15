@@ -58,7 +58,7 @@ export const ChallengesList = ({
           <div className="h-[2px] w-full rounded-[5px] bg-[#38830A]"></div>
           <div className="py-4">
             <div className="grid gap-4">
-              {challenges.data.map((ChallengeData) => (
+              {challenges.data.map((ChallengeData, index) => (
                 <div
                   className={`grid w-full cursor-pointer grid-cols-12 rounded-[10px] border border-[#76993E] p-4 ${
                     selectedChallenge?.id === ChallengeData.challenge.id
@@ -70,7 +70,7 @@ export const ChallengesList = ({
                   }}
                   key={ChallengeData.challenge.id}
                 >
-                  <div className="col-span-1">{ChallengeData.challenge.id}</div>
+                  <div className="col-span-1">{index + 1}</div>
                   <div className="col-span-3">
                     {ChallengeData.challenge.name}
                   </div>
