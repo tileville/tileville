@@ -47,6 +47,7 @@ export const TREASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 export const FAUCET_URL = "https://faucet.minaprotocol.com/";
 export const GAME_ENTRY_FEE_KEY = "is_entry_fee_paid";
+export const PVP_GAME_ENTRY_FEE_KEY = "is_pvp_entry_fee_paid";
 export const GITHUB_URL = "https://github.com/tileville/tileville";
 export const GAME_TUTORIAL_VIDEO_URL = "https://youtu.be/rUd880VHHT0";
 export const MY_GITHUB_URL = "https://github.com/satyambnsal";
@@ -773,3 +774,49 @@ export const TILEVILLE_BOT_URL = "https://t.me/tileville_mayor_bot";
 
 export const ADMIN_API_URL =
   process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:3000";
+
+export const FIRST_WORDS = [
+  "Coastal",
+  "Mountain",
+  "Valley",
+  "Forest",
+  "Desert",
+  "River",
+  "Island",
+  "Garden",
+  "Crystal",
+  "Ancient",
+  "Modern",
+  "Solar",
+  "Wind",
+  "Harbor",
+  "Golden",
+  "Azure",
+  "Emerald",
+  "Sapphire",
+  "Marble",
+  "Stone",
+];
+
+export const SECOND_WORDS = [
+  "Kingdom",
+  "Empire",
+  "Haven",
+  "Sanctuary",
+  "Metropolis",
+  "Paradise",
+  "Oasis",
+  "Citadel",
+  "Township",
+  "District",
+  "Colony",
+  "Settlement",
+  "Frontier",
+  "Territory",
+  "Domain",
+  "Realm",
+  "Capital",
+  "Province",
+  "Borough",
+  "Commons",
+];

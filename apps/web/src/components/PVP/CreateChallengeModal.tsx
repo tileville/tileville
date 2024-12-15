@@ -8,18 +8,7 @@ import { useCreateChallenge } from "@/db/react-query-hooks";
 import { ChallengeCreatedModal } from "./ChallengeCreatedModal";
 import { PRIMARY_BUTTON_V2_LG } from "@/constants";
 import { SpinnerWhite } from "../common/Spinner";
-
-// Game name suggestions for regeneration
-const GAME_NAMES = [
-  "TileVille Heroes",
-  "TileVille Clash",
-  "TileVille Rush",
-  "TileVille Duel",
-  "TileVille Battle",
-  "TileVille Champions",
-  "TileVille Rivals",
-  "TileVille Masters",
-];
+import { generateChallengeName } from "@/lib/helpers";
 
 const INPUT_CLASS =
   "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
@@ -38,7 +27,7 @@ export const CreateChallengeModal = ({
     useState("");
 
   // Form states
-  const [name, setName] = useState(GAME_NAMES[0]);
+  const [name, setName] = useState(generateChallengeName());
   const [entryFee, setEntryFee] = useState(1); // 1 MINA default
   const [endTime, setEndTime] = useState("24"); // 24 hours default
   const [maxParticipants, setMaxParticipants] = useState(2); // minimum 2 players
@@ -48,11 +37,6 @@ export const CreateChallengeModal = ({
   const createChallengeMutation = useCreateChallenge(
     networkStore.address || ""
   );
-
-  const generateRandomName = () => {
-    const randomIndex = Math.floor(Math.random() * GAME_NAMES.length);
-    setName(GAME_NAMES[randomIndex]);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +97,7 @@ export const CreateChallengeModal = ({
                 <div className="absolute bottom-0 right-0 top-0 flex items-center justify-center gap-1">
                   <button
                     type="button"
-                    onClick={generateRandomName}
+                    onClick={() => setName(generateChallengeName)}
                     className="w-full p-3"
                   >
                     <UpdateIcon width={20} height={20} />

@@ -5,7 +5,12 @@ import {
 import clsx, { ClassValue } from "clsx";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
-import { TILEVILLE_BOT_URL, TREASURY_ADDRESS } from "@/constants";
+import {
+  FIRST_WORDS,
+  SECOND_WORDS,
+  TILEVILLE_BOT_URL,
+  TREASURY_ADDRESS,
+} from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
 
 export function walletInstalled() {
@@ -138,9 +143,11 @@ export async function dummy() {
 export async function sendPayment({
   from,
   amount,
+  memo,
 }: {
   from: string;
   amount: number;
+  memo?: string;
 }) {
   const nonceResponse = await fetch(`/api/nonce?wallet_address=${from}`);
   const nonce = await nonceResponse.json();
@@ -152,7 +159,7 @@ export async function sendPayment({
   console.log("nonce", nonce);
   const transaction = {
     to: TREASURY_ADDRESS,
-    memo: "game fess",
+    memo: memo ? memo : "game fees",
     fee: 100_000_000,
     amount: amount * 1000_000_000,
     nonce: nonce.nonce,
@@ -257,4 +264,12 @@ export const formatGameAnnouncement = ({
 
 export const generateAuroWalletDeepLink = (chatId: string) => {
   return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/verify?chatId=${chatId}`;
+};
+
+export const generateChallengeName = () => {
+  console.log("generated words called");
+  const firstWord = FIRST_WORDS[Math.floor(Math.random() * FIRST_WORDS.length)];
+  const secondWord =
+    SECOND_WORDS[Math.floor(Math.random() * SECOND_WORDS.length)];
+  return `${firstWord} ${secondWord}`;
 };
