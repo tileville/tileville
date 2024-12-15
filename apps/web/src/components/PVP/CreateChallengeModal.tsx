@@ -13,6 +13,9 @@ import { CustomTooltip } from "../common/CustomTooltip";
 const INPUT_CLASS =
   "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
 
+const ARROW_BTN_CLASS =
+  "flex h-5 w-[26px] items-center justify-center rounded-[2px] bg-[#378209] text-white text-xl";
+
 export const CreateChallengeModal = ({
   open,
   onOpenChange,
@@ -28,7 +31,7 @@ export const CreateChallengeModal = ({
 
   // Form states
   const [name, setName] = useState(generateChallengeName());
-  const [entryFee, setEntryFee] = useState(1); // 1 MINA default
+  const [entryFee, setEntryFee] = useState(5);
   const [endTime, setEndTime] = useState("24"); // 24 hours default
   const [maxParticipants, setMaxParticipants] = useState(2); // minimum 2 players
   const [isSpeedChallenge, setIsSpeedChallenge] = useState(false);
@@ -113,6 +116,10 @@ export const CreateChallengeModal = ({
                     <Cross1Icon width={20} height={20} />
                   </button>
                 </div>
+
+                <div className="absolute -right-5 -top-[7px] min-h-[15px] rounded-[5px] bg-[#90AA70] px-1 text-[10px] text-[#435133]">
+                  regenerate name
+                </div>
               </div>
             </div>
 
@@ -130,16 +137,34 @@ export const CreateChallengeModal = ({
                           this challenge."
                   />
                 </div>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="5"
+                    step="1"
+                    className={`${INPUT_CLASS} no-spinner`}
+                    value={entryFee}
+                    onChange={(e) => setEntryFee(Number(e.target.value))}
+                    required
+                  />
 
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  className={INPUT_CLASS}
-                  value={entryFee}
-                  onChange={(e) => setEntryFee(Number(e.target.value))}
-                  required
-                />
+                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setEntryFee(entryFee + 1)}
+                      className={ARROW_BTN_CLASS}
+                    >
+                      &#9652;
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEntryFee(entryFee - 1)}
+                      className={ARROW_BTN_CLASS}
+                    >
+                      &#9662;
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Challenge End Time */}
@@ -156,16 +181,26 @@ export const CreateChallengeModal = ({
                   />
                 </div>
 
-                <select
-                  className={INPUT_CLASS}
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                  required
-                >
-                  <option value="24">24 hours</option>
-                  <option value="48">48 hours</option>
-                  <option value="72">72 hours</option>
-                </select>
+                <div className="relative">
+                  <select
+                    className={`${INPUT_CLASS} appearance-none`}
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    required
+                  >
+                    <option value="24">24 hours</option>
+                    <option value="48">48 hours</option>
+                    <option value="72">72 hours</option>
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={() => setEntryFee(entryFee - 1)}
+                    className={`${ARROW_BTN_CLASS} absolute right-2 top-1/2 -translate-y-1/2`}
+                  >
+                    &#9662;
+                  </button>
+                </div>
               </div>
 
               {/* Max Participants */}

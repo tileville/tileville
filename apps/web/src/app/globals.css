@@ -531,6 +531,17 @@ input[type="range"]:focus::-moz-range-thumb {
   animation: spin 3s linear infinite;
 }
 
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: none; /* Chrome, Safari, Edge */
+  appearance: none; /* Generic */
+}
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
 @media screen and (max-width: 750px) {
   .text-primary-shadow {
     color: hsl(var(--primary));
