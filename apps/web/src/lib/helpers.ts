@@ -267,7 +267,6 @@ export const generateAuroWalletDeepLink = (chatId: string) => {
 };
 
 export const generateChallengeName = () => {
-  console.log("generated words called");
   const firstWord = FIRST_WORDS[Math.floor(Math.random() * FIRST_WORDS.length)];
   const secondWord =
     SECOND_WORDS[Math.floor(Math.random() * SECOND_WORDS.length)];
