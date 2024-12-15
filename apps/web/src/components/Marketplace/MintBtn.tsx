@@ -16,7 +16,8 @@ type MintBtnType = {
 };
 
 const hasMinatyNFT = (nfts: Array<any>) => {
-  return nfts.some((nft) => nft.name.toLowerCase().includes("minaty"));
+  // Count the number of MINATY NFTs owned by the user
+  return nfts.filter((nft) => nft.name.toLowerCase().includes("minaty")).length;
 };
 
 export const MintBtn = ({
@@ -38,15 +39,19 @@ export const MintBtn = ({
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
 
-  const userHasMinatyNFT =
-    isMinatyNFT && mintNFTHitsResponse && hasMinatyNFT(mintNFTHitsResponse);
+  // Count user's MINATY NFTs
+  const minatyNFTCount =
+    isMinatyNFT && mintNFTHitsResponse ? hasMinatyNFT(mintNFTHitsResponse) : 0;
+
+  // Disable button if user owns 3 or more MINATY NFTs
+  const userHasMaxMinatyNFT = minatyNFTCount >= 2;
 
   const isButtonDisabled = isMinatyNFT
-    ? isMintingStyledDisabled || isNotForSoldNFT || userHasMinatyNFT
+    ? isMintingStyledDisabled || isNotForSoldNFT || userHasMaxMinatyNFT
     : isMintingStyledDisabled;
 
   const displayText =
-    isMinatyNFT && userHasMinatyNFT ? "Already Own MINATY NFT" : btnText;
+    isMinatyNFT && userHasMaxMinatyNFT ? "Max MINATY NFTs Owned" : btnText;
 
   return (
     <Tooltip.Provider delayDuration={100}>
@@ -73,16 +78,16 @@ export const MintBtn = ({
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          {(window.mina?.isPallad || userHasMinatyNFT) && (
+          {(window.mina?.isPallad || userHasMaxMinatyNFT) && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
             >
-              {userHasMinatyNFT ? (
+              {userHasMaxMinatyNFT ? (
                 <div className="max-w-md">
                   <p className="mb-2 font-bold">
-                    You already own a MINATY NFT. Only one MINATY NFT is allowed
-                    per wallet.
+                    You already own the maximum of 3 MINATY NFTs. No more can be
+                    minted per wallet.
                   </p>
                 </div>
               ) : (
