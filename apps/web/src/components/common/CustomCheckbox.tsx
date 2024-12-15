@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import { CheckIcon } from "@radix-ui/react-icons";
 
-const CustomCheckbox = () => {
-  const [checked, setChecked] = useState(false);
+interface CustomCheckboxProps {
+  checked: boolean;
+  onChange: () => void;
+}
 
+const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
+  checked,
+  onChange,
+}) => {
   return (
     <label
-      className={`relative flex h-10 w-10 items-center justify-center rounded-md border-2 ${
-        checked ? "border-black bg-green-600" : "border-gray-400 bg-green-200"
-      } cursor-pointer transition-all`}
+      onClick={onChange}
+      className="relative flex h-6 w-10 cursor-pointer items-center justify-center rounded-[5px] border-2 border-black bg-black/20 transition-all"
     >
-      {/* Hidden Checkbox Input */}
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={() => setChecked(!checked)}
-        className="hidden"
-      />
       {/* Check Icon */}
-      {checked && <CheckIcon className="h-6 w-6 text-white" />}
+      {checked && <CheckIcon width={28} height={28} color="white" />}
     </label>
   );
 };

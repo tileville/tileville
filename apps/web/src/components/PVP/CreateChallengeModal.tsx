@@ -9,6 +9,7 @@ import { PRIMARY_BUTTON_V2_LG } from "@/constants";
 import { SpinnerWhite } from "../common/Spinner";
 import { generateChallengeName } from "@/lib/helpers";
 import { CustomTooltip } from "../common/CustomTooltip";
+import CustomCheckbox from "../common/CustomCheckbox";
 
 const INPUT_CLASS =
   "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
@@ -246,44 +247,44 @@ export const CreateChallengeModal = ({
 
               {/* Speed Challenge */}
               <div>
-                <div className="mb-2 flex items-center justify-start gap-1 ">
-                  <label className="block font-medium">Speed Challenge</label>
+                <div className="mb-2 flex justify-between">
+                  <div className="flex items-center justify-start gap-1 ">
+                    <label className="block font-medium">Speed Challenge</label>
 
-                  <CustomTooltip
-                    tooltipContent="Enable this option if the challenge requires
+                    <CustomTooltip
+                      tooltipContent="Enable this option if the challenge requires
                           participants to place all tiles within a specified
                           time limit."
-                  />
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CustomCheckbox
+                      checked={isSpeedChallenge}
+                      onChange={() => setIsSpeedChallenge(!isSpeedChallenge)}
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="h-5 w-5"
-                    checked={isSpeedChallenge}
-                    onChange={(e) => setIsSpeedChallenge(e.target.checked)}
-                  />
-                  <span>Enable Speed Mode</span>
-                </div>
-              </div>
 
-              {/* Speed Duration (only shown if Speed Challenge is enabled) */}
-              {isSpeedChallenge && (
-                <div className="col-span-2">
-                  <label className="mb-2 block font-medium">
-                    Speed Duration (Seconds)
-                    <span className="text-red-500">*</span>
-                  </label>
+                {/* Speed Duration (only shown if Speed Challenge is enabled) */}
+                <div className="relative">
                   <input
                     type="number"
                     min="60"
                     max="300"
-                    className={INPUT_CLASS}
+                    className={`${INPUT_CLASS} disabled:border-[#7CA550] disabled:text-gray-500`}
                     value={speedDuration}
                     onChange={(e) => setSpeedDuration(Number(e.target.value))}
                     required={isSpeedChallenge}
+                    disabled={!isSpeedChallenge}
                   />
+
+                  <span
+                    className={`${ARROW_BTN_CLASS} pointer-events-none absolute right-2 top-1/2  -translate-y-1/2`}
+                  >
+                    &#9662;
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
 
             <div className="flex justify-end gap-4">
