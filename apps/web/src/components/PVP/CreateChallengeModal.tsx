@@ -274,18 +274,31 @@ export const CreateChallengeModal = ({
                     type="number"
                     min="60"
                     max="300"
-                    className={`${INPUT_CLASS} disabled:border-[#7CA550] disabled:text-gray-500`}
+                    className={`${INPUT_CLASS} no-spinner disabled:border-[#7CA550] disabled:text-gray-500`}
                     value={speedDuration}
                     onChange={(e) => setSpeedDuration(Number(e.target.value))}
                     required={isSpeedChallenge}
                     disabled={!isSpeedChallenge}
                   />
 
-                  <span
-                    className={`${ARROW_BTN_CLASS} pointer-events-none absolute right-2 top-1/2  -translate-y-1/2`}
-                  >
-                    &#9662;
-                  </span>
+                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setSpeedDuration(speedDuration + 1)}
+                      className={ARROW_BTN_CLASS}
+                      disabled={!isSpeedChallenge}
+                    >
+                      &#9652;
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSpeedDuration(speedDuration - 1)}
+                      className={ARROW_BTN_CLASS}
+                      disabled={!isSpeedChallenge}
+                    >
+                      &#9662;
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -318,6 +331,7 @@ export const CreateChallengeModal = ({
         open={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
         inviteLink={createdChallengeInviteLink}
+        challengeName={name}
       />
     </>
   );

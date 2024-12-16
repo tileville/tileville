@@ -7,12 +7,14 @@ type ChallengeCreatedModalProps = {
   open: boolean;
   onClose: () => void;
   inviteLink: string;
+  challengeName: string;
 };
 
 export const ChallengeCreatedModal = ({
   open,
   onClose,
   inviteLink,
+  challengeName,
 }: ChallengeCreatedModalProps) => {
   const handleShare = (platform: string) => {
     let shareUrl = "";
@@ -48,9 +50,9 @@ export const ChallengeCreatedModal = ({
             height={64}
           />
 
-          <div>
+          <div className="flex items-center justify-center flex-col">
             <h2 className="mb-2 text-[28px] font-bold">
-              Challenge successfully created!
+              Your Challenge {challengeName} successfully created!
             </h2>
             <p className="max-w-sm text-center text-lg text-[#5D6845]">
               Share your challenge and let the competition begin!
@@ -74,7 +76,7 @@ export const ChallengeCreatedModal = ({
                     copiedType: "Invite Link",
                   })
                 }
-                className="rounded-md bg-[#38830A] px-4 py-2 text-white hover:bg-[#38830A]/90 flex items-center gap-2 text-base font-bold"
+                className="flex items-center gap-2 rounded-md bg-[#38830A] px-4 py-2 text-base font-bold text-white hover:bg-[#38830A]/90"
               >
                 <CopyIcon />
                 Copy

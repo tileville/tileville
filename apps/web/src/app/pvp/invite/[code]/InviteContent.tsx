@@ -168,7 +168,7 @@ export default function InviteContent({ code }: { code: string }) {
                     <span>Joining...</span>
                   </div>
                 ) : (
-                  `Pay Entry Fees (${challenge.data.entry_fee} MINA)`
+                  `Join Challenge`
                 )}
               </button>
             </>
