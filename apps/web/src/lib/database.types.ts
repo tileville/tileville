@@ -185,7 +185,6 @@ export type Database = {
           joined_at: string
           played_at: string | null
           score: number | null
-          status: string
           txn_hash: string | null
           txn_status: string
           wallet_address: string
@@ -198,7 +197,6 @@ export type Database = {
           joined_at?: string
           played_at?: string | null
           score?: number | null
-          status?: string
           txn_hash?: string | null
           txn_status?: string
           wallet_address: string
@@ -211,7 +209,6 @@ export type Database = {
           joined_at?: string
           played_at?: string | null
           score?: number | null
-          status?: string
           txn_hash?: string | null
           txn_status?: string
           wallet_address?: string

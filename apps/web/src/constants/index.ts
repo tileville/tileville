@@ -477,6 +477,7 @@ export const TABLE_SKELETON_CONTENT = [
   "70",
 ];
 
+//TODO: Replace all of these with @apply
 export const PRIMARY_BUTTON_STYLES =
   "w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-105 transition-transform";
 
