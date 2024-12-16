@@ -108,7 +108,6 @@ export type ChallengeParticipant = {
   wallet_address: string;
   joined_at: string;
   played_at: string | null;
-  status: string;
   score: number | null;
   has_played: boolean;
   txn_hash: string | null;

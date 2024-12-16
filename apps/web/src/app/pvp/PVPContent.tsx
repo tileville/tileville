@@ -12,14 +12,20 @@ import { ChallengesList } from "@/components/PVP/ChallengesTabs/ChallengesList";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import clsx from "clsx";
 
-const TABS = [
-  { value: "accepted", text: "Accepted Challenges" },
-  { value: "created", text: "Created Challenges" },
-];
+const TABS = {
+  ACCEPTED: {
+    id: "accepted",
+    label: "Accepted Challenges",
+  },
+  CREATED: {
+    id: "created",
+    label: "Created Challenges",
+  },
+};
 
 export default function PVPContent() {
   const networkStore = useNetworkStore();
-  const [activeTab, setActiveTab] = useState("accepted");
+  const [activeTab, setActiveTab] = useState(TABS.ACCEPTED.id);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
@@ -48,6 +54,7 @@ export default function PVPContent() {
     setCreateModalOpen(true);
   };
 
+  //TODO: Instead of hiding whole PVP content, show the tabs if wallet is not connected
   if (!networkStore.address) {
     return (
       <div className="flex min-h-screen items-center justify-center p-8">
@@ -67,7 +74,9 @@ export default function PVPContent() {
     <div className="p-4 pb-16 pt-12 font-roboto md:pt-24">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-primary">PVP Challenges</h1>
+          <h1 className="text-2xl font-bold text-primary">
+            Player-vs-Player Challenges
+          </h1>
           <button
             className={clsx(PRIMARY_BUTTON_V2, "py-1")}
             onClick={handleCreateChallenge}
@@ -78,31 +87,29 @@ export default function PVPContent() {
 
         <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
           <Tabs.List className="mt-4 whitespace-nowrap !text-xl !text-black">
-            {TABS.map((tab) => (
+            {Object.values(TABS).map((tab) => (
               <Tabs.Trigger
-                key={tab.value}
-                value={tab.value}
-                className={`${activeTab === tab.value ? "!font-bold" : ""}`}
+                key={tab.id}
+                value={tab.id}
+                className={`${activeTab === tab.id ? "!font-bold" : ""}`}
               >
-                {tab.text}
+                {tab.label}
               </Tabs.Trigger>
             ))}
           </Tabs.List>
-
           <Box pt="3">
-            <Tabs.Content value="accepted">
+            <Tabs.Content value={TABS.ACCEPTED.id}>
               <ChallengesList
                 isLoadingAccepted={isLoadingAccepted}
                 challenges={acceptedChallenges}
-                challengesType="accepted"
+                challengesType={TABS.ACCEPTED.id}
               />
             </Tabs.Content>
-
-            <Tabs.Content value="created">
+            <Tabs.Content value={TABS.CREATED.id}>
               <ChallengesList
                 isLoadingCreated={isLoadingCreated}
                 challenges={createdChallenges}
-                challengesType="created"
+                challengesType={TABS.CREATED.id}
               />
             </Tabs.Content>
           </Box>
