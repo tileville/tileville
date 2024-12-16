@@ -43,7 +43,7 @@ export const PVPEntryFeesModal = ({
     // });
     const data = await payPVPFees({
       participation_fee: entryFee ?? 0,
-      challenge_id: challengeId,
+      challenge_id: +challengeId,
     });
 
     if (data.success) {

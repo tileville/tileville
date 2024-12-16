@@ -5,7 +5,10 @@ import { useState } from "react";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useCreateChallenge } from "@/db/react-query-hooks";
 import { ChallengeCreatedModal } from "./ChallengeCreatedModal";
-import { PRIMARY_BUTTON_V2_LG } from "@/constants";
+import {
+  PRIMARY_BUTTON_V2_LG,
+  PVP_CHALLENGES_MIN_ENTRY_FEE,
+} from "@/constants";
 import { SpinnerWhite } from "../common/Spinner";
 import { generateChallengeName } from "@/lib/helpers";
 import { CustomTooltip } from "../common/CustomTooltip";
@@ -32,7 +35,7 @@ export const CreateChallengeModal = ({
 
   // Form states
   const [name, setName] = useState(generateChallengeName());
-  const [entryFee, setEntryFee] = useState(5);
+  const [entryFee, setEntryFee] = useState(PVP_CHALLENGES_MIN_ENTRY_FEE);
   const [endTime, setEndTime] = useState("24"); // 24 hours default
   const [maxParticipants, setMaxParticipants] = useState(2); // minimum 2 players
   const [isSpeedChallenge, setIsSpeedChallenge] = useState(false);
@@ -141,7 +144,7 @@ export const CreateChallengeModal = ({
                 <div className="relative">
                   <input
                     type="number"
-                    min="5"
+                    min={PVP_CHALLENGES_MIN_ENTRY_FEE}
                     step="1"
                     className={`${INPUT_CLASS} no-spinner`}
                     value={entryFee}

@@ -1,4 +1,8 @@
-import { copyToClipBoard, formatAddress } from "@/lib/helpers";
+import {
+  copyToClipBoard,
+  formatAddress,
+  generatePVPChallengeInviteLink,
+} from "@/lib/helpers";
 import { Challenge, ChallengeParticipant } from "@/types";
 import { CopyIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
@@ -10,6 +14,12 @@ import { useRouter } from "next/navigation";
 import { useUsername } from "@/db/react-query-hooks";
 import { Skeleton } from "@radix-ui/themes";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
+import { ChallengeStatus } from "./ChallengesList";
+import { isFuture } from "date-fns";
+import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
+import { usePayPVPFees } from "@/hooks/usePayPVPFees";
+import { useState } from "react";
+import { Spinner2 } from "@/components/common/Spinner";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -20,18 +30,19 @@ export const ChallengeDetails = ({
   challenge,
   participants,
 }: ChallengeDetailsProps) => {
+  const challengeStatus = challenge.status as ChallengeStatus;
   const networkStore = useNetworkStore();
+  const [payLoading, setPayLoading] = useState(false);
   const router = useRouter();
+
+  const { payPVPFees } = usePayPVPFees();
   const { data: createdByUsername, isLoading: usernameLoading } = useUsername(
     challenge.created_by
   );
 
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
-  // Function to check if challenge has ended
-  const isChallengeEnded = () => {
-    return new Date(challenge.end_time) < new Date();
-  };
+  const isChallengeActive = isFuture(challenge.end_time);
 
   // Function to check if current user has already played
   const hasUserPlayed = () => {
@@ -47,7 +58,7 @@ export const ChallengeDetails = ({
 
   const getWinner = (): ChallengeParticipant | null => {
     // Only show winner if challenge ended OR all participants have played
-    if (!isChallengeEnded() && !haveAllParticipantsPlayed()) return null;
+    if (isChallengeActive && !haveAllParticipantsPlayed()) return null;
 
     const playedParticipants = participants.filter((p) => p.has_played);
     if (playedParticipants.length === 0) return null;
@@ -62,40 +73,49 @@ export const ChallengeDetails = ({
 
   const winner = getWinner();
 
-  const handlePlayGame = async () => {
-    if (!accountAuthSignature) {
-      await validateOrSetSignature();
-      return;
+  const handlePayParticipationFess = async () => {
+    if (!networkStore.address) {
+      return networkStore.connectWallet(false);
     }
-    // Find participant's game record
-    const currentParticipant = participants.find(
-      (p) => p.wallet_address === networkStore.address
-    );
+    setPayLoading(true);
 
-    if (!currentParticipant) {
-      toast.error("You haven't joined this challenge yet!");
-      return;
-    }
-
-    if (currentParticipant.has_played) {
-      toast.error("You've already played this challenge!");
-      return;
-    }
-
-    if (isChallengeEnded()) {
-      toast.error("This challenge has ended!");
-      return;
-    }
-
-    // toast.success(
-    //   `You have joined the ${challenge.name} Challenge successfully. Redirecting you to the game screen now.`
-    // );
-    // setTimeout(() => {
-    router.push(`/pvp/${challenge.id}/game`);
-    // }, 3);
+    //TODO: Add posthog Event for challenges
+    await payPVPFees({
+      participation_fee: challenge.entry_fee ?? 0,
+      challenge_id: challenge.id,
+    });
+    setPayLoading(false);
   };
 
-  const inviteLink = `https://www.tileville.xyz/pvp/invite/${challenge.invite_code}`;
+  // const handlePlayGame = async () => {
+  //   if (!accountAuthSignature) {
+  //     await validateOrSetSignature();
+  //     return;
+  //   }
+  //   // Find participant's game record
+  //   const currentParticipant = participants.find(
+  //     (p) => p.wallet_address === networkStore.address
+  //   );
+
+  //   if (!currentParticipant) {
+  //     toast.error("You haven't joined this challenge yet!");
+  //     return;
+  //   }
+
+  //   if (currentParticipant.has_played) {
+  //     toast.error("You've already played this challenge!");
+  //     return;
+  //   }
+
+  //   if (!isChallengeActive) {
+  //     toast.error("This challenge has ended!");
+  //     return;
+  //   }
+
+  //   router.push(`/pvp/${challenge.id}/game`);
+  // };
+
+  const inviteLink = generatePVPChallengeInviteLink(challenge.invite_code);
 
   return (
     <div className="relative rounded-lg border border-[#38830A] bg-[#99B579] p-6">
@@ -255,7 +275,7 @@ export const ChallengeDetails = ({
 
       {/* Update the play button */}
       <div className="mt-6 flex justify-end">
-        <button
+        {/* <button
           onClick={handlePlayGame}
           disabled={isChallengeEnded() || hasUserPlayed()}
           className="rounded-lg bg-primary px-6 py-2 text-white  disabled:opacity-50"
@@ -265,7 +285,57 @@ export const ChallengeDetails = ({
             : hasUserPlayed()
             ? "Already Played"
             : "Play"}
-        </button>
+        </button> */}
+
+        {challengeStatus === ChallengeStatus.PAYMENT_NOT_INIT &&
+          isChallengeActive && (
+            <button
+              className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
+              onClick={handlePayParticipationFess}
+            >
+              Pay Now
+            </button>
+          )}
+        {challengeStatus === ChallengeStatus.TXN_NOT_CONFIRMED &&
+          isChallengeActive && (
+            <div className="flex gap-2">
+              <button
+                className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
+                onClick={() => {}}
+              >
+                Refresh Status
+              </button>
+              <button
+                className={`${PRIMARY_OUTLINE_BUTTON} relative disabled:opacity-60`}
+                onClick={handlePayParticipationFess}
+              >
+                Pay Now
+                {payLoading && (
+                  <span className="absolute right-1 top-1/2 -translate-y-1/2">
+                    <Spinner2 size={12} />
+                  </span>
+                )}
+              </button>
+            </div>
+          )}
+        {challengeStatus === ChallengeStatus.READY_TO_PLAY &&
+          isChallengeActive && (
+            <button
+              className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
+              onClick={() => {}}
+            >
+              Play
+            </button>
+          )}
+        {challengeStatus === ChallengeStatus.PAYMENT_FAILED &&
+          isChallengeActive && (
+            <button
+              className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
+              onClick={() => {}}
+            >
+              Retry
+            </button>
+          )}
       </div>
     </div>
   );

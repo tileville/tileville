@@ -50,7 +50,7 @@ const postHandler = async (request: NextRequest) => {
     await supabase.from("pvp_challenge_participants").insert({
       challenge_id: data.id,
       wallet_address: wallet_address,
-      status: "JOINED",
+      txn_status: "NOT_INIT",
     });
 
     return Response.json({ success: true, data });

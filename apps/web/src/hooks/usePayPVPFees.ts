@@ -23,7 +23,7 @@ export const usePayPVPFees = () => {
     challenge_id,
   }: {
     participation_fee: number;
-    challenge_id: string;
+    challenge_id: number;
   }): Promise<PayPVPFeesResponse> => {
     const network = window.mina?.isPallad
       ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
@@ -57,7 +57,7 @@ export const usePayPVPFees = () => {
         txn_hash: hash,
         wallet_address: networkStore.address,
         network,
-        challenge_id: +challenge_id,
+        challenge_id: challenge_id,
         txn_status,
         amount: participation_fee,
         is_game_played: false,

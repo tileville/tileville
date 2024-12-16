@@ -272,3 +272,7 @@ export const generateChallengeName = () => {
     SECOND_WORDS[Math.floor(Math.random() * SECOND_WORDS.length)];
   return `${firstWord} ${secondWord}`;
 };
+
+export const generatePVPChallengeInviteLink = (invite_code: string) => {
+  return `${window.location.origin}/pvp/invite/${invite_code}`;
+};

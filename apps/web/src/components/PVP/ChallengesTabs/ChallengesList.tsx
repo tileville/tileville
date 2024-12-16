@@ -53,84 +53,39 @@ export const ChallengesList = ({
             <div className="col-span-3">Challenge Name</div>
             <div className="col-span-3 text-center">Ends In</div>
             <div className="col-span-2 text-center">Entry Fees</div>
-            <div className="col-span-3 text-center">Action</div>
+            <div className="col-span-3 text-center">Status</div>
           </div>
 
           <div className="h-[2px] w-full rounded-[5px] bg-[#38830A]"></div>
           <div className="my-4 max-h-[calc(100vh-460px)] overflow-auto pr-4">
             <div className="grid gap-4">
               {challenges.data.map(({ challenge, participants }, index) => {
+                const txn_status = participants[0]
+                  .txn_status as TransactionStatus;
+                const has_played = participants[0].has_played;
+                const challengeStatus = getChallengeStatus({
+                  txn_status,
+                  has_played,
+                });
+                const updatedChallenge = {
+                  ...challenge,
+                  status: challengeStatus,
+                };
                 return (
                   <ChallengeListItem
                     key={challenge.id}
                     challengeID={challenge.id}
                     sn={index + 1}
                     challengeName={challenge.name}
-                    txn_status={participants[0].txn_status as TransactionStatus}
-                    has_played={participants[0].has_played}
-                    participantsLength={participants.length}
+                    challengeStatus={challengeStatus}
                     selectedChallengeId={selectedChallenge?.id}
                     selectChallengeFn={() => {
-                      setSelectedChallenge(challenge);
+                      setSelectedChallenge(updatedChallenge);
                     }}
                     endTime={challenge.end_time}
                     entryFee={challenge.entry_fee}
                   />
                 );
-
-                // const challengeStatus =
-                //   participants.length > 0
-                //     ? getChallengeStatus({
-                //         txn_status: participants[0]
-                //           .txn_status as TransactionStatus,
-                //         has_played: participants[0].has_played,
-                //       })
-                //     : ChallengeStatus.UNKNOWN_ERROR;
-
-                // const buttonState = getButtonState(challengeStatus);
-                // return (
-                //   <div
-                //     className={`grid w-full cursor-pointer grid-cols-12 rounded-[10px] border border-[#76993E] p-4 ${
-                //       selectedChallenge?.id === challenge.id
-                //         ? "border-primary bg-[#99B579] outline outline-2 outline-[#38830A]"
-                //         : "border-[#76993E]"
-                //     }`}
-                //     onClick={() => {
-                //       setSelectedChallenge(challenge);
-                //     }}
-                //     key={challenge.id}
-                //   >
-                //     <div className="col-span-1">{index + 1}</div>
-                //     <div className="col-span-3">{challenge.name}</div>
-                //     <div className="col-span-3 text-center">
-                //       <CountdownTimerSmall endTime={challenge.end_time} />
-                //     </div>
-                //     <div className="col-span-2 text-center">
-                //       {challenge.entry_fee} MINA
-                //     </div>
-                //     <div className="col-span-3 text-center">
-                //       <Badge
-                //         color={getBadgeColorFromStatus(challengeStatus)}
-                //         className="mb-2 !text-[10px]"
-                //       >
-                //         {challengeStatus}
-                //       </Badge>
-                //       <button
-                //         className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
-                //         onClick={() => {
-                //           if (buttonState.action === "play") {
-                //             // Handle play action
-                //           } else if (buttonState.action === "retry") {
-                //             // Handle retry action
-                //           }
-                //         }}
-                //         disabled={buttonState.disabled}
-                //       >
-                //         {buttonState.text}
-                //       </button>
-                //     </div>
-                //   </div>
-                // );
               })}
             </div>
           </div>
@@ -155,4 +110,27 @@ export const ChallengesList = ({
       </div>
     </div>
   );
+};
+
+export enum ChallengeStatus {
+  TXN_NOT_CONFIRMED = "TRANSACTION NOT CONFIRMED",
+  READY_TO_PLAY = "READY TO PLAY",
+  ALREADY_PLAYED = "ALREADY PLAYED",
+  PAYMENT_FAILED = "PAYMENT FAILED",
+  UNKNOWN_ERROR = "UNKNOWN ERROR",
+  PAYMENT_NOT_INIT = "PAYMENT NOT DONE",
+}
+
+const getChallengeStatus = ({
+  txn_status,
+  has_played,
+}: {
+  txn_status: TransactionStatus;
+  has_played: boolean;
+}): ChallengeStatus => {
+  if (has_played) return ChallengeStatus.ALREADY_PLAYED;
+  if (txn_status === "NOT_INIT") return ChallengeStatus.PAYMENT_NOT_INIT;
+  if (txn_status === "PENDING") return ChallengeStatus.TXN_NOT_CONFIRMED;
+  if (txn_status === "FAILED") return ChallengeStatus.PAYMENT_FAILED;
+  return ChallengeStatus.READY_TO_PLAY;
 };

@@ -42,4 +42,4 @@ export interface PVPTransactionLog {
   is_game_played: boolean;
 }
 
-export type TransactionStatus = "PENDING" | "CONFIRMED" | "FAILED";
+export type TransactionStatus = "PENDING" | "CONFIRMED" | "FAILED" | "NOT_INIT";

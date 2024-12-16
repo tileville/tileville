@@ -376,8 +376,10 @@ export const useMainnetPVPTransactionsStatus = (
 ) => {
   return useQuery(
     ["transaction_status_mainnet_pvp", txn_hash],
-    () =>
-      fetch(
+    () => {
+      //TODO: Add counter for blockberry API to track how many times we calling this
+      console.log(`Calling Blockberry api to check pvp txn status`);
+      return fetch(
         `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
         {
           headers: {
@@ -392,7 +394,8 @@ export const useMainnetPVPTransactionsStatus = (
               txn_status: "CONFIRMED",
             });
           }
-        }),
+        });
+    },
     {
       staleTime: Infinity,
       enabled: !!txn_hash && txn_status === "PENDING",
@@ -1138,7 +1141,6 @@ export const useSavePvPScore = () => {
     },
   });
 };
-
 
 export const useChallengeById = (challengeId: string | number) => {
   return useQuery({
