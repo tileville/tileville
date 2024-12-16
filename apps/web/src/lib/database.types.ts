@@ -238,7 +238,6 @@ export type Database = {
           max_participants: number
           name: string
           speed_duration: number | null
-          status: string
           updated_at: string | null
         }
         Insert: {
@@ -252,7 +251,6 @@ export type Database = {
           max_participants?: number
           name: string
           speed_duration?: number | null
-          status?: string
           updated_at?: string | null
         }
         Update: {
@@ -266,7 +264,6 @@ export type Database = {
           max_participants?: number
           name?: string
           speed_duration?: number | null
-          status?: string
           updated_at?: string | null
         }
         Relationships: []

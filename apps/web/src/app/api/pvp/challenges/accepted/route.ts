@@ -49,7 +49,6 @@ export async function GET(request: NextRequest) {
         max_participants: challenge.max_participants,
         is_speed_challenge: challenge.is_speed_challenge,
         speed_duration: challenge.speed_duration,
-        status: challenge.status,
         created_at: challenge.created_at,
         updated_at: challenge.updated_at,
       },

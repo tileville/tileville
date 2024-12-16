@@ -37,7 +37,6 @@ const postHandler = async (request: NextRequest) => {
       max_participants,
       is_speed_challenge,
       speed_duration: is_speed_challenge ? speed_duration : null,
-      status: "PENDING",
     };
 
     const { data, error } = await supabase
