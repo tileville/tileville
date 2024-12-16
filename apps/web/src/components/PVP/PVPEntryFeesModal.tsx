@@ -14,6 +14,8 @@ type PVPEntryFeesModalProps = {
   challengeId: string;
 };
 
+//TODO: Handle Loading states
+
 export const PVPEntryFeesModal = ({
   open,
   handleClose,
@@ -32,13 +34,7 @@ export const PVPEntryFeesModal = ({
 
   const handlePayParticipationFess = async () => {
     if (!networkStore.address) {
-      try {
-        networkStore.connectWallet(false);
-      } catch (error) {
-        console.error(`Failed to connect with wallet`, error);
-      } finally {
-        return;
-      }
+      return networkStore.connectWallet(false);
     }
     // logJoinCompetition({
     //   walletAddress: networkStore.address,
@@ -50,7 +46,7 @@ export const PVPEntryFeesModal = ({
       challenge_id: challengeId,
     });
 
-    if (data?.id) {
+    if (data.success) {
       toast(
         `You have joined the challenge successfully. Redirecting you to the game screen now.`
       );
@@ -59,9 +55,7 @@ export const PVPEntryFeesModal = ({
       }, 3000);
       handleClose();
     } else {
-      toast(
-        `Failed to connect wallet. Please make sure your wallet extension is unlocked. If issue still persists, Please report a bug!`
-      );
+      toast(data.message);
     }
   };
 

@@ -3,62 +3,88 @@ import { useNetworkStore } from "@/lib/stores/network";
 import { NETWORKS } from "@/constants/network";
 import { sendPayment } from "@/lib/helpers";
 import { addPVPTransactionLog } from "@/db/supabase-queries";
-import toast from "react-hot-toast";
 import { TransactionStatus } from "o1js";
 
+type PayPVPFeesResponse = {
+  success: boolean;
+  message: string;
+  data?: {
+    [key: string]: any;
+  };
+};
+// {code, message: `failed for %s %s`, showHelp: true}
 export const usePayPVPFees = () => {
   const networkStore = useNetworkStore();
   //   const {
   //     joinedCompetition: [, logJoinCompetitionError],
   //   } = usePosthogEvents();
-
   const payPVPFees = async ({
     participation_fee,
     challenge_id,
   }: {
     participation_fee: number;
     challenge_id: string;
-  }): Promise<{ id: number } | null | undefined> => {
+  }): Promise<PayPVPFeesResponse> => {
     const network = window.mina?.isPallad
       ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
       : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
-    let txn_status: TransactionStatus = "PENDING";
+
+    const txn_status: TransactionStatus = "PENDING";
+
     if (!networkStore.address) {
       networkStore.connectWallet(false);
-      return null;
+      return { success: false, message: "Please connect your wallet first" };
     }
-
-    const hash = await sendPayment({
-      from: networkStore.address,
-      amount: participation_fee,
-      memo: `CID ${challenge_id}`,
-    });
-
-    txn_status = "PENDING";
-
     try {
-      if (hash) {
-        console.log("response hash", hash);
-        const response = await addPVPTransactionLog({
-          txn_hash: hash,
-          wallet_address: networkStore.address,
-          network,
-          challenge_id: Number(challenge_id),
-          txn_status,
-          amount: participation_fee,
-          is_game_played: false,
-        });
+      const hash = await sendPayment({
+        from: networkStore.address,
+        amount: participation_fee,
+        memo: `CID ${challenge_id}`,
+      });
 
-        console.log("Add pvp transaction log response", response);
-        return response;
-      } else {
-        console.log("toast error");
+      if (!hash) {
+        return {
+          success: false,
+          message: "Transaction failed, Please try again",
+        };
       }
+      //TODO: Replace all these logs with actual sentry or posthog logs for debugging purpose
+      console.log(
+        `pvp transaction hash ${hash} for challenge ID ${challenge_id}`
+      );
+
+      const response = await addPVPTransactionLog({
+        txn_hash: hash,
+        wallet_address: networkStore.address,
+        network,
+        challenge_id: +challenge_id,
+        txn_status,
+        amount: participation_fee,
+        is_game_played: false,
+      });
+
+      //TODO: replace with sentry
+      console.log("Add pvp transaction log response", response);
+      if (!response.id) {
+        return {
+          success: false,
+          message: `Failed to add PVP transaction log in db for challenge ID ${challenge_id}`,
+        };
+      }
+      return {
+        success: true,
+        message: `PVP join fees paid successfully`,
+        data: {
+          hash,
+          txn_log_id: response.id,
+        },
+      };
     } catch (err: any) {
-      console.log("ERROR SENDIN ENTRY FEES IN PVP", err);
-      toast("Failed to transfer entry fees😭");
+      return {
+        success: false,
+        message: `Failed to pay pvp fees due to ${err.toString()}`,
+      };
       //   logJoinCompetitionError(err.toString());
-      return null;
     }
   };
 

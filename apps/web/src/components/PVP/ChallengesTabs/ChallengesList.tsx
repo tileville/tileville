@@ -90,9 +90,7 @@ export const ChallengesList = ({
                         console.log("CLICKED");
                       }}
                     >
-                      {ChallengeData.challenge.status === "PENDING"
-                        ? "Play"
-                        : "Played"}
+                      Play
                     </button>
                   </div>
                 </div>
