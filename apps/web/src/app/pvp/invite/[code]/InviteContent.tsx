@@ -81,6 +81,7 @@ export default function InviteContent({ code }: { code: string }) {
                     <Link
                       href={`${window.location.origin}/u/${username}`}
                       className="underline hover:no-underline"
+                      target="_blank"
                     >
                       {username}
                     </Link>
