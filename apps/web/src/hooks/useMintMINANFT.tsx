@@ -10,7 +10,7 @@ import {
   CHAIN_NAME,
   FEEMASTER_PUBLIC_KEY_DEFAULT,
   MINANFT_CONTRACT_ADDRESS,
-  RESERVED_PRICE_REDUCE_KEY,
+  RESERVED_PRICE_REDUCE_KEY_DEFAULT,
   ProofOfNFT,
 } from "@/app/api/mint-nft/constants";
 import { createFileFromImageUrl } from "@/app/api/mint-nft/common-utils";
@@ -48,6 +48,7 @@ export function useMintMINANFT() {
     } = params;
     const collectionConfig = globalConfig?.nft_collections_config?.[collection] || {}
     const feeMasterPublicKey = collectionConfig.fee_master_public_key || FEEMASTER_PUBLIC_KEY_DEFAULT
+    const reserved_price_reduce_key = collectionConfig.reserved_price_reduce_key || RESERVED_PRICE_REDUCE_KEY_DEFAULT
     console.log("feeMasterPublicKey" , feeMasterPublicKey)
     const contractAddress = MINANFT_CONTRACT_ADDRESS;
     const chain: blockchain = CHAIN_NAME;
@@ -120,7 +121,7 @@ export function useMintMINANFT() {
       version: "v2",
       developer: "Tileville",
       repo: "tileville",
-      key: RESERVED_PRICE_REDUCE_KEY,
+      key: reserved_price_reduce_key,
     } as any);
 
     const nft = new RollupNFT({

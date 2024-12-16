@@ -11,7 +11,7 @@ export const MINATY_NFT_BUCKET_NAME = "minaty_nfts";
 export const MINANFT_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
 
-export const RESERVED_PRICE_REDUCE_KEY =
+export const RESERVED_PRICE_REDUCE_KEY_DEFAULT =
   process.env.NEXT_PUBLIC_RESERVED_PRICE_REDUCE_KEY ||
   "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V";
 
