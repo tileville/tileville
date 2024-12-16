@@ -64,7 +64,6 @@ export async function POST(request: NextRequest) {
       .insert({
         challenge_id,
         wallet_address,
-        status: "JOINED",
       })
       .select()
       .single();
