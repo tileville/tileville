@@ -243,7 +243,7 @@ export const ChallengeDetails = ({
                           </span>
                         )}
                     </td>
-                    <td>{participant.status}</td>
+                    <td>{/* //TODO: Add status here */}</td>
                     <td>{participant.score || "-"}</td>
                   </tr>
                 ))

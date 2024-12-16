@@ -52,11 +52,14 @@ export async function GET(request: NextRequest) {
         created_at: challenge.created_at,
         updated_at: challenge.updated_at,
       },
-      participants: Array.isArray(challenge.participants)
-        ? challenge.participants
-        : challenge.participants
-        ? [challenge.participants]
-        : [],
+      participants: (challenge.participants || []).sort(
+        (participant1, participant2) =>
+          participant1.wallet_address === wallet_address
+            ? -1
+            : participant2.wallet_address === wallet_address
+            ? 1
+            : 0
+      ),
     }));
 
     return Response.json({ success: true, data: formattedData });
