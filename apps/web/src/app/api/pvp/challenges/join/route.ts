@@ -6,7 +6,44 @@ export async function POST(request: NextRequest) {
   try {
     const { challenge_id, wallet_address } = await request.json();
 
-    // Check if user has already joined this challenge
+    // Check if challenge exists and get max_participants
+    const { data: challenge, error: challengeError } = await supabase
+      .from("pvp_challenges")
+      .select("max_participants")
+      .eq("id", challenge_id)
+      .single();
+
+    if (challengeError) throw challengeError;
+    if (!challenge) {
+      return Response.json(
+        { success: false, message: "Challenge not found" },
+        { status: 404 }
+      );
+    }
+
+    // Get current participant count
+    const { count: currentParticipants, error: countError } = await supabase
+      .from("pvp_challenge_participants")
+      .select("*", { count: "exact" })
+      .eq("challenge_id", challenge_id);
+
+    if (countError) throw countError;
+
+    // Safely check participant count - if null, assume 0
+    const participantCount = currentParticipants ?? 0;
+
+    // Check if max participants limit is reached
+    if (participantCount >= challenge.max_participants) {
+      return Response.json(
+        {
+          success: false,
+          message: `Challenge is full. Maximum ${challenge.max_participants} participants allowed.`,
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check if user has already joined
     const { data: existingParticipant } = await supabase
       .from("pvp_challenge_participants")
       .select()
