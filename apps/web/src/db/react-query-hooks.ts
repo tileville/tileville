@@ -30,6 +30,7 @@ import {
   getAllNFTsEntries,
   updatePVPTransactionLog,
   fetchPVPChallengeTransaction,
+  confirmChallengeParticipation,
 } from "./supabase-queries";
 import {
   ACCOUNT_AUTH_LOCAL_KEY,
@@ -41,6 +42,7 @@ import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
+import { TransactionStatus } from "@/lib/types";
 
 export const useSendEmail = ({
   onSuccess,
@@ -372,11 +374,13 @@ export const useMainnetTransactionStatusForMint = (txn_hash: string) => {
 
 export const useMainnetPVPTransactionsStatus = (
   txn_hash: string,
-  txn_status: string | undefined
+  txn_status: TransactionStatus,
+  challenge_id: number
 ) => {
   return useQuery(
     ["transaction_status_mainnet_pvp", txn_hash],
     () => {
+      console.log(txn_hash, txn_status, challenge_id, 383);
       //TODO: Add counter for blockberry API to track how many times we calling this
       console.log(`Calling Blockberry api to check pvp txn status`);
       return fetch(
@@ -389,10 +393,13 @@ export const useMainnetPVPTransactionsStatus = (
       )
         .then((response) => response.json())
         .then((res) => {
+          console.log("response blockberrry", res);
           if (res.blockConfirmationsCount >= 1 || res.txStatus === "applied") {
-            return updatePVPTransactionLog(txn_hash, {
-              txn_status: "CONFIRMED",
-            });
+            return confirmChallengeParticipation(
+              txn_hash,
+              challenge_id,
+              "CONFIRMED"
+            );
           }
         });
     },

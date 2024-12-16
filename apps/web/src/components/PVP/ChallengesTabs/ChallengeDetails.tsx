@@ -11,7 +11,11 @@ import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useUsername } from "@/db/react-query-hooks";
+import {
+  useMainnetPVPTransactionsStatus,
+  usePVPChallengeTransaction,
+  useUsername,
+} from "@/db/react-query-hooks";
 import { Skeleton } from "@radix-ui/themes";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { ChallengeStatus } from "./ChallengesList";
@@ -20,6 +24,7 @@ import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
 import { usePayPVPFees } from "@/hooks/usePayPVPFees";
 import { useState } from "react";
 import { Spinner2 } from "@/components/common/Spinner";
+import { TransactionStatus } from "@/lib/types";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -38,6 +43,17 @@ export const ChallengeDetails = ({
   const { payPVPFees } = usePayPVPFees();
   const { data: createdByUsername, isLoading: usernameLoading } = useUsername(
     challenge.created_by
+  );
+
+  const { data: challengeTransaction } = usePVPChallengeTransaction(
+    networkStore.address || "",
+    challenge.id
+  );
+
+  useMainnetPVPTransactionsStatus(
+    challengeTransaction?.txn_hash || "",
+    challengeTransaction?.txn_status as TransactionStatus,
+    challenge.id
   );
 
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();

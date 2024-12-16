@@ -14,6 +14,7 @@ import {
 import { Spinner2 } from "@/components/common/Spinner";
 import { useState } from "react";
 import { PVPEntryFeesModal } from "@/components/PVP/PVPEntryFeesModal";
+import { TransactionStatus } from "@/lib/types";
 
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
@@ -34,7 +35,8 @@ export default function PvPChallengePage() {
 
   useMainnetPVPTransactionsStatus(
     challengeTransaction?.txn_hash || "",
-    challengeTransaction?.txn_status
+    challengeTransaction?.txn_status as TransactionStatus,
+    +params.challengeId
   );
 
   if (!networkStore.address) {

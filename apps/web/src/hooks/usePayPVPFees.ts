@@ -2,7 +2,7 @@ import { useNetworkStore } from "@/lib/stores/network";
 // import { usePosthogEvents } from "./usePosthogEvents";
 import { NETWORKS } from "@/constants/network";
 import { sendPayment } from "@/lib/helpers";
-import { addPVPTransactionLog } from "@/db/supabase-queries";
+import { updateChallengeTransaction } from "@/db/supabase-queries";
 import { TransactionStatus } from "o1js";
 
 type PayPVPFeesResponse = {
@@ -53,14 +53,11 @@ export const usePayPVPFees = () => {
         `pvp transaction hash ${hash} for challenge ID ${challenge_id}`
       );
 
-      const response = await addPVPTransactionLog({
+      const response = await updateChallengeTransaction({
         txn_hash: hash,
         wallet_address: networkStore.address,
-        network,
         challenge_id: challenge_id,
         txn_status,
-        amount: participation_fee,
-        is_game_played: false,
       });
 
       //TODO: replace with sentry
