@@ -338,7 +338,9 @@ export const ChallengeDetails = ({
           isChallengeActive && (
             <button
               className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
-              onClick={() => {}}
+              onClick={() => {
+                router.push(`/pvp/${challenge.id}/game`);
+              }}
             >
               Play
             </button>
