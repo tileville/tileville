@@ -52,7 +52,7 @@ export const ChallengeListItem = ({
   );
 };
 
-const getBadgeColorFromStatus = (challengeStatus: ChallengeStatus) => {
+export const getBadgeColorFromStatus = (challengeStatus: ChallengeStatus) => {
   if (challengeStatus === ChallengeStatus.TXN_NOT_CONFIRMED) {
     return "yellow";
   } else if (challengeStatus === ChallengeStatus.READY_TO_PLAY) {

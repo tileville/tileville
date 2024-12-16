@@ -16,15 +16,16 @@ import {
   usePVPChallengeTransaction,
   useUsername,
 } from "@/db/react-query-hooks";
-import { Skeleton } from "@radix-ui/themes";
+import { Badge, Skeleton } from "@radix-ui/themes";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { ChallengeStatus } from "./ChallengesList";
+import { ChallengeStatus, getChallengeStatus } from "./ChallengesList";
 import { isFuture } from "date-fns";
 import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
 import { usePayPVPFees } from "@/hooks/usePayPVPFees";
 import { useState } from "react";
 import { Spinner2 } from "@/components/common/Spinner";
 import { TransactionStatus } from "@/lib/types";
+import { getBadgeColorFromStatus } from "../ChallengeListItem";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -59,14 +60,6 @@ export const ChallengeDetails = ({
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
   const isChallengeActive = isFuture(challenge.end_time);
-
-  // Function to check if current user has already played
-  const hasUserPlayed = () => {
-    const currentParticipant = participants.find(
-      (p) => p.wallet_address === networkStore.address
-    );
-    return currentParticipant?.has_played;
-  };
 
   const haveAllParticipantsPlayed = () => {
     return participants.length > 0 && participants.every((p) => p.has_played);
@@ -265,24 +258,45 @@ export const ChallengeDetails = ({
                   </td>
                 </tr>
               ) : (
-                participants.map((participant, index) => (
-                  <tr key={index} className="border-none">
-                    <td className="py-2">{index + 1}</td>
-                    <td>
-                      {participant.wallet_address.slice(0, 6)}...
-                      {participant.wallet_address.slice(-4)}
-                      {winner &&
-                        participant.wallet_address ===
-                          winner.wallet_address && (
-                          <span className="ml-2 text-xs font-bold text-green-600">
-                            (Winner!)
-                          </span>
-                        )}
-                    </td>
-                    <td>{/* //TODO: Add status here */}</td>
-                    <td>{participant.score || "-"}</td>
-                  </tr>
-                ))
+                participants.map((participant, index) => {
+                  const txn_status =
+                    participant?.txn_status as TransactionStatus;
+                  const has_played = participant?.has_played
+                    ? participant?.has_played
+                    : false;
+                  const participantChallengeStatus = getChallengeStatus({
+                    txn_status,
+                    has_played,
+                  });
+
+                  return (
+                    <tr key={index} className="border-none">
+                      <td className="py-2">{index + 1}</td>
+                      <td>
+                        {participant.wallet_address.slice(0, 6)}...
+                        {participant.wallet_address.slice(-4)}
+                        {winner &&
+                          participant.wallet_address ===
+                            winner.wallet_address && (
+                            <span className="ml-2 text-xs font-bold text-green-600">
+                              (Winner!)
+                            </span>
+                          )}
+                      </td>
+                      <td className="text-xs">
+                        <Badge
+                          color={getBadgeColorFromStatus(
+                            participantChallengeStatus
+                          )}
+                          className="mb-2 !text-[10px]"
+                        >
+                          {participantChallengeStatus}
+                        </Badge>
+                      </td>
+                      <td>{participant.score || "-"}</td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -349,7 +363,7 @@ export const ChallengeDetails = ({
           isChallengeActive && (
             <button
               className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
-              onClick={() => {}}
+              onClick={handlePayParticipationFess}
             >
               Retry
             </button>

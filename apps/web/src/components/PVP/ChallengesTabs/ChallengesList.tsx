@@ -121,7 +121,7 @@ export enum ChallengeStatus {
   PAYMENT_NOT_INIT = "PAYMENT NOT DONE",
 }
 
-const getChallengeStatus = ({
+export const getChallengeStatus = ({
   txn_status,
   has_played,
 }: {
