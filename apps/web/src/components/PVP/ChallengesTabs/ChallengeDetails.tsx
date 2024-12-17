@@ -59,10 +59,8 @@ export const ChallengeDetails = ({
 
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
-  const { throttledFunction, isThrottled } = useThrottleWithIncreasingDelay(
-    2000,
-    1000
-  );
+  const { throttledFunction, isThrottled, currentDelay } =
+    useThrottleWithIncreasingDelay(2000, 1000);
 
   const handleRefreshStatus = () => {
     throttledFunction(() => {
@@ -276,19 +274,23 @@ export const ChallengeDetails = ({
           isChallengeActive && (
             <div className="flex gap-2">
               <button
-                className={`${PRIMARY_OUTLINE_BUTTON} min-w-[120px] disabled:opacity-60`}
+                className={`${PRIMARY_OUTLINE_BUTTON} min-w-[140px] disabled:opacity-60`}
                 onClick={handleRefreshStatus}
                 disabled={isThrottled}
               >
-                {isThrottled ? "Please wait..." : "Refresh Status"}
+                {isThrottled
+                  ? `Try again in ${Math.ceil(currentDelay / 1000)} seconds`
+                  : "Refresh Status"}
               </button>
+
               <button
-                className={`${PRIMARY_OUTLINE_BUTTON} relative disabled:opacity-60`}
+                className={`${PRIMARY_OUTLINE_BUTTON} relative min-w-[120px] disabled:opacity-60`}
                 onClick={handlePayParticipationFess}
+                disabled={payLoading}
               >
-                Pay Now
+                Try Again
                 {payLoading && (
-                  <span className="absolute right-1 top-1/2 -translate-y-1/2">
+                  <span className="absolute left-1 top-1/2 -translate-y-1/2">
                     <Spinner2 size={12} />
                   </span>
                 )}
