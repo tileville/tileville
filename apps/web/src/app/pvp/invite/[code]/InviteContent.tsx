@@ -84,7 +84,7 @@ export default function InviteContent({ code }: { code: string }) {
       return (
         <button
           onClick={() => networkStore.connectWallet(false)}
-          className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90"
+          className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white hover:bg-[#38830A]/90 md:py-3 md:text-lg"
         >
           Connect Wallet
         </button>
@@ -97,7 +97,7 @@ export default function InviteContent({ code }: { code: string }) {
         return (
           <button
             disabled
-            className="mt-4 w-full rounded-lg bg-gray-500 py-3 text-lg font-semibold text-white opacity-50"
+            className="mt-4 w-full rounded-lg bg-gray-500 py-2 text-sm font-semibold text-white opacity-50 md:py-3 md:text-lg"
           >
             Already Played
           </button>
@@ -109,7 +109,7 @@ export default function InviteContent({ code }: { code: string }) {
         return (
           <button
             onClick={() => router.push(`/pvp/${challenge.data.id}/game`)}
-            className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90"
+            className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white hover:bg-[#38830A]/90 md:py-3 md:text-lg"
           >
             Play Now
           </button>
@@ -121,7 +121,7 @@ export default function InviteContent({ code }: { code: string }) {
         return (
           <button
             disabled
-            className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white opacity-70"
+            className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white opacity-70 md:py-3 md:text-lg"
           >
             Payment Processing...
           </button>
@@ -134,7 +134,7 @@ export default function InviteContent({ code }: { code: string }) {
           <button
             onClick={handleJoinChallenge}
             disabled={payLoading || joinChallengeMutation.isLoading}
-            className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90 disabled:opacity-50"
+            className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white hover:bg-[#38830A]/90 disabled:opacity-50 md:py-3 md:text-lg"
           >
             Retry Payment
           </button>
@@ -163,13 +163,14 @@ export default function InviteContent({ code }: { code: string }) {
 
   return (
     <Dialog.Root open={true}>
-      <Dialog.Content className="relative !m-0 !min-h-[523px] !max-w-[540px] !rounded-md !bg-[#A6B97B] ">
-        <div className="flex !min-h-[523px] flex-col items-center justify-center gap-4">
+      <Dialog.Content className="relative !m-0 !min-h-[523px] !max-w-[540px] !rounded-md !bg-[#A6B97B] !px-2 !py-4  sm:!p-8">
+        <div className="flex !min-h-[523px] flex-col items-center justify-center gap-2 text-sm md:gap-4 md:text-base">
           <Image
             src="/icons/invitation.png"
             width={80}
             height={80}
             alt="invitation"
+            className="h-10 w-10 md:h-20 md:w-20"
           />
 
           {isLoading ? (
@@ -177,7 +178,7 @@ export default function InviteContent({ code }: { code: string }) {
           ) : (
             <>
               <div className="text-center">
-                <h2 className="text-2xl font-bold">
+                <h2 className="text-lg font-bold md:text-2xl">
                   {/* {usernameLoading ? (
                     <Skeleton />
                   ) : (
@@ -212,7 +213,9 @@ export default function InviteContent({ code }: { code: string }) {
               </p>
 
               <div className="flex w-full items-center justify-between">
-                <h3 className="text-2xl font-bold">{challenge.data.name}</h3>
+                <h3 className="text-lg font-bold md:text-2xl">
+                  {challenge.data.name}
+                </h3>
                 <button
                   className="ml-auto flex items-center rounded-md bg-primary/30 px-3 py-1 text-sm"
                   onClick={() =>
@@ -226,15 +229,15 @@ export default function InviteContent({ code }: { code: string }) {
                 </button>
               </div>
 
-              <div className="grid w-full grid-cols-3 gap-4">
-                <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#9AB579] p-4">
+              <div className="grid w-full grid-cols-3 gap-1 md:gap-4">
+                <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#9AB579] p-2 md:p-4">
                   <Image
                     src="/icons/timer.png"
                     width={27}
                     height={27}
                     alt="timer"
                   />
-                  <p className="my-1 text-xl font-bold">
+                  <p className="my-1 text-base font-bold md:text-xl">
                     Time <br /> remaining
                   </p>
                   <p className="mt-auto">
@@ -242,28 +245,28 @@ export default function InviteContent({ code }: { code: string }) {
                   </p>
                 </div>
 
-                <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#9AB579] p-4">
+                <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#9AB579] p-2 md:p-4">
                   <Image
                     src="/icons/cashCoin.png"
                     width={27}
                     height={27}
                     alt="entry fees"
                   />
-                  <p className="my-1 text-xl font-bold">
+                  <p className="my-1 text-base font-bold md:text-xl">
                     Entry <br /> Fees
                   </p>
                   <p className="mt-auto">{challenge.data.entry_fee} MINA</p>
                 </div>
 
                 {challenge.data.is_speed_challenge && (
-                  <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#9AB579] p-4">
+                  <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#9AB579] p-2 md:p-4">
                     <Image
                       src="/icons/rocket.png"
                       width={27}
                       height={27}
                       alt="speed"
                     />
-                    <p className="my-1 text-xl font-bold">
+                    <p className="my-1 text-base font-bold md:text-xl">
                       Speed <br /> Challenge
                     </p>
                     <p className="mt-auto">
@@ -280,7 +283,7 @@ export default function InviteContent({ code }: { code: string }) {
                   }
                   className="flex w-full items-center justify-between rounded-lg px-4 py-1 transition-all hover:bg-primary/10"
                 >
-                  <h3 className="text-xl font-bold">
+                  <h3 className="text-base font-bold md:text-xl">
                     Participants ({challenge?.data?.participants?.length || 0})
                   </h3>
                   <span
@@ -306,7 +309,7 @@ export default function InviteContent({ code }: { code: string }) {
                 </div>
               </div>
               {renderActionButton()}
-              <p className="mt-6 text-center text-sm text-[#5D6845]">
+              <p className="mt-3 text-center text-xs text-[#5D6845] md:mt-6 md:text-sm">
                 Note: A fee of 1 MINA will be deducted from the total prize pool
                 to cover the cost of creating the challenge.
               </p>

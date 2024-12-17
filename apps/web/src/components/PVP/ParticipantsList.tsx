@@ -15,10 +15,10 @@ export const ParticipantsList = ({
   winner,
 }: ParticipantsListProps) => {
   return (
-    <div className="max-h-[180px] overflow-auto rounded-lg border border-black/20 p-4 shadow-[0px_4px_4px_0px_#00000040]">
+    <div className="max-h-[180px] overflow-auto rounded-lg border border-black/20 p-4 text-sm shadow-[0px_4px_4px_0px_#00000040] lg:text-base">
       <table className="w-full">
         <thead>
-          <tr className="text-left">
+          <tr className="whitespace-nowrap text-left">
             <th>S.N</th>
             <th>Wallet Address</th>
             <th>Status</th>
