@@ -44,7 +44,7 @@ export const MintBtn = ({
     isMinatyNFT && mintNFTHitsResponse ? hasMinatyNFT(mintNFTHitsResponse) : 0;
 
   // Disable button if user owns 3 or more MINATY NFTs
-  const userHasMaxMinatyNFT = minatyNFTCount >= 2;
+  const userHasMaxMinatyNFT = minatyNFTCount >= 3;
 
   const isButtonDisabled = isMinatyNFT
     ? isMintingStyledDisabled || isNotForSoldNFT || userHasMaxMinatyNFT
