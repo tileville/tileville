@@ -2,6 +2,7 @@ import {
   copyToClipBoard,
   formatAddress,
   generatePVPChallengeInviteLink,
+  getMinaScanNormalLink,
 } from "@/lib/helpers";
 import { Challenge, ChallengeParticipant } from "@/types";
 import { CopyIcon } from "@radix-ui/react-icons";
@@ -272,14 +273,25 @@ export const ChallengeDetails = ({
           )}
         {challengeStatus === ChallengeStatus.TXN_NOT_CONFIRMED &&
           isChallengeActive && (
-            <div className="flex gap-2">
+            <div className="flex w-full justify-between gap-2">
+              <Link
+                className={`${PRIMARY_OUTLINE_BUTTON} min-w-[140px] text-center disabled:opacity-60`}
+                onClick={handleRefreshStatus}
+                href={getMinaScanNormalLink(
+                  challengeTransaction?.txn_hash || ""
+                )}
+                target="_blank"
+              >
+                Check Status
+              </Link>
+
               <button
                 className={`${PRIMARY_OUTLINE_BUTTON} min-w-[140px] disabled:opacity-60`}
                 onClick={handleRefreshStatus}
                 disabled={isThrottled}
               >
                 {isThrottled
-                  ? `Try again in ${Math.ceil(currentDelay / 1000)} seconds`
+                  ? `Try again in ${Math.ceil(currentDelay / 1000)}s`
                   : "Refresh Status"}
               </button>
 

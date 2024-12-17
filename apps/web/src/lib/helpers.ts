@@ -73,6 +73,9 @@ export function formatTimestampToReadableAge(timestamp: string): string {
 export const getMinaScanLink = (txnHash: string) =>
   `https://minascan.io/mainnet/tx/${txnHash}?type=zk-tx`;
 
+export const getMinaScanNormalLink = (txnHash: string) =>
+  `https://minascan.io/mainnet/tx/${txnHash}`;
+
 export const getMINANFTLink = (txnHash: string) =>
   `https://minanft.io/explore?query=${txnHash}`;
 
