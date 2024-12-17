@@ -1,6 +1,14 @@
+import { generateAuroWalletDeepLinkForChallengeInvite } from "@/lib/helpers";
 import Image from "next/image";
+import Link from "next/link";
 
-export const InviteContentMobileWarning = () => {
+type InviteContentMobileWarningType = {
+  inviteCode: string;
+};
+
+export const InviteContentMobileWarning = ({
+  inviteCode,
+}: InviteContentMobileWarningType) => {
   return (
     <div className="mb-6 rounded-xl bg-[#38830A]/10 p-4 backdrop-blur-sm">
       <div className="flex flex-col items-center gap-3">
@@ -31,7 +39,18 @@ export const InviteContentMobileWarning = () => {
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#38830A]/20">
                 2
               </span>
-              Or paste this link in the Auro mobile app browser
+              <span>
+                Or paste this link in the{" "}
+                <Link
+                  href={generateAuroWalletDeepLinkForChallengeInvite(
+                    inviteCode
+                  )}
+                  target="_blank"
+                  className="font-medium underline hover:no-underline"
+                >
+                  Auro mobile app browser
+                </Link>
+              </span>
             </li>
           </ul>
         </div>

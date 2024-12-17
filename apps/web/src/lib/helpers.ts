@@ -269,6 +269,12 @@ export const generateAuroWalletDeepLink = (chatId: string) => {
   return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/verify?chatId=${chatId}`;
 };
 
+export const generateAuroWalletDeepLinkForChallengeInvite = (
+  inviteCode: string
+) => {
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2F${window.location.origin}/pvp/invite/${inviteCode}`;
+};
+
 export const generateChallengeName = () => {
   const firstWord = FIRST_WORDS[Math.floor(Math.random() * FIRST_WORDS.length)];
   const secondWord =

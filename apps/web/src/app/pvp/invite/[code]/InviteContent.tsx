@@ -182,7 +182,9 @@ export default function InviteContent({ code }: { code: string }) {
           ) : (
             <>
               <div className="text-center">
-                {isNormalMobileBrowser && <InviteContentMobileWarning />}
+                {isNormalMobileBrowser && (
+                  <InviteContentMobileWarning inviteCode={code} />
+                )}
                 <h2 className="text-lg font-bold md:text-2xl">
                   {/* {usernameLoading ? (
                     <Skeleton />
