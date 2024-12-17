@@ -18,7 +18,7 @@ import {
 } from "@/db/react-query-hooks";
 import { Skeleton } from "@radix-ui/themes";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { ChallengeStatus } from "./ChallengesList";
+import { ChallengeStatus, getChallengeStatus } from "./ChallengesList";
 import { isFuture } from "date-fns";
 import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
 import { usePayPVPFees } from "@/hooks/usePayPVPFees";
@@ -37,7 +37,13 @@ export const ChallengeDetails = ({
   challenge,
   participants,
 }: ChallengeDetailsProps) => {
-  const challengeStatus = challenge.status as ChallengeStatus;
+  const txn_status = participants[0].txn_status as TransactionStatus;
+  const has_played = participants[0].has_played;
+  const challengeStatus = getChallengeStatus({
+    txn_status,
+    has_played,
+  });
+  // const challengeStatus = challenge.status as ChallengeStatus;
   const networkStore = useNetworkStore();
   const [payLoading, setPayLoading] = useState(false);
   const router = useRouter();
