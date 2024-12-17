@@ -330,6 +330,9 @@ export const ChallengeDetails = ({
             </button>
           )}
       </div>
+      <p className="mt-4 text-center text-xs text-[#5D6845]">
+        Note: The winner will receive all the rewards
+      </p>
     </div>
   );
 };
