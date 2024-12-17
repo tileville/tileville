@@ -53,7 +53,7 @@ export const usePayPVPFees = () => {
         `pvp transaction hash ${hash} for challenge ID ${challenge_id}`
       );
 
-      const response = await updateChallengeTransaction({
+      const isSuccess = await updateChallengeTransaction({
         txn_hash: hash,
         wallet_address: networkStore.address,
         challenge_id: challenge_id,
@@ -61,8 +61,8 @@ export const usePayPVPFees = () => {
       });
 
       //TODO: replace with sentry
-      console.log("Add pvp transaction log response", response);
-      if (!response.id) {
+      console.log("Add pvp transaction log response", isSuccess);
+      if (!isSuccess) {
         return {
           success: false,
           message: `Failed to add PVP transaction log in db for challenge ID ${challenge_id}`,
@@ -73,7 +73,6 @@ export const usePayPVPFees = () => {
         message: `PVP join fees paid successfully`,
         data: {
           hash,
-          txn_log_id: response.id,
         },
       };
     } catch (err: any) {

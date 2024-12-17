@@ -530,7 +530,7 @@ export const updateChallengeTransaction = async (payload: {
   challenge_id: number;
   txn_hash: string;
   txn_status: string;
-}): Promise<Table<"pvp_challenge_participants">> => {
+}): Promise<boolean> => {
   const { wallet_address, challenge_id, ...updateData } = payload;
 
   const { data, error } = await supabase
@@ -542,7 +542,7 @@ export const updateChallengeTransaction = async (payload: {
   if (error) {
     throw error;
   }
-  return data;
+  return true;
 };
 
 export const confirmChallengeParticipation = async (

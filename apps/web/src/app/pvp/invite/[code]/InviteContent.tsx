@@ -38,8 +38,6 @@ export default function InviteContent({ code }: { code: string }) {
     }
   }, [code, router]);
 
-  // In InviteContent.tsx
-
   // Update the handleJoinChallenge function
   const handleJoinChallenge = async () => {
     if (!networkStore.address) {
@@ -48,23 +46,23 @@ export default function InviteContent({ code }: { code: string }) {
 
     setPayLoading(true);
     try {
-      // First handle payment
-      const paymentResult = await payPVPFees({
-        participation_fee: challenge.data.entry_fee ?? 0,
+      const joinChallengeResponse = await joinChallengeMutation.mutateAsync({
         challenge_id: challenge.data.id,
+        wallet_address: networkStore.address,
       });
 
-      if (paymentResult.success) {
-        // If payment successful, join the challenge
-        await joinChallengeMutation.mutateAsync({
+      if (joinChallengeResponse.success) {
+        const paymentResult = await payPVPFees({
+          participation_fee: challenge.data.entry_fee ?? 0,
           challenge_id: challenge.data.id,
-          wallet_address: networkStore.address,
         });
 
-        toast.success("Successfully joined the challenge!");
-        router.push("/pvp");
-      } else {
-        toast.error(paymentResult.message || "Payment failed");
+        if (paymentResult.success) {
+          toast.success("Successfully joined the challenge!");
+          router.push("/pvp");
+        } else {
+          toast.error(paymentResult.message || "Payment failed");
+        }
       }
     } catch (error: any) {
       toast.error(error.message || "Failed to join challenge");
