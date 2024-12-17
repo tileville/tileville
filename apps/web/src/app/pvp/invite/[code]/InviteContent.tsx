@@ -42,6 +42,13 @@ export default function InviteContent({ code }: { code: string }) {
     }
   }, [code, router]);
 
+  const getUserParticipantStatus = () => {
+    return challenge?.data?.participants?.find(
+      (p: ChallengeParticipant) => p.wallet_address === networkStore.address
+    );
+  };
+  const userParticipant = getUserParticipantStatus();
+
   // Update the handleJoinChallenge function
   const handleJoinChallenge = async () => {
     if (!networkStore.address) {
@@ -50,12 +57,15 @@ export default function InviteContent({ code }: { code: string }) {
 
     setPayLoading(true);
     try {
-      const joinChallengeResponse = await joinChallengeMutation.mutateAsync({
-        challenge_id: challenge.data.id,
-        wallet_address: networkStore.address,
-      });
+      let joinChallengeResponse;
+      if (!userParticipant) {
+        joinChallengeResponse = await joinChallengeMutation.mutateAsync({
+          challenge_id: challenge.data.id,
+          wallet_address: networkStore.address,
+        });
+      }
 
-      if (joinChallengeResponse.success) {
+      if (joinChallengeResponse?.success || userParticipant) {
         const paymentResult = await payPVPFees({
           participation_fee: challenge.data.entry_fee ?? 0,
           challenge_id: challenge.data.id,
@@ -75,15 +85,7 @@ export default function InviteContent({ code }: { code: string }) {
     }
   };
 
-  const getUserParticipantStatus = () => {
-    return challenge?.data?.participants?.find(
-      (p: ChallengeParticipant) => p.wallet_address === networkStore.address
-    );
-  };
-
   const renderActionButton = () => {
-    const userParticipant = getUserParticipantStatus();
-
     if (!networkStore.address) {
       return (
         <button
@@ -186,12 +188,6 @@ export default function InviteContent({ code }: { code: string }) {
                   <InviteContentMobileWarning inviteCode={code} />
                 )}
                 <h2 className="text-lg font-bold md:text-2xl">
-                  {/* {usernameLoading ? (
-                    <Skeleton />
-                  ) : (
-                    formatAddress( || "")
-                  )} */}
-
                   {usernameLoading ? (
                     <Skeleton />
                   ) : username ? (
