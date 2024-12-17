@@ -17,6 +17,7 @@ import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
 import Link from "next/link";
 import { ParticipantsList } from "@/components/PVP/ParticipantsList";
 import clsx from "clsx";
+import { usePayPVPFees } from "@/hooks/usePayPVPFees";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
@@ -27,6 +28,8 @@ export default function InviteContent({ code }: { code: string }) {
     challenge?.data?.created_by || ""
   );
   const [isParticipantsListOpen, setIsParticipantsListOpen] = useState(false);
+  const [payLoading, setPayLoading] = useState(false);
+  const { payPVPFees } = usePayPVPFees();
 
   useEffect(() => {
     if (!code) {
@@ -34,23 +37,38 @@ export default function InviteContent({ code }: { code: string }) {
     }
   }, [code, router]);
 
+  // In InviteContent.tsx
+
+  // Update the handleJoinChallenge function
   const handleJoinChallenge = async () => {
     if (!networkStore.address) {
-      toast.error("Please connect your wallet first");
-      return;
+      return networkStore.connectWallet(false);
     }
 
+    setPayLoading(true);
     try {
-      await joinChallengeMutation.mutateAsync({
+      // First handle payment
+      const paymentResult = await payPVPFees({
+        participation_fee: challenge.data.entry_fee ?? 0,
         challenge_id: challenge.data.id,
-        wallet_address: networkStore.address,
       });
 
-      toast.success("Successfully joined the challenge!");
-      // Redirect to the challenge page or PVP home
-      router.push("/pvp");
+      if (paymentResult.success) {
+        // If payment successful, join the challenge
+        await joinChallengeMutation.mutateAsync({
+          challenge_id: challenge.data.id,
+          wallet_address: networkStore.address,
+        });
+
+        toast.success("Successfully joined the challenge!");
+        router.push("/pvp");
+      } else {
+        toast.error(paymentResult.message || "Payment failed");
+      }
     } catch (error: any) {
       toast.error(error.message || "Failed to join challenge");
+    } finally {
+      setPayLoading(false);
     }
   };
 
@@ -200,16 +218,18 @@ export default function InviteContent({ code }: { code: string }) {
               </div>
               <button
                 onClick={handleJoinChallenge}
-                disabled={joinChallengeMutation.isLoading}
+                disabled={payLoading || joinChallengeMutation.isLoading}
                 className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90 disabled:opacity-50"
               >
-                {joinChallengeMutation.isLoading ? (
+                {payLoading || joinChallengeMutation.isLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     <Spinner2 />
-                    <span>Joining...</span>
+                    <span>
+                      {payLoading ? "Processing Payment..." : "Joining..."}
+                    </span>
                   </div>
                 ) : (
-                  `Join Challenge`
+                  `Pay Entry Fees (${challenge.data.entry_fee} MINA)`
                 )}
               </button>
 
