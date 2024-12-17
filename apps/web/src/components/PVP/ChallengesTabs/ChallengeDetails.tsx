@@ -9,23 +9,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
 import { useNetworkStore } from "@/lib/stores/network";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import {
   useMainnetPVPTransactionsStatus,
   usePVPChallengeTransaction,
   useUsername,
 } from "@/db/react-query-hooks";
-import { Badge, Skeleton } from "@radix-ui/themes";
+import { Skeleton } from "@radix-ui/themes";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { ChallengeStatus, getChallengeStatus } from "./ChallengesList";
+import { ChallengeStatus } from "./ChallengesList";
 import { isFuture } from "date-fns";
 import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
 import { usePayPVPFees } from "@/hooks/usePayPVPFees";
 import { useState } from "react";
 import { Spinner2 } from "@/components/common/Spinner";
 import { TransactionStatus } from "@/lib/types";
-import { getBadgeColorFromStatus } from "../ChallengeListItem";
+import { ParticipantsList } from "../ParticipantsList";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -66,7 +65,6 @@ export const ChallengeDetails = ({
   };
 
   const getWinner = (): ChallengeParticipant | null => {
-    // Only show winner if challenge ended OR all participants have played
     if (isChallengeActive && !haveAllParticipantsPlayed()) return null;
 
     const playedParticipants = participants.filter((p) => p.has_played);
@@ -79,8 +77,6 @@ export const ChallengeDetails = ({
       return highest;
     }, playedParticipants[0]);
   };
-
-  const winner = getWinner();
 
   const handlePayParticipationFess = async () => {
     if (!networkStore.address) {
@@ -230,70 +226,7 @@ export const ChallengeDetails = ({
 
       <div>
         <h3 className="mb-4 text-lg font-bold">Participants List</h3>
-        <div className="rounded-lg border border-black/20 p-4 shadow-[0px_4px_4px_0px_#00000040]">
-          <table className="w-full">
-            <thead>
-              <tr className="text-left">
-                <th>S.N</th>
-                <th>Wallet Address</th>
-                <th>Status</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {participants.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={4}
-                    className="p-4 text-center text-2xl font-bold"
-                  >
-                    No one has joined Yet!
-                  </td>
-                </tr>
-              ) : (
-                participants.map((participant, index) => {
-                  const txn_status =
-                    participant?.txn_status as TransactionStatus;
-                  const has_played = participant?.has_played
-                    ? participant?.has_played
-                    : false;
-                  const participantChallengeStatus = getChallengeStatus({
-                    txn_status,
-                    has_played,
-                  });
-
-                  return (
-                    <tr key={index} className="border-none">
-                      <td className="py-2">{index + 1}</td>
-                      <td>
-                        {participant.wallet_address.slice(0, 6)}...
-                        {participant.wallet_address.slice(-4)}
-                        {winner &&
-                          participant.wallet_address ===
-                            winner.wallet_address && (
-                            <span className="ml-2 text-xs font-bold text-green-600">
-                              (Winner!)
-                            </span>
-                          )}
-                      </td>
-                      <td className="text-xs">
-                        <Badge
-                          color={getBadgeColorFromStatus(
-                            participantChallengeStatus
-                          )}
-                          className="mb-2 !text-[10px]"
-                        >
-                          {participantChallengeStatus}
-                        </Badge>
-                      </td>
-                      <td>{participant.score || "-"}</td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <ParticipantsList winner={getWinner()} participants={participants} />
       </div>
 
       {/* Update the play button */}
