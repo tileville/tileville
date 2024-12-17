@@ -138,6 +138,7 @@ export const ChallengeDetails = ({
             <Link
               href={`${window.location.origin}/u/${createdByUsername}`}
               className="underline hover:no-underline"
+              target="_blank"
             >
               {createdByUsername}
             </Link>
@@ -222,14 +223,6 @@ export const ChallengeDetails = ({
               width={43}
               height={43}
               alt="Telegram"
-            />
-          </Link>
-          <Link href={`https://discord.com/`} target="_blank" className="">
-            <Image
-              src="/icons/discord.svg"
-              width={43}
-              height={43}
-              alt="Discord"
             />
           </Link>
         </div>

@@ -309,15 +309,22 @@ export const CreateChallengeModal = ({
                 disabled={loading}
                 className={`${PRIMARY_BUTTON_V2_LG} relative min-h-[50px] w-full`}
               >
-                {loading && (
-                  <span className="absolute right-6 top-1/2  -translate-y-1/2">
-                    <SpinnerWhite size={18} />
-                  </span>
-                )}
-                <span>Create Challenge</span>
+                <span className="relative min-w-[250px]">
+                  {loading && (
+                    <span className="absolute -left-8 top-1/2  -translate-y-1/2">
+                      <SpinnerWhite size={18} />
+                    </span>
+                  )}
+                  <span>Create Challenge</span>
+                </span>
               </button>
             </div>
           </form>
+
+          <p className="mt-6 text-center text-sm text-[#5D6845]">
+            Note: A fee of 1 MINA will be deducted from the total prize pool to
+            cover the cost of creating the challenge.
+          </p>
 
           <Dialog.Close>
             <button className="absolute right-4 top-4">

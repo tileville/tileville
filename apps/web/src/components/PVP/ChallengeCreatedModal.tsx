@@ -50,10 +50,13 @@ export const ChallengeCreatedModal = ({
             height={64}
           />
 
-          <div className="flex items-center justify-center flex-col">
-            <h2 className="mb-2 text-[28px] font-bold">
-              Your Challenge {challengeName} successfully created!
+          <div className="flex flex-col items-center justify-center">
+            <h2 className=" text-[28px] font-bold">
+              Challenge successfully created!
             </h2>
+            <p className="mb-2 text-lg font-medium">
+              Challenge name: {challengeName}
+            </p>
             <p className="max-w-sm text-center text-lg text-[#5D6845]">
               Share your challenge and let the competition begin!
             </p>
@@ -98,14 +101,6 @@ export const ChallengeCreatedModal = ({
                   width={40}
                   height={40}
                   alt="Telegram"
-                />
-              </button>
-              <button onClick={() => handleShare("discord")}>
-                <Image
-                  src="/icons/discord.svg"
-                  width={40}
-                  height={40}
-                  alt="Discord"
                 />
               </button>
             </div>
