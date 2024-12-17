@@ -4,18 +4,19 @@ import {
   useJoinChallenge,
   useUsername,
 } from "@/db/react-query-hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, Skeleton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { copyToClipBoard, formatAddress } from "@/lib/helpers";
 import { Spinner2 } from "@/components/common/Spinner";
 // import { useNetworkStore } from "@/lib/stores/network";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
 import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
 import Link from "next/link";
+import { ParticipantsList } from "@/components/PVP/ParticipantsList";
+import clsx from "clsx";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function InviteContent({ code }: { code: string }) {
   const { data: username, isLoading: usernameLoading } = useUsername(
     challenge?.data?.created_by || ""
   );
+  const [isParticipantsListOpen, setIsParticipantsListOpen] = useState(false);
 
   useEffect(() => {
     if (!code) {
@@ -165,14 +167,37 @@ export default function InviteContent({ code }: { code: string }) {
               </div>
 
               <div className="w-full">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium">
-                    Participants ({challenge.data.participants?.length || 0})
+                <button
+                  onClick={() =>
+                    setIsParticipantsListOpen(!isParticipantsListOpen)
+                  }
+                  className="flex w-full items-center justify-between rounded-lg px-4 py-1 transition-all hover:bg-primary/10"
+                >
+                  <h3 className="text-xl font-bold">
+                    Participants ({challenge?.data?.participants?.length || 0})
                   </h3>
-                  <ChevronDownIcon className="h-5 w-5" />
+                  <span
+                    className={clsx(
+                      "origin-center transform text-4xl font-bold transition-transform duration-300",
+                      isParticipantsListOpen ? "rotate-180" : ""
+                    )}
+                  >
+                    &#9662;
+                  </span>
+                </button>
+
+                <div
+                  className={clsx(
+                    "participants-dropdown",
+                    isParticipantsListOpen && "open"
+                  )}
+                >
+                  <ParticipantsList
+                    participants={challenge?.data?.participants || []}
+                    winner={null}
+                  />
                 </div>
               </div>
-
               <button
                 onClick={handleJoinChallenge}
                 disabled={joinChallengeMutation.isLoading}

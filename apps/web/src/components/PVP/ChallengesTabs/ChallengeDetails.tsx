@@ -144,7 +144,7 @@ export const ChallengeDetails = ({
         </p>
       </div>
 
-      <div className="mb-8 grid grid-cols-3 gap-2">
+      <div className="mb-4 grid grid-cols-3 gap-2">
         <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
           <div>
             <Image src="/icons/timer.png" width={27} height={27} alt="timer" />
@@ -165,13 +165,21 @@ export const ChallengeDetails = ({
 
         {challenge.is_speed_challenge && (
           <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
-            {/* <Image src="/icons/speed.svg" width={24} height={24} alt="speed" /> */}
+            <Image src="/icons/rocket.png" width={27} height={27} alt="speed" />
             <p className="mb-1 mt-2 text-xl font-bold">
               Speed <br /> Challenge
             </p>
             <p className="mt-auto">{challenge.speed_duration} seconds</p>
           </div>
         )}
+      </div>
+
+      <div className="mb-2 ">
+        <span className="text-base font-medium"></span>
+        Max Participants:
+        <span className="ml-3 text-xl font-bold">
+          {challenge.max_participants}
+        </span>
       </div>
 
       <div className="mb-6">

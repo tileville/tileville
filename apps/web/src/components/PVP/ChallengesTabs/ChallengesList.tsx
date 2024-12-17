@@ -43,9 +43,11 @@ export const ChallengesList = ({
 
   return (
     <div className="rounded-xl border border-[#435133] bg-[#C6C99C] p-8">
-      <h2 className="text-2xl font-semibold text-[#378209]">Your Challenges</h2>
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-7">
+          <h2 className="text-2xl font-semibold text-[#378209]">
+            Your Challenges
+          </h2>
           <div
             className={`grid grid-cols-12 py-3 text-base font-semibold text-black`}
           >

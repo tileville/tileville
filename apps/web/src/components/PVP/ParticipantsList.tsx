@@ -15,7 +15,7 @@ export const ParticipantsList = ({
   winner,
 }: ParticipantsListProps) => {
   return (
-    <div className="rounded-lg border border-black/20 p-4 shadow-[0px_4px_4px_0px_#00000040]">
+    <div className="max-h-[180px] overflow-auto rounded-lg border border-black/20 p-4 shadow-[0px_4px_4px_0px_#00000040]">
       <table className="w-full">
         <thead>
           <tr className="text-left">
@@ -61,7 +61,7 @@ export const ParticipantsList = ({
                       color={getBadgeColorFromStatus(
                         participantChallengeStatus
                       )}
-                      className="mb-2 !text-[10px]"
+                      className="!text-[10px]"
                     >
                       {participantChallengeStatus}
                     </Badge>
