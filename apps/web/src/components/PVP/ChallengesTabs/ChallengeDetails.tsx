@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import {
   useMainnetPVPTransactionsStatus,
   usePVPChallengeTransaction,
+  useSendPrivateGroupMessage,
   useUsername,
 } from "@/db/react-query-hooks";
 import { Skeleton } from "@radix-ui/themes";
@@ -57,6 +58,8 @@ export const ChallengeDetails = ({
     networkStore.address || "",
     challenge.id
   );
+
+  const sendPrivateGroupMessageMutation = useSendPrivateGroupMessage();
 
   const { refetch: refetchTxnStatus } = useMainnetPVPTransactionsStatus(
     challengeTransaction?.txn_hash || "",
@@ -248,6 +251,57 @@ export const ChallengeDetails = ({
           </Link>
         </div>
       </div>
+
+      {!isChallengeActive &&
+        getWinner()?.wallet_address === networkStore.address && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={async () => {
+                if (!networkStore.address) return;
+
+                const message = `🎮 Challenge "${challenge.name}" Results 🏆
+
+Winner: ${createdByUsername || formatAddress(networkStore.address)}
+Score: ${getWinner()?.score}
+Prize Pool: ${challenge.entry_fee * participants.length} MINA
+Number of Participants: ${participants.length}/${challenge.max_participants}
+Challenge Link: ${generatePVPChallengeInviteLink(challenge.invite_code)}
+
+Congratulations! 🎉
+
+${getMinaScanNormalLink(challengeTransaction?.txn_hash || "")}`;
+
+                try {
+                  await sendPrivateGroupMessageMutation.mutateAsync({
+                    message,
+                    walletAddress: networkStore.address,
+                  });
+                } catch (error) {
+                  console.error("Failed to send winner message:", error);
+                }
+              }}
+              className={`${PRIMARY_OUTLINE_BUTTON} flex items-center gap-2`}
+              disabled={sendPrivateGroupMessageMutation.isLoading}
+            >
+              {sendPrivateGroupMessageMutation.isLoading ? (
+                <>
+                  <Spinner2 size={16} />
+                  <span>Sending...</span>
+                </>
+              ) : (
+                <>
+                  <Image
+                    src="/icons/trophy.png"
+                    width={20}
+                    height={20}
+                    alt="trophy"
+                  />
+                  <span>Announce Victory!</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
       <div>
         <h3 className="mb-4 text-lg font-bold">Participants List</h3>

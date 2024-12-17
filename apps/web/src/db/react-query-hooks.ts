@@ -1001,6 +1001,53 @@ export const useSendGroupMessage = () => {
   });
 };
 
+export const useSendPrivateGroupMessage = () => {
+  const toastRef = useRef<string | null>(null);
+
+  return useMutation({
+    mutationFn: async ({
+      message,
+      walletAddress,
+    }: {
+      message: string;
+      walletAddress: string;
+    }) => {
+      const response = await fetch("/api/telegram/private-group-message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // "Wallet-Address": walletAddress,
+        },
+        body: JSON.stringify({
+          message,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send message");
+      }
+
+      return response.json();
+    },
+    onMutate: () => {
+      toastRef.current = toast.loading("Sending announcement...");
+    },
+    onSuccess: () => {
+      toast.success("Victory announcement sent successfully!", {
+        id: toastRef.current ?? undefined,
+      });
+      toastRef.current = null;
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to send announcement", {
+        id: toastRef.current ?? undefined,
+      });
+      toastRef.current = null;
+    },
+  });
+};
+
 export const useCreatedChallenges = (walletAddress: string) => {
   return useQuery({
     queryKey: ["created-challenges", walletAddress],
