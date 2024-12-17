@@ -171,14 +171,6 @@ export default function InviteContent({ code }: { code: string }) {
     <Dialog.Root open={true}>
       <Dialog.Content className="relative !m-0 !min-h-[523px] !max-w-[560px] !rounded-md !bg-[#A6B97B] !px-2 !py-4  sm:!p-8">
         <div className="flex !min-h-[523px] flex-col items-center justify-center gap-2 text-sm md:gap-4 md:text-base">
-          <Image
-            src="/icons/invitation.png"
-            width={80}
-            height={80}
-            alt="invitation"
-            className="h-10 w-10 md:h-20 md:w-20"
-          />
-
           {isLoading ? (
             <Spinner2 />
           ) : (
@@ -187,6 +179,16 @@ export default function InviteContent({ code }: { code: string }) {
                 {isNormalMobileBrowser && (
                   <InviteContentMobileWarning inviteCode={code} />
                 )}
+                <div className="mb-2 flex items-center justify-center">
+                  <Image
+                    src="/icons/invitation.png"
+                    width={80}
+                    height={80}
+                    alt="invitation"
+                    className="h-10 w-10 md:h-20 md:w-20"
+                  />
+                </div>
+
                 <h2 className="text-lg font-bold md:text-2xl">
                   {usernameLoading ? (
                     <Skeleton />
