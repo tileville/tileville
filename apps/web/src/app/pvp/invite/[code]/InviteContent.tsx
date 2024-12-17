@@ -167,7 +167,7 @@ export default function InviteContent({ code }: { code: string }) {
 
   return (
     <Dialog.Root open={true}>
-      <Dialog.Content className="relative !m-0 !min-h-[523px] !max-w-[540px] !rounded-md !bg-[#A6B97B] !px-2 !py-4  sm:!p-8">
+      <Dialog.Content className="relative !m-0 !min-h-[523px] !max-w-[560px] !rounded-md !bg-[#A6B97B] !px-2 !py-4  sm:!p-8">
         <div className="flex !min-h-[523px] flex-col items-center justify-center gap-2 text-sm md:gap-4 md:text-base">
           <Image
             src="/icons/invitation.png"
