@@ -272,7 +272,7 @@ export const generateAuroWalletDeepLink = (chatId: string) => {
 export const generateAuroWalletDeepLinkForChallengeInvite = (
   inviteCode: string
 ) => {
-  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2F${window.location.origin}/pvp/invite/${inviteCode}`;
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=${window.location.origin}/pvp/invite/${inviteCode}`;
 };
 
 export const generateChallengeName = () => {
