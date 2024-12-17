@@ -123,7 +123,7 @@ export default function InviteContent({ code }: { code: string }) {
         return (
           <button
             disabled
-            className="mt-4 w-full rounded-lg bg-yellow-500 py-3 text-lg font-semibold text-white opacity-70"
+            className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white opacity-70"
           >
             Payment Processing...
           </button>
