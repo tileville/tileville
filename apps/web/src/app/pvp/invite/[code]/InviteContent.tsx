@@ -18,6 +18,7 @@ import Link from "next/link";
 import { ParticipantsList } from "@/components/PVP/ParticipantsList";
 import clsx from "clsx";
 import { usePayPVPFees } from "@/hooks/usePayPVPFees";
+import { ChallengeParticipant } from "@/types";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
@@ -70,6 +71,96 @@ export default function InviteContent({ code }: { code: string }) {
     } finally {
       setPayLoading(false);
     }
+  };
+
+  const getUserParticipantStatus = () => {
+    return challenge?.data?.participants?.find(
+      (p: ChallengeParticipant) => p.wallet_address === networkStore.address
+    );
+  };
+
+  const renderActionButton = () => {
+    const userParticipant = getUserParticipantStatus();
+
+    if (!networkStore.address) {
+      return (
+        <button
+          onClick={() => networkStore.connectWallet(false)}
+          className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90"
+        >
+          Connect Wallet
+        </button>
+      );
+    }
+
+    if (userParticipant) {
+      // If user has already played
+      if (userParticipant.has_played) {
+        return (
+          <button
+            disabled
+            className="mt-4 w-full rounded-lg bg-gray-500 py-3 text-lg font-semibold text-white opacity-50"
+          >
+            Already Played
+          </button>
+        );
+      }
+
+      // If payment is confirmed and ready to play
+      if (userParticipant.txn_status === "CONFIRMED") {
+        return (
+          <button
+            onClick={() => router.push(`/pvp/${challenge.data.id}/game`)}
+            className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90"
+          >
+            Play Now
+          </button>
+        );
+      }
+
+      // If payment is pending
+      if (userParticipant.txn_status === "PENDING") {
+        return (
+          <button
+            disabled
+            className="mt-4 w-full rounded-lg bg-yellow-500 py-3 text-lg font-semibold text-white opacity-70"
+          >
+            Payment Processing...
+          </button>
+        );
+      }
+
+      // If payment failed, allow retry
+      if (userParticipant.txn_status === "FAILED") {
+        return (
+          <button
+            onClick={handleJoinChallenge}
+            disabled={payLoading || joinChallengeMutation.isLoading}
+            className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90 disabled:opacity-50"
+          >
+            Retry Payment
+          </button>
+        );
+      }
+    }
+
+    // Default case: New participant joining
+    return (
+      <button
+        onClick={handleJoinChallenge}
+        disabled={payLoading || joinChallengeMutation.isLoading}
+        className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90 disabled:opacity-50"
+      >
+        {payLoading || joinChallengeMutation.isLoading ? (
+          <div className="flex items-center justify-center gap-2">
+            <Spinner2 />
+            <span>{payLoading ? "Processing Payment..." : "Joining..."}</span>
+          </div>
+        ) : (
+          `Pay Entry Fees (${challenge.data.entry_fee} MINA)`
+        )}
+      </button>
+    );
   };
 
   return (
@@ -216,23 +307,7 @@ export default function InviteContent({ code }: { code: string }) {
                   />
                 </div>
               </div>
-              <button
-                onClick={handleJoinChallenge}
-                disabled={payLoading || joinChallengeMutation.isLoading}
-                className="mt-4 w-full rounded-lg bg-[#38830A] py-3 text-lg font-semibold text-white hover:bg-[#38830A]/90 disabled:opacity-50"
-              >
-                {payLoading || joinChallengeMutation.isLoading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <Spinner2 />
-                    <span>
-                      {payLoading ? "Processing Payment..." : "Joining..."}
-                    </span>
-                  </div>
-                ) : (
-                  `Pay Entry Fees (${challenge.data.entry_fee} MINA)`
-                )}
-              </button>
-
+              {renderActionButton()}
               <p className="mt-6 text-center text-sm text-[#5D6845]">
                 Note: A fee of 1 MINA will be deducted from the total prize pool
                 to cover the cost of creating the challenge.

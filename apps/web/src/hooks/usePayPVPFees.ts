@@ -77,6 +77,7 @@ export const usePayPVPFees = () => {
         },
       };
     } catch (err: any) {
+      console.log("ERROR pay pvp fees", err);
       return {
         success: false,
         message: `Failed to pay pvp fees due to ${err.toString()}`,
