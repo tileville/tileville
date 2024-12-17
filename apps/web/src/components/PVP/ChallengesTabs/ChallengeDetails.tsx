@@ -25,6 +25,7 @@ import { useState } from "react";
 import { Spinner2 } from "@/components/common/Spinner";
 import { TransactionStatus } from "@/lib/types";
 import { ParticipantsList } from "../ParticipantsList";
+import { useThrottleWithIncreasingDelay } from "@/hooks/useThrottleWithIncreasingDelay";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -50,13 +51,24 @@ export const ChallengeDetails = ({
     challenge.id
   );
 
-  useMainnetPVPTransactionsStatus(
+  const { refetch: refetchTxnStatus } = useMainnetPVPTransactionsStatus(
     challengeTransaction?.txn_hash || "",
     challengeTransaction?.txn_status as TransactionStatus,
     challenge.id
   );
 
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
+
+  const { throttledFunction, isThrottled } = useThrottleWithIncreasingDelay(
+    2000,
+    1000
+  );
+
+  const handleRefreshStatus = () => {
+    throttledFunction(() => {
+      refetchTxnStatus();
+    });
+  };
 
   const isChallengeActive = isFuture(challenge.end_time);
 
@@ -264,10 +276,11 @@ export const ChallengeDetails = ({
           isChallengeActive && (
             <div className="flex gap-2">
               <button
-                className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
-                onClick={() => {}}
+                className={`${PRIMARY_OUTLINE_BUTTON} min-w-[120px] disabled:opacity-60`}
+                onClick={handleRefreshStatus}
+                disabled={isThrottled}
               >
-                Refresh Status
+                {isThrottled ? "Please wait..." : "Refresh Status"}
               </button>
               <button
                 className={`${PRIMARY_OUTLINE_BUTTON} relative disabled:opacity-60`}
