@@ -1,4 +1,6 @@
 // src/app/api/pvp/challenges/join/route.ts
+
+import { sendChallengeJoinNotification } from "@/app/api/lib/telegram-notifications";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 
@@ -6,10 +8,10 @@ export async function POST(request: NextRequest) {
   try {
     const { challenge_id, wallet_address } = await request.json();
 
-    // Check if challenge exists and get max_participants
+    // Check if challenge exists and get details
     const { data: challenge, error: challengeError } = await supabase
       .from("pvp_challenges")
-      .select("max_participants")
+      .select("max_participants, name")
       .eq("id", challenge_id)
       .single();
 
@@ -21,19 +23,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get current participant count
-    const { count: currentParticipants, error: countError } = await supabase
-      .from("pvp_challenge_participants")
-      .select("*", { count: "exact" })
-      .eq("challenge_id", challenge_id);
+    // Get current participants
+    const { data: currentParticipants, error: participantsError } =
+      await supabase
+        .from("pvp_challenge_participants")
+        .select("wallet_address")
+        .eq("challenge_id", challenge_id);
 
-    if (countError) throw countError;
-
-    // Safely check participant count - if null, assume 0
-    const participantCount = currentParticipants ?? 0;
+    if (participantsError) throw participantsError;
 
     // Check if max participants limit is reached
-    if (participantCount >= challenge.max_participants) {
+    if ((currentParticipants?.length ?? 0) >= challenge.max_participants) {
       return Response.json(
         {
           success: false,
@@ -44,12 +44,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has already joined
-    const { data: existingParticipant } = await supabase
-      .from("pvp_challenge_participants")
-      .select()
-      .eq("challenge_id", challenge_id)
-      .eq("wallet_address", wallet_address)
-      .single();
+    const existingParticipant = currentParticipants?.find(
+      (p) => p.wallet_address === wallet_address
+    );
 
     if (existingParticipant) {
       return Response.json(
@@ -69,6 +66,15 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) throw error;
+
+    // Send notifications to existing participants
+    if (currentParticipants?.length) {
+      await sendChallengeJoinNotification({
+        newParticipant: wallet_address,
+        challengeName: challenge.name,
+        currentParticipants: currentParticipants.map((p) => p.wallet_address),
+      });
+    }
 
     return Response.json({
       success: true,
