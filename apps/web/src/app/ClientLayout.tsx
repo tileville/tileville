@@ -25,17 +25,17 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     setIsClient(true);
   }, []);
 
-  // useEffect(() => {
-  //   if (process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true") {
-  //     if (typeof window !== "undefined") {
-  //       vConsole = new VConsole();
-  //     }
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_IS_MOCK_ENV === "true") {
+      if (typeof window !== "undefined") {
+        vConsole = new VConsole();
+      }
 
-  //     return () => {
-  //       if (typeof window !== "undefined") vConsole?.destroy();
-  //     };
-  //   }
-  // }, []);
+      return () => {
+        if (typeof window !== "undefined") vConsole?.destroy();
+      };
+    }
+  }, []);
 
   const renderNavBar = () => {
     if (!isClient) return null; // Don't render anything on the server
