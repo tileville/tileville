@@ -247,10 +247,15 @@ export const ChallengeDetails = ({
         {challengeStatus === ChallengeStatus.PAYMENT_NOT_INIT &&
           isChallengeActive && (
             <button
-              className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
+              className={`${PRIMARY_OUTLINE_BUTTON} relative min-w-[120px] disabled:opacity-60`}
               onClick={handlePayParticipationFess}
             >
               Pay Now
+              {payLoading && (
+                <span className="absolute left-1 top-1/2 -translate-y-1/2">
+                  <Spinner2 size={12} />
+                </span>
+              )}
             </button>
           )}
         {challengeStatus === ChallengeStatus.TXN_NOT_CONFIRMED &&
@@ -305,10 +310,15 @@ export const ChallengeDetails = ({
         {challengeStatus === ChallengeStatus.PAYMENT_FAILED &&
           isChallengeActive && (
             <button
-              className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
+              className={`${PRIMARY_OUTLINE_BUTTON} relative min-w-[120px] disabled:opacity-60`}
               onClick={handlePayParticipationFess}
             >
               Retry
+              {payLoading && (
+                <span className="absolute left-1 top-1/2 -translate-y-1/2">
+                  <Spinner2 size={12} />
+                </span>
+              )}
             </button>
           )}
       </div>
