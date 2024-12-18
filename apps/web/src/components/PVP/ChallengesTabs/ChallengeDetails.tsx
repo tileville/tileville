@@ -14,7 +14,6 @@ import { useRouter } from "next/navigation";
 import {
   useMainnetPVPTransactionsStatus,
   usePVPChallengeTransaction,
-  useSendPrivateGroupMessage,
   useUsername,
 } from "@/db/react-query-hooks";
 import { Skeleton } from "@radix-ui/themes";
@@ -79,12 +78,14 @@ export const ChallengeDetails = ({
 
   const isChallengeActive = isFuture(challenge.end_time);
 
-  const haveAllParticipantsPlayed = () => {
-    return participants.length > 0 && participants.every((p) => p.has_played);
-  };
-
   const getWinner = (): ChallengeParticipant | null => {
-    if (isChallengeActive && !haveAllParticipantsPlayed()) return null;
+    // Challenge is finished if either it's ended or max participants reached and all have played
+    const isChallengeFinished =
+      (!isChallengeActive ||
+        participants.length >= challenge.max_participants) &&
+      participants.every((p) => p.has_played);
+
+    if (!isChallengeFinished) return null;
 
     const playedParticipants = participants.filter((p) => p.has_played);
     if (playedParticipants.length === 0) return null;
@@ -110,34 +111,6 @@ export const ChallengeDetails = ({
     });
     setPayLoading(false);
   };
-
-  // const handlePlayGame = async () => {
-  //   if (!accountAuthSignature) {
-  //     await validateOrSetSignature();
-  //     return;
-  //   }
-  //   // Find participant's game record
-  //   const currentParticipant = participants.find(
-  //     (p) => p.wallet_address === networkStore.address
-  //   );
-
-  //   if (!currentParticipant) {
-  //     toast.error("You haven't joined this challenge yet!");
-  //     return;
-  //   }
-
-  //   if (currentParticipant.has_played) {
-  //     toast.error("You've already played this challenge!");
-  //     return;
-  //   }
-
-  //   if (!isChallengeActive) {
-  //     toast.error("This challenge has ended!");
-  //     return;
-  //   }
-
-  //   router.push(`/pvp/${challenge.id}/game`);
-  // };
 
   const inviteLink = generatePVPChallengeInviteLink(challenge.invite_code);
   const winner = getWinner();
@@ -247,7 +220,9 @@ export const ChallengeDetails = ({
           </Link>
         </div>
       </div>
-      {!isChallengeActive &&
+      {((participants.length >= challenge.max_participants &&
+        participants.every((p) => p.has_played)) ||
+        !isChallengeActive) &&
         winner?.wallet_address === networkStore.address && (
           <div className="mt-4 flex justify-center">
             <ClaimPrizeButton
@@ -269,18 +244,6 @@ export const ChallengeDetails = ({
 
       {/* Update the play button */}
       <div className="mt-6 flex justify-end">
-        {/* <button
-          onClick={handlePlayGame}
-          disabled={isChallengeEnded() || hasUserPlayed()}
-          className="rounded-lg bg-primary px-6 py-2 text-white  disabled:opacity-50"
-        >
-          {isChallengeEnded()
-            ? "Challenge Ended"
-            : hasUserPlayed()
-            ? "Already Played"
-            : "Play"}
-        </button> */}
-
         {challengeStatus === ChallengeStatus.PAYMENT_NOT_INIT &&
           isChallengeActive && (
             <button
