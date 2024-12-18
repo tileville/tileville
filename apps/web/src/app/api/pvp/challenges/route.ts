@@ -18,8 +18,6 @@ const postHandler = async (request: NextRequest) => {
       throw new Error("Wallet address is required");
     }
 
-    console.log("route is getting called");
-
     const {
       name,
       entry_fee,

@@ -1,4 +1,3 @@
-// src/app/api/pvp/challenge/[challengeId]/route.ts
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 
