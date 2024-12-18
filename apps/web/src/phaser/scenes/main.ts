@@ -67,7 +67,7 @@ export class MainScene extends Scene {
   breakdownTexts: GameObjects.BitmapText[] = [];
 
   isPvpGame = false;
-  challengeId: number | null = null;
+
   pvpGameFinished = false;
 
   constructor() {
@@ -76,7 +76,6 @@ export class MainScene extends Scene {
 
   create() {
     this.isPvpGame = this.game.registry.get("isPvpGame") || false;
-    this.challengeId = this.game.registry.get("challengeId") || null;
 
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
 
@@ -547,6 +546,8 @@ export class MainScene extends Scene {
     const isDemoGame = this.game.registry.get("isDemoGame");
     const competitionKey = this.game.registry.get("competitionKey");
 
+    const challengeName = this.game.registry.get("challengeName") || null;
+
     const isSpeedVersion = this.game.registry.get("isSpeedVersion");
     const handleSendGroupMessageDemo = this.game.registry.get(
       "handleSendGroupMessageDemo"
@@ -715,6 +716,16 @@ export class MainScene extends Scene {
         570,
         "font",
         `Competition Key: ${competitionKey}`,
+        24
+      );
+      this.competitionNameText.setOrigin(0.5);
+      this.competitionNameText.setDepth(4);
+    } else {
+      this.competitionNameText = this.add.bitmapText(
+        1500,
+        570,
+        "font",
+        `Challenge name: ${challengeName}`,
         24
       );
       this.competitionNameText.setOrigin(0.5);
@@ -892,15 +903,15 @@ export class MainScene extends Scene {
       ease: PhaserMath.Easing.Quadratic.Out,
     });
 
-    if (!this.isPvpGame) {
-      this.tweens.add({
-        targets: [this.competitionNameText, this.currentTimeText],
-        props: { x: 1040 },
-        delay: 1200,
-        duration: 300,
-        ease: PhaserMath.Easing.Quadratic.Out,
-      });
-    }
+    // if (!this.isPvpGame) {
+    this.tweens.add({
+      targets: [this.competitionNameText, this.currentTimeText],
+      props: { x: 1040 },
+      delay: 1200,
+      duration: 300,
+      ease: PhaserMath.Easing.Quadratic.Out,
+    });
+    // }
 
     if (isDemoGame) {
       this.tweens.add({

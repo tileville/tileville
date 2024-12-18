@@ -24,6 +24,7 @@ type PhaserLayerProps = {
   speedDuration: number | undefined;
   challengeId?: number;
   isPvPGame?: boolean;
+  challengeName?: string;
 };
 
 export const PhaserLayer = ({
@@ -37,6 +38,7 @@ export const PhaserLayer = ({
   speedDuration,
   challengeId,
   isPvPGame,
+  challengeName,
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
@@ -155,7 +157,7 @@ export const PhaserLayer = ({
     game.registry.set("speedDuration", speedDuration);
     game.registry.set("handleSendGroupMessageDemo", handleSendGroupMessageDemo); //
     game.registry.set("isPvpGame", isPvPGame);
-    game.registry.set("challengeId", challengeId);
+    game.registry.set("challengeName", challengeName);
 
     return () => {
       game.destroy(true);

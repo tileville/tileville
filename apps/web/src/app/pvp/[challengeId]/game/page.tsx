@@ -136,6 +136,7 @@ export default function PvPChallengePage() {
             speedDuration={challengeData?.data?.speed_duration}
             challengeId={+params.challengeId}
             txnHash={challengeTransaction?.txn_hash || ""}
+            challengeName={challengeData?.data.name}
           />
           <Toaster />
         </div>
