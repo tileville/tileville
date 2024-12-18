@@ -1016,7 +1016,6 @@ export const useSendPrivateGroupMessage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "Wallet-Address": walletAddress,
         },
         body: JSON.stringify({
           message,
@@ -1031,18 +1030,25 @@ export const useSendPrivateGroupMessage = () => {
       return response.json();
     },
     onMutate: () => {
-      toastRef.current = toast.loading("Sending announcement...");
+      toastRef.current = toast.loading("Notifying about your win...");
     },
     onSuccess: () => {
-      toast.success("Victory announcement sent successfully!", {
-        id: toastRef.current ?? undefined,
-      });
+      toast.success(
+        "Team has been notified of your win! Prize will be sent to your wallet soon.",
+        {
+          id: toastRef.current ?? undefined,
+        }
+      );
       toastRef.current = null;
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to send announcement", {
-        id: toastRef.current ?? undefined,
-      });
+      toast.error(
+        error.message ||
+          "Failed to notify team. Please try again or contact support.",
+        {
+          id: toastRef.current ?? undefined,
+        }
+      );
       toastRef.current = null;
     },
   });

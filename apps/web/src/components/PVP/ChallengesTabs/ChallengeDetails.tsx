@@ -28,6 +28,7 @@ import { Spinner2 } from "@/components/common/Spinner";
 import { TransactionStatus } from "@/lib/types";
 import { ParticipantsList } from "../ParticipantsList";
 import { useThrottleWithIncreasingDelay } from "@/hooks/useThrottleWithIncreasingDelay";
+import { ClaimPrizeButton } from "../ClaimPrizeButton";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -58,8 +59,6 @@ export const ChallengeDetails = ({
     networkStore.address || "",
     challenge.id
   );
-
-  const sendPrivateGroupMessageMutation = useSendPrivateGroupMessage();
 
   const { refetch: refetchTxnStatus } = useMainnetPVPTransactionsStatus(
     challengeTransaction?.txn_hash || "",
@@ -141,6 +140,7 @@ export const ChallengeDetails = ({
   // };
 
   const inviteLink = generatePVPChallengeInviteLink(challenge.invite_code);
+  const winner = getWinner();
 
   return (
     <div className="relative rounded-lg border border-[#38830A] bg-[#99B579] p-6">
@@ -163,7 +163,6 @@ export const ChallengeDetails = ({
           )}
         </p>
       </div>
-
       <div className="mb-4 grid grid-cols-3 gap-2">
         <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
           <div>
@@ -193,7 +192,6 @@ export const ChallengeDetails = ({
           </div>
         )}
       </div>
-
       <div className="mb-2 ">
         <span className="text-base font-medium"></span>
         Max Participants:
@@ -201,7 +199,6 @@ export const ChallengeDetails = ({
           {challenge.max_participants}
         </span>
       </div>
-
       <div className="mb-6">
         <h3 className="mb-2 text-base font-medium">Share Invite Link</h3>
         <div className="relative">
@@ -224,7 +221,6 @@ export const ChallengeDetails = ({
           </button>
         </div>
       </div>
-
       <div className="mb-6">
         <h3 className="mb-2 text-base font-medium">
           Share Invite Link on Socials
@@ -251,61 +247,24 @@ export const ChallengeDetails = ({
           </Link>
         </div>
       </div>
-
       {!isChallengeActive &&
-        getWinner()?.wallet_address === networkStore.address && (
+        winner?.wallet_address === networkStore.address && (
           <div className="mt-4 flex justify-center">
-            <button
-              onClick={async () => {
-                if (!networkStore.address) return;
-
-                const message = `🎮 Challenge "${challenge.name}" Results 🏆
-
-Winner: ${createdByUsername || formatAddress(networkStore.address)}
-Score: ${getWinner()?.score}
-Prize Pool: ${challenge.entry_fee * participants.length} MINA
-Number of Participants: ${participants.length}/${challenge.max_participants}
-Challenge Link: ${generatePVPChallengeInviteLink(challenge.invite_code)}
-
-Congratulations! 🎉
-
-${getMinaScanNormalLink(challengeTransaction?.txn_hash || "")}`;
-
-                try {
-                  await sendPrivateGroupMessageMutation.mutateAsync({
-                    message,
-                    walletAddress: networkStore.address,
-                  });
-                } catch (error) {
-                  console.error("Failed to send winner message:", error);
-                }
-              }}
-              className={`${PRIMARY_OUTLINE_BUTTON} flex items-center gap-2`}
-              disabled={sendPrivateGroupMessageMutation.isLoading}
-            >
-              {sendPrivateGroupMessageMutation.isLoading ? (
-                <>
-                  <Spinner2 size={16} />
-                  <span>Sending...</span>
-                </>
-              ) : (
-                <>
-                  <Image
-                    src="/icons/trophy.png"
-                    width={20}
-                    height={20}
-                    alt="trophy"
-                  />
-                  <span>Announce Victory!</span>
-                </>
-              )}
-            </button>
+            <ClaimPrizeButton
+              challengeName={challenge.name}
+              challengeId={challenge.id}
+              winnerAddress={winner?.wallet_address || ""}
+              winnerScore={winner?.score || 0}
+              challengeEntryFees={challenge.entry_fee}
+              participantsLength={participants.length}
+              inviteCode={challenge.invite_code}
+              participantTxnHash={challengeTransaction?.txn_hash || ""}
+            />
           </div>
         )}
-
       <div>
         <h3 className="mb-4 text-lg font-bold">Participants List</h3>
-        <ParticipantsList winner={getWinner()} participants={participants} />
+        <ParticipantsList winner={winner} participants={participants} />
       </div>
 
       {/* Update the play button */}
