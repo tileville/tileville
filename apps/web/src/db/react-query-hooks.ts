@@ -28,7 +28,6 @@ import {
   isGameAlreadyPlayed,
   fetchGlobalConfig,
   getAllNFTsEntries,
-  updatePVPTransactionLog,
   fetchPVPChallengeTransaction,
   confirmChallengeParticipation,
 } from "./supabase-queries";

@@ -163,21 +163,6 @@ export const addTransactionLog = async (
   return data;
 };
 
-export const addPVPTransactionLog = async (
-  transaction: PVPTransactionLog
-): Promise<Table<"pvp_transaction_logs">> => {
-  const { data, error } = await supabase
-    .from("pvp_transaction_logs")
-    .insert(transaction)
-    .select("*")
-    .single();
-
-  if (error) {
-    throw error;
-  }
-  return data;
-};
-
 export const updateTransactionLog = async (
   txn_hash: string,
   update_payload: { txn_status: string }
@@ -193,41 +178,6 @@ export const updateTransactionLog = async (
   }
   return data;
 };
-export const updatePVPTransactionLog = async (
-  txn_hash: string,
-  update_payload: { txn_status: string }
-): Promise<any> => {
-  // First get the transaction to find the challenge_id
-  const { data: txnLog, error: txnError } = await supabase
-    .from("pvp_transaction_logs")
-    .select("challenge_id")
-    .eq("txn_hash", txn_hash)
-    .single();
-
-  if (txnError) throw txnError;
-
-  const updatePromises = [
-    // Update transaction log
-    supabase
-      .from("pvp_transaction_logs")
-      .update(update_payload)
-      .eq("txn_hash", txn_hash),
-
-    supabase
-      .from("pvp_challenge_participants")
-      .update({ txn_status: update_payload.txn_status })
-      .eq("challenge_id", txnLog.challenge_id)
-      .eq("txn_hash", txn_hash),
-  ];
-
-  // Execute both updates
-  const [txnUpdate, participantUpdate] = await Promise.all(updatePromises);
-
-  if (txnUpdate.error) throw txnUpdate.error;
-  if (participantUpdate.error) throw participantUpdate.error;
-
-  return txnUpdate.data;
-};
 
 export const fetchTransactions = async (
   wallet_address: string,
@@ -235,23 +185,6 @@ export const fetchTransactions = async (
 ): Promise<Array<Table<"transaction_logs">>> => {
   const { data, error } = await supabase
     .from("transaction_logs")
-    .select("*")
-    .eq("wallet_address", wallet_address)
-    .eq("txn_status", txn_status);
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-};
-
-export const fetchPVPTransactions = async (
-  wallet_address: string,
-  txn_status: string
-): Promise<Array<Table<"pvp_transaction_logs">>> => {
-  const { data, error } = await supabase
-    .from("pvp_transaction_logs")
     .select("*")
     .eq("wallet_address", wallet_address)
     .eq("txn_status", txn_status);
