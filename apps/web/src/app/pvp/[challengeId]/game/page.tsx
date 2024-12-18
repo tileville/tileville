@@ -95,6 +95,20 @@ export default function PvPChallengePage() {
   }
 
   const hasFeesConfirmed = challengeTransaction?.txn_status === "CONFIRMED";
+  const isTxnPending = challengeTransaction?.txn_status === "PENDING";
+
+  if (isTxnPending) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-8">
+        <div className="text-center">
+          <h2 className="mb-4 text-2xl font-bold">Transaction is pending</h2>
+          <p className="mb-4">
+            Please wait till the transaction gets confirmed.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!hasFeesConfirmed) {
     return (
