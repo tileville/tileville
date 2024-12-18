@@ -100,7 +100,7 @@ button {
   font-family: inherit;
 }
 
-button:focus-visible{
+button:focus-visible {
   outline: none;
 }
 
@@ -219,7 +219,6 @@ button:focus-visible{
     text-shadow: inherit;
   }
 }
-
 
 .sideBarProfile {
   height: 100%;
@@ -374,6 +373,9 @@ input[type="range"]:focus::-moz-range-thumb {
 .slideAnimOnChilds > *:nth-child(8) {
   animation-duration: 2400ms;
 }
+.slideAnimOnChilds > *:nth-child(9) {
+  animation-duration: 2700ms;
+}
 
 .competitionCard {
   background: linear-gradient(135deg, transparent, hsl(var(--primary) / 0.3));
@@ -398,7 +400,7 @@ input[type="range"]:focus::-moz-range-thumb {
   animation: fade-slide-in 600ms ease;
 }
 
-.fade-in{
+.fade-in {
   animation: fade-in 600ms ease;
 }
 
@@ -434,14 +436,12 @@ input[type="range"]:focus::-moz-range-thumb {
   transform: translate(0);
 }
 
-
-  
-.list-style{
+.list-style {
   display: flex;
   flex-direction: column;
 }
 
-.list-style .listItem{
+.list-style .listItem {
   display: grid;
   grid-template-columns: repeat(24, minmax(0, 1fr));
   align-items: center;
@@ -450,18 +450,18 @@ input[type="range"]:focus::-moz-range-thumb {
   min-width: 1000px;
 }
 
-.list-style .listItem:hover{
+.list-style .listItem:hover {
   background-color: hsl(var(--primary) / 0.1);
 }
 
-.list-header{
+.list-header {
   display: grid;
   grid-template-columns: repeat(24, minmax(0, 1fr));
   align-items: center;
   padding: 12px;
 }
 
-.list-style .nft-img{
+.list-style .nft-img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -469,7 +469,7 @@ input[type="range"]:focus::-moz-range-thumb {
   grid-column: span 1 / span 1;
 }
 
-.list-style .nft-content{
+.list-style .nft-content {
   grid-column: span 23 / span 23;
   align-items: center;
   gap: 1rem;
@@ -479,48 +479,51 @@ input[type="range"]:focus::-moz-range-thumb {
   padding-bottom: 0;
 }
 
-.list-style .nft-content > div:not(:last-child){
+.list-style .nft-content > div:not(:last-child) {
   grid-column: span 4 / span 4;
   text-align: center;
 }
-.list-style .nft-content > div:last-child{
+.list-style .nft-content > div:last-child {
   grid-column: span 3 / span 3;
   /* text-align: right; */
 }
 
-.list-style .nft-content > div:nth-child(4){
+.list-style .nft-content > div:nth-child(4) {
   grid-column: span 6 / span 6;
 }
-.list-style .nft-content > div:nth-child(2){
+.list-style .nft-content > div:nth-child(2) {
   grid-column: span 2 / span 2;
 }
 
-.list-style .nft-content-info{
+.list-style .nft-content-info {
   gap: 1rem;
 }
 
-.list-style .nft-price{
+.list-style .nft-price {
   justify-content: center;
 }
-.nft-item{
+.nft-item {
   grid-column: span 5 / span 5;
 }
 
-.list-header > div:not(:first-child){
+.list-header > div:not(:first-child) {
   text-align: center;
 }
 
-.list-header > div:not(:first-child):not(:last-child):not(:nth-child(4)):not(:nth-child(2)){
+.list-header
+  > div:not(:first-child):not(:last-child):not(:nth-child(4)):not(
+    :nth-child(2)
+  ) {
   grid-column: span 4 / span 4;
 }
-.list-header > div:last-child{
+.list-header > div:last-child {
   grid-column: span 3 / span 3;
 }
 
-.list-header > div:nth-child(4){
+.list-header > div:nth-child(4) {
   grid-column: span 6 / span 6;
 }
-.list-header > div:nth-child(2){
+.list-header > div:nth-child(2) {
   grid-column: span 2 / span 2;
 }
 
@@ -528,8 +531,31 @@ input[type="range"]:focus::-moz-range-thumb {
   animation: spin 3s linear infinite;
 }
 
-@media screen and (max-width: 750px) {
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: none; /* Chrome, Safari, Edge */
+  appearance: none; /* Generic */
+}
 
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.participants-dropdown {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+}
+
+.participants-dropdown.open {
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+@media screen and (max-width: 750px) {
   .text-primary-shadow {
     color: hsl(var(--primary));
     text-shadow: 0 -2px 1px, 0 0 0, 0 0 1px hsl(var(--primary)),
@@ -539,16 +565,15 @@ input[type="range"]:focus::-moz-range-thumb {
     user-select: none;
   }
 
-  .list-header{
+  .list-header {
     white-space: nowrap;
     min-width: 1000px;
   }
 
-  .list-style .listItem{
+  .list-style .listItem {
     padding: 4px 8px;
   }
 }
-
 
 @keyframes mulShdSpin {
   0%,
@@ -671,10 +696,12 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 
 @keyframes device-rotate {
-  0%, 100% {
+  0%,
+  100% {
     transform: rotate(0deg);
   }
-  25%, 75% {
+  25%,
+  75% {
     transform: rotate(90deg);
   }
 }
@@ -682,4 +709,3 @@ input[type="range"]:focus::-moz-range-thumb {
 .animate-device-rotate {
   animation: device-rotate 4s ease-in-out infinite;
 }
-

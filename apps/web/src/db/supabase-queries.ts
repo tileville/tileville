@@ -1,6 +1,10 @@
 import { AppSupabaseClient, Table } from "@/types";
 import { supabaseUserClientComponentClient as supabase } from "@/supabase-clients/supabaseUserClientComponentClient";
-import { TransactionLog } from "@/lib/types";
+import {
+  PVPTransactionLog,
+  TransactionLog,
+  TransactionStatus,
+} from "@/lib/types";
 import { NFT_PAGE_SIZE } from "@/constants";
 
 type PlayerProfile = {
@@ -189,6 +193,21 @@ export const fetchTransactions = async (
     throw error;
   }
 
+  return data;
+};
+
+export const fetchPVPChallengeTransaction = async (
+  wallet_address: string,
+  challenge_id: string | number
+): Promise<Table<"pvp_challenge_participants">> => {
+  const { data, error } = await supabase
+    .from("pvp_challenge_participants")
+    .select("*")
+    .eq("wallet_address", wallet_address)
+    .eq("challenge_id", challenge_id)
+    .single();
+
+  if (error) throw error;
   return data;
 };
 
@@ -437,4 +456,42 @@ export const getAllNFTsEntries = async ({
     nfts: data as Array<Table<"tileville_builder_nfts">>,
     count: count ?? 0,
   };
+};
+
+export const updateChallengeTransaction = async (payload: {
+  wallet_address: string;
+  challenge_id: number;
+  txn_hash: string;
+  txn_status: string;
+}): Promise<boolean> => {
+  const { wallet_address, challenge_id, ...updateData } = payload;
+
+  const { data, error } = await supabase
+    .from("pvp_challenge_participants")
+    .update(updateData)
+    .match({ wallet_address, challenge_id })
+    .single();
+
+  if (error) {
+    throw error;
+  }
+  return true;
+};
+
+export const confirmChallengeParticipation = async (
+  txn_hash: string,
+  challenge_id: number,
+  txn_status: TransactionStatus
+): Promise<Table<"pvp_challenge_participants">> => {
+  console.log("updating txn to supabase", txn_status);
+  const { data, error } = await supabase
+    .from("pvp_challenge_participants")
+    .update({ txn_status })
+    .match({ txn_hash, challenge_id })
+    .single();
+
+  if (error) {
+    throw error;
+  }
+  return data;
 };

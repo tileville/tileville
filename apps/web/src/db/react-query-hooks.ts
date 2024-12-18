@@ -28,6 +28,8 @@ import {
   isGameAlreadyPlayed,
   fetchGlobalConfig,
   getAllNFTsEntries,
+  fetchPVPChallengeTransaction,
+  confirmChallengeParticipation,
 } from "./supabase-queries";
 import {
   ACCOUNT_AUTH_LOCAL_KEY,
@@ -37,8 +39,9 @@ import {
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
-import { PublicProfile } from "@/types";
+import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
+import { TransactionStatus } from "@/lib/types";
 
 export const useSendEmail = ({
   onSuccess,
@@ -364,6 +367,58 @@ export const useMainnetTransactionStatusForMint = (txn_hash: string) => {
     {
       enabled: !!txn_hash,
       retry: 5,
+    }
+  );
+};
+
+export const useMainnetPVPTransactionsStatus = (
+  txn_hash: string,
+  txn_status: TransactionStatus,
+  challenge_id: number
+) => {
+  return useQuery(
+    ["transaction_status_mainnet_pvp", txn_hash],
+    () => {
+      console.log(txn_hash, txn_status, challenge_id, 383);
+      //TODO: Add counter for blockberry API to track how many times we calling this
+      console.log(`Calling Blockberry api to check pvp txn status`);
+      return fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          console.log("response blockberrry", res);
+          if (res.blockConfirmationsCount >= 1 || res.txStatus === "applied") {
+            return confirmChallengeParticipation(
+              txn_hash,
+              challenge_id,
+              "CONFIRMED"
+            );
+          }
+        });
+    },
+    {
+      staleTime: Infinity,
+      enabled: !!txn_hash && txn_status === "PENDING",
+      retry: 5,
+    }
+  );
+};
+
+export const usePVPChallengeTransaction = (
+  wallet_address: string,
+  challenge_id: string | number
+) => {
+  return useQuery(
+    ["pvp_challenge_transaction", wallet_address, challenge_id],
+    () => fetchPVPChallengeTransaction(wallet_address, challenge_id),
+    {
+      enabled: !!wallet_address && !!challenge_id,
     }
   );
 };
@@ -942,5 +997,224 @@ export const useSendGroupMessage = () => {
       });
       return response.json();
     },
+  });
+};
+
+export const useSendPrivateGroupMessage = () => {
+  const toastRef = useRef<string | null>(null);
+
+  return useMutation({
+    mutationFn: async ({
+      message,
+      walletAddress,
+    }: {
+      message: string;
+      walletAddress: string;
+    }) => {
+      const response = await fetch("/api/telegram/private-group-message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send message");
+      }
+
+      return response.json();
+    },
+    onMutate: () => {
+      toastRef.current = toast.loading("Notifying about your win...");
+    },
+    onSuccess: () => {
+      toast.success(
+        "Team has been notified of your win! Prize will be sent to your wallet soon.",
+        {
+          id: toastRef.current ?? undefined,
+        }
+      );
+      toastRef.current = null;
+    },
+    onError: (error: Error) => {
+      toast.error(
+        error.message ||
+          "Failed to notify team. Please try again or contact support.",
+        {
+          id: toastRef.current ?? undefined,
+        }
+      );
+      toastRef.current = null;
+    },
+  });
+};
+
+export const useCreatedChallenges = (walletAddress: string) => {
+  return useQuery({
+    queryKey: ["created-challenges", walletAddress],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/created?wallet_address=${walletAddress}`
+      );
+      const data = await response.json();
+      return data as ChallengeResponse;
+    },
+    enabled: !!walletAddress,
+  });
+};
+
+export const useAcceptedChallenges = (walletAddress: string) => {
+  return useQuery({
+    queryKey: ["accepted-challenges", walletAddress],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/accepted?wallet_address=${walletAddress}`
+      );
+      const data = await response.json();
+      return data as ChallengeResponse;
+    },
+    enabled: !!walletAddress,
+  });
+};
+
+export const useCreateChallenge = (wallet_address: string) => {
+  const queryClient = useQueryClient();
+
+  const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+  if (!authSignature) {
+    console.warn("Auth signature missing in storage");
+    throw new Error("Auth signature missing!");
+  }
+
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      entry_fee: number;
+      end_time: string;
+      max_participants: number;
+      is_speed_challenge: boolean;
+      speed_duration?: number;
+    }) => {
+      const response = await fetch("/api/pvp/challenges", {
+        method: "POST",
+        headers: {
+          "Auth-Signature": authSignature,
+          "Wallet-Address": wallet_address,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["created_challenges"] });
+    },
+  });
+};
+
+export const useInviteChallenge = (code: string) => {
+  return useQuery({
+    queryKey: ["invite-challenge", code],
+    queryFn: async () => {
+      const response = await fetch(`/api/pvp/challenges/${code}`);
+      const data = await response.json();
+      return data;
+    },
+    enabled: !!code,
+  });
+};
+
+export const useJoinChallenge = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+    }) => {
+      const response = await fetch("/api/pvp/challenges/join", {
+        method: "POST",
+        body: JSON.stringify({ challenge_id, wallet_address }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to join challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate relevant queries to refetch the latest data
+      queryClient.invalidateQueries({ queryKey: ["invite-challenge"] });
+    },
+  });
+};
+
+export const useSavePvPScore = () => {
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+      score,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+      score: number;
+    }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
+      const response = await fetch("/api/pvp/challenges/submit-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Wallet-Address": wallet_address,
+          "Auth-Signature": authSignature,
+        },
+        body: JSON.stringify({
+          challenge_id,
+          score,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save PVP score");
+      }
+
+      return response.json();
+    },
+  });
+};
+
+export const useChallengeById = (challengeId: string | number) => {
+  return useQuery({
+    queryKey: ["challenge", challengeId],
+    queryFn: async () => {
+      const response = await fetch(`/api/pvp/challenge/${challengeId}`);
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || "Failed to fetch challenge");
+      }
+      return data;
+    },
+    enabled: !!challengeId,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 };

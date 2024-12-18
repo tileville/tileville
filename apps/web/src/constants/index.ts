@@ -21,6 +21,7 @@ import DoneLottie from "../../public/lotties/doneLottie.json";
 import TxnConfirmed from "../../public/lotties/txnConfirmed.json";
 import confusingLottie from "../../public/lotties/confusingLottie.json";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
+import clsx from "clsx";
 
 type AttributeValue = {
   [key: string]: string;
@@ -46,6 +47,7 @@ export const TREASURY_ADDRESS =
   "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV";
 export const FAUCET_URL = "https://faucet.minaprotocol.com/";
 export const GAME_ENTRY_FEE_KEY = "is_entry_fee_paid";
+export const PVP_GAME_ENTRY_FEE_KEY = "is_pvp_entry_fee_paid";
 export const GITHUB_URL = "https://github.com/tileville/tileville";
 export const GAME_TUTORIAL_VIDEO_URL = "https://youtu.be/rUd880VHHT0";
 export const MY_GITHUB_URL = "https://github.com/satyambnsal";
@@ -266,52 +268,58 @@ export const BACKGROUND_PATHS_HEADER = [
 ];
 export const NAVIGATION_MENU_ITEMS = [
   {
-    name: "Play Game",
+    name: "Join Competition",
     key: 0,
     href: "/competitions",
   },
   {
-    name: "Guide",
+    name: "PLAYER VS PLAYER",
     key: 1,
+    targetBlank: false,
+    href: "/pvp",
+  },
+  {
+    name: "Guide",
+    key: 2,
     targetBlank: false,
     href: "/guide",
   },
 
   {
     name: "Leaderboard",
-    key: 2,
+    key: 3,
     targetBlank: false,
     href: "/leaderboard",
   },
   {
     name: "Community Section",
-    key: 7,
+    key: 4,
     targetBlank: false,
     href: "/community",
   },
 
   {
     name: "User Profile",
-    key: 3,
+    key: 5,
     targetBlank: false,
     href: "/profile",
   },
   {
     name: "NFTS MARKETPLACE",
-    key: 4,
+    key: 6,
     targetBlank: false,
     href: "/marketplace",
   },
   {
     name: "FAQ",
-    key: 5,
+    key: 7,
     targetBlank: false,
     href: "/faq",
   },
 
   {
     name: "ZKNOID games store",
-    key: 6,
+    key: 8,
     href: "https://app.zknoid.io/",
     targetBlank: true,
   },
@@ -324,40 +332,46 @@ export const MOB_NAV_MENU_ITEMS = [
     href: "/competitions",
   },
   {
-    name: "Guide",
+    name: "PLAYER VS PLAYER",
     key: 1,
+    targetBlank: false,
+    href: "/pvp",
+  },
+  {
+    name: "Guide",
+    key: 2,
     targetBlank: false,
     href: "/guide",
   },
 
   {
     name: "Leaderboard",
-    key: 2,
+    key: 3,
     targetBlank: false,
     href: "/leaderboard",
   },
   {
     name: "Community Section",
-    key: 7,
+    key: 4,
     targetBlank: false,
     href: "/community",
   },
 
   {
     name: "User Profile",
-    key: 3,
+    key: 5,
     targetBlank: false,
     href: COLLECTION_URL,
   },
   {
     name: "NFTS MARKETPLACE",
-    key: 4,
+    key: 6,
     targetBlank: false,
     href: "/marketplace",
   },
   {
     name: "FAQ",
-    key: 5,
+    key: 7,
     targetBlank: false,
     href: "/faq",
   },
@@ -463,6 +477,7 @@ export const TABLE_SKELETON_CONTENT = [
   "70",
 ];
 
+//TODO: Replace all of these with @apply
 export const PRIMARY_BUTTON_STYLES =
   "w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-105 transition-transform";
 
@@ -473,8 +488,26 @@ export const FOLLOWING_BTN_LG = `${PRIMARY_BUTTON_STYLES_LG} hover:text-[#830A0A
 
 export const FOLLOWING_BTN = `${PRIMARY_BUTTON_STYLES} hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-105 transition-transform bg-transparent`;
 
+export const PRIMARY_OUTLINE_BUTTON =
+  "min-w-[100px] rounded-lg border border-[#378209] p-1 text-base font-bold text-[#38830A] shadow-[0px_1px_4px_0px_#89AB5D]";
+
 export const BADGE_BASE_CLASSES =
   "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
+
+export const PRIMARY_BUTTON_V2 = clsx(
+  "rounded-md border-2 border-primary",
+  "bg-primary bg-opacity-30",
+  "px-2 text-center text-sm leading-none text-white",
+  "hover:shadow-[0_0_8px_hsl(var(--primary))]",
+  "md:px-[15px] md:text-base"
+);
+
+export const PRIMARY_BUTTON_V2_LG = clsx(
+  "rounded-md border-2 border-primary",
+  "bg-primary bg-opacity-30",
+  "px-2 text-center text-xl font-bold leading-none text-white",
+  "md:px-[15px] md:text-2xl"
+);
 
 export type NFTCollection =
   (typeof NFT_COLLECTIONS)[keyof typeof NFT_COLLECTIONS];
@@ -742,3 +775,53 @@ export const TILEVILLE_BOT_URL = "https://t.me/tileville_mayor_bot";
 
 export const ADMIN_API_URL =
   process.env.NEXT_PUBLIC_ADMIN_API_URL || "http://localhost:3000";
+
+export const FIRST_WORDS = [
+  "Coastal",
+  "Mountain",
+  "Valley",
+  "Forest",
+  "Desert",
+  "River",
+  "Island",
+  "Garden",
+  "Crystal",
+  "Ancient",
+  "Modern",
+  "Solar",
+  "Wind",
+  "Harbor",
+  "Golden",
+  "Azure",
+  "Emerald",
+  "Sapphire",
+  "Marble",
+  "Stone",
+];
+
+export const SECOND_WORDS = [
+  "Kingdom",
+  "Empire",
+  "Haven",
+  "Sanctuary",
+  "Metropolis",
+  "Paradise",
+  "Oasis",
+  "Citadel",
+  "Township",
+  "District",
+  "Colony",
+  "Settlement",
+  "Frontier",
+  "Territory",
+  "Domain",
+  "Realm",
+  "Capital",
+  "Province",
+  "Borough",
+  "Commons",
+];
+
+export const PVP_CHALLENGES_MIN_ENTRY_FEE = Number(
+  process.env.PVP_CHALLENGES_MIN_ENTRY_FEE || 1
+);

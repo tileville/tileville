@@ -86,3 +86,39 @@ interface PublicProfile {
   email_address?: string | null;
   total_rewards?: number;
 }
+
+interface Challenge {
+  created_at: string;
+  created_by: string;
+  end_time: string;
+  entry_fee: number;
+  id: number;
+  invite_code: string;
+  is_speed_challenge: boolean;
+  max_participants: number;
+  name: string;
+  speed_duration: number | null;
+  status: string;
+  updated_at: string | null;
+}
+
+export type ChallengeParticipant = {
+  id: number;
+  challenge_id: number;
+  wallet_address: string;
+  joined_at: string;
+  played_at: string | null;
+  score: number | null;
+  has_played: boolean;
+  txn_hash: string | null;
+  txn_status: string;
+  created_at: string;
+};
+
+export type ChallengeResponse = {
+  success: boolean;
+  data: {
+    challenge: Challenge;
+    participants: ChallengeParticipant[];
+  }[];
+};
