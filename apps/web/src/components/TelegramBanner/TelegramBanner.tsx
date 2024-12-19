@@ -10,19 +10,24 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export const TelegramBanner = () => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false); // Default to hidden
 
-  // Check if banner was previously closed
   useEffect(() => {
     const isBannerClosed = sessionStorage.getItem("telegram_banner_closed");
-    if (isBannerClosed) {
-      setIsVisible(false);
+    const neverShow = localStorage.getItem("telegram_banner_never_show");
+    if (!isBannerClosed && !neverShow) {
+      setIsVisible(true);
     }
   }, []);
 
   const handleClose = () => {
     setIsVisible(false);
     sessionStorage.setItem("telegram_banner_closed", "true");
+  };
+
+  const handleNeverShow = () => {
+    setIsVisible(false);
+    localStorage.setItem("telegram_banner_never_show", "true");
   };
 
   if (!isVisible) return null;
@@ -70,6 +75,15 @@ export const TelegramBanner = () => {
         >
           Connect Telegram Account
         </Link>
+
+        <div className="mt-4 text-center text-sm text-gray-500">
+          <button
+            onClick={handleNeverShow}
+            className="underline hover:text-gray-700"
+          >
+            Never show me again
+          </button>
+        </div>
       </div>
     </div>
   );
