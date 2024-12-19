@@ -21,6 +21,7 @@ import { usePayPVPFees } from "@/hooks/usePayPVPFees";
 import { ChallengeParticipant } from "@/types";
 import { isMobile } from "react-device-detect";
 import { InviteContentMobileWarning } from "@/components/PVP/InviteContentMobileWarning";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
@@ -33,6 +34,9 @@ export default function InviteContent({ code }: { code: string }) {
   const [isParticipantsListOpen, setIsParticipantsListOpen] = useState(false);
   const [payLoading, setPayLoading] = useState(false);
   const { payPVPFees } = usePayPVPFees();
+  const {
+    joinedPVPChallenge: [logJoinChallenge, logJoinChallengeError],
+  } = usePosthogEvents();
 
   const isNormalMobileBrowser = !window.mina && isMobile;
 
@@ -63,6 +67,14 @@ export default function InviteContent({ code }: { code: string }) {
           challenge_id: challenge.data.id,
           wallet_address: networkStore.address,
         });
+
+        logJoinChallenge({
+          walletAddress: networkStore.address,
+          challengeId: challenge.data.id,
+          challengeName: challenge.data.name,
+          isSpeedChallenge: challenge.data.is_speed_challenge,
+          entryFee: challenge.data.entry_fee,
+        });
       }
 
       if (joinChallengeResponse?.success || userParticipant) {
@@ -75,11 +87,15 @@ export default function InviteContent({ code }: { code: string }) {
           toast.success("Successfully joined the challenge!");
           router.push("/pvp");
         } else {
+          logJoinChallengeError(`Payment failed: ${paymentResult.message}`);
           toast.error(paymentResult.message || "Payment failed");
         }
       }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to join challenge");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      logJoinChallengeError(errorMessage);
+      toast.error(errorMessage || "Failed to join challenge");
     } finally {
       setPayLoading(false);
     }
