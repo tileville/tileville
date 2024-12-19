@@ -285,3 +285,42 @@ export const generateChallengeName = () => {
 export const generatePVPChallengeInviteLink = (invite_code: string) => {
   return `${window.location.origin}/pvp/invite/${invite_code}`;
 };
+
+type generateChallengeMessageForGroupType = {
+  challengeName: string;
+  walletAddress: string;
+  speedDuration: number | null;
+  endTime: string;
+  isSpeedChallenge: boolean;
+  entryFee: number;
+  username: string | null;
+  maxParticipants: number;
+};
+
+export const generateChallengeMessageForGroup = ({
+  challengeName,
+  walletAddress,
+  speedDuration,
+  endTime,
+  isSpeedChallenge,
+  entryFee,
+  username,
+  maxParticipants,
+}: generateChallengeMessageForGroupType) => {
+  const groupMessage = `🎉 A New Challenge Awaits!
+
+  🌟 **Challenge Name:** "${challengeName}"
+  👤 **Created By:** ${username || `Wallet ${walletAddress.slice(0, 6)}`}
+  💰 **Entry Fee:** ${entryFee} MINA
+  👥 **Max Participants:** ${maxParticipants}
+  ⏰ **End Time:** ${new Date(endTime).toLocaleString()}${
+    isSpeedChallenge
+      ? `\n⏱️ **Speed Challenge Duration:** ${speedDuration} seconds`
+      : ""
+  }
+  
+  Don't miss out on exciting opportunity to compete and win! 🚀
+  `;
+
+  return groupMessage;
+};
