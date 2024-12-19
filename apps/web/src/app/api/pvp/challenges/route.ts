@@ -5,6 +5,8 @@ import { withAuth } from "../../authMiddleware";
 import { v4 as uuidv4 } from "uuid";
 import type { Database } from "@/lib/database.types";
 import { sendPersonalNotification } from "../../lib/telegram-notifications";
+import { ADMIN_API_URL, GROUP_COMPETITION_GAME_TOPIC_ID } from "@/constants";
+import { generateChallengeMessageForGroup } from "@/lib/helpers";
 
 type PVPChallengeInsert =
   Database["public"]["Tables"]["pvp_challenges"]["Insert"];
@@ -66,6 +68,29 @@ const postHandler = async (request: NextRequest) => {
       .eq("wallet_address", wallet_address)
       .eq("authenticated", true)
       .single();
+
+    const groupMessage = generateChallengeMessageForGroup({
+      challengeName: name,
+      walletAddress: wallet_address,
+      speedDuration: challenge.speed_duration || null,
+      endTime: challenge.end_time,
+      isSpeedChallenge: challenge.is_speed_challenge || false,
+      entryFee: challenge.entry_fee || 0,
+      username: userProfile?.username || null,
+      maxParticipants: 2,
+    });
+
+    await fetch(`${ADMIN_API_URL}/api/telegram/group-message`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-token": process.env.NEXT_PUBLIC_ADMIN_API_TOKEN || "",
+      },
+      body: JSON.stringify({
+        message: groupMessage,
+        groupTopicId: GROUP_COMPETITION_GAME_TOPIC_ID,
+      }),
+    });
 
     // Send telegram notification if user has connected telegram
     if (telegramAuth?.chat_id) {

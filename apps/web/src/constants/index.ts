@@ -825,3 +825,6 @@ export const SECOND_WORDS = [
 export const PVP_CHALLENGES_MIN_ENTRY_FEE = Number(
   process.env.PVP_CHALLENGES_MIN_ENTRY_FEE || 1
 );
+
+export const GROUP_COMPETITION_GAME_TOPIC_ID =
+  process.env.NEXT_PUBLIC_GROUP_COMPETITION_GAME_TOPIC_ID || 3;

@@ -59,6 +59,7 @@ export class MainScene extends Scene {
   competitionNameText: GameObjects.BitmapText | null = null;
   currentTimeText: GameObjects.BitmapText | null = null;
   playAgainButton: GameObjects.BitmapText | null = null;
+  goBackButton: GameObjects.BitmapText | null = null;
   shareButton: GameObjects.Image | null = null;
 
   // playAgainButton: Button | null = null;
@@ -841,6 +842,26 @@ export class MainScene extends Scene {
       })
       .setDepth(4);
 
+    if (this.isPvpGame) {
+      this.goBackButton = this.add
+        .bitmapText(1400, 640, "font", "Go back", 40)
+        .setInteractive({ useHandCursor: true })
+        .setOrigin(0.5)
+        .setDepth(4)
+        .on("pointerdown", () => {
+          this.tweens.add({
+            targets: this.goBackButton,
+            scaleX: 0.95,
+            scaleY: 0.95,
+            duration: 60,
+            ease: "Linear",
+            onComplete: () => {
+              window.location.href = "/pvp";
+            },
+          });
+        });
+    }
+
     this.breakdownContainer = this.add.container(1500, 300);
     this.breakdownContainer.setDepth(4);
 
@@ -923,6 +944,16 @@ export class MainScene extends Scene {
       });
     }
 
+    if (this.isPvpGame) {
+      this.tweens.add({
+        targets: this.goBackButton,
+        props: { x: 1040 },
+        delay: 1350,
+        duration: 300,
+        ease: PhaserMath.Easing.Quadratic.Out,
+      });
+    }
+
     this.tweens.add({
       targets: this.shareButton,
       props: { x: 1040 },
@@ -939,6 +970,7 @@ export class MainScene extends Scene {
     this.rankText?.setVisible(false);
     this.playAgainButton?.setVisible(false);
     this.shareButton?.setVisible(false);
+    this.goBackButton?.setVisible(false);
     this.scoreText?.setVisible(false);
     this.timerText?.setVisible(false);
     this.scoreBackground?.setVisible(false);

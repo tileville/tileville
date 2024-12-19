@@ -1218,3 +1218,19 @@ export const useChallengeById = (challengeId: string | number) => {
     refetchOnReconnect: false,
   });
 };
+
+export const useTelegramStatus = (wallet_address: string) => {
+  return useQuery({
+    queryKey: ["telegram-status", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/telegram/status?wallet_address=${wallet_address}`
+      );
+      const data = await response.json();
+      return data.verified;
+    },
+    enabled: !!wallet_address,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+  });
+};

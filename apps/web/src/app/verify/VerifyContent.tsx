@@ -3,22 +3,17 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { PRIMARY_BUTTON_STYLES_LG, TILEVILLE_BOT_URL } from "@/constants";
-import { generateAuroWalletDeepLink } from "@/lib/helpers";
+import { copyToClipBoard, generateAuroWalletDeepLink } from "@/lib/helpers";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
 import Image from "next/image";
 import { useWalletVerification } from "@/hooks/useWalletVerification";
 import toast from "react-hot-toast";
+import { CopyIcon } from "@radix-ui/react-icons";
 
 export default function VerifyContent() {
   const searchParams = useSearchParams();
   const chatId = searchParams.get("chatId");
-
-  useEffect(() => {
-    if (!window.mina && isMobile) {
-      window.location.href = generateAuroWalletDeepLink(chatId || "");
-    }
-  }, [chatId]);
 
   const { handleVerification, getButtonText, isProcessing, isSuccess } =
     useWalletVerification(chatId);
@@ -80,6 +75,30 @@ export default function VerifyContent() {
             >
               {getButtonText()}
             </button>
+
+            {isMobile && !window.mina && (
+              <div className="mt-6 flex flex-col gap-4">
+                <button
+                  className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center gap-4`}
+                  onClick={() => {
+                    copyToClipBoard({
+                      toCopyContent: window.location.href,
+                      copiedType: "URL",
+                    });
+                  }}
+                >
+                  Copy Verification Link
+                  <CopyIcon className="h-5 w-5" />
+                </button>
+
+                <Link
+                  href={generateAuroWalletDeepLink(chatId || "")}
+                  className={PRIMARY_BUTTON_STYLES_LG}
+                >
+                  Open Auro App
+                </Link>
+              </div>
+            )}
           </>
         )}
       </div>

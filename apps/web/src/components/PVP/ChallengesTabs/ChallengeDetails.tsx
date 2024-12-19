@@ -172,6 +172,13 @@ export const ChallengeDetails = ({
           {challenge.max_participants}
         </span>
       </div>
+      <div className="mb-2">
+        The winner will receive{" "}
+        <span className="font-semibold">
+          {participants.length * challenge.entry_fee - 1} MINA{" "}
+        </span>
+        rewards
+      </div>
       <div className="mb-6">
         <h3 className="mb-2 text-base font-medium">Share Invite Link</h3>
         <div className="relative">
@@ -224,17 +231,35 @@ export const ChallengeDetails = ({
         participants.every((p) => p.has_played)) ||
         !isChallengeActive) &&
         winner?.wallet_address === networkStore.address && (
-          <div className="mt-4 flex justify-center">
-            <ClaimPrizeButton
-              challengeName={challenge.name}
-              challengeId={challenge.id}
-              winnerAddress={winner?.wallet_address || ""}
-              winnerScore={winner?.score || 0}
-              challengeEntryFees={challenge.entry_fee}
-              participantsLength={participants.length}
-              inviteCode={challenge.invite_code}
-              participantTxnHash={challengeTransaction?.txn_hash || ""}
-            />
+          <div className="my-2 flex justify-center">
+            {challenge.is_reward_sent ? (
+              <div className="flex items-center gap-2 rounded-md border border-primary bg-[#C6C99C] px-4 py-2 text-primary">
+                <span>
+                  🎉 Reward of {participants.length * challenge.entry_fee - 1}{" "}
+                  MINA has been sent!
+                </span>
+                {challenge.reward_txn_hash && (
+                  <Link
+                    href={getMinaScanNormalLink(challenge.reward_txn_hash)}
+                    target="_blank"
+                    className="text-primary underline hover:no-underline"
+                  >
+                    View Transaction
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <ClaimPrizeButton
+                challengeName={challenge.name}
+                challengeId={challenge.id}
+                winnerAddress={winner?.wallet_address || ""}
+                winnerScore={winner?.score || 0}
+                challengeEntryFees={challenge.entry_fee}
+                participantsLength={participants.length}
+                inviteCode={challenge.invite_code}
+                participantTxnHash={challengeTransaction?.txn_hash || ""}
+              />
+            )}
           </div>
         )}
       <div>
@@ -322,9 +347,6 @@ export const ChallengeDetails = ({
             </button>
           )}
       </div>
-      <p className="mt-4 text-center text-xs text-[#5D6845]">
-        Note: The winner will receive all the rewards
-      </p>
     </div>
   );
 };

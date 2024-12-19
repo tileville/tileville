@@ -18,6 +18,22 @@ type JoinCompetitionPayload = {
   network: string;
 };
 
+type PVPChallengePayload = {
+  walletAddress: string;
+  challengeId: number;
+  challengeName: string;
+  isSpeedChallenge: boolean;
+  entryFee: number;
+};
+
+type PlayPVPChallengePayload = {
+  walletAddress: string;
+  challengeId: number;
+  challengeName: string;
+  score: number;
+  isSpeedChallenge: boolean;
+};
+
 /**
  *
  * The way you create a logger event is you create two set of events for every action.
@@ -69,6 +85,15 @@ function usePosthogEvents() {
     createEventLogger,
     joinedCompetition:
       createEventLogger<JoinCompetitionPayload>("Competition joined"),
+    createdPVPChallenge: createEventLogger<PVPChallengePayload>(
+      "PVP Challenge Created"
+    ),
+    joinedPVPChallenge: createEventLogger<PVPChallengePayload>(
+      "PVP Challenge Joined"
+    ),
+    playedPVPChallenge: createEventLogger<PlayPVPChallengePayload>(
+      "PVP Challenge Played"
+    ),
   };
 }
 

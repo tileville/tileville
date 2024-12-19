@@ -13,6 +13,7 @@ import { SpinnerWhite } from "../common/Spinner";
 import { generateChallengeName } from "@/lib/helpers";
 import { CustomTooltip } from "../common/CustomTooltip";
 import CustomCheckbox from "../common/CustomCheckbox";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 const INPUT_CLASS =
   "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
@@ -36,7 +37,7 @@ export const CreateChallengeModal = ({
   // Form states
   const [name, setName] = useState(generateChallengeName());
   const [entryFee, setEntryFee] = useState(PVP_CHALLENGES_MIN_ENTRY_FEE);
-  const [endTime, setEndTime] = useState("24"); // 24 hours default
+  const [endTime, setEndTime] = useState("8");
   const [maxParticipants, setMaxParticipants] = useState(2); // minimum 2 players
   const [isSpeedChallenge, setIsSpeedChallenge] = useState(false);
   const [speedDuration, setSpeedDuration] = useState(180); // 180 seconds default
@@ -44,6 +45,9 @@ export const CreateChallengeModal = ({
   const createChallengeMutation = useCreateChallenge(
     networkStore.address || ""
   );
+  const {
+    createdPVPChallenge: [logCreateChallenge, logCreateChallengeError],
+  } = usePosthogEvents();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,9 +74,21 @@ export const CreateChallengeModal = ({
         setCreatedChallengeInviteLink(inviteLink);
         setShowSuccessModal(true);
         onOpenChange(false);
+
+        logCreateChallenge({
+          walletAddress: networkStore.address,
+          challengeId: response.data.id,
+          challengeName: name,
+          isSpeedChallenge,
+          entryFee,
+        });
       }
-    } catch (error) {
-      console.error("Failed to create challenge:", error);
+    } catch (err) {
+      console.error("Failed to create challenge:", err);
+      const error = err as Error;
+      logCreateChallengeError(
+        error?.message || "Unknown error during challenge creation"
+      );
     } finally {
       setLoading(false);
     }
@@ -192,6 +208,13 @@ export const CreateChallengeModal = ({
                     onChange={(e) => setEndTime(e.target.value)}
                     required
                   >
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="5">5 hours</option>
+                    <option value="8">8 hours</option>
+                    <option value="13">13 hours</option>
+                    <option value="21">21 hours</option>
                     <option value="24">24 hours</option>
                     <option value="48">48 hours</option>
                     <option value="72">72 hours</option>

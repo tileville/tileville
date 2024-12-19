@@ -8,6 +8,7 @@ import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
 import VConsole from "vconsole";
+import { TelegramBanner } from "@/components/TelegramBanner/TelegramBanner";
 let vConsole: any;
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         {renderNavBar()}
         <div className="mx-auto max-h-[calc(100vh-200px)]"></div>
+        <TelegramBanner />
         {children}
         {renderFooter()}
       </QueryClientProvider>
