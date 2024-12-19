@@ -9,18 +9,39 @@ import {
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useNetworkStore } from "@/lib/stores/network";
+import { useTelegramStatus } from "@/db/react-query-hooks";
 
 export const TelegramBanner = () => {
   const [isVisible, setIsVisible] = useState(false); // Default to hidden
   const [isExiting, setIsExiting] = useState(false);
+  const networkStore = useNetworkStore();
+
+  const { data: isVerified, isLoading } = useTelegramStatus(
+    networkStore.address || ""
+  );
 
   useEffect(() => {
     const isBannerClosed = sessionStorage.getItem("telegram_banner_closed");
     const neverShow = localStorage.getItem("telegram_banner_never_show");
-    if (!isBannerClosed && !neverShow) {
+
+    // Only show banner if:
+    // 1. User is connected (has wallet address)
+    // 2. User is not verified on Telegram
+    // 3. Banner hasn't been closed this session
+    // 4. User hasn't chosen to never show the banner
+    if (
+      networkStore.address &&
+      !isVerified &&
+      !isBannerClosed &&
+      !neverShow &&
+      !isLoading
+    ) {
       setIsVisible(true);
+    } else {
+      setIsVisible(false);
     }
-  }, []);
+  }, [networkStore.address, isVerified, isLoading]);
 
   const handleClose = () => {
     setIsExiting(true);
