@@ -37,7 +37,7 @@ export const CreateChallengeModal = ({
   // Form states
   const [name, setName] = useState(generateChallengeName());
   const [entryFee, setEntryFee] = useState(PVP_CHALLENGES_MIN_ENTRY_FEE);
-  const [endTime, setEndTime] = useState("24"); // 24 hours default
+  const [endTime, setEndTime] = useState("8");
   const [maxParticipants, setMaxParticipants] = useState(2); // minimum 2 players
   const [isSpeedChallenge, setIsSpeedChallenge] = useState(false);
   const [speedDuration, setSpeedDuration] = useState(180); // 180 seconds default
@@ -208,6 +208,13 @@ export const CreateChallengeModal = ({
                     onChange={(e) => setEndTime(e.target.value)}
                     required
                   >
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="5">5 hours</option>
+                    <option value="8">8 hours</option>
+                    <option value="13">13 hours</option>
+                    <option value="21">21 hours</option>
                     <option value="24">24 hours</option>
                     <option value="48">48 hours</option>
                     <option value="72">72 hours</option>
