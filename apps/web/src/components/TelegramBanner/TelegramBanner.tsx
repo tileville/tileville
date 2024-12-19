@@ -1,4 +1,5 @@
 "use client";
+import { TILEVILLE_BOT_URL } from "@/constants";
 import {
   BellIcon,
   Cross2Icon,
@@ -80,7 +81,7 @@ export const TelegramBanner = () => {
         </ul>
 
         <Link
-          href={process.env.NEXT_PUBLIC_TILEVILLE_BOT_URL || "#"}
+          href={TILEVILLE_BOT_URL}
           target="_blank"
           className="block rounded-md bg-primary px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-primary/70"
         >
