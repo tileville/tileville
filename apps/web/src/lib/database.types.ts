@@ -231,9 +231,11 @@ export type Database = {
           entry_fee: number
           id: number
           invite_code: string
+          is_reward_sent: boolean
           is_speed_challenge: boolean
           max_participants: number
           name: string
+          reward_txn_hash: string | null
           speed_duration: number | null
           updated_at: string | null
         }
@@ -244,9 +246,11 @@ export type Database = {
           entry_fee?: number
           id?: number
           invite_code: string
+          is_reward_sent?: boolean
           is_speed_challenge?: boolean
           max_participants?: number
           name: string
+          reward_txn_hash?: string | null
           speed_duration?: number | null
           updated_at?: string | null
         }
@@ -257,9 +261,11 @@ export type Database = {
           entry_fee?: number
           id?: number
           invite_code?: string
+          is_reward_sent?: boolean
           is_speed_challenge?: boolean
           max_participants?: number
           name?: string
+          reward_txn_hash?: string | null
           speed_duration?: number | null
           updated_at?: string | null
         }
