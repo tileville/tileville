@@ -13,6 +13,7 @@ import { SpinnerWhite } from "../common/Spinner";
 import { generateChallengeName } from "@/lib/helpers";
 import { CustomTooltip } from "../common/CustomTooltip";
 import CustomCheckbox from "../common/CustomCheckbox";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 const INPUT_CLASS =
   "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
@@ -44,6 +45,9 @@ export const CreateChallengeModal = ({
   const createChallengeMutation = useCreateChallenge(
     networkStore.address || ""
   );
+  const {
+    createdPVPChallenge: [logCreateChallenge, logCreateChallengeError],
+  } = usePosthogEvents();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,9 +74,21 @@ export const CreateChallengeModal = ({
         setCreatedChallengeInviteLink(inviteLink);
         setShowSuccessModal(true);
         onOpenChange(false);
+
+        logCreateChallenge({
+          walletAddress: networkStore.address,
+          challengeId: response.data.id,
+          challengeName: name,
+          isSpeedChallenge,
+          entryFee,
+        });
       }
-    } catch (error) {
-      console.error("Failed to create challenge:", error);
+    } catch (err) {
+      console.error("Failed to create challenge:", err);
+      const error = err as Error;
+      logCreateChallengeError(
+        error?.message || "Unknown error during challenge creation"
+      );
     } finally {
       setLoading(false);
     }
