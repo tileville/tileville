@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 
 export const TelegramBanner = () => {
   const [isVisible, setIsVisible] = useState(false); // Default to hidden
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     const isBannerClosed = sessionStorage.getItem("telegram_banner_closed");
@@ -21,19 +22,29 @@ export const TelegramBanner = () => {
   }, []);
 
   const handleClose = () => {
-    setIsVisible(false);
-    sessionStorage.setItem("telegram_banner_closed", "true");
+    setIsExiting(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      sessionStorage.setItem("telegram_banner_closed", "true");
+    }, 300);
   };
 
   const handleNeverShow = () => {
-    setIsVisible(false);
-    localStorage.setItem("telegram_banner_never_show", "true");
+    setIsExiting(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      localStorage.setItem("telegram_banner_never_show", "true");
+    }, 300);
   };
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed right-4 top-20 z-50 w-80 rounded-lg border border-blue-100 bg-white p-4 shadow-lg">
+    <div
+      className={`telegram-banner fixed right-4 top-20 z-50 w-80 rounded-lg border border-blue-100 bg-white p-4 shadow-lg transition-transform duration-300 ${
+        isExiting ? "translate-x-full" : "translate-x-0"
+      }`}
+    >
       <button
         onClick={handleClose}
         className="absolute right-2 top-2 text-gray-400 hover:text-gray-600"

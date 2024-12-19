@@ -555,6 +555,10 @@ input[type="range"]:focus::-moz-range-thumb {
   margin-top: 8px;
 }
 
+.telegram-banner {
+  animation: slideIn 300ms ease;
+}
+
 @media screen and (max-width: 750px) {
   .text-primary-shadow {
     color: hsl(var(--primary));
