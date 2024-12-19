@@ -172,6 +172,13 @@ export const ChallengeDetails = ({
           {challenge.max_participants}
         </span>
       </div>
+      <div className="mb-2">
+        The winner will receive{" "}
+        <span className="font-semibold">
+          {participants.length * challenge.entry_fee - 1} MINA{" "}
+        </span>
+        rewards
+      </div>
       <div className="mb-6">
         <h3 className="mb-2 text-base font-medium">Share Invite Link</h3>
         <div className="relative">
@@ -322,9 +329,6 @@ export const ChallengeDetails = ({
             </button>
           )}
       </div>
-      <p className="mt-4 text-center text-xs text-[#5D6845]">
-        Note: The winner will receive all the rewards
-      </p>
     </div>
   );
 };
