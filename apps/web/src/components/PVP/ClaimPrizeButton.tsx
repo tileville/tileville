@@ -45,6 +45,7 @@ export const ClaimPrizeButton = ({
         
 Challenge ID: ${challengeId}
 Winner: ${winnerUsername || winnerAddress}
+Winner wallet Address: ${winnerAddress}
 Score: ${winnerScore}
 Entry Fees: ${challengeEntryFees}
 Prize Pool: ${challengeEntryFees * participantsLength} MINA
