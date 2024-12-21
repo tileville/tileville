@@ -51,6 +51,8 @@ export async function GET(request: NextRequest) {
         speed_duration: challenge.speed_duration,
         created_at: challenge.created_at,
         updated_at: challenge.updated_at,
+        is_reward_sent: challenge.is_reward_sent,
+        reward_txn_hash: challenge.reward_txn_hash,
       },
       participants: (challenge.participants || []).sort(
         (participant1, participant2) =>

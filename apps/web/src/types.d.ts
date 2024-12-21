@@ -100,6 +100,8 @@ interface Challenge {
   speed_duration: number | null;
   status: string;
   updated_at: string | null;
+  is_reward_sent: boolean;
+  reward_txn_hash: string | null;
 }
 
 export type ChallengeParticipant = {

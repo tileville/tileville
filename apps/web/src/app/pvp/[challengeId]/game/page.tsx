@@ -12,9 +12,10 @@ import {
   usePVPChallengeTransaction,
 } from "@/db/react-query-hooks";
 import { Spinner2 } from "@/components/common/Spinner";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { PVPEntryFeesModal } from "@/components/PVP/PVPEntryFeesModal";
 import { TransactionStatus } from "@/lib/types";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
 const PhaserLayer = dynamic(() => import("@/phaser/phaserLayer"), {
   ssr: false,
@@ -27,6 +28,9 @@ export default function PvPChallengePage() {
   const { data: challengeData, isLoading } = useChallengeById(
     params.challengeId
   );
+  const {
+    playedPVPChallenge: [logPlayPVPChallenge, logPlayPVPChallengeError],
+  } = usePosthogEvents();
 
   const { data: challengeTransaction } = usePVPChallengeTransaction(
     networkStore.address || "",
@@ -37,6 +41,33 @@ export default function PvPChallengePage() {
     challengeTransaction?.txn_hash || "",
     challengeTransaction?.txn_status as TransactionStatus,
     +params.challengeId
+  );
+
+  const trackGameCompletion = useCallback(
+    (score: number) => {
+      if (!networkStore.address || !challengeData?.data) return;
+
+      try {
+        logPlayPVPChallenge({
+          walletAddress: networkStore.address,
+          challengeId: +params.challengeId,
+          challengeName: challengeData.data.name,
+          score: score,
+          isSpeedChallenge: challengeData.data.is_speed_challenge,
+        });
+      } catch (error: unknown) {
+        logPlayPVPChallengeError(
+          error instanceof Error ? error.message : String(error)
+        );
+      }
+    },
+    [
+      networkStore.address,
+      challengeData,
+      params.challengeId,
+      logPlayPVPChallenge,
+      logPlayPVPChallengeError,
+    ]
   );
 
   if (!networkStore.address) {
@@ -151,6 +182,7 @@ export default function PvPChallengePage() {
             challengeId={+params.challengeId}
             txnHash={challengeTransaction?.txn_hash || ""}
             challengeName={challengeData?.data.name}
+            trackGameCompletion={trackGameCompletion}
           />
           <Toaster />
         </div>

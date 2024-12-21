@@ -25,6 +25,7 @@ type PhaserLayerProps = {
   challengeId?: number;
   isPvPGame?: boolean;
   challengeName?: string;
+  trackGameCompletion?: (score: number) => void;
 };
 
 export const PhaserLayer = ({
@@ -39,6 +40,7 @@ export const PhaserLayer = ({
   challengeId,
   isPvPGame,
   challengeName,
+  trackGameCompletion,
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
@@ -104,6 +106,7 @@ export const PhaserLayer = ({
           {
             onSuccess: () => {
               console.log("PVP game score saved successfully");
+              trackGameCompletion?.(score);
             },
             onError: (error) => {
               toast.error("Failed to save PVP game score");
@@ -129,6 +132,7 @@ export const PhaserLayer = ({
       isDemoGame,
       isPvPGame,
       challengeId,
+      trackGameCompletion,
     ]
   );
 
