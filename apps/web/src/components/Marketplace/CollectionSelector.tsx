@@ -39,6 +39,14 @@ const CollectionSelector: React.FC<CollectionSelectorProps> = ({
         >
           Minaty
         </DropdownMenu.Item>
+
+        <DropdownMenu.Item
+          key={NFT_COLLECTIONS.MINAPUNKS}
+          onClick={() => onSelect(NFT_COLLECTIONS.MINAPUNKS)}
+          className="hover:bg-primary"
+        >
+          MinaPunks
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
