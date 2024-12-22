@@ -8,6 +8,7 @@ export const FEEMASTER_PUBLIC_KEY_DEFAULT =
 export const MINTER_PRIVATE_KEY = process.env.MINTER_PRIVATE_KEY || "";
 export const TILEVILLE_NFT_BUCKET_NAME = "builder_nfts";
 export const MINATY_NFT_BUCKET_NAME = "minaty_nfts";
+export const MINAPUNKS_NFT_BUCKET_NAME = "minaty_nfts";
 export const MINANFT_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
 

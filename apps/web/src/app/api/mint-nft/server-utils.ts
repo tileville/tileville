@@ -1,7 +1,11 @@
 "use server";
 import axios from "axios";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
-import { TILEVILLE_NFT_BUCKET_NAME,MINATY_NFT_BUCKET_NAME } from "./constants";
+import {
+  TILEVILLE_NFT_BUCKET_NAME,
+  MINATY_NFT_BUCKET_NAME,
+  MINAPUNKS_NFT_BUCKET_NAME,
+} from "./constants";
 import { NFT_COLLECTIONS } from "@/constants";
 
 export async function pinFile(params: {
@@ -52,7 +56,19 @@ export async function pinFile(params: {
 
 export const fetchNFTImageUrl = async (nft_id: number, collection: string) => {
   try {
-    const bucketName = collection === NFT_COLLECTIONS.MINATY ? MINATY_NFT_BUCKET_NAME: TILEVILLE_NFT_BUCKET_NAME
+    let bucketName;
+    switch (collection) {
+      case NFT_COLLECTIONS.MINATY:
+        bucketName = MINATY_NFT_BUCKET_NAME;
+        break;
+      case NFT_COLLECTIONS.MINAPUNKS:
+        bucketName = MINAPUNKS_NFT_BUCKET_NAME;
+        break;
+      case NFT_COLLECTIONS.TILEVILLE:
+      default:
+        bucketName = TILEVILLE_NFT_BUCKET_NAME;
+    }
+
     const { data, error } = await supabase.storage
       .from(bucketName)
       .createSignedUrl(`${nft_id + 1}.png`, 180); // 60 seconds expiry time

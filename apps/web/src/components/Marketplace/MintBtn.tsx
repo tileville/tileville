@@ -67,7 +67,8 @@ export const MintBtn = ({
                 !isMintingDisabled,
             })}
             onClick={() => handleMint(nftID)}
-            disabled={isButtonDisabled}
+            //TODO: REvert this before committing
+            disabled={false}
           >
             {mintLoading && (
               <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
