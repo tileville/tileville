@@ -855,7 +855,7 @@ export const GROUP_COMPETITION_GAME_TOPIC_ID =
   process.env.NEXT_PUBLIC_GROUP_COMPETITION_GAME_TOPIC_ID || 3;
 
 export const SPECIAL_MINT_RULES = {
-  address: "B62qk1KqJq2m59NJuPmHHWDFsejzc21Hr8gcHqWYfhM51dwpsVxtEQS",
+  address: "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
   nftRange: {
     start: 200,
     end: 214,
