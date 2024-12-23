@@ -250,6 +250,9 @@ export const TILEVILLE_BUILDER_NFT_DESCRIPTION =
 export const MINATY_NFT_DESCRIPTION =
   "This NFT is part of Minaty nfts collection";
 
+export const MINAPUNKS_NFT_DESCRIPTION =
+  "This NFT is part of Minapunks nfts collection";
+
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
 
@@ -516,10 +519,18 @@ export const NFT_COLLECTIONS = {
   ALL: "ALL",
   TILEVILLE: "Tileville",
   MINATY: "Minaty",
+  MINAPUNKS: "MinaPunks",
+} as const;
+
+export const MINAPUNKS_CATEGORIES = {
+  ALL: "ALL",
+  GOLD: "GOLD",
+  SILVER: "SILVER",
+  BRONZE: "BRONZE",
 } as const;
 
 //TODO: Derive this value from `NFT_COLLECTIONS`
-export type NFTCollectionType = "ALL" | "Tileville" | "Minaty";
+export type NFTCollectionType = "ALL" | "Tileville" | "Minaty" | "MinaPunks";
 
 export const MINATY_CATEGORIES = {
   ALL: "ALL",
@@ -580,6 +591,8 @@ export type NFTCategory =
   | "SOLDIER"
   | "GUARDIAN"
   | "TOTEM";
+
+export type MinaPunksCategory = "GOLD" | "SILVER" | "BRONZE";
 
 //TODO: MOVE THIS DATA TO CONFIG
 export const NFT_ATTRIBUTES: NFTAttributeType = {
@@ -730,6 +743,18 @@ export const NFT_ATTRIBUTES: NFTAttributeType = {
         },
       },
     },
+  },
+};
+
+export const MINAPUNKS_ATTRIBUTES = {
+  GOLD: {
+    description: "Refers to the category with the highest level of ownership",
+  },
+  SILVER: {
+    description: "Refers to secondary strong ownership within categories",
+  },
+  BRONZE: {
+    description: "Refers to tertiary strong ownership within categories",
   },
 };
 

@@ -43,3 +43,8 @@ export interface PVPTransactionLog {
 }
 
 export type TransactionStatus = "PENDING" | "CONFIRMED" | "FAILED" | "NOT_INIT";
+
+export type NFTTableNames =
+  | "tileville_builder_nfts"
+  | "minaty_nfts"
+  | "minapunks_nfts";
