@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { fetchNFTImageUrl } from "./server-utils";
 // import { withAuth } from "../authMiddleware";
 import {
+  MINAPUNKS_NFT_DESCRIPTION,
   MINATY_NFT_DESCRIPTION,
   NFT_COLLECTIONS,
   TILEVILLE_BUILDER_NFT_DESCRIPTION,
@@ -13,6 +14,7 @@ import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { CHAIN_NAME, MINANFT_CONTRACT_ADDRESS, ProofOfNFT } from "./constants";
 import { pinFile } from "./server-utils";
 import { createFileFromImageUrl } from "./common-utils";
+import { NFTTableNames } from "@/lib/types";
 
 const postHandler = async (request: NextRequest) => {
   const payload = await request.json();
@@ -24,15 +26,32 @@ const postHandler = async (request: NextRequest) => {
   } = payload;
 
   //TODO: Make this generic
-  const tableName =
-    collection === NFT_COLLECTIONS.MINATY
-      ? "minaty_nfts"
-      : "tileville_builder_nfts";
+  let tableName: NFTTableNames;
+  switch (collection) {
+    case NFT_COLLECTIONS.MINATY:
+      tableName = "minaty_nfts";
+      break;
+    case NFT_COLLECTIONS.MINAPUNKS:
+      tableName = "minapunks_nfts";
+      break;
+    case NFT_COLLECTIONS.TILEVILLE:
+    default:
+      tableName = "tileville_builder_nfts";
+  }
 
-  const description =
-    collection === NFT_COLLECTIONS.MINATY
-      ? MINATY_NFT_DESCRIPTION
-      : TILEVILLE_BUILDER_NFT_DESCRIPTION;
+  let description;
+  switch (collection) {
+    case NFT_COLLECTIONS.MINATY:
+      description = MINATY_NFT_DESCRIPTION;
+      break;
+    case NFT_COLLECTIONS.MINAPUNKS:
+      description = MINAPUNKS_NFT_DESCRIPTION;
+      break;
+    case NFT_COLLECTIONS.TILEVILLE:
+    default:
+      description = TILEVILLE_BUILDER_NFT_DESCRIPTION;
+  }
+
   // const authSignature = request.headers.get("Auth-Signature");
 
   // console.log({ wallet_address, nft_id, txn_hash, authSignature });

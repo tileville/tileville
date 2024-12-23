@@ -1234,3 +1234,36 @@ export const useTelegramStatus = (wallet_address: string) => {
     cacheTime: 1000 * 60 * 30, // 30 minutes
   });
 };
+
+export const useMinaPunksNFTEntries = ({
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+  category = "ALL",
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+  category?: string;
+}) => {
+  return useQuery(
+    ["minapunks_nfts", sortOrder, searchTerm, currentPage, category],
+    async () => {
+      const params = [
+        `sortOrder=${sortOrder}`,
+        `searchTerm=${encodeURIComponent(searchTerm)}`,
+        `currentPage=${currentPage}`,
+        `category=${category}`,
+      ].join("&");
+
+      const response = await fetch(`/api/nfts/minapunks-nfts?${params}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+};

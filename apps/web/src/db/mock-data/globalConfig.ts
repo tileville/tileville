@@ -1,5 +1,5 @@
 export const MOCK_GLOBAL_CONFIG = {
-  nft_collections: ["Tileville", "Minaty"],
+  nft_collections: ["Tileville", "Minaty", "MinaPunks"],
   nft_collections_config: {
     "Tileville": {
       "total_nft_count": "150",
@@ -86,8 +86,13 @@ export const MOCK_GLOBAL_CONFIG = {
         "B62qrDNwVuFRKNpHiacEPEJsJgYaViKiuRjuuFGYsspt4wgeLJ8g3ty",
         "B62qqCtdu2g7bLGUEJH4KmR5GxG7kFMFNDc8MVW91azwhsAmMdYfeoy",
         "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
-      ]
-    }
+      ],
+    },
+    MinaPunks: {
+      nft_mint_start_date_time_utc: "2024-12-23T18:00:00Z",
+      is_mint_public: true,
+      fee_master_public_key:
+        "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
+    },
   },
-
-}
+};

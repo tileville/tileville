@@ -8,13 +8,15 @@ import {
   NFT_ATTRIBUTES,
   NFTCategory,
   NFT_COLLECTIONS,
+  MinaPunksCategory,
+  MINAPUNKS_ATTRIBUTES,
 } from "@/constants";
 import { Json } from "@/lib/database.types";
 
 type TraitsSectionType = {
   traits: Json;
   collection: NFTCollectionType;
-  category: NFTCategory | null;
+  category: NFTCategory | null | MinaPunksCategory;
 };
 
 type Trait = {
@@ -141,6 +143,39 @@ export const TraitsSection = ({
             </p>
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (collection === NFT_COLLECTIONS.MINAPUNKS) {
+    const parsedTraits = parseTraits(traits);
+    return (
+      <div className="mt-4 space-y-6">
+        <div className="space-y-4">
+          <h3 className="font-semibold">About {category}</h3>
+          <p className="text-sm leading-relaxed text-gray-700">
+            {MINAPUNKS_ATTRIBUTES[category as MinaPunksCategory].description}
+          </p>
+        </div>
+        {/* Traits */}
+        <div>
+          <h3 className="mb-4 font-semibold">Traits</h3>
+          <div className="">
+            <ul className="grid grid-cols-1 gap-4 text-center text-xs md:grid-cols-2">
+              {parsedTraits.map((trait) => (
+                <li
+                  key={trait.key}
+                  className="relative flex flex-col items-center gap-2 rounded-md bg-white px-3 py-5"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-black/70">{trait.key}</span>
+                  </div>
+                  <div className="text-md font-semibold">{trait.value}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }

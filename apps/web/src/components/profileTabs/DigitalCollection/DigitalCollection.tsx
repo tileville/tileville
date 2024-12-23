@@ -18,12 +18,14 @@ export default function DigitalCollection({
   walletAddress,
   isOwner,
 }: DigitalCollectionType) {
+  // Fetch Minaty NFTs
   const { mintNFTHitsResponse: minatyNfts = [], isLoading: isMinatyLoading } =
     useFetchNFTSAlgolia({
       owner: walletAddress,
       queryText: "MINATY",
     });
 
+  // Fetch Tileville NFTs
   const {
     mintNFTHitsResponse: tilevilleNfts = [],
     isLoading: isTilevilleLoading,
@@ -32,8 +34,17 @@ export default function DigitalCollection({
     queryText: "TILEVILLE BUILDER",
   });
 
-  const isLoading = isMinatyLoading || isTilevilleLoading;
-  const totalNfts = [...minatyNfts, ...tilevilleNfts];
+  // Fetch MinaPunks NFTs
+  const {
+    mintNFTHitsResponse: minaPunksNfts = [],
+    isLoading: isMinaPunksLoading,
+  } = useFetchNFTSAlgolia({
+    owner: walletAddress,
+    queryText: "MINAPUNKS",
+  });
+
+  const isLoading = isMinatyLoading || isTilevilleLoading || isMinaPunksLoading;
+  const totalNfts = [...minatyNfts, ...tilevilleNfts, ...minaPunksNfts];
 
   if (isLoading) {
     return (

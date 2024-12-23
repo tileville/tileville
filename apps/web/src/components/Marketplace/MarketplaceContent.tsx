@@ -6,7 +6,11 @@ import { useCallback, useState, useEffect, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { DropdownMenu } from "@radix-ui/themes";
 import { NFTModal } from "@/components/NFTModal";
-import { useNFTEntries, useMinatyNFTEntries } from "@/db/react-query-hooks";
+import {
+  useNFTEntries,
+  useMinatyNFTEntries,
+  useMinaPunksNFTEntries,
+} from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import { Pagination } from "@/components/common/Pagination";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
@@ -62,16 +66,33 @@ export default function MarketplaceContent() {
     currentPage,
   });
 
+  // Add this new query hook
+  const { data: minaPunksData, isLoading: minaPunksLoading } =
+    useMinaPunksNFTEntries({
+      sortOrder,
+      searchTerm,
+      currentPage,
+    });
+
   const displayData = useMemo(() => {
-    return selectedCollection === NFT_COLLECTIONS.TILEVILLE
-      ? tilevilleData
-      : minatyData;
-  }, [selectedCollection, tilevilleData, minatyData]);
+    switch (selectedCollection) {
+      case NFT_COLLECTIONS.TILEVILLE:
+        return tilevilleData;
+      case NFT_COLLECTIONS.MINATY:
+        return minatyData;
+      case NFT_COLLECTIONS.MINAPUNKS:
+        return minaPunksData;
+      default:
+        return tilevilleData;
+    }
+  }, [selectedCollection, tilevilleData, minatyData, minaPunksData]);
 
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     queryText:
       selectedCollection === "Tileville"
         ? "Tileville Builder"
+        : selectedCollection === "MinaPunks"
+        ? "MinaPunks"
         : selectedCollection,
   });
 
@@ -260,7 +281,7 @@ export default function MarketplaceContent() {
           )}
 
           <div className={`${renderStyle} pr-2 text-lg`}>
-            {tilevilleLoading || minatyLoading ? (
+            {tilevilleLoading || minatyLoading || minaPunksLoading ? (
               <MarketplaceLoading />
             ) : (
               <>
@@ -283,6 +304,8 @@ export default function MarketplaceContent() {
                       NFTCategory={
                         selectedCollection === NFT_COLLECTIONS.MINATY
                           ? nft.category
+                          : selectedCollection === NFT_COLLECTIONS.MINAPUNKS
+                          ? nft.category
                           : null
                       }
                     />
@@ -295,7 +318,7 @@ export default function MarketplaceContent() {
       </div>
 
       {/* Pagination */}
-      {tilevilleLoading || minatyLoading ? (
+      {tilevilleLoading || minatyLoading || minaPunksLoading ? (
         <Spinner2 />
       ) : (
         <Pagination
