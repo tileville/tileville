@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
   try {
     const tableName = name.toLowerCase().includes("minaty")
       ? "minaty_nfts"
+      : name.toLowerCase().includes("minapunks")
+      ? "minapunks_nfts"
       : "tileville_builder_nfts";
     const { data: nftData, error: nftFetchError } = await supabase
       .from(tableName)
