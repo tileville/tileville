@@ -25,28 +25,15 @@ const CollectionSelector: React.FC<CollectionSelectorProps> = ({
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="min-w-[190px] !bg-transparent backdrop-blur-2xl">
-        <DropdownMenu.Item
-          key={NFT_COLLECTIONS.TILEVILLE}
-          onClick={() => onSelect(NFT_COLLECTIONS.TILEVILLE)}
-          className="hover:bg-primary"
-        >
-          Tileville
-        </DropdownMenu.Item>
-        <DropdownMenu.Item
-          key={NFT_COLLECTIONS.MINATY}
-          onClick={() => onSelect(NFT_COLLECTIONS.MINATY)}
-          className="hover:bg-primary"
-        >
-          Minaty
-        </DropdownMenu.Item>
-
-        <DropdownMenu.Item
-          key={NFT_COLLECTIONS.MINAPUNKS}
-          onClick={() => onSelect(NFT_COLLECTIONS.MINAPUNKS)}
-          className="hover:bg-primary"
-        >
-          MinaPunks
-        </DropdownMenu.Item>
+        {Object.entries(NFT_COLLECTIONS).map(([key, value]) => (
+          <DropdownMenu.Item
+            key={key}
+            onClick={() => onSelect(value as NFTCollectionType)}
+            className="hover:bg-primary"
+          >
+            {value}
+          </DropdownMenu.Item>
+        ))}
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
