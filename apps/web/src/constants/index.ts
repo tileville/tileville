@@ -853,3 +853,11 @@ export const PVP_CHALLENGES_MIN_ENTRY_FEE = Number(
 
 export const GROUP_COMPETITION_GAME_TOPIC_ID =
   process.env.NEXT_PUBLIC_GROUP_COMPETITION_GAME_TOPIC_ID || 3;
+
+export const SPECIAL_MINT_RULES = {
+  address: "B62qk1KqJq2m59NJuPmHHWDFsejzc21Hr8gcHqWYfhM51dwpsVxtEQS",
+  nftRange: {
+    start: 200,
+    end: 214,
+  },
+} as const;
