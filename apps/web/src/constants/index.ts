@@ -516,7 +516,6 @@ export type NFTCollection =
   (typeof NFT_COLLECTIONS)[keyof typeof NFT_COLLECTIONS];
 
 export const NFT_COLLECTIONS = {
-  ALL: "ALL",
   TILEVILLE: "Tileville",
   MINATY: "Minaty",
   MINAPUNKS: "MinaPunks",
