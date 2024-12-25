@@ -322,17 +322,10 @@ export const generateChallengeMessageForGroup = ({
       ? `\n⏱️ **Speed Challenge Duration:** ${speedDuration} seconds`
       : ""
   }
-${
-  isPublic
-    ? "\n🌐 **Type:** Public Challenge - Anyone can join!"
-    : "\n🔒 **Type:** Private Challenge - Invite only"
-}${!isPublic ? `\n🔗 **Invite Link:** ${inviteLink}` : ""}
 
-${
-  isPublic
-    ? "Join now and compete for the prize! 🏆"
-    : "Share the invite link with your chosen competitors! 🤝"
-} 🚀`;
+${isPublic && `👥 **Invite Link:**: ${inviteLink}`}
+
+🚀`;
 
   return groupMessage;
 };
