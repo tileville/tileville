@@ -253,6 +253,9 @@ export const MINATY_NFT_DESCRIPTION =
 export const MINAPUNKS_NFT_DESCRIPTION =
   "This NFT is part of Minapunks nfts collection";
 
+export const ZKGOD_NFT_DESCRIPTION =
+  "This NFT is part of Zkgod nfts collection";
+
 export const PAGINATION_SIBLING_COUNT = 1;
 export const NFT_PAGE_SIZE = 20;
 
@@ -519,6 +522,7 @@ export const NFT_COLLECTIONS = {
   TILEVILLE: "Tileville",
   MINATY: "Minaty",
   MINAPUNKS: "MinaPunks",
+  ZKGOD: "ZKGod",
 } as const;
 
 export const MINAPUNKS_CATEGORIES = {
@@ -529,7 +533,12 @@ export const MINAPUNKS_CATEGORIES = {
 } as const;
 
 //TODO: Derive this value from `NFT_COLLECTIONS`
-export type NFTCollectionType = "ALL" | "Tileville" | "Minaty" | "MinaPunks";
+export type NFTCollectionType =
+  | "ALL"
+  | "Tileville"
+  | "Minaty"
+  | "MinaPunks"
+  | "ZKGod";
 
 export const MINATY_CATEGORIES = {
   ALL: "ALL",

@@ -2,7 +2,8 @@ export const MOCK_GLOBAL_CONFIG = {
   "nft_collections": [
     "Tileville",
     "Minaty",
-    "MinaPunks"
+    "MinaPunks",
+    "ZKGod"
   ],
   "nft_collections_config": {
     "Minaty": {
@@ -56,6 +57,12 @@ export const MOCK_GLOBAL_CONFIG = {
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
       "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z"
+    },
+    "ZKGod": {
+      "is_mint_public": false,
+      "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
+      "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
+      "nft_mint_start_date_time_utc": "2024-12-26T23:00:00Z"
     },
     "Tileville": {
       "is_mint_public": true,

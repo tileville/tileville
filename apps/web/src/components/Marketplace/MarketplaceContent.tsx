@@ -10,6 +10,7 @@ import {
   useNFTEntries,
   useMinatyNFTEntries,
   useMinaPunksNFTEntries,
+  useZKGodNFTEntries,
 } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import { Pagination } from "@/components/common/Pagination";
@@ -66,13 +67,18 @@ export default function MarketplaceContent() {
     currentPage,
   });
 
-  // Add this new query hook
   const { data: minaPunksData, isLoading: minaPunksLoading } =
     useMinaPunksNFTEntries({
       sortOrder,
       searchTerm,
       currentPage,
     });
+
+  const { data: zkGodData, isLoading: zkGodLoading } = useZKGodNFTEntries({
+    sortOrder,
+    searchTerm,
+    currentPage,
+  });
 
   const displayData = useMemo(() => {
     switch (selectedCollection) {
@@ -82,18 +88,31 @@ export default function MarketplaceContent() {
         return minatyData;
       case NFT_COLLECTIONS.MINAPUNKS:
         return minaPunksData;
+      case NFT_COLLECTIONS.ZKGOD:
+        return zkGodData;
       default:
         return tilevilleData;
     }
-  }, [selectedCollection, tilevilleData, minatyData, minaPunksData]);
+  }, [selectedCollection, tilevilleData, minatyData, minaPunksData, zkGodData]);
+
+  let queryText;
+  switch (selectedCollection) {
+    case NFT_COLLECTIONS.MINATY:
+      queryText = NFT_COLLECTIONS.MINATY;
+      break;
+    case NFT_COLLECTIONS.MINAPUNKS:
+      queryText = NFT_COLLECTIONS.MINAPUNKS;
+      break;
+    case NFT_COLLECTIONS.ZKGOD:
+      queryText = NFT_COLLECTIONS.ZKGOD;
+      break;
+    case NFT_COLLECTIONS.TILEVILLE:
+    default:
+      queryText = NFT_COLLECTIONS.TILEVILLE;
+  }
 
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
-    queryText:
-      selectedCollection === "Tileville"
-        ? "Tileville Builder"
-        : selectedCollection === "MinaPunks"
-        ? "MinaPunks"
-        : selectedCollection,
+    queryText,
   });
 
   const updateSearchParams = useCallback(
@@ -281,7 +300,10 @@ export default function MarketplaceContent() {
           )}
 
           <div className={`${renderStyle} pr-2 text-lg`}>
-            {tilevilleLoading || minatyLoading || minaPunksLoading ? (
+            {tilevilleLoading ||
+            minatyLoading ||
+            minaPunksLoading ||
+            zkGodLoading ? (
               <MarketplaceLoading />
             ) : (
               <>
@@ -318,7 +340,7 @@ export default function MarketplaceContent() {
       </div>
 
       {/* Pagination */}
-      {tilevilleLoading || minatyLoading || minaPunksLoading ? (
+      {tilevilleLoading || minatyLoading || minaPunksLoading || zkGodLoading ? (
         <Spinner2 />
       ) : (
         <Pagination

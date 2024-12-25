@@ -5,6 +5,7 @@ import {
   TILEVILLE_NFT_BUCKET_NAME,
   MINATY_NFT_BUCKET_NAME,
   MINAPUNKS_NFT_BUCKET_NAME,
+  ZKGOD_NFT_BUCKET_NAME,
 } from "./constants";
 import { NFT_COLLECTIONS } from "@/constants";
 
@@ -63,6 +64,9 @@ export const fetchNFTImageUrl = async (nft_id: number, collection: string) => {
         break;
       case NFT_COLLECTIONS.MINAPUNKS:
         bucketName = MINAPUNKS_NFT_BUCKET_NAME;
+        break;
+      case NFT_COLLECTIONS.ZKGOD:
+        bucketName = ZKGOD_NFT_BUCKET_NAME;
         break;
       case NFT_COLLECTIONS.TILEVILLE:
       default:
