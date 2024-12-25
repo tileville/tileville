@@ -4,7 +4,7 @@ import { Spinner } from "../common/Spinner";
 import {
   NFT_COLLECTIONS,
   NFTCollectionType,
-  SPECIAL_MINT_RULES,
+  COLLECTION_MINT_RULES,
 } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
@@ -19,9 +19,10 @@ type MintBtnType = {
   currentUserAddress: string;
 };
 
-const hasMinatyNFT = (nfts: Array<any>) => {
-  // Count the number of MINATY NFTs owned by the user
-  return nfts.filter((nft) => nft.name.toLowerCase().includes("minaty")).length;
+const hasCollectionNFTs = (nfts: Array<any>, collectionName: string) => {
+  return nfts.filter((nft) =>
+    nft.name.toLowerCase().includes(collectionName.toLowerCase())
+  ).length;
 };
 
 export const MintBtn = ({
@@ -36,44 +37,54 @@ export const MintBtn = ({
 }: MintBtnType) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
-    queryText: "MINATY",
   });
 
   const isSpecialNFT = (nftID: number) => {
+    const rules = COLLECTION_MINT_RULES[NFT_COLLECTIONS.MINATY]?.specialRules;
     return (
-      nftID >= SPECIAL_MINT_RULES.nftRange.start &&
-      nftID <= SPECIAL_MINT_RULES.nftRange.end &&
+      rules &&
+      nftID >= rules.nftRange.start &&
+      nftID <= rules.nftRange.end &&
       collection === NFT_COLLECTIONS.MINATY
     );
   };
 
-  const isMinatyNFT = collection === NFT_COLLECTIONS.MINATY;
+  const isUnauthorizedForSpecialNFT =
+    isSpecialNFT(nftID) &&
+    currentUserAddress !==
+      COLLECTION_MINT_RULES[NFT_COLLECTIONS.MINATY].specialRules.address;
+
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
 
-  const isUnauthorizedForSpecialNFT =
-    isSpecialNFT(nftID) && currentUserAddress !== SPECIAL_MINT_RULES.address;
+  const checkMintLimit = () => {
+    if (!mintNFTHitsResponse || !collection) return false;
 
-  // Count user's MINATY NFTs
-  const minatyNFTCount =
-    isMinatyNFT && mintNFTHitsResponse ? hasMinatyNFT(mintNFTHitsResponse) : 0;
+    const rules =
+      COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
+    if (!rules) return false;
 
-  // Disable button if user owns 3 or more MINATY NFTs
-  const userHasMaxMinatyNFT = minatyNFTCount >= 3;
+    const userNFTCount = hasCollectionNFTs(mintNFTHitsResponse, collection);
+    return userNFTCount >= rules.maxMintsPerWallet;
+  };
 
-  const isButtonDisabled = isMinatyNFT
-    ? isMintingStyledDisabled ||
-      isNotForSoldNFT ||
-      userHasMaxMinatyNFT ||
-      isUnauthorizedForSpecialNFT
-    : isMintingStyledDisabled;
+  const hasReachedMintLimit = checkMintLimit();
 
-  const displayText =
-    isMinatyNFT && userHasMaxMinatyNFT
-      ? "Max MINATY NFTs Owned"
-      : isUnauthorizedForSpecialNFT
-      ? "Not Authorized"
-      : btnText;
+  const isButtonDisabled =
+    isMintingStyledDisabled ||
+    isNotForSoldNFT ||
+    hasReachedMintLimit ||
+    isUnauthorizedForSpecialNFT;
+
+  const getDisplayText = () => {
+    if (hasReachedMintLimit) {
+      const rules =
+        COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
+      return `Max ${rules?.maxMintsPerWallet} NFTs Per Wallet`;
+    }
+    if (isUnauthorizedForSpecialNFT) return "Not Authorized";
+    return btnText;
+  };
 
   return (
     <Tooltip.Provider delayDuration={100}>
@@ -96,22 +107,22 @@ export const MintBtn = ({
                 <Spinner />
               </span>
             )}
-            {displayText}
+            {getDisplayText()}
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
           {(window.mina?.isPallad ||
-            userHasMaxMinatyNFT ||
+            hasReachedMintLimit ||
             isUnauthorizedForSpecialNFT) && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
             >
-              {userHasMaxMinatyNFT ? (
+              {hasReachedMintLimit ? (
                 <div className="max-w-md">
                   <p className="mb-2 font-bold">
-                    You already own the maximum of 3 MINATY NFTs. No more can be
-                    minted per wallet.
+                    You have reached the maximum number of NFTs allowed for this
+                    collection.
                   </p>
                 </div>
               ) : isUnauthorizedForSpecialNFT ? (
