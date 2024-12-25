@@ -89,79 +89,40 @@ export type Database = {
         }
         Relationships: []
       }
-      minapunks_nfts: {
-        Row: {
-          category: string
-          created_at: string
-          id: number
-          img_url: string
-          name: string
-          nft_id: number | null
-          owner_address: string | null
-          price: number
-          traits: Json | null
-          txn_hash: string | null
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          id?: number
-          img_url: string
-          name: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          id?: number
-          img_url?: string
-          name?: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price?: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Relationships: []
-      }
       minaty_nfts: {
         Row: {
-          category: Database["public"]["Enums"]["nft_category"]
+          category: Database["public"]["Enums"]["nft_category"] | null
           created_at: string
           id: number
-          img_url: string
-          name: string
+          img_url: string | null
+          name: string | null
           nft_id: number | null
           owner_address: string | null
-          price: number
+          price: number | null
           traits: Json | null
           txn_hash: string | null
         }
         Insert: {
-          category: Database["public"]["Enums"]["nft_category"]
+          category?: Database["public"]["Enums"]["nft_category"] | null
           created_at?: string
           id?: number
-          img_url: string
-          name: string
+          img_url?: string | null
+          name?: string | null
           nft_id?: number | null
           owner_address?: string | null
-          price: number
+          price?: number | null
           traits?: Json | null
           txn_hash?: string | null
         }
         Update: {
-          category?: Database["public"]["Enums"]["nft_category"]
+          category?: Database["public"]["Enums"]["nft_category"] | null
           created_at?: string
           id?: number
-          img_url?: string
-          name?: string
+          img_url?: string | null
+          name?: string | null
           nft_id?: number | null
           owner_address?: string | null
-          price?: number
+          price?: number | null
           traits?: Json | null
           txn_hash?: string | null
         }
@@ -225,7 +186,7 @@ export type Database = {
           played_at: string | null
           score: number | null
           txn_hash: string | null
-          txn_status: string | null
+          txn_status: string
           wallet_address: string
         }
         Insert: {
@@ -237,7 +198,7 @@ export type Database = {
           played_at?: string | null
           score?: number | null
           txn_hash?: string | null
-          txn_status?: string | null
+          txn_status?: string
           wallet_address: string
         }
         Update: {
@@ -249,7 +210,7 @@ export type Database = {
           played_at?: string | null
           score?: number | null
           txn_hash?: string | null
-          txn_status?: string | null
+          txn_status?: string
           wallet_address?: string
         }
         Relationships: [
@@ -270,6 +231,7 @@ export type Database = {
           entry_fee: number
           id: number
           invite_code: string
+          is_public: boolean
           is_reward_sent: boolean
           is_speed_challenge: boolean
           max_participants: number
@@ -285,6 +247,7 @@ export type Database = {
           entry_fee?: number
           id?: number
           invite_code: string
+          is_public?: boolean
           is_reward_sent?: boolean
           is_speed_challenge?: boolean
           max_participants?: number
@@ -300,6 +263,7 @@ export type Database = {
           entry_fee?: number
           id?: number
           invite_code?: string
+          is_public?: boolean
           is_reward_sent?: boolean
           is_speed_challenge?: boolean
           max_participants?: number
@@ -309,6 +273,53 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      pvp_transaction_logs: {
+        Row: {
+          amount: number
+          challenge_id: number
+          created_at: string
+          id: number
+          is_game_played: boolean
+          network: string
+          txn_hash: string
+          txn_status: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          amount: number
+          challenge_id: number
+          created_at?: string
+          id?: number
+          is_game_played?: boolean
+          network?: string
+          txn_hash: string
+          txn_status?: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          amount?: number
+          challenge_id?: number
+          created_at?: string
+          id?: number
+          is_game_played?: boolean
+          network?: string
+          txn_hash?: string
+          txn_status?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pvp_transaction_logs_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "pvp_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       signup_emails: {
         Row: {
@@ -333,21 +344,21 @@ export type Database = {
       }
       telegram_auth: {
         Row: {
-          authenticated: boolean | null
+          authenticated: boolean
           chat_id: string | null
           created_at: string
           id: number
           wallet_address: string | null
         }
         Insert: {
-          authenticated?: boolean | null
+          authenticated?: boolean
           chat_id?: string | null
           created_at?: string
           id?: number
           wallet_address?: string | null
         }
         Update: {
-          authenticated?: boolean | null
+          authenticated?: boolean
           chat_id?: string | null
           created_at?: string
           id?: number
@@ -541,42 +552,6 @@ export type Database = {
           is_redeemed?: boolean
           redeemed_at?: string | null
           redeemed_by?: string | null
-        }
-        Relationships: []
-      }
-      zkgod_nfts: {
-        Row: {
-          created_at: string
-          id: number
-          img_url: string
-          name: string
-          nft_id: number | null
-          owner_address: string | null
-          price: number
-          traits: Json | null
-          txn_hash: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          img_url: string
-          name: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price: number
-          traits?: Json | null
-          txn_hash?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          img_url?: string
-          name?: string
-          nft_id?: number | null
-          owner_address?: string | null
-          price?: number
-          traits?: Json | null
-          txn_hash?: string | null
         }
         Relationships: []
       }

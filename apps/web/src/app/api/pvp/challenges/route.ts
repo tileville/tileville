@@ -27,6 +27,7 @@ const postHandler = async (request: NextRequest) => {
       max_participants,
       is_speed_challenge,
       speed_duration,
+      is_public,
     } = payload;
 
     const challenge: PVPChallengeInsert = {
@@ -38,8 +39,8 @@ const postHandler = async (request: NextRequest) => {
       max_participants,
       is_speed_challenge,
       speed_duration: is_speed_challenge ? speed_duration : null,
+      is_public,
     };
-
     const { data: challengeData, error: challengeError } = await supabase
       .from("pvp_challenges")
       .insert(challenge)
@@ -78,6 +79,7 @@ const postHandler = async (request: NextRequest) => {
       entryFee: challenge.entry_fee || 0,
       username: userProfile?.username || null,
       maxParticipants: 2,
+      isPublic: is_public,
     });
 
     await fetch(`${ADMIN_API_URL}/api/telegram/group-message`, {

@@ -1098,6 +1098,7 @@ export const useCreateChallenge = (wallet_address: string) => {
       max_participants: number;
       is_speed_challenge: boolean;
       speed_duration?: number;
+      is_public: boolean;
     }) => {
       const response = await fetch("/api/pvp/challenges", {
         method: "POST",

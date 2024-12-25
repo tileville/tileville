@@ -295,6 +295,7 @@ type generateChallengeMessageForGroupType = {
   entryFee: number;
   username: string | null;
   maxParticipants: number;
+  isPublic: boolean;
 };
 
 export const generateChallengeMessageForGroup = ({
@@ -306,21 +307,32 @@ export const generateChallengeMessageForGroup = ({
   entryFee,
   username,
   maxParticipants,
+  isPublic,
 }: generateChallengeMessageForGroupType) => {
+  const inviteLink = generatePVPChallengeInviteLink(walletAddress);
+
   const groupMessage = `🎉 A New Challenge Awaits!
 
-  🌟 **Challenge Name:** "${challengeName}"
-  👤 **Created By:** ${username || `Wallet ${walletAddress.slice(0, 6)}`}
-  💰 **Entry Fee:** ${entryFee} MINA
-  👥 **Max Participants:** ${maxParticipants}
-  ⏰ **End Time:** ${new Date(endTime).toLocaleString()}${
+🌟 **Challenge Name:** "${challengeName}"
+👤 **Created By:** ${username || `Wallet ${walletAddress.slice(0, 6)}`}
+💰 **Entry Fee:** ${entryFee} MINA
+👥 **Max Participants:** ${maxParticipants}
+⏰ **End Time:** ${new Date(endTime).toLocaleString()}${
     isSpeedChallenge
       ? `\n⏱️ **Speed Challenge Duration:** ${speedDuration} seconds`
       : ""
   }
-  
-  Don't miss out on exciting opportunity to compete and win! 🚀
-  `;
+${
+  isPublic
+    ? "\n🌐 **Type:** Public Challenge - Anyone can join!"
+    : "\n🔒 **Type:** Private Challenge - Invite only"
+}${!isPublic ? `\n🔗 **Invite Link:** ${inviteLink}` : ""}
+
+${
+  isPublic
+    ? "Join now and compete for the prize! 🏆"
+    : "Share the invite link with your chosen competitors! 🤝"
+} 🚀`;
 
   return groupMessage;
 };
