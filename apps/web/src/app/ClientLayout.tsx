@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
 import VConsole from "vconsole";
 import { TelegramBanner } from "@/components/TelegramBanner/TelegramBanner";
+import { SnowFlakes } from "@/components/common/SnowFlakes";
 let vConsole: any;
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
         {renderNavBar()}
         <div className="mx-auto max-h-[calc(100vh-200px)]"></div>
         <TelegramBanner />
+        <SnowFlakes />
         {children}
         {renderFooter()}
       </QueryClientProvider>
