@@ -328,11 +328,17 @@ export const NFTModal = ({
                     />
                   )}
               </Flex>
-              <TraitsSection
-                traits={traits}
-                collection={collection}
-                category={NFTCategory}
-              />
+              {/* Inside Dialog.Content, before closing div */}
+              {traits &&
+                typeof traits === "object" &&
+                traits !== null &&
+                Object.keys(traits).length > 0 && (
+                  <TraitsSection
+                    traits={traits}
+                    collection={collection}
+                    category={NFTCategory}
+                  />
+                )}
             </div>
           </div>
           <Dialog.Close>
