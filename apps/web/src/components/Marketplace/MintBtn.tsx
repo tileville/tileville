@@ -42,7 +42,8 @@ export const MintBtn = ({
   const isSpecialNFT = (nftID: number) => {
     return (
       nftID >= SPECIAL_MINT_RULES.nftRange.start &&
-      nftID <= SPECIAL_MINT_RULES.nftRange.end
+      nftID <= SPECIAL_MINT_RULES.nftRange.end &&
+      collection === NFT_COLLECTIONS.MINATY
     );
   };
 
