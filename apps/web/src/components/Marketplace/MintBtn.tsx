@@ -1,7 +1,11 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
-import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
+import {
+  NFT_COLLECTIONS,
+  NFTCollectionType,
+  SPECIAL_MINT_RULES,
+} from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
 type MintBtnType = {
@@ -35,6 +39,13 @@ export const MintBtn = ({
     queryText: "MINATY",
   });
 
+  const isSpecialNFT = (nftID: number) => {
+    return (
+      nftID >= SPECIAL_MINT_RULES.nftRange.start &&
+      nftID <= SPECIAL_MINT_RULES.nftRange.end
+    );
+  };
+
   const isMinatyNFT = collection === NFT_COLLECTIONS.MINATY;
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
@@ -47,11 +58,18 @@ export const MintBtn = ({
   const userHasMaxMinatyNFT = minatyNFTCount >= 3;
 
   const isButtonDisabled = isMinatyNFT
-    ? isMintingStyledDisabled || isNotForSoldNFT || userHasMaxMinatyNFT
+    ? isMintingStyledDisabled ||
+      isNotForSoldNFT ||
+      userHasMaxMinatyNFT ||
+      (isSpecialNFT(nftID) && currentUserAddress !== SPECIAL_MINT_RULES.address)
     : isMintingStyledDisabled;
 
   const displayText =
-    isMinatyNFT && userHasMaxMinatyNFT ? "Max MINATY NFTs Owned" : btnText;
+    isMinatyNFT && userHasMaxMinatyNFT
+      ? "Max MINATY NFTs Owned"
+      : isSpecialNFT(nftID) && currentUserAddress !== SPECIAL_MINT_RULES.address
+      ? "Not Authorized"
+      : btnText;
 
   return (
     <Tooltip.Provider delayDuration={100}>
