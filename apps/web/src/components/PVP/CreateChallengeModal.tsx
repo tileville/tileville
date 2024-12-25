@@ -33,6 +33,7 @@ export const CreateChallengeModal = ({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdChallengeInviteLink, setCreatedChallengeInviteLink] =
     useState("");
+  const [isPublic, setIsPublic] = useState(true);
 
   // Form states
   const [name, setName] = useState(generateChallengeName());
@@ -67,6 +68,7 @@ export const CreateChallengeModal = ({
         max_participants: maxParticipants,
         is_speed_challenge: isSpeedChallenge,
         speed_duration: isSpeedChallenge ? speedDuration : undefined,
+        is_public: isPublic,
       });
 
       if (response.success) {
@@ -323,6 +325,49 @@ export const CreateChallengeModal = ({
                     </button>
                   </div>
                 </div>
+              </div>
+
+              {/* Privacy Settings */}
+              <div className="col-span-2">
+                <div className="mb-2 flex justify-between">
+                  <div className="flex items-center justify-start gap-1">
+                    <label className="block font-medium">
+                      Challenge Privacy
+                    </label>
+                    <CustomTooltip
+                      tooltipContent={
+                        isPublic
+                          ? "Challenge will be shared in TileVille Telegram for anyone to join"
+                          : "Challenge link shared only with players you choose"
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      checked={isPublic}
+                      onChange={() => setIsPublic(true)}
+                      className="h-4 w-4"
+                    />
+                    <span>Public</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      checked={!isPublic}
+                      onChange={() => setIsPublic(false)}
+                      className="h-4 w-4"
+                    />
+                    <span>Private</span>
+                  </label>
+                </div>
+                <p className="mt-2 text-sm text-[#5D6845]">
+                  {isPublic
+                    ? "Challenge will be shared in TileVille Telegram for anyone to join"
+                    : "Challenge link shared only with players you choose"}
+                </p>
               </div>
             </div>
 
