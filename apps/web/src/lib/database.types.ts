@@ -544,6 +544,42 @@ export type Database = {
         }
         Relationships: []
       }
+      zkgod_nfts: {
+        Row: {
+          created_at: string
+          id: number
+          img_url: string
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          img_url: string
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          img_url?: string
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
