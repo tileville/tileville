@@ -296,6 +296,7 @@ type generateChallengeMessageForGroupType = {
   username: string | null;
   maxParticipants: number;
   isPublic: boolean;
+  inviteLink: string;
 };
 
 export const generateChallengeMessageForGroup = ({
@@ -308,9 +309,8 @@ export const generateChallengeMessageForGroup = ({
   username,
   maxParticipants,
   isPublic,
+  inviteLink,
 }: generateChallengeMessageForGroupType) => {
-  const inviteLink = generatePVPChallengeInviteLink(walletAddress);
-
   const groupMessage = `🎉 A New Challenge Awaits!
 
 🌟 **Challenge Name:** "${challengeName}"

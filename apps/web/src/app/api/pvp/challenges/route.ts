@@ -70,6 +70,8 @@ const postHandler = async (request: NextRequest) => {
       .eq("authenticated", true)
       .single();
 
+    const inviteLink = `https://tileville.xyz/pvp/invite/${challengeData.invite_code}`;
+
     const groupMessage = generateChallengeMessageForGroup({
       challengeName: name,
       walletAddress: wallet_address,
@@ -80,6 +82,7 @@ const postHandler = async (request: NextRequest) => {
       username: userProfile?.username || null,
       maxParticipants: 2,
       isPublic: is_public,
+      inviteLink: inviteLink,
     });
 
     await fetch(`${ADMIN_API_URL}/api/telegram/group-message`, {
@@ -98,7 +101,6 @@ const postHandler = async (request: NextRequest) => {
     if (telegramAuth?.chat_id) {
       const displayName =
         userProfile?.username || `Wallet ${wallet_address.slice(0, 6)}`;
-      const inviteLink = `https://tileville.xyz/pvp/invite/${challengeData.invite_code}`;
 
       const message = `🎮 Challenge Created!\n\nHey ${displayName}! Your challenge "${name}" has been created successfully.\n\nDetails:\n- Entry Fee: ${entry_fee} MINA\n- Max Participants: ${max_participants}\n- End Time: ${new Date(
         end_time
@@ -116,6 +118,7 @@ const postHandler = async (request: NextRequest) => {
 
     return Response.json({ success: true, data: challengeData });
   } catch (error: any) {
+    console.log("ERROR", error);
     return Response.json(
       { success: false, error: error.message },
       { status: 500 }
