@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
-import { NFT_COLLECTIONS } from "@/constants";
 import { NFTTableNames } from "@/lib/types";
 
 export async function POST(request: NextRequest) {
@@ -17,6 +16,8 @@ export async function POST(request: NextRequest) {
       tableName = "minaty_nfts";
     } else if (name.toLowerCase().includes("minapunk")) {
       tableName = "minapunks_nfts";
+    } else if (name.toLowerCase().includes("zkgod")) {
+      tableName = "zkgod_nfts";
     } else {
       tableName = "tileville_builder_nfts";
     }
@@ -50,10 +51,8 @@ export async function POST(request: NextRequest) {
 
     const {
       price,
-      collection = NFT_COLLECTIONS.TILEVILLE, // default to TILEVILLE if not specified
     }: {
       price: number;
-      collection?: string;
       traits: any;
     } = nftData[0];
 
@@ -72,7 +71,6 @@ export async function POST(request: NextRequest) {
       {
         name,
         price: price - 1,
-        collection,
         success: true,
       },
       { status: 200 }

@@ -413,6 +413,11 @@ export const TABS_HEADINGS = [
 
 export const TRACKS = [
   {
+    url: "/sfx/christmasSound.mp3",
+    title: "Christmas",
+    tags: ["Christmas"],
+  },
+  {
     url: "/sfx/ambience.wav",
     title: "Ambience",
     tags: ["house"],
