@@ -79,6 +79,7 @@ const postHandler = async (request: NextRequest) => {
       entryFee: challenge.entry_fee || 0,
       username: userProfile?.username || null,
       maxParticipants: 2,
+      isPublic: is_public,
     });
 
     await fetch(`${ADMIN_API_URL}/api/telegram/group-message`, {
