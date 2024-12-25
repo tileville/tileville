@@ -50,6 +50,9 @@ export const MintBtn = ({
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
 
+  const isUnauthorizedForSpecialNFT =
+    isSpecialNFT(nftID) && currentUserAddress !== SPECIAL_MINT_RULES.address;
+
   // Count user's MINATY NFTs
   const minatyNFTCount =
     isMinatyNFT && mintNFTHitsResponse ? hasMinatyNFT(mintNFTHitsResponse) : 0;
@@ -61,13 +64,13 @@ export const MintBtn = ({
     ? isMintingStyledDisabled ||
       isNotForSoldNFT ||
       userHasMaxMinatyNFT ||
-      (isSpecialNFT(nftID) && currentUserAddress !== SPECIAL_MINT_RULES.address)
+      isUnauthorizedForSpecialNFT
     : isMintingStyledDisabled;
 
   const displayText =
     isMinatyNFT && userHasMaxMinatyNFT
       ? "Max MINATY NFTs Owned"
-      : isSpecialNFT(nftID) && currentUserAddress !== SPECIAL_MINT_RULES.address
+      : isUnauthorizedForSpecialNFT
       ? "Not Authorized"
       : btnText;
 
@@ -96,7 +99,9 @@ export const MintBtn = ({
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          {(window.mina?.isPallad || userHasMaxMinatyNFT) && (
+          {(window.mina?.isPallad ||
+            userHasMaxMinatyNFT ||
+            isUnauthorizedForSpecialNFT) && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
@@ -106,6 +111,12 @@ export const MintBtn = ({
                   <p className="mb-2 font-bold">
                     You already own the maximum of 3 MINATY NFTs. No more can be
                     minted per wallet.
+                  </p>
+                </div>
+              ) : isUnauthorizedForSpecialNFT ? (
+                <div className="max-w-md">
+                  <p className="mb-2 font-bold">
+                    This NFT can only be minted by the collection owner.
                   </p>
                 </div>
               ) : (
