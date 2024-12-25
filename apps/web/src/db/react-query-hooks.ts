@@ -1239,21 +1239,18 @@ export const useMinaPunksNFTEntries = ({
   sortOrder = "desc",
   searchTerm,
   currentPage,
-  category = "ALL",
 }: {
   sortOrder: "asc" | "desc";
   searchTerm: string;
   currentPage: number;
-  category?: string;
 }) => {
   return useQuery(
-    ["minapunks_nfts", sortOrder, searchTerm, currentPage, category],
+    ["minapunks_nfts", sortOrder, searchTerm, currentPage],
     async () => {
       const params = [
         `sortOrder=${sortOrder}`,
         `searchTerm=${encodeURIComponent(searchTerm)}`,
         `currentPage=${currentPage}`,
-        `category=${category}`,
       ].join("&");
 
       const response = await fetch(`/api/nfts/minapunks-nfts?${params}`);
