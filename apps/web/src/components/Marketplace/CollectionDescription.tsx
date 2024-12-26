@@ -16,15 +16,15 @@ export const CollectionDescription = () => {
           <p className="text-[#C5E4A8]">
             In an era where privacy is a luxury and true freedom lies in
             anonymity, ZKgod emerges as the beacon of change. Each NFT in this
-            collection is more than just digital art - it's your key to the
+            collection is more than just digital art - it&apos;s your key to the
             future of privacy-first innovation.
           </p>
 
           <p className="text-[#C5E4A8]">
-            As a ZKgod holder, you're not just collecting art - you're joining
-            an elite movement that's redefining digital privacy. Your NFT serves
-            as your gateway to exclusive Silent Airdrops and puts you at the
-            forefront of the zero-knowledge revolution.
+            As a ZKgod holder, you&apos;re not just collecting art - you&apos;re
+            joining an elite movement that&apos;s redefining digital privacy.
+            Your NFT serves as your gateway to exclusive Silent Airdrops and
+            puts you at the forefront of the zero-knowledge revolution.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
