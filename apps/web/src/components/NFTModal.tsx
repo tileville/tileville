@@ -79,6 +79,7 @@ export const NFTModal = ({
   const isMintingNotStarted = isFuture(nftMintStartDate);
   const collectionOwner =
     collectionConfig.owner_address || DEFAULT_TRASURY_ADDRESS;
+  const maxMintsPerWallet = collectionConfig.max_mints_per_wallet;
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
@@ -299,6 +300,7 @@ export const NFTModal = ({
                   currentUserAddress={networkStore.address || ""}
                   isPublicMint={isPublicMint}
                   collectionOwner={collectionOwner}
+                  maxMintsPerWallet={maxMintsPerWallet}
                 />
 
                 {isAvailableToPurchase && (

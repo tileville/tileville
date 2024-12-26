@@ -1294,6 +1294,9 @@ export const useZKGodNFTEntries = ({
     },
     {
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     }
   );
 };

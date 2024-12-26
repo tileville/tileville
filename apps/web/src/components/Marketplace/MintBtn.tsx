@@ -1,7 +1,7 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
-import { NFT_COLLECTIONS, NFTCollectionType, COLLECTION_MINT_RULES } from "@/constants";
+import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
 type MintBtnType = {
@@ -15,6 +15,7 @@ type MintBtnType = {
   currentUserAddress: string;
   isPublicMint: boolean;
   collectionOwner: string;
+  maxMintsPerWallet?: number;
 };
 
 const hasCollectionNFTs = (nfts: Array<any>, collectionName: string) => {
@@ -34,11 +35,13 @@ export const MintBtn = ({
   currentUserAddress,
   isPublicMint,
   collectionOwner,
+  maxMintsPerWallet,
 }: MintBtnType) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
   });
 
+  console.log("mintNFTHitsResponse", mintNFTHitsResponse);
   // Check if user is collection owner
   const isOwner = currentUserAddress === collectionOwner;
 
@@ -51,29 +54,26 @@ export const MintBtn = ({
   const checkMintLimit = () => {
     // Collection owner is exempt from mint limits
     if (isOwner) return false;
-    
-    if (!mintNFTHitsResponse || !collection) return false;
 
-    const rules = COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
-    if (!rules) return false;
+    // If maxMintsPerWallet is undefined, there is no limit
+    if (!maxMintsPerWallet || !mintNFTHitsResponse || !collection) return false;
 
     const userNFTCount = hasCollectionNFTs(mintNFTHitsResponse, collection);
-    return userNFTCount >= rules.maxMintsPerWallet;
+    return userNFTCount >= maxMintsPerWallet;
   };
 
   const hasReachedMintLimit = checkMintLimit();
 
   const isButtonDisabled =
-    isMintingStyledDisabled || 
-    isNotForSoldNFT || 
+    isMintingStyledDisabled ||
+    isNotForSoldNFT ||
     isUnauthorizedMint ||
     (!isOwner && hasReachedMintLimit);
 
   const getDisplayText = () => {
     if (isUnauthorizedMint) return "Only Owner Can Mint";
     if (hasReachedMintLimit) {
-      const rules = COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
-      return `Max ${rules?.maxMintsPerWallet} NFTs Per Wallet`;
+      return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
     }
     return btnText;
   };
@@ -103,7 +103,9 @@ export const MintBtn = ({
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          {(window.mina?.isPallad || isUnauthorizedMint || hasReachedMintLimit) && (
+          {(window.mina?.isPallad ||
+            isUnauthorizedMint ||
+            hasReachedMintLimit) && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
@@ -111,13 +113,15 @@ export const MintBtn = ({
               {isUnauthorizedMint ? (
                 <div className="max-w-md">
                   <p className="mb-2 font-bold">
-                    This NFT is currently only available for minting by the collection owner.
+                    This NFT is currently only available for minting by the
+                    collection owner.
                   </p>
                 </div>
               ) : hasReachedMintLimit ? (
                 <div className="max-w-md">
                   <p className="mb-2 font-bold">
-                    You have reached the maximum number of NFTs allowed for this collection.
+                    You have reached the maximum number of NFTs allowed for this
+                    collection.
                   </p>
                 </div>
               ) : (
