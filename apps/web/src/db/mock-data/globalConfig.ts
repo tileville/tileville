@@ -62,7 +62,7 @@ export const MOCK_GLOBAL_CONFIG = {
       "is_mint_public": true,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-26T12:00:00Z"
+      "nft_mint_start_date_time_utc": "2024-12-26T6:00:00Z"
     },
     "Tileville": {
       "is_mint_public": true,
