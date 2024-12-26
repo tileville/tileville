@@ -13,6 +13,7 @@ import {
   NFTCollectionType,
   NFTCategory,
   DEFAULT_TRASURY_ADDRESS,
+  NFT_COLLECTIONS,
 } from "@/constants";
 import Link from "next/link";
 import { getTime, isFuture } from "date-fns";
@@ -30,6 +31,7 @@ import { TraitsSection } from "./Marketplace/TraitsSection";
 import { AlreadyMintedContent } from "./Marketplace/AlreadyMintedContent";
 import { NFTModalTriggerContent } from "./Marketplace/NFTModalTriggerContent";
 import { CountdownTimer } from "./common/CountdownTimer";
+import { CollectionDescription } from "./Marketplace/CollectionDescription";
 
 export const NFTModal = ({
   traits,
@@ -341,6 +343,12 @@ export const NFTModal = ({
                   )}
               </Flex>
               {/* Inside Dialog.Content, before closing div */}
+
+              <div>
+                {collection === NFT_COLLECTIONS.ZKGOD && (
+                  <CollectionDescription />
+                )}
+              </div>
               {traits &&
                 typeof traits === "object" &&
                 traits !== null &&
