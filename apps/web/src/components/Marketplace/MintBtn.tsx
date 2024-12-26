@@ -1,11 +1,7 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
-import {
-  NFT_COLLECTIONS,
-  NFTCollectionType,
-  COLLECTION_MINT_RULES,
-} from "@/constants";
+import { NFT_COLLECTIONS, NFTCollectionType, COLLECTION_MINT_RULES } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 
 type MintBtnType = {
@@ -17,6 +13,8 @@ type MintBtnType = {
   nftID: number;
   collection: NFTCollectionType;
   currentUserAddress: string;
+  isPublicMint: boolean;
+  collectionOwner: string;
 };
 
 const hasCollectionNFTs = (nfts: Array<any>, collectionName: string) => {
@@ -34,34 +32,29 @@ export const MintBtn = ({
   nftID,
   collection,
   currentUserAddress,
+  isPublicMint,
+  collectionOwner,
 }: MintBtnType) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
   });
 
-  const isSpecialNFT = (nftID: number) => {
-    const rules = COLLECTION_MINT_RULES[NFT_COLLECTIONS.MINATY]?.specialRules;
-    return (
-      rules &&
-      nftID >= rules.nftRange.start &&
-      nftID <= rules.nftRange.end &&
-      collection === NFT_COLLECTIONS.MINATY
-    );
-  };
+  // Check if user is collection owner
+  const isOwner = currentUserAddress === collectionOwner;
 
-  const isUnauthorizedForSpecialNFT =
-    isSpecialNFT(nftID) &&
-    currentUserAddress !==
-      COLLECTION_MINT_RULES[NFT_COLLECTIONS.MINATY].specialRules.address;
+  // Check if the current user is authorized to mint
+  const isUnauthorizedMint = !isPublicMint && !isOwner;
 
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
 
   const checkMintLimit = () => {
+    // Collection owner is exempt from mint limits
+    if (isOwner) return false;
+    
     if (!mintNFTHitsResponse || !collection) return false;
 
-    const rules =
-      COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
+    const rules = COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
     if (!rules) return false;
 
     const userNFTCount = hasCollectionNFTs(mintNFTHitsResponse, collection);
@@ -71,18 +64,17 @@ export const MintBtn = ({
   const hasReachedMintLimit = checkMintLimit();
 
   const isButtonDisabled =
-    isMintingStyledDisabled ||
-    isNotForSoldNFT ||
-    hasReachedMintLimit ||
-    isUnauthorizedForSpecialNFT;
+    isMintingStyledDisabled || 
+    isNotForSoldNFT || 
+    isUnauthorizedMint ||
+    (!isOwner && hasReachedMintLimit);
 
   const getDisplayText = () => {
+    if (isUnauthorizedMint) return "Only Owner Can Mint";
     if (hasReachedMintLimit) {
-      const rules =
-        COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
+      const rules = COLLECTION_MINT_RULES[collection as keyof typeof COLLECTION_MINT_RULES];
       return `Max ${rules?.maxMintsPerWallet} NFTs Per Wallet`;
     }
-    if (isUnauthorizedForSpecialNFT) return "Not Authorized";
     return btnText;
   };
 
@@ -111,24 +103,21 @@ export const MintBtn = ({
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          {(window.mina?.isPallad ||
-            hasReachedMintLimit ||
-            isUnauthorizedForSpecialNFT) && (
+          {(window.mina?.isPallad || isUnauthorizedMint || hasReachedMintLimit) && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
             >
-              {hasReachedMintLimit ? (
+              {isUnauthorizedMint ? (
                 <div className="max-w-md">
                   <p className="mb-2 font-bold">
-                    You have reached the maximum number of NFTs allowed for this
-                    collection.
+                    This NFT is currently only available for minting by the collection owner.
                   </p>
                 </div>
-              ) : isUnauthorizedForSpecialNFT ? (
+              ) : hasReachedMintLimit ? (
                 <div className="max-w-md">
                   <p className="mb-2 font-bold">
-                    This NFT can only be minted by the collection owner.
+                    You have reached the maximum number of NFTs allowed for this collection.
                   </p>
                 </div>
               ) : (
