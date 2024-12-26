@@ -13,7 +13,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types:local": "export $(cat .env.local | xargs) &&  supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts",
+    "generate:types:local": "export $(cat .env.development | xargs) &&  supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts",
     "generate:types:prod": "export $(cat .env.production | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts"
   },
   "dependencies": {

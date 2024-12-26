@@ -134,6 +134,7 @@ export type Database = {
           created_at: string
           id: number
           img_url: string
+          is_public_mint: boolean
           name: string
           nft_id: number | null
           owner_address: string | null
@@ -146,6 +147,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url: string
+          is_public_mint?: boolean
           name: string
           nft_id?: number | null
           owner_address?: string | null
@@ -158,6 +160,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url?: string
+          is_public_mint?: boolean
           name?: string
           nft_id?: number | null
           owner_address?: string | null
@@ -552,6 +555,7 @@ export type Database = {
           created_at: string
           id: number
           img_url: string
+          is_public_mint: boolean
           name: string
           nft_id: number | null
           owner_address: string | null
@@ -563,6 +567,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url: string
+          is_public_mint?: boolean
           name: string
           nft_id?: number | null
           owner_address?: string | null
@@ -574,6 +579,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url?: string
+          is_public_mint?: boolean
           name?: string
           nft_id?: number | null
           owner_address?: string | null

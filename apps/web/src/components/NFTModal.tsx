@@ -12,6 +12,8 @@ import {
   isMockEnv,
   NFTCollectionType,
   NFTCategory,
+  DEFAULT_TRASURY_ADDRESS,
+  NFT_COLLECTIONS,
 } from "@/constants";
 import Link from "next/link";
 import { getTime, isFuture } from "date-fns";
@@ -29,6 +31,7 @@ import { TraitsSection } from "./Marketplace/TraitsSection";
 import { AlreadyMintedContent } from "./Marketplace/AlreadyMintedContent";
 import { NFTModalTriggerContent } from "./Marketplace/NFTModalTriggerContent";
 import { CountdownTimer } from "./common/CountdownTimer";
+import { CollectionDescription } from "./Marketplace/CollectionDescription";
 
 export const NFTModal = ({
   traits,
@@ -41,6 +44,7 @@ export const NFTModal = ({
   algoliaHitData,
   collection,
   NFTCategory,
+  isPublicMint,
 }: {
   traits: Json;
   img_url: string;
@@ -53,6 +57,7 @@ export const NFTModal = ({
   algoliaHitData: AlgoliaHitResponse | undefined;
   collection: NFTCollectionType;
   NFTCategory: NFTCategory | null;
+  isPublicMint: boolean;
 }) => {
   // Function to parse traits
   const [mintLoading, setMintLoading] = useState(false);
@@ -69,9 +74,14 @@ export const NFTModal = ({
   const { switchNetwork } = useSwitchNetwork();
   const [mintKey] = useLocalStorage("MINTING_ENABLE", "");
 
-  const collectionConfig = globalConfig?.nft_collections_config?.[collection] || {}
-  const nftMintStartDate = collectionConfig?.nft_mint_start_date_time_utc || new Date(2024, 0, 1)
-  const isMintingNotStarted = isFuture(nftMintStartDate)
+  const collectionConfig =
+    globalConfig?.nft_collections_config?.[collection] || {};
+  const nftMintStartDate =
+    collectionConfig?.nft_mint_start_date_time_utc || new Date(2024, 0, 1);
+  const isMintingNotStarted = isFuture(nftMintStartDate);
+  const collectionOwner =
+    collectionConfig.owner_address || DEFAULT_TRASURY_ADDRESS;
+  const maxMintsPerWallet = collectionConfig.max_mints_per_wallet;
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
@@ -117,7 +127,10 @@ export const NFTModal = ({
   }
 
   const handleMint = async (nft_id: number) => {
-    if (!isMockEnv() && networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
+    if (
+      !isMockEnv() &&
+      networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId
+    ) {
       await switchNetwork(MAINNET_NETWORK);
       return;
     }
@@ -270,10 +283,8 @@ export const NFTModal = ({
                 </span>
               </div>
               <Flex direction="column" gap="3" mt="4" justify="center">
-              {isMintingNotStarted && (
-                  <CountdownTimer
-                    initialTime={getTime(nftMintStartDate)}
-                  />
+                {isMintingNotStarted && (
+                  <CountdownTimer initialTime={getTime(nftMintStartDate)} />
                 )}
                 <MintBtn
                   isMintingDisabled={isMintingDisabled}
@@ -289,6 +300,9 @@ export const NFTModal = ({
                   nftID={nftID}
                   collection={collection}
                   currentUserAddress={networkStore.address || ""}
+                  isPublicMint={isPublicMint}
+                  collectionOwner={collectionOwner}
+                  maxMintsPerWallet={maxMintsPerWallet}
                 />
 
                 {isAvailableToPurchase && (
@@ -328,11 +342,23 @@ export const NFTModal = ({
                     />
                   )}
               </Flex>
-              <TraitsSection
-                traits={traits}
-                collection={collection}
-                category={NFTCategory}
-              />
+              {/* Inside Dialog.Content, before closing div */}
+
+              <div>
+                {collection === NFT_COLLECTIONS.ZKGOD && (
+                  <CollectionDescription />
+                )}
+              </div>
+              {traits &&
+                typeof traits === "object" &&
+                traits !== null &&
+                Object.keys(traits).length > 0 && (
+                  <TraitsSection
+                    traits={traits}
+                    collection={collection}
+                    category={NFTCategory}
+                  />
+                )}
             </div>
           </div>
           <Dialog.Close>

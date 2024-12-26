@@ -1265,3 +1265,39 @@ export const useMinaPunksNFTEntries = ({
     }
   );
 };
+
+export const useZKGodNFTEntries = ({
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+  category = "ALL",
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+  category?: string;
+}) => {
+  return useQuery(
+    ["zkgod_nfts", sortOrder, searchTerm, currentPage, category],
+    async () => {
+      const params = [
+        `sortOrder=${sortOrder}`,
+        `searchTerm=${encodeURIComponent(searchTerm)}`,
+        `currentPage=${currentPage}`,
+        `category=${category}`,
+      ].join("&");
+
+      const response = await fetch(`/api/nfts/zkgod-nfts?${params}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+    {
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  );
+};

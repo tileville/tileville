@@ -2,7 +2,8 @@ export const MOCK_GLOBAL_CONFIG = {
   "nft_collections": [
     "Tileville",
     "Minaty",
-    "MinaPunks"
+    "MinaPunks",
+    "ZKGod"
   ],
   "nft_collections_config": {
     "Minaty": {
@@ -49,13 +50,23 @@ export const MOCK_GLOBAL_CONFIG = {
         "B62qrVzi6k4c1Q7fCMnLbe8Wn5TSqMrfvuAmpacKe8VJkjsjKUXH73Z"
       ],
       "reserved_price_reduce_key": "dbVHT6pf4aBcjmUHANFr3P4eEzvjHbxrFdjVbfafbhjew_J",
-      "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z"
+      "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z",
+      "owner_address": "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
+      "max_mints_per_wallet": 3,
     },
-    "Minapunks": {
+    "MinaPunks": {
       "is_mint_public": true,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z"
+      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z",
+    },
+    "ZKGod": {
+      "is_mint_public": true,
+      "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
+      "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
+      "nft_mint_start_date_time_utc": "2024-12-26T18:30:00Z",
+      "owner_address": "B62qmhyxLwrLHaMBx6VK979xaELuyPuLGMHxGMrYLtyqMDLzdUc3Ht8",
+      "max_mints_per_wallet": 1,
     },
     "Tileville": {
       "is_mint_public": true,
