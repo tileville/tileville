@@ -51,14 +51,14 @@ export const MOCK_GLOBAL_CONFIG = {
       ],
       "reserved_price_reduce_key": "dbVHT6pf4aBcjmUHANFr3P4eEzvjHbxrFdjVbfafbhjew_J",
       "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z",
-      "owner_address": "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD"
+      "owner_address": "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
+      "max_mints_per_wallet": 3,
     },
     "MinaPunks": {
       "is_mint_public": true,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
       "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z",
-      "max_mints_per_wallet": 3,
     },
     "ZKGod": {
       "is_mint_public": true,
