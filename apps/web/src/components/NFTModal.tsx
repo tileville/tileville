@@ -83,6 +83,7 @@ export const NFTModal = ({
     collectionConfig.owner_address || DEFAULT_TRASURY_ADDRESS;
   const maxMintsPerWallet = collectionConfig.max_mints_per_wallet;
 
+  // TODO: commited
   useEffect(() => {
     if (nftMintResponse.state === "active") {
       if (nftMintResponse.success) {
