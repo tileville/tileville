@@ -34,6 +34,15 @@ type PlayPVPChallengePayload = {
   isSpeedChallenge: boolean;
 };
 
+type NFTMintPayload = {
+  walletAddress: string;
+  collection: string;
+  name: string;
+  nft_id: number;
+  nftAddress: string;
+  nftPrivateKey: string;
+};
+
 /**
  *
  * The way you create a logger event is you create two set of events for every action.
