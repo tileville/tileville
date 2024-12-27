@@ -329,3 +329,67 @@ ${isPublic && `👥 **Invite Link:**: ${inviteLink}`}
 
   return groupMessage;
 };
+
+export const getShareContent = ({
+  inviteLink,
+  challengeName,
+  entryFee,
+}: {
+  inviteLink: string;
+  challengeName: string;
+  entryFee: number;
+}) => {
+  return {
+    twitter: `🎮 Join my TileVille challenge "${challengeName}"! 
+
+Entry fee: ${entryFee} MINA
+${inviteLink}
+
+@TileVilleSocial #TileVille #MinaProtocol #Gaming #P2E`,
+
+    telegram: `🎮 Join my TileVille challenge!
+
+Challenge: ${challengeName}
+Entry fee: ${entryFee} MINA`,
+
+    discord: `🎮 Join my TileVille challenge!
+
+Challenge: ${challengeName}
+Entry fee: ${entryFee} MINA
+
+Join here: ${inviteLink}`,
+  };
+};
+
+export const handleSocialShare = ({
+  platform,
+  inviteLink,
+  challengeName,
+  entryFee,
+}: {
+  platform: "twitter" | "telegram" | "discord";
+  inviteLink: string;
+  challengeName: string;
+  entryFee: number;
+}) => {
+  const shareContent = getShareContent({ inviteLink, challengeName, entryFee });
+  let shareUrl = "";
+
+  switch (platform) {
+    case "twitter":
+      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        shareContent.twitter
+      )}`;
+      break;
+    case "telegram":
+      shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
+        inviteLink
+      )}&text=${encodeURIComponent(shareContent.telegram)}`;
+      break;
+    case "discord":
+      shareUrl = "https://discord.com/";
+      break;
+  }
+
+  window.open(shareUrl, "_blank");
+};

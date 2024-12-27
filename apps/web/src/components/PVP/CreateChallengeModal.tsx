@@ -407,6 +407,7 @@ export const CreateChallengeModal = ({
         onClose={() => setShowSuccessModal(false)}
         inviteLink={createdChallengeInviteLink}
         challengeName={name}
+        entryFee={entryFee}
       />
     </>
   );
