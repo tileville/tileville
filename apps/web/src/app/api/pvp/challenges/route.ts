@@ -80,7 +80,7 @@ const postHandler = async (request: NextRequest) => {
       isSpeedChallenge: challenge.is_speed_challenge || false,
       entryFee: challenge.entry_fee || 0,
       username: userProfile?.username || null,
-      maxParticipants: 2,
+      maxParticipants: max_participants,
       isPublic: is_public,
       inviteLink: inviteLink,
     });

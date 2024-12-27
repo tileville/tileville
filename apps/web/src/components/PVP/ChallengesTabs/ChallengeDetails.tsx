@@ -3,6 +3,7 @@ import {
   formatAddress,
   generatePVPChallengeInviteLink,
   getMinaScanNormalLink,
+  handleSocialShare,
 } from "@/lib/helpers";
 import { Challenge, ChallengeParticipant } from "@/types";
 import { CopyIcon } from "@radix-ui/react-icons";
@@ -206,17 +207,27 @@ export const ChallengeDetails = ({
           Share Invite Link on Socials
         </h3>
         <div className="flex gap-2">
-          <Link
-            href={`https://twitter.com/intent/tweet?text=Join my TileVille challenge! ${inviteLink}`}
-            target="_blank"
-            className=""
+          <button
+            onClick={() =>
+              handleSocialShare({
+                platform: "twitter",
+                inviteLink,
+                challengeName: challenge.name,
+                entryFee: challenge.entry_fee || 0,
+              })
+            }
           >
             <Image src="/icons/x.svg" width={43} height={43} alt="X" />
-          </Link>
-          <Link
-            href={`https://t.me/share/url?url=${inviteLink}`}
-            target="_blank"
-            className=""
+          </button>
+          <button
+            onClick={() =>
+              handleSocialShare({
+                platform: "telegram",
+                inviteLink,
+                challengeName: challenge.name,
+                entryFee: challenge.entry_fee || 0,
+              })
+            }
           >
             <Image
               src="/icons/telegram.svg"
@@ -224,7 +235,7 @@ export const ChallengeDetails = ({
               height={43}
               alt="Telegram"
             />
-          </Link>
+          </button>
         </div>
       </div>
       {((participants.length >= challenge.max_participants &&

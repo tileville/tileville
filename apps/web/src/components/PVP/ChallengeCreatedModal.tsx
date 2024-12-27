@@ -1,13 +1,14 @@
 import { Dialog } from "@radix-ui/themes";
 import { CopyIcon, Cross1Icon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { copyToClipBoard } from "@/lib/helpers";
+import { copyToClipBoard, handleSocialShare } from "@/lib/helpers";
 
 type ChallengeCreatedModalProps = {
   open: boolean;
   onClose: () => void;
   inviteLink: string;
   challengeName: string;
+  entryFee: number;
 };
 
 export const ChallengeCreatedModal = ({
@@ -15,30 +16,8 @@ export const ChallengeCreatedModal = ({
   onClose,
   inviteLink,
   challengeName,
+  entryFee,
 }: ChallengeCreatedModalProps) => {
-  const handleShare = (platform: string) => {
-    let shareUrl = "";
-    const text = "Join my TileVille challenge!";
-
-    switch (platform) {
-      case "twitter":
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          text
-        )}&url=${encodeURIComponent(inviteLink)}`;
-        break;
-      case "telegram":
-        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
-          inviteLink
-        )}&text=${encodeURIComponent(text)}`;
-        break;
-      case "discord":
-        shareUrl = "https://discord.com/";
-        break;
-    }
-
-    window.open(shareUrl, "_blank");
-  };
-
   return (
     <Dialog.Root open={open}>
       <Dialog.Content className="relative !m-0 !max-w-[610px] !rounded-md !bg-[#A6B97B] !p-8">
@@ -51,7 +30,7 @@ export const ChallengeCreatedModal = ({
           />
 
           <div className="flex flex-col items-center justify-center">
-            <h2 className=" text-[28px] font-bold">
+            <h2 className="text-[28px] font-bold">
               Challenge successfully created!
             </h2>
             <p className="mb-2 text-lg font-medium">
@@ -64,7 +43,7 @@ export const ChallengeCreatedModal = ({
 
           <div className="w-full">
             <h3 className="mb-2 text-2xl font-bold">Share Invite Link</h3>
-            <div className="flex items-center gap-2 rounded-lg  p-2">
+            <div className="flex items-center gap-2 rounded-lg p-2">
               <input
                 type="text"
                 value={inviteLink}
@@ -92,10 +71,28 @@ export const ChallengeCreatedModal = ({
               Share Invite Link on Socials
             </h3>
             <div className="flex justify-center gap-3">
-              <button onClick={() => handleShare("twitter")}>
+              <button
+                onClick={() =>
+                  handleSocialShare({
+                    platform: "twitter",
+                    inviteLink,
+                    challengeName,
+                    entryFee,
+                  })
+                }
+              >
                 <Image src="/icons/x.svg" width={40} height={40} alt="X" />
               </button>
-              <button onClick={() => handleShare("telegram")}>
+              <button
+                onClick={() =>
+                  handleSocialShare({
+                    platform: "telegram",
+                    inviteLink,
+                    challengeName,
+                    entryFee,
+                  })
+                }
+              >
                 <Image
                   src="/icons/telegram.svg"
                   width={40}
