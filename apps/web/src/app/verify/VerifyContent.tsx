@@ -63,18 +63,29 @@ export default function VerifyContent() {
             </div>
             <h1 className="mb-6 text-[28px] font-bold">Verify Your Account</h1>
 
-            <p className="mb-3 text-sm text-[#494949] md:mb-6 md:text-xl">
-              Connect your wallet and complete the account verification on
-              TileVille.
-            </p>
+            {isMobile && window.mina && (
+              <p className="mb-3 text-sm text-[#494949] md:mb-6 md:text-xl">
+                Connect your wallet and complete the account verification on
+                TileVille.
+              </p>
+            )}
 
-            <button
-              onClick={handleVerification}
-              disabled={isProcessing}
-              className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
-            >
-              {getButtonText()}
-            </button>
+            {isMobile && !window.mina && (
+              <p>
+                Seems like you have opened this link in the mobile browser{" "}
+                <br />
+                Please copy the link and paste it in the Auro App
+              </p>
+            )}
+            {window.mina && (
+              <button
+                onClick={handleVerification}
+                disabled={isProcessing}
+                className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
+              >
+                {getButtonText()}
+              </button>
+            )}
 
             {isMobile && !window.mina && (
               <div className="mt-6 flex flex-col gap-4">
