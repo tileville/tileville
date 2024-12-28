@@ -42,6 +42,8 @@ import { globalConfigAtom } from "@/contexts/atoms";
 import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
 import { TransactionStatus } from "@/lib/types";
+import { useSetAtom } from "jotai";
+import { followLoadingAtom } from "@/contexts/atoms";
 
 export const useSendEmail = ({
   onSuccess,
@@ -544,6 +546,7 @@ export function useGetConnections(wallet_address: string) {
 
 export function useFollowUser() {
   const queryClient = useQueryClient();
+  const setFollowLoading = useSetAtom(followLoadingAtom);
 
   return useMutation({
     mutationFn: async ({
@@ -553,12 +556,11 @@ export function useFollowUser() {
       follower_wallet: string;
       target_wallet: string;
     }) => {
-      const authSignature =
-        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
-
-      console.log("target wallet", target_wallet);
-      console.log("follower_wallet", follower_wallet);
+      setFollowLoading(true);
       try {
+        const authSignature =
+          window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
         const response = await fetch("/api/player/follow", {
           method: "POST",
           headers: {
@@ -577,8 +579,8 @@ export function useFollowUser() {
           throw new Error(data.error);
         }
         return data;
-      } catch (error) {
-        throw error;
+      } finally {
+        setFollowLoading(false); 
       }
     },
     onSuccess: () => {
@@ -590,6 +592,7 @@ export function useFollowUser() {
 
 export function useUnfollowUser() {
   const queryClient = useQueryClient();
+  const setFollowLoading = useSetAtom(followLoadingAtom);
 
   return useMutation({
     mutationFn: async ({
@@ -601,10 +604,8 @@ export function useUnfollowUser() {
     }) => {
       const authSignature =
         window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
-
-      console.log("target wallet", target_wallet);
-      console.log("follower_wallet", follower_wallet);
-      try {
+      setFollowLoading(true);
+           try {
         const response = await fetch("/api/player/unfollow", {
           method: "POST",
           headers: {
@@ -625,6 +626,8 @@ export function useUnfollowUser() {
         return data;
       } catch (error) {
         throw error;
+      } finally {
+        setFollowLoading(false);
       }
     },
     onSuccess: () => {

@@ -21,3 +21,5 @@ export const mintProgressAtom = atom<{
 }>({});
 
 export const algoliaHitsResponseAtom = atom<AlgoliaHitResponse[]>([]);
+
+export const followLoadingAtom = atom<boolean>(false);

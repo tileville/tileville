@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Spinner2 } from "../common/Spinner";
+import { useAtomValue } from "jotai";
+import { followLoadingAtom } from "@/contexts/atoms";
 
 type UserListItemType = {
   userInfo: {
@@ -28,6 +30,8 @@ export const UserListItem = ({
 }: UserListItemType) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const isFollowLoading = useAtomValue(followLoadingAtom);
+
 
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
@@ -101,7 +105,7 @@ export const UserListItem = ({
               e.preventDefault();
               handleFollowAction();
             }}
-            disabled={isLoading}
+            disabled={isFollowLoading}  
           >
             {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
 
