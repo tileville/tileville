@@ -322,8 +322,7 @@ export const generateChallengeMessageForGroup = ({
       ? `\n⏱️ **Speed Challenge Duration:** ${speedDuration} seconds`
       : ""
   }
-
-${isPublic && `👥 **Invite Link:**: ${inviteLink}`}
+${isPublic ? `\n👥 **Invite Link:** ${inviteLink}` : ""}
 
 🚀`;
 
