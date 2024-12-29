@@ -49,7 +49,7 @@ export const MintBtn = ({
   const isUnauthorizedMint = !isPublicMint && !isOwner;
 
   const isNotForSoldNFT =
-    collection === NFT_COLLECTIONS.MINATY && (nftID === 100 || nftID === 101);
+    collection === NFT_COLLECTIONS.MINATY && (nftID === 100);
 
   const checkMintLimit = () => {
     // Collection owner is exempt from mint limits
