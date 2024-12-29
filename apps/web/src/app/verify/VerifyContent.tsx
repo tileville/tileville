@@ -71,10 +71,15 @@ export default function VerifyContent() {
             )}
 
             {isMobile && !window.mina && (
-              <p>
-                Seems like you have opened this link in the mobile browser{" "}
+              <p className="mb-3 text-sm text-[#494949]">
+                Copy the verification link and tap &quot;Open Auro App&quot; to
+                continue. Paste the link in Auro app&apos;s browser to connect
+                your wallet and complete verification.
                 <br />
-                Please copy the link and paste it in the Auro App
+                <br />
+                Note: Your regular mobile browser cannot connect to wallets
+                directly. Using Auro app&apos;s built-in browser allows secure
+                wallet connection.
               </p>
             )}
             {window.mina && (
