@@ -47,7 +47,8 @@ export default function LeaderboardContent() {
     isLoading: competitionNameLoading,
   } = useCompetitionsName();
 
-  const [selectedCompetition, setSelectedCompetition] = useState<SelectedCompetition | null>(null);
+  const [selectedCompetition, setSelectedCompetition] =
+    useState<SelectedCompetition | null>(null);
 
   // Add useEffect to set initial competition when data is loaded
   useEffect(() => {
@@ -77,7 +78,7 @@ export default function LeaderboardContent() {
 
   // Modify the useLeaderboardEntries call to only fetch when selectedCompetition exists
   const { data: leaderboardData = [], isLoading } = useLeaderboardEntries(
-    selectedCompetition?.competition_key || ''
+    selectedCompetition?.competition_key || ""
   );
 
   useEffect(() => {
@@ -153,30 +154,33 @@ export default function LeaderboardContent() {
                     ))}
                   </>
                 ) : (
-                  competitionData?.map((competition) => (
-                    <DropdownMenu.Item
-                      key={competition.id}
-                      onClick={() =>
-                        handleCompetitionChange({
-                          id: competition.id,
-                          competition_key: competition.unique_keyname,
-                          name: competition.name,
-                        })
-                      }
-                      className={`!md:h-8 !h-auto py-2 mt-1 transition-colors ${selectedCompetition?.id === competition.id
-                          ? "bg-primary text-white" // Selected state
-                          : "hover:bg-primary hover:text-white" // Hover state
+                  competitionData.map((competition) => {
+                    return (
+                      <DropdownMenu.Item
+                        key={competition.unique_keyname}
+                        onClick={() =>
+                          handleCompetitionChange({
+                            id: competition.id,
+                            competition_key: competition.unique_keyname,
+                            name: competition.name,
+                          })
+                        }
+                        className={`!md:h-8 mt-1 !h-auto py-2 transition-colors ${
+                          selectedCompetition?.competition_key ===
+                          competition.unique_keyname
+                            ? "bg-primary text-white" // Selected state
+                            : "hover:bg-primary hover:text-white" // Hover state
                         }`}
-                    >
-                      <div className="flex items-center justify-between px-2 w-full">
-                        <span>{competition.name}</span>
-                        {selectedCompetition?.id === competition.id && (
-                          <span className="text-sm">✓</span>
-                        )}
-                      </div>
-                    </DropdownMenu.Item>
-
-                  ))
+                      >
+                        <div className="flex w-full items-center justify-between px-2">
+                          <span>{competition.name}</span>
+                          {selectedCompetition?.id === competition.id && (
+                            <span className="text-sm">✓</span>
+                          )}
+                        </div>
+                      </DropdownMenu.Item>
+                    );
+                  })
                 )}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
