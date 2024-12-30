@@ -195,6 +195,13 @@ export default function InviteContent({ code }: { code: string }) {
                 {isNormalMobileBrowser && (
                   <InviteContentMobileWarning inviteCode={code} />
                 )}
+
+                <Link
+                  href="/pvp"
+                  className="absolute right-2 top-2 text-xs underline hover:no-underline"
+                >
+                  open player vs player mode
+                </Link>
                 <div className="mb-2 flex items-center justify-center">
                   <Image
                     src="/icons/invitation.png"
