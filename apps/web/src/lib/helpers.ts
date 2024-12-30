@@ -299,6 +299,15 @@ type generateChallengeMessageForGroupType = {
   inviteLink: string;
 };
 
+const calculateHoursRemaining = (endTime: string): number => {
+  const now = new Date();
+  const end = new Date(endTime);
+  const diffInHours = Math.ceil(
+    (end.getTime() - now.getTime()) / (1000 * 60 * 60)
+  );
+  return diffInHours;
+};
+
 export const generateChallengeMessageForGroup = ({
   challengeName,
   walletAddress,
@@ -311,20 +320,21 @@ export const generateChallengeMessageForGroup = ({
   isPublic,
   inviteLink,
 }: generateChallengeMessageForGroupType) => {
+  const hoursRemaining = calculateHoursRemaining(endTime);
+
   const groupMessage = `🎉 A New Challenge Awaits!
 
 🌟 **Challenge Name:** "${challengeName}"
 👤 **Created By:** ${username || `Wallet ${walletAddress.slice(0, 6)}`}
 💰 **Entry Fee:** ${entryFee} MINA
 👥 **Max Participants:** ${maxParticipants}
-⏰ **End Time:** ${new Date(endTime).toLocaleString()}${
+⏰ **Ends in:** ${hoursRemaining} hours${
     isSpeedChallenge
       ? `\n⏱️ **Speed Challenge Duration:** ${speedDuration} seconds`
       : ""
   }
 ${isPublic ? `\n👥 **Invite Link:** ${inviteLink}` : ""}
-
-🚀`;
+`;
 
   return groupMessage;
 };
