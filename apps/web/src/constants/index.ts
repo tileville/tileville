@@ -535,6 +535,7 @@ export const MINAPUNKS_CATEGORIES = {
   GOLD: "GOLD",
   SILVER: "SILVER",
   BRONZE: "BRONZE",
+  CHRISTMAS: "CHRISTMAS",
 } as const;
 
 //TODO: Derive this value from `NFT_COLLECTIONS`
@@ -768,6 +769,9 @@ export const MINAPUNKS_ATTRIBUTES = {
   },
   BRONZE: {
     description: "Refers to tertiary strong ownership within categories",
+  },
+  CHRISTMAS: {
+    description: "Refers to Christmas strong ownership within categories",
   },
 };
 
