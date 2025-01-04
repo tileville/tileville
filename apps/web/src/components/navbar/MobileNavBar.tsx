@@ -71,13 +71,6 @@ export const MobileNavBar = () => {
         <ul className="flex flex-col gap-2 overflow-auto p-4">
           <li>
             <div className="relative">
-              <Image
-                src="/icons/christmasHat.png"
-                width={27}
-                height={27}
-                alt="timer"
-                className="absolute -left-[13px] -top-[15px]"
-              />
               <button
                 onClick={() => {
                   router.push("/main-menu");

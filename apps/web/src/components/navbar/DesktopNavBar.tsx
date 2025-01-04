@@ -135,13 +135,6 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           )}
 
           <div className="relative">
-            <Image
-              src="/icons/christmasHat.png"
-              width={27}
-              height={27}
-              alt="timer"
-              className="absolute -left-[13px] -top-[15px]"
-            />
             <Link
               href="/main-menu"
               className="text-primary-shadow sm font-mono"
