@@ -136,10 +136,18 @@ export const insertEmail = async (
 
 export const getAllCompetitionsNames = async (
   supabase: AppSupabaseClient
-): Promise<Array<{ id: number; name: string; unique_keyname: string }>> => {
+): Promise<
+  Array<{
+    id: number;
+    name: string;
+    unique_keyname: string;
+    start_date: string;
+    end_date: string;
+  }>
+> => {
   const { data, error } = await supabase
     .from("tileville_competitions")
-    .select("id, name, unique_keyname");
+    .select("id, name, unique_keyname, start_date, end_date");
 
   if (error) {
     throw error;

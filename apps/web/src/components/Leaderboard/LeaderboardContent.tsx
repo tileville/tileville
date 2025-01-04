@@ -9,11 +9,14 @@ import {
 import { LEADERBOARD_COLUMNS } from "@/constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import TableSkeleton from "./TableSkeleton";
+import { getCompetitionStatus } from "@/lib/helpers";
 
 type SelectedCompetition = {
   id: number;
   name: string;
   competition_key: string;
+  start_date: string;
+  end_date: string;
 };
 
 type LeaderboardResult = {
@@ -35,6 +38,31 @@ const skeletonItems = Array.from(
   })
 );
 
+const CompetitionStatusTag = ({
+  status,
+}: {
+  status: "ONGOING" | "UPCOMING" | "ENDED";
+}) => {
+  const getTagStyles = () => {
+    switch (status) {
+      case "ONGOING":
+        return "bg-primary/20 text-primary";
+      case "UPCOMING":
+        return "bg-blue-500/20 text-blue-700";
+      case "ENDED":
+        return "bg-gray-500/20 text-gray-700";
+    }
+  };
+
+  return (
+    <span
+      className={`rounded-full px-3 py-1 text-sm font-medium ${getTagStyles()}`}
+    >
+      {status}
+    </span>
+  );
+};
+
 export default function LeaderboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -53,7 +81,6 @@ export default function LeaderboardContent() {
   // Add useEffect to set initial competition when data is loaded
   useEffect(() => {
     if (competitionData && competitionData.length > 0) {
-      // If there's a competition in URL params, use that
       if (competitionParam) {
         const matchedCompetition = competitionData.find(
           (comp) => comp.unique_keyname === competitionParam
@@ -63,14 +90,17 @@ export default function LeaderboardContent() {
             id: matchedCompetition.id,
             name: matchedCompetition.name,
             competition_key: matchedCompetition.unique_keyname,
+            start_date: matchedCompetition.start_date,
+            end_date: matchedCompetition.end_date,
           });
         }
       } else {
-        // If no competition in URL params, use the first competition from the list
         setSelectedCompetition({
           id: competitionData[0].id,
           name: competitionData[0].name,
           competition_key: competitionData[0].unique_keyname,
+          start_date: competitionData[0].start_date,
+          end_date: competitionData[0].end_date,
         });
       }
     }
@@ -91,6 +121,8 @@ export default function LeaderboardContent() {
           id: matchedCompetition.id,
           name: matchedCompetition.name,
           competition_key: matchedCompetition.unique_keyname,
+          start_date: matchedCompetition.start_date,
+          end_date: matchedCompetition.end_date,
         });
       }
     }
@@ -163,6 +195,8 @@ export default function LeaderboardContent() {
                             id: competition.id,
                             competition_key: competition.unique_keyname,
                             name: competition.name,
+                            start_date: competition.start_date,
+                            end_date: competition.end_date,
                           })
                         }
                         className={`!md:h-8 mt-1 !h-auto py-2 transition-colors ${
@@ -185,6 +219,15 @@ export default function LeaderboardContent() {
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           </div>
+
+          {selectedCompetition && (
+            <CompetitionStatusTag
+              status={getCompetitionStatus(
+                selectedCompetition.start_date,
+                selectedCompetition.end_date
+              )}
+            />
+          )}
         </div>
         <Table.Root>
           <Table.Header>

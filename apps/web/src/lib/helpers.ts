@@ -402,3 +402,20 @@ export const handleSocialShare = ({
 
   window.open(shareUrl, "_blank");
 };
+
+export const getCompetitionStatus = (
+  startDate: string,
+  endDate: string
+): "ONGOING" | "UPCOMING" | "ENDED" => {
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (now < start) {
+    return "UPCOMING";
+  } else if (now > end) {
+    return "ENDED";
+  } else {
+    return "ONGOING";
+  }
+};
