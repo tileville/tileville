@@ -35,7 +35,7 @@ export async function sendTransaction(params: {
   contractAddress: string;
   name: string;
   nonce: { success: boolean; nonce: number };
-}): Promise<{ isSent: boolean; hash: string }> {
+}): Promise<{ isSent: boolean; hash: string; error?: string }> {
   const {
     serializedTransaction,
     signedData,
@@ -58,33 +58,86 @@ export async function sendTransaction(params: {
     2
   );
 
-  let answer = await zkCloudWorkerRequest({
-    command: "execute",
-    transactions: [transaction],
-    task: "mint",
-    args,
-    metadata: `mint NFT @${name}`,
-    mode: "async",
-  });
-
-  // console.log(`zkCloudWorker answer:`, answer);
-  const jobId = answer.jobId;
-  let result;
-  while (result === undefined && answer.jobStatus !== "failed") {
-    await sleep(5000);
-    answer = await zkCloudWorkerRequest({
-      command: "jobResult",
-      jobId,
+  try {
+    let answer = await zkCloudWorkerRequest({
+      command: "execute",
+      transactions: [transaction],
+      task: "mint",
+      args,
+      metadata: `mint NFT @${name}`,
+      mode: "async",
     });
-    // console.log(`jobResult api call result:`, answer);
-    result = answer.result;
-    if (result !== undefined) console.log(`jobResult result:`, result);
+
+    // console.log(`zkCloudWorker answer:`, answer);
+    const jobId = answer.jobId;
+    if (!jobId) {
+      return {
+        isSent: false,
+        hash: "",
+        error: "Failed to get jobId from zkCloud worker",
+      };
+    }
+
+    let result;
+    let retryCount = 0;
+    const MAX_RETRIES = 12; // 1 minute total with 5 second intervals
+
+    while (retryCount < MAX_RETRIES) {
+      await sleep(5000);
+
+      try {
+        answer = await zkCloudWorkerRequest({
+          command: "jobResult",
+          jobId,
+        });
+        // console.log(`jobResult api call result:`, answer);
+
+        // Check for various error conditions
+        if (answer.jobStatus === "failed") {
+          return {
+            isSent: false,
+            hash: "",
+            error: answer.error || "Job failed in zkCloud worker",
+          };
+        }
+
+        if (answer.error) {
+          return {
+            isSent: false,
+            hash: "",
+            error: answer.error,
+          };
+        }
+
+        result = answer.result;
+        if (result !== undefined) {
+          console.log(`jobResult result:`, result);
+          return { isSent: true, hash: result };
+        }
+
+        retryCount++;
+      } catch (error: any) {
+        return {
+          isSent: false,
+          hash: "",
+          error: `Error checking job status: ${error.message}`,
+        };
+      }
+    }
+
+    // If we exit the loop due to max retries
+    return {
+      isSent: false,
+      hash: "",
+      error: "Timeout waiting for zkCloud worker response",
+    };
+  } catch (error: any) {
+    return {
+      isSent: false,
+      hash: "",
+      error: `Transaction failed: ${error.message}`,
+    };
   }
-  if (answer.jobStatus === "failed") {
-    return { isSent: false, hash: result };
-  } else if (result === undefined) {
-    return { isSent: false, hash: "job error" };
-  } else return { isSent: true, hash: result };
 }
 
 export async function prepareTransaction(params: SimpleMintNFT): Promise<{
@@ -137,27 +190,43 @@ export async function prepareTransaction(params: SimpleMintNFT): Promise<{
 async function zkCloudWorkerRequest(params: any) {
   const { command, task, transactions, args, metadata, mode, jobId } = params;
   const chain = CHAIN_NAME;
-  if (chain === undefined) throw new Error("Chain is undefined");
-  const apiData = {
-    auth: process.env.NEXT_PUBLIC_ZKCW_AUTH,
-    command: command,
-    jwtToken: process.env.NEXT_PUBLIC_ZKCW_JWT,
-    data: {
-      task,
-      transactions: transactions ?? [],
-      args,
-      repo: "mint-worker",
-      developer: "DFST",
-      metadata,
-      mode: mode ?? "sync",
-      jobId,
-    },
-    chain,
-  };
-  const endpoint = process.env.NEXT_PUBLIC_ZKCW_ENDPOINT + chain;
 
-  const response = await axios.post(endpoint, apiData);
-  return response.data;
+  try {
+    const apiData = {
+      auth: process.env.NEXT_PUBLIC_ZKCW_AUTH,
+      command: command,
+      jwtToken: process.env.NEXT_PUBLIC_ZKCW_JWT,
+      data: {
+        task,
+        transactions: transactions ?? [],
+        args,
+        repo: "mint-worker",
+        developer: "DFST",
+        metadata,
+        mode: mode ?? "sync",
+        jobId,
+      },
+      chain,
+    };
+
+    const endpoint = process.env.NEXT_PUBLIC_ZKCW_ENDPOINT + CHAIN_NAME;
+
+    const response = await axios.post(endpoint, apiData);
+
+    if (response.data?.error) {
+      throw new Error(response.data.error);
+    }
+
+    return response.data;
+  } catch (error: any) {
+    // Handle axios errors
+    if (error.response) {
+      throw new Error(
+        `ZkCloud API error: ${error.response.data?.error || error.message}`
+      );
+    }
+    throw error; // Re-throw other errors
+  }
 }
 
 function sleep(ms: number) {
