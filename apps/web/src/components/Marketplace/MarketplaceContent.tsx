@@ -233,7 +233,7 @@ export default function MarketplaceContent() {
           {/* Search input */}
           <div className="relative min-h-[40px] min-w-[200px] flex-1 overflow-hidden">
             <span className="text-primary-50 absolute left-3 top-1/2 -translate-y-1/2">
-              <MagnifyingGlassIcon width={20} height={20} />{" "}
+              <MagnifyingGlassIcon width={20} height={20} />
             </span>
             <input
               type="text"
