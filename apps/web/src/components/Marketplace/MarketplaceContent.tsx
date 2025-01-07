@@ -20,6 +20,8 @@ import {
 import { TraitsInfoBtn } from "@/components/Marketplace/TraitsInfoBtn";
 import CollectionSelector from "@/components/Marketplace/CollectionSelector";
 import { Spinner2 } from "@/components/common/Spinner";
+import { useAtomValue } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
 
 export default function MarketplaceContent() {
   const searchParams = useSearchParams();
@@ -50,35 +52,24 @@ export default function MarketplaceContent() {
         NFT_COLLECTIONS.TILEVILLE
     );
 
+  const globalConfig = useAtomValue(globalConfigAtom);
+  const collectionConfig =
+    globalConfig?.nft_collections_config?.[selectedCollection] || {};
+  const collectionTableName = collectionConfig.table_name;
+
   const {
     data: nftData,
     isLoading: isNFTLoading,
     error: nftError,
   } = useNFTsWithPagination({
-    collection: selectedCollection,
     sortOrder,
     searchTerm,
     currentPage,
+    collectionTableName,
   });
 
-  let queryText;
-  switch (selectedCollection) {
-    case NFT_COLLECTIONS.MINATY:
-      queryText = NFT_COLLECTIONS.MINATY;
-      break;
-    case NFT_COLLECTIONS.MINAPUNKS:
-      queryText = NFT_COLLECTIONS.MINAPUNKS;
-      break;
-    case NFT_COLLECTIONS.ZKGOD:
-      queryText = NFT_COLLECTIONS.ZKGOD;
-      break;
-    case NFT_COLLECTIONS.TILEVILLE:
-    default:
-      queryText = NFT_COLLECTIONS.TILEVILLE;
-  }
-
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
-    queryText,
+    queryText: selectedCollection,
   });
 
   const updateSearchParams = useCallback(

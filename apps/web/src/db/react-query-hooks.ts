@@ -36,13 +36,12 @@ import {
   BLOCKBERRY_API_KEY,
   BLOCKBERRY_MAINNET_BASE_URL,
   isMockEnv,
-  NFTCollectionType,
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
-import { TransactionStatus } from "@/lib/types";
+import { NFTTableNames, TransactionStatus } from "@/lib/types";
 import { useSetAtom } from "jotai";
 import { followLoadingAtom } from "@/contexts/atoms";
 
@@ -1307,7 +1306,7 @@ export const useZKGodNFTEntries = ({
 };
 
 export interface NFTResponse {
-  nfts: Array<any>; 
+  nfts: Array<any>;
   count: number;
   currentPage: number;
   totalPages: number;
@@ -1319,29 +1318,24 @@ export type NFTError = {
 };
 
 export const useNFTsWithPagination = ({
-  collection,
   sortOrder = "desc",
   searchTerm,
   currentPage,
+  collectionTableName,
 }: {
-  collection: NFTCollectionType;
   sortOrder: "asc" | "desc";
   searchTerm: string;
   currentPage: number;
+  collectionTableName: NFTTableNames;
 }) => {
   return useQuery<NFTResponse, NFTError>({
-    queryKey: [
-      `${collection.toLowerCase()}_nfts`,
-      sortOrder,
-      searchTerm,
-      currentPage,
-    ],
+    queryKey: [sortOrder, searchTerm, currentPage, collectionTableName],
     queryFn: async () => {
       const params = [
-        `collection=${collection}`,
         `sortOrder=${sortOrder}`,
         `searchTerm=${encodeURIComponent(searchTerm)}`,
         `page=${currentPage}`,
+        `collectionTableName=${collectionTableName}`,
       ].join("&");
 
       const response = await fetch(`/api/nfts?${params}`);
@@ -1355,6 +1349,6 @@ export const useNFTsWithPagination = ({
       return response.json();
     },
     keepPreviousData: true,
-    staleTime: 1000 * 60, 
+    staleTime: 1000 * 60,
   });
 };
