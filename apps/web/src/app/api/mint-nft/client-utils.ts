@@ -80,7 +80,7 @@ export async function sendTransaction(params: {
 
     let result;
     let retryCount = 0;
-    const MAX_RETRIES = 12; // 1 minute total with 5 second intervals
+    const MAX_RETRIES = 24;
 
     while (retryCount < MAX_RETRIES) {
       await sleep(5000);
