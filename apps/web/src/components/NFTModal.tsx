@@ -85,11 +85,9 @@ export const NFTModal = ({
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
-      if (nftMintResponse.success) {
+      if (nftMintResponse.success && nftMintResponse.txHash) {
         toast.success(
-          <>
-            <NFTSuccessMintContent nftTxnHash={nftMintResponse.txHash} />
-          </>,
+          <NFTSuccessMintContent nftTxnHash={nftMintResponse.txHash} />,
           {
             id: "mint-success-toast",
           }
@@ -112,6 +110,7 @@ export const NFTModal = ({
           }
         );
       }
+      setMintLoading(false);
     }
   }, [nftMintResponse]);
 

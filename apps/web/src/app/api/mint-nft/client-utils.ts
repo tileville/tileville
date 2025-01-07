@@ -93,35 +93,40 @@ export async function sendTransaction(params: {
         // console.log(`jobResult api call result:`, answer);
 
         // Check for various error conditions
-        if (answer.jobStatus === "failed") {
+        if (answer.jobStatus === "failed" || answer.error) {
+          console.error("Transaction failed:", answer.error || "Unknown error");
           return {
             isSent: false,
             hash: "",
-            error: answer.error || "Job failed in zkCloud worker",
+            error: answer.error || "Transaction failed",
           };
         }
 
-        if (answer.error) {
-          return {
-            isSent: false,
-            hash: "",
-            error: answer.error,
-          };
-        }
+        result = answer.result; // Get the result from answer
 
-        result = answer.result;
         if (result !== undefined) {
-          console.log(`jobResult result:`, result);
-          return { isSent: true, hash: result };
+          // Only check for validity if we have a result
+          if (
+            typeof result !== "string" ||
+            result.toLowerCase().includes("error")
+          ) {
+            return {
+              isSent: false,
+              hash: "",
+              error: "Invalid transaction result",
+            };
+          }
+          // If we have a valid result, return success
+          return {
+            isSent: true,
+            hash: result,
+          };
         }
 
         retryCount++;
       } catch (error: any) {
-        return {
-          isSent: false,
-          hash: "",
-          error: `Error checking job status: ${error.message}`,
-        };
+        console.error("Error checking job status:", error);
+        retryCount++;
       }
     }
 
