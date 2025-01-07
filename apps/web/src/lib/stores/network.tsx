@@ -281,24 +281,50 @@ export const useParticipationFee = () => {
   return { payParticipationFees };
 };
 
+const MINTING_STEPS = {
+  STARTED: 1,
+  IPFS_UPLOAD: 2,
+  O1JS_LOADING: 3,
+  TRANSACTION_SIGNING: 4,
+  TRANSACTION_SENDING: 5,
+  COMPLETED: 6,
+} as const;
+
 //TODO: Move this to new files
 export const useMintNFT = () => {
   const networkStore = useNetworkStore();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const { mintMINANFTHelper } = useMintMINANFT();
+  const {
+    nftMinting: [logNFTMinting, logNFTMintingError],
+    nftMintingStepComplete: [logNFTMintingStepComplete],
+    nftMintingSuccess: [logNFTMintingSuccess],
+  } = usePosthogEvents();
 
   const mintNft = async ({
     nft_id,
     collection,
+    category,
   }: {
     nft_id: number;
-    collection: string;
+    collection?: string;
+    category?: string;
   }) => {
     if (!networkStore.address) {
       networkStore.connectWallet(false);
       return null;
     }
+
     try {
+      // Step 1: Started
+      logNFTMinting({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        step: MINTING_STEPS.STARTED,
+        collection,
+        category,
+      });
+
       const nft_payload_response = await fetch(`/api/mint-nft`, {
         method: "POST",
         body: JSON.stringify({
@@ -312,19 +338,80 @@ export const useMintNFT = () => {
       });
 
       const nft_payload = await nft_payload_response.json();
-      console.log({ nft_payload });
+
       if (nft_payload.success === false) {
+        logNFTMintingError({
+          nftId: nft_id,
+          walletAddress: networkStore.address,
+          step: MINTING_STEPS.IPFS_UPLOAD,
+          error: nft_payload.message,
+          collection,
+          category,
+        });
         return nft_payload;
       }
+
+      // Step 2: IPFS Upload Complete
+      logNFTMintingStepComplete({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        price: nft_payload.price,
+        step: MINTING_STEPS.IPFS_UPLOAD,
+        collection,
+        category,
+      });
+
       setMintProgress({
         [nft_id]: {
           step: 2,
           message: "Loading O1JS and MINANFT Environment",
         },
       });
+
+      // Step 3: O1JS Loading
+      logNFTMintingStepComplete({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        price: nft_payload.price,
+        step: MINTING_STEPS.O1JS_LOADING,
+        collection,
+        category,
+      });
+
       const response = await mintMINANFTHelper(nft_payload);
+
+      if (response?.success) {
+        logNFTMintingSuccess({
+          nftId: nft_id,
+          walletAddress: networkStore.address,
+          price: nft_payload.price,
+          txHash: response?.txHash,
+          step: MINTING_STEPS.COMPLETED,
+          collection,
+          category,
+        });
+      } else {
+        logNFTMintingError({
+          nftId: nft_id,
+          walletAddress: networkStore.address,
+          price: nft_payload.price,
+          error: response?.message || "Unknown error",
+          step: MINTING_STEPS.TRANSACTION_SIGNING,
+          collection,
+          category,
+        });
+      }
+
       return response;
     } catch (error: any) {
+      logNFTMintingError({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        step: MINTING_STEPS.TRANSACTION_SIGNING,
+        error: error.toString(),
+        collection,
+        category,
+      });
       toast(`Txn failed with error ${error.toString()}. report a bug`);
     }
   };

@@ -43,8 +43,24 @@ export default function DigitalCollection({
     queryText: "MINAPUNKS",
   });
 
-  const isLoading = isMinatyLoading || isTilevilleLoading || isMinaPunksLoading;
-  const totalNfts = [...minatyNfts, ...tilevilleNfts, ...minaPunksNfts];
+  // Fetch ZkGod NFTs
+  const { mintNFTHitsResponse: zkGodNfts = [], isLoading: isZkGodLoading } =
+    useFetchNFTSAlgolia({
+      owner: walletAddress,
+      queryText: "ZKGOD",
+    });
+
+  const isLoading =
+    isMinatyLoading ||
+    isTilevilleLoading ||
+    isMinaPunksLoading ||
+    isZkGodLoading;
+  const totalNfts = [
+    ...minatyNfts,
+    ...tilevilleNfts,
+    ...minaPunksNfts,
+    ...zkGodNfts,
+  ];
 
   if (isLoading) {
     return (

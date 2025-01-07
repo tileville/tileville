@@ -342,6 +342,22 @@ export function useMintMINANFT() {
       name,
       nonce,
     });
+
+    if (!sentTx.isSent || sentTx.error) {
+      setMintProgress({
+        [nft_id]: {
+          step: 5,
+          message: `Transaction failed: ${
+            sentTx.error || "Unknown error occurred"
+          }`,
+        },
+      });
+      return {
+        success: false,
+        message: sentTx.error || "Failed to send transaction",
+      };
+    }
+
     setMintProgress({
       [nft_id]: {
         step: 6,
@@ -349,10 +365,12 @@ export function useMintMINANFT() {
       },
     });
 
-    if (sentTx.hash.toLocaleLowerCase().includes("error")) {
-      return { success: false, message: sentTx.hash };
-    }
     return { success: true, txHash: sentTx.hash };
+
+    // if (sentTx.hash.toLocaleLowerCase().includes("error")) {
+    //   return { success: false, message: sentTx.hash };
+    // }
+    // return { success: true, txHash: sentTx.hash };
   };
 
   return { mintMINANFTHelper };
