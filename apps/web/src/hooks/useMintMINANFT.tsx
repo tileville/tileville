@@ -22,7 +22,7 @@ export type MintNFTParams = {
   name: string;
   signed_image_url: string;
   collection: string;
-  description: string;
+  collectionDescription: string;
   price: number;
   keys: ProofOfNFT[];
   owner_address: string;
@@ -40,7 +40,7 @@ export function useMintMINANFT() {
       name,
       price,
       collection,
-      description,
+      collectionDescription,
       keys,
       ipfs,
       signed_image_url,
@@ -139,10 +139,10 @@ export function useMintMINANFT() {
     if (collection !== undefined && collection !== "")
       nft.update({ key: `collection`, value: collection });
 
-    if (description !== undefined && description !== "")
+    if (collectionDescription !== undefined && collectionDescription !== "")
       nft.updateText({
         key: `description`,
-        text: description,
+        text: collectionDescription,
       });
 
     for (const item of keys) {
