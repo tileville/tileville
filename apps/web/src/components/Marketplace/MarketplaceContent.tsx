@@ -2,16 +2,11 @@
 import React from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { DropdownMenu } from "@radix-ui/themes";
 import { NFTModal } from "@/components/NFTModal";
-import {
-  useNFTEntries,
-  useMinatyNFTEntries,
-  useMinaPunksNFTEntries,
-  useZKGodNFTEntries,
-} from "@/db/react-query-hooks";
+import { useNFTsWithPagination } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import { Pagination } from "@/components/common/Pagination";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
@@ -55,45 +50,16 @@ export default function MarketplaceContent() {
         NFT_COLLECTIONS.TILEVILLE
     );
 
-  const { data: tilevilleData, isLoading: tilevilleLoading } = useNFTEntries({
+  const {
+    data: nftData,
+    isLoading: isNFTLoading,
+    error: nftError,
+  } = useNFTsWithPagination({
+    collection: selectedCollection,
     sortOrder,
     searchTerm,
     currentPage,
   });
-
-  const { data: minatyData, isLoading: minatyLoading } = useMinatyNFTEntries({
-    sortOrder,
-    searchTerm,
-    currentPage,
-  });
-
-  const { data: minaPunksData, isLoading: minaPunksLoading } =
-    useMinaPunksNFTEntries({
-      sortOrder,
-      searchTerm,
-      currentPage,
-    });
-
-  const { data: zkGodData, isLoading: zkGodLoading } = useZKGodNFTEntries({
-    sortOrder,
-    searchTerm,
-    currentPage,
-  });
-
-  const displayData = useMemo(() => {
-    switch (selectedCollection) {
-      case NFT_COLLECTIONS.TILEVILLE:
-        return tilevilleData;
-      case NFT_COLLECTIONS.MINATY:
-        return minatyData;
-      case NFT_COLLECTIONS.MINAPUNKS:
-        return minaPunksData;
-      case NFT_COLLECTIONS.ZKGOD:
-        return zkGodData;
-      default:
-        return tilevilleData;
-    }
-  }, [selectedCollection, tilevilleData, minatyData, minaPunksData, zkGodData]);
 
   let queryText;
   switch (selectedCollection) {
@@ -196,6 +162,16 @@ export default function MarketplaceContent() {
     );
   }, [searchParams]);
 
+  if (nftError) {
+    return (
+      <div className="py-36 text-center">
+        <h2 className="text-center text-3xl font-semibold text-red-500">
+          Error loading NFTs: {nftError.message || "An unknown error occurred"}
+        </h2>
+      </div>
+    );
+  }
+
   return (
     <div className="relative p-4 pb-0 pt-12 md:pb-28 md:pt-20">
       <div className="mx-auto max-w-[1280px] pt-3">
@@ -289,7 +265,7 @@ export default function MarketplaceContent() {
 
         {/* NFT grid */}
         <div className="mb-16">
-          {displayData?.nfts.length === 0 ? (
+          {nftData?.nfts.length === 0 ? (
             <div className="py-36 text-center">
               <h2 className="text-center text-3xl font-semibold">
                 No Results Found
@@ -300,14 +276,11 @@ export default function MarketplaceContent() {
           )}
 
           <div className={`${renderStyle} pr-2 text-lg`}>
-            {tilevilleLoading ||
-            minatyLoading ||
-            minaPunksLoading ||
-            zkGodLoading ? (
+            {isNFTLoading ? (
               <MarketplaceLoading />
             ) : (
               <>
-                {displayData?.nfts.map((nft: any) => {
+                {nftData?.nfts.map((nft: any) => {
                   return (
                     <NFTModal
                       key={nft.nft_id}
@@ -341,12 +314,12 @@ export default function MarketplaceContent() {
       </div>
 
       {/* Pagination */}
-      {tilevilleLoading || minatyLoading || minaPunksLoading || zkGodLoading ? (
+      {isNFTLoading ? (
         <Spinner2 />
       ) : (
         <Pagination
           currentPage={currentPage}
-          totalCount={displayData.count}
+          totalCount={nftData?.count || 0}
           onPageChange={handlePageChange}
         />
       )}

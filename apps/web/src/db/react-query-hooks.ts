@@ -36,6 +36,7 @@ import {
   BLOCKBERRY_API_KEY,
   BLOCKBERRY_MAINNET_BASE_URL,
   isMockEnv,
+  NFTCollectionType,
 } from "@/constants";
 import { useAtom } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
@@ -580,7 +581,7 @@ export function useFollowUser() {
         }
         return data;
       } finally {
-        setFollowLoading(false); 
+        setFollowLoading(false);
       }
     },
     onSuccess: () => {
@@ -605,7 +606,7 @@ export function useUnfollowUser() {
       const authSignature =
         window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
       setFollowLoading(true);
-           try {
+      try {
         const response = await fetch("/api/player/unfollow", {
           method: "POST",
           headers: {
@@ -1303,4 +1304,57 @@ export const useZKGodNFTEntries = ({
       refetchOnReconnect: false,
     }
   );
+};
+
+export interface NFTResponse {
+  nfts: Array<any>; 
+  count: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+export type NFTError = {
+  message: string;
+  status?: number;
+};
+
+export const useNFTsWithPagination = ({
+  collection,
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+}: {
+  collection: NFTCollectionType;
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+}) => {
+  return useQuery<NFTResponse, NFTError>({
+    queryKey: [
+      `${collection.toLowerCase()}_nfts`,
+      sortOrder,
+      searchTerm,
+      currentPage,
+    ],
+    queryFn: async () => {
+      const params = [
+        `collection=${collection}`,
+        `sortOrder=${sortOrder}`,
+        `searchTerm=${encodeURIComponent(searchTerm)}`,
+        `page=${currentPage}`,
+      ].join("&");
+
+      const response = await fetch(`/api/nfts?${params}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw {
+          message: errorData.error || "Failed to fetch NFTs",
+          status: response.status,
+        };
+      }
+      return response.json();
+    },
+    keepPreviousData: true,
+    staleTime: 1000 * 60, 
+  });
 };
