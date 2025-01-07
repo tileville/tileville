@@ -20,8 +20,14 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from(tableName)
       .select("*", { count: "exact" })
-      .range(start, end)
-      .order("price", { ascending: sortOrder === "asc" });
+      .range(start, end);
+
+    query = query
+      .order("price", {
+        ascending: sortOrder === "asc",
+        nullsFirst: false,
+      })
+      .order("nft_id", { ascending: true });
 
     if (searchTerm) {
       const numericSearch = parseInt(searchTerm);
@@ -39,7 +45,7 @@ export async function GET(request: NextRequest) {
     if (error) throw error;
 
     return Response.json({
-      nfts,
+      nfts: nfts || [],
       count: count || 0,
       currentPage: page,
       totalPages: Math.ceil((count || 0) / NFT_PAGE_SIZE),
