@@ -67,3 +67,8 @@ export type CompetitionErrorType = {
     extraData?: Record<string, any>;
   };
 };
+export type NFTBucketNames =
+  | "builder_nfts"
+  | "minaty_nfts"
+  | "minapunks_nfts"
+  | "zkgod_nfts";

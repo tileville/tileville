@@ -3,7 +3,7 @@ import {
   Cross1Icon,
   HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MediaPlayer } from "../MediaPlayer/page";
 import {
@@ -19,14 +19,60 @@ import {
   XFollowBtn,
 } from "../NavButtons/NavButtons";
 import { FooterContent } from "../Footer/FooterContent";
-import Image from "next/image";
+import { useNetworkStore } from "@/lib/stores/network";
+import {
+  useFetchTransactions,
+  useMainnetTransactionsStatus,
+  useProfileLazyQuery,
+} from "@/db/react-query-hooks";
+import { useAuthSignature } from "@/hooks/useAuthSignature";
+import { usePosthogEvents } from "@/hooks/usePosthogEvents";
+import { walletInstalled } from "@/lib/helpers";
+import { anonymousSignIn } from "@/db/supabase-queries";
 
-export const MobileNavBar = () => {
+export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
   const isHeaderWithBg = BACKGROUND_PATHS_HEADER.includes(pathname);
   const router = useRouter();
+  const networkStore = useNetworkStore();
+  const { data, isFetched } = useProfileLazyQuery(networkStore?.address || "");
+  const { data: pendingTransactions = [] } = useFetchTransactions(
+    networkStore?.address || "",
+    "PENDING"
+  );
+  const { validateOrSetSignature } = useAuthSignature();
+  useMainnetTransactionsStatus(
+    pendingTransactions
+      .filter(({ network }) => network === "mina:mainnet")
+      .map(({ txn_hash, txn_status }) => ({
+        txn_hash,
+        txn_status,
+      }))
+  );
+  const { phClient } = usePosthogEvents();
+  useEffect(() => {
+    if (!walletInstalled()) return;
+    if (autoConnect) {
+      networkStore.connectWallet(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    if (networkStore.walletConnected && isFetched) {
+      validateOrSetSignature();
+      phClient.identify(networkStore.address, { username: data?.username });
+      anonymousSignIn()
+        .then(() => {
+          console.log("anonymous login done");
+        })
+        .catch(() => {
+          console.log("failed to do anonymous login");
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [networkStore.walletConnected, data, isFetched]);
 
   return (
     <div className="">

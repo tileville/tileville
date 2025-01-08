@@ -16,6 +16,7 @@ import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintMINANFT } from "@/hooks/useMintMINANFT";
 import { requestAccounts, requestNetwork, sendPayment } from "../helpers";
 import { useCompetitionErrorTracking } from "@/hooks/useCompetitionErrorTracking";
+import { NFTBucketNames, NFTTableNames } from "../types";
 // import uuid from "uuid";
 
 export interface NetworkState {
@@ -305,10 +306,16 @@ export const useMintNFT = () => {
     nft_id,
     collection,
     category,
+    collectionTableName,
+    collectionBucketName,
+    collectionDescription,
   }: {
     nft_id: number;
     collection?: string;
     category?: string;
+    collectionTableName: NFTTableNames;
+    collectionBucketName: NFTBucketNames;
+    collectionDescription: string;
   }) => {
     if (!networkStore.address) {
       networkStore.connectWallet(false);
@@ -331,6 +338,9 @@ export const useMintNFT = () => {
           wallet_address: networkStore.address,
           nft_id,
           collection,
+          collectionTableName,
+          collectionBucketName,
+          collectionDescription,
         }),
         headers: {
           "Auth-Signature": "abv1",

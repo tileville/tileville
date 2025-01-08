@@ -883,3 +883,13 @@ export const COLLECTION_MINT_RULES = {
     maxMintsPerWallet: 1,
   },
 } as const;
+
+export const NFT_TABLE_NAMES = {
+  TILEVILLE: "tileville_builder_nfts",
+  MINATY: "minaty_nfts",
+  MINAPUNKS: "minapunks_nfts",
+  ZKGOD: "zkgod_nfts",
+} as const;
+
+export type NFTTableName =
+  (typeof NFT_TABLE_NAMES)[keyof typeof NFT_TABLE_NAMES];
