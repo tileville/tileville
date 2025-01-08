@@ -89,30 +89,230 @@ export type Database = {
         }
         Relationships: []
       }
+      minapunks_nfts: {
+        Row: {
+          category: string
+          created_at: string
+          id: number
+          img_url: string
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: number
+          img_url: string
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: number
+          img_url?: string
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Relationships: []
+      }
+      minaty_nfts: {
+        Row: {
+          category: Database["public"]["Enums"]["nft_category"]
+          created_at: string
+          id: number
+          img_url: string
+          is_public_mint: boolean
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["nft_category"]
+          created_at?: string
+          id?: number
+          img_url: string
+          is_public_mint?: boolean
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["nft_category"]
+          created_at?: string
+          id?: number
+          img_url?: string
+          is_public_mint?: boolean
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Relationships: []
+      }
       player_profile: {
         Row: {
           avatar_url: string | null
           created_at: string
+          discord_username: Json
+          email_address: Json
+          followers: string[]
+          following: string[]
           fullname: string | null
           id: number
+          telegram_username: Json
+          total_rewards: number
+          twitter_username: Json
           username: string
           wallet_address: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          discord_username?: Json
+          email_address?: Json
+          followers?: string[]
+          following?: string[]
           fullname?: string | null
           id?: number
+          telegram_username?: Json
+          total_rewards?: number
+          twitter_username?: Json
           username: string
           wallet_address: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          discord_username?: Json
+          email_address?: Json
+          followers?: string[]
+          following?: string[]
           fullname?: string | null
           id?: number
+          telegram_username?: Json
+          total_rewards?: number
+          twitter_username?: Json
           username?: string
           wallet_address?: string
+        }
+        Relationships: []
+      }
+      pvp_challenge_participants: {
+        Row: {
+          challenge_id: number
+          created_at: string
+          has_played: boolean
+          id: number
+          joined_at: string
+          played_at: string | null
+          score: number | null
+          txn_hash: string | null
+          txn_status: string | null
+          wallet_address: string
+        }
+        Insert: {
+          challenge_id: number
+          created_at?: string
+          has_played?: boolean
+          id?: number
+          joined_at?: string
+          played_at?: string | null
+          score?: number | null
+          txn_hash?: string | null
+          txn_status?: string | null
+          wallet_address: string
+        }
+        Update: {
+          challenge_id?: number
+          created_at?: string
+          has_played?: boolean
+          id?: number
+          joined_at?: string
+          played_at?: string | null
+          score?: number | null
+          txn_hash?: string | null
+          txn_status?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pvp_challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "pvp_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pvp_challenges: {
+        Row: {
+          created_at: string
+          created_by: string
+          end_time: string
+          entry_fee: number
+          id: number
+          invite_code: string
+          is_public: boolean
+          is_reward_sent: boolean
+          is_speed_challenge: boolean
+          max_participants: number
+          name: string
+          reward_txn_hash: string | null
+          speed_duration: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          end_time: string
+          entry_fee?: number
+          id?: number
+          invite_code: string
+          is_public?: boolean
+          is_reward_sent?: boolean
+          is_speed_challenge?: boolean
+          max_participants?: number
+          name: string
+          reward_txn_hash?: string | null
+          speed_duration?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          end_time?: string
+          entry_fee?: number
+          id?: number
+          invite_code?: string
+          is_public?: boolean
+          is_reward_sent?: boolean
+          is_speed_challenge?: boolean
+          max_participants?: number
+          name?: string
+          reward_txn_hash?: string | null
+          speed_duration?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -134,6 +334,30 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+        }
+        Relationships: []
+      }
+      telegram_auth: {
+        Row: {
+          authenticated: boolean | null
+          chat_id: string | null
+          created_at: string
+          id: number
+          wallet_address: string | null
+        }
+        Insert: {
+          authenticated?: boolean | null
+          chat_id?: string | null
+          created_at?: string
+          id?: number
+          wallet_address?: string | null
+        }
+        Update: {
+          authenticated?: boolean | null
+          chat_id?: string | null
+          created_at?: string
+          id?: number
+          wallet_address?: string | null
         }
         Relationships: []
       }
@@ -269,6 +493,30 @@ export type Database = {
         }
         Relationships: []
       }
+      umbra_signup_emails: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: number
+          message: string | null
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: number
+          message?: string | null
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: number
+          message?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
       voucher_codes: {
         Row: {
           code: string
@@ -302,6 +550,45 @@ export type Database = {
         }
         Relationships: []
       }
+      zkgod_nfts: {
+        Row: {
+          created_at: string
+          id: number
+          img_url: string
+          is_public_mint: boolean
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          img_url: string
+          is_public_mint?: boolean
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          img_url?: string
+          is_public_mint?: boolean
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -310,7 +597,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      nft_category: "FOUNDER" | "DESIGNER" | "SOLDIER" | "GUARDIAN" | "TOTEM"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -398,4 +685,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

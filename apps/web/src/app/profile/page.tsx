@@ -1,24 +1,36 @@
 "use client";
 
-import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic";
-
-const ProfileContent = dynamic(() => import("./ProfileContent"), {
-  ssr: false,
-});
+import { Spinner2 } from "@/components/common/Spinner";
+import { useNetworkStore } from "@/lib/stores/network";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Profile() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ProfileWrapper />
-    </Suspense>
-  );
-}
+  const networkStore = useNetworkStore();
+  const router = useRouter();
 
-function ProfileWrapper() {
-  const searchParams = useSearchParams();
-  const paramsValue = searchParams.get("tab");
+  useEffect(() => {
+    if (networkStore.address) {
+      router.push(`/u/${networkStore.address}`);
+    }
+  }, [networkStore.address, router]);
 
-  return <ProfileContent initialTab={paramsValue || "collection"} />;
+  if (!networkStore.address) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center p-8">
+        <button
+          className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+          onClick={() => {
+            networkStore.connectWallet(false);
+          }}
+        >
+          Connect your wallet first
+        </button>
+      </div>
+    );
+  }
+
+  return  <div className="min-h-screen flex items-center justify-center w-full">
+    <Spinner2 />
+  </div>;
 }

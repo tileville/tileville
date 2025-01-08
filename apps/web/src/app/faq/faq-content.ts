@@ -88,20 +88,25 @@ export const faqContent: {
       },
       {
         id: 4,
+        question: "What counts as a 'Win' in TileVille competitions?",
+        answer:
+          "In TileVille, a 'Win' is achieved when you place in the Top 10 of any competition. Each competition can only count as one win toward your total wins, even if you have multiple high-scoring entries in that competition. For example, if you place 3rd and 8th in the same competition, it counts as one win. If you place in the top 10 in three different competitions, you'll have three wins. This system rewards consistent high performance across multiple competitions rather than just one-time high scores.",
+      },
+      {
+        id: 5,
         question:
           "Can the one wallet address win muliple prize in the same competition",
         answer:
           "If the same user is listed multiple times on the leaderboard, we will consider their highest rank only. The subsequent positions will be adjusted to ensure each prize goes to a different player. For instance, if User A is first and third, User A will receive the prize for the first rank, and the player who is second will remain second, while the player who is fourth will move up to third place.",
       },
-
       {
-        id: 5,
+        id: 6,
         question: "What is the reward payout mechanism?",
         answer:
           "We're currently handling the payout. However, we're working on automating this process to allow users to claim their winnings directly from their profile section.",
       },
       {
-        id: 6,
+        id: 7,
         question:
           "What happens if two players have the same score on the leaderboard?",
         answer:

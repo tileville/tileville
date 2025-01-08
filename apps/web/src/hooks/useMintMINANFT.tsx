@@ -8,14 +8,14 @@ import {
 import type { VerificationKey } from "o1js";
 import {
   CHAIN_NAME,
-  FEEMASTER_PUBLIC_KEY,
+  FEEMASTER_PUBLIC_KEY_DEFAULT,
   MINANFT_CONTRACT_ADDRESS,
-  RESERVED_PRICE_REDUCE_KEY,
+  RESERVED_PRICE_REDUCE_KEY_DEFAULT,
   ProofOfNFT,
 } from "@/app/api/mint-nft/constants";
 import { createFileFromImageUrl } from "@/app/api/mint-nft/common-utils";
-import { useSetAtom } from "jotai";
-import { mintProgressAtom } from "@/contexts/atoms";
+import { useAtomValue, useSetAtom } from "jotai";
+import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { requestAccounts } from "@/lib/helpers";
 
 export type MintNFTParams = {
@@ -32,6 +32,7 @@ export type MintNFTParams = {
 
 export function useMintMINANFT() {
   const setMintProgress = useSetAtom(mintProgressAtom);
+  const globalConfig = useAtomValue(globalConfigAtom)
   const mintMINANFTHelper = async (params: MintNFTParams) => {
     console.log("######## MINT NFT Flow Starts ######");
     console.log("params", params);
@@ -45,6 +46,10 @@ export function useMintMINANFT() {
       signed_image_url,
       nft_id,
     } = params;
+    const collectionConfig = globalConfig?.nft_collections_config?.[collection] || {}
+    const feeMasterPublicKey = collectionConfig.fee_master_public_key || FEEMASTER_PUBLIC_KEY_DEFAULT
+    const reserved_price_reduce_key = collectionConfig.reserved_price_reduce_key || RESERVED_PRICE_REDUCE_KEY_DEFAULT
+    console.log("feeMasterPublicKey" , feeMasterPublicKey)
     const contractAddress = MINANFT_CONTRACT_ADDRESS;
     const chain: blockchain = CHAIN_NAME;
 
@@ -116,7 +121,7 @@ export function useMintMINANFT() {
       version: "v2",
       developer: "Tileville",
       repo: "tileville",
-      key: RESERVED_PRICE_REDUCE_KEY,
+      key: reserved_price_reduce_key,
     } as any);
 
     const nft = new RollupNFT({
@@ -206,7 +211,7 @@ export function useMintMINANFT() {
     await commitPromise;
     console.timeEnd("prepared commit data");
     console.time("prepared tx");
-    const feeMaster = PublicKey.fromBase58(FEEMASTER_PUBLIC_KEY);
+    const feeMaster = PublicKey.fromBase58(feeMasterPublicKey);
 
     if (nft.storage === undefined) {
       return {
@@ -250,7 +255,7 @@ export function useMintMINANFT() {
         storage: nft.storage,
       },
     };
-    console.log("mint params 245", mintParams);
+    console.log("============= mint params ===============", mintParams);
     let tx: any;
     try {
       tx = await Mina.transaction({ sender, fee, memo }, async () => {
@@ -337,6 +342,22 @@ export function useMintMINANFT() {
       name,
       nonce,
     });
+
+    if (!sentTx.isSent || sentTx.error) {
+      setMintProgress({
+        [nft_id]: {
+          step: 5,
+          message: `Transaction failed: ${
+            sentTx.error || "Unknown error occurred"
+          }`,
+        },
+      });
+      return {
+        success: false,
+        message: sentTx.error || "Failed to send transaction",
+      };
+    }
+
     setMintProgress({
       [nft_id]: {
         step: 6,
@@ -344,10 +365,12 @@ export function useMintMINANFT() {
       },
     });
 
-    if (sentTx.hash.toLocaleLowerCase().includes("error")) {
-      return { success: false, message: sentTx.hash };
-    }
     return { success: true, txHash: sentTx.hash };
+
+    // if (sentTx.hash.toLocaleLowerCase().includes("error")) {
+    //   return { success: false, message: sentTx.hash };
+    // }
+    // return { success: true, txHash: sentTx.hash };
   };
 
   return { mintMINANFTHelper };

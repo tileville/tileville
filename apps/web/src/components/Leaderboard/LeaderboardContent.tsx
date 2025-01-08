@@ -9,11 +9,14 @@ import {
 import { LEADERBOARD_COLUMNS } from "@/constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import TableSkeleton from "./TableSkeleton";
+import { getCompetitionStatus } from "@/lib/helpers";
 
 type SelectedCompetition = {
   id: number;
   name: string;
   competition_key: string;
+  start_date: string;
+  end_date: string;
 };
 
 type LeaderboardResult = {
@@ -35,6 +38,31 @@ const skeletonItems = Array.from(
   })
 );
 
+const CompetitionStatusTag = ({
+  status,
+}: {
+  status: "ONGOING" | "UPCOMING" | "ENDED";
+}) => {
+  const getTagStyles = () => {
+    switch (status) {
+      case "ONGOING":
+        return "bg-primary/20 text-primary";
+      case "UPCOMING":
+        return "bg-blue-500/20 text-blue-700";
+      case "ENDED":
+        return "bg-gray-500/20 text-gray-700";
+    }
+  };
+
+  return (
+    <span
+      className={`rounded-full px-3 py-1 text-sm font-medium ${getTagStyles()}`}
+    >
+      {status}
+    </span>
+  );
+};
+
 export default function LeaderboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,14 +76,39 @@ export default function LeaderboardContent() {
   } = useCompetitionsName();
 
   const [selectedCompetition, setSelectedCompetition] =
-    useState<SelectedCompetition>({
-      id: 3,
-      name: "Hero's Tileville League",
-      competition_key: "heros_tileville",
-    } as SelectedCompetition);
+    useState<SelectedCompetition | null>(null);
 
+  // Add useEffect to set initial competition when data is loaded
+  useEffect(() => {
+    if (competitionData && competitionData.length > 0) {
+      if (competitionParam) {
+        const matchedCompetition = competitionData.find(
+          (comp) => comp.unique_keyname === competitionParam
+        );
+        if (matchedCompetition) {
+          setSelectedCompetition({
+            id: matchedCompetition.id,
+            name: matchedCompetition.name,
+            competition_key: matchedCompetition.unique_keyname,
+            start_date: matchedCompetition.start_date,
+            end_date: matchedCompetition.end_date,
+          });
+        }
+      } else {
+        setSelectedCompetition({
+          id: competitionData[0].id,
+          name: competitionData[0].name,
+          competition_key: competitionData[0].unique_keyname,
+          start_date: competitionData[0].start_date,
+          end_date: competitionData[0].end_date,
+        });
+      }
+    }
+  }, [competitionData, competitionParam]);
+
+  // Modify the useLeaderboardEntries call to only fetch when selectedCompetition exists
   const { data: leaderboardData = [], isLoading } = useLeaderboardEntries(
-    selectedCompetition.competition_key
+    selectedCompetition?.competition_key || ""
   );
 
   useEffect(() => {
@@ -68,6 +121,8 @@ export default function LeaderboardContent() {
           id: matchedCompetition.id,
           name: matchedCompetition.name,
           competition_key: matchedCompetition.unique_keyname,
+          start_date: matchedCompetition.start_date,
+          end_date: matchedCompetition.end_date,
         });
       }
     }
@@ -93,7 +148,7 @@ export default function LeaderboardContent() {
   }
 
   return (
-    <div className="mt-4 p-4 pb-8 pt-12 md:py-40">
+    <div className="p-4 pb-8 pt-16 md:py-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div className="grid grid-cols-2 items-center gap-2 md:flex md:gap-3">
@@ -102,13 +157,12 @@ export default function LeaderboardContent() {
             </p>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <button className="border-primary-30  flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
-                  {isLoading ? (
+                <button className="border-primary-30 flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
+                  {isLoading || !selectedCompetition ? (
                     <Skeleton className="h-5 w-full" />
                   ) : (
                     <span className="truncate">{selectedCompetition.name}</span>
                   )}
-
                   <span>
                     <Image
                       src="icons/topBottomArrows.svg"
@@ -132,29 +186,48 @@ export default function LeaderboardContent() {
                     ))}
                   </>
                 ) : (
-                  competitionData?.map((competition) => (
-                    <DropdownMenu.Item
-                      key={competition.id}
-                      onClick={() =>
-                        handleCompetitionChange({
-                          id: competition.id,
-                          competition_key: competition.unique_keyname,
-                          name: competition.name,
-                        })
-                      }
-                      className="!md:h-8 !h-auto py-2 hover:bg-primary"
-                    >
-                      {competitionNameLoading ? (
-                        <Skeleton className="h-3 w-full" />
-                      ) : (
-                        competition.name
-                      )}
-                    </DropdownMenu.Item>
-                  ))
+                  competitionData.map((competition) => {
+                    return (
+                      <DropdownMenu.Item
+                        key={competition.unique_keyname}
+                        onClick={() =>
+                          handleCompetitionChange({
+                            id: competition.id,
+                            competition_key: competition.unique_keyname,
+                            name: competition.name,
+                            start_date: competition.start_date,
+                            end_date: competition.end_date,
+                          })
+                        }
+                        className={`!md:h-8 mt-1 !h-auto py-2 transition-colors ${
+                          selectedCompetition?.competition_key ===
+                          competition.unique_keyname
+                            ? "bg-primary text-white" // Selected state
+                            : "hover:bg-primary hover:text-white" // Hover state
+                        }`}
+                      >
+                        <div className="flex w-full items-center justify-between px-2">
+                          <span>{competition.name}</span>
+                          {selectedCompetition?.id === competition.id && (
+                            <span className="text-sm">✓</span>
+                          )}
+                        </div>
+                      </DropdownMenu.Item>
+                    );
+                  })
                 )}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           </div>
+
+          {selectedCompetition && (
+            <CompetitionStatusTag
+              status={getCompetitionStatus(
+                selectedCompetition.start_date,
+                selectedCompetition.end_date
+              )}
+            />
+          )}
         </div>
         <Table.Root>
           <Table.Header>

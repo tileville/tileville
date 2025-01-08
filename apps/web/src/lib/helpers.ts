@@ -5,7 +5,12 @@ import {
 import clsx, { ClassValue } from "clsx";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
-import { TREASURY_ADDRESS } from "@/constants";
+import {
+  FIRST_WORDS,
+  SECOND_WORDS,
+  TILEVILLE_BOT_URL,
+  TREASURY_ADDRESS,
+} from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
 
 export function walletInstalled() {
@@ -67,6 +72,9 @@ export function formatTimestampToReadableAge(timestamp: string): string {
 
 export const getMinaScanLink = (txnHash: string) =>
   `https://minascan.io/mainnet/tx/${txnHash}?type=zk-tx`;
+
+export const getMinaScanNormalLink = (txnHash: string) =>
+  `https://minascan.io/mainnet/tx/${txnHash}`;
 
 export const getMINANFTLink = (txnHash: string) =>
   `https://minanft.io/explore?query=${txnHash}`;
@@ -138,9 +146,11 @@ export async function dummy() {
 export async function sendPayment({
   from,
   amount,
+  memo,
 }: {
   from: string;
   amount: number;
+  memo?: string;
 }) {
   const nonceResponse = await fetch(`/api/nonce?wallet_address=${from}`);
   const nonce = await nonceResponse.json();
@@ -152,7 +162,7 @@ export async function sendPayment({
   console.log("nonce", nonce);
   const transaction = {
     to: TREASURY_ADDRESS,
-    memo: "game fess",
+    memo: memo ? memo : "game fees",
     fee: 100_000_000,
     amount: amount * 1000_000_000,
     nonce: nonce.nonce,
@@ -187,7 +197,7 @@ export async function sendPayment({
       )?.mina?.sendPayment({
         amount: amount,
         to: TREASURY_ADDRESS,
-        memo: `Pay ${amount} by auro wallet.`,
+        memo: memo || `Pay ${amount} by auro wallet.`,
       });
       return (data as SendTransactionResult).hash;
     } catch (err: any) {
@@ -221,3 +231,191 @@ export async function copyToClipBoard({
     });
   }
 }
+
+export const redirectToTelegramBot = () => {
+  window.location.href = TILEVILLE_BOT_URL;
+};
+
+export const formatGameAnnouncement = ({
+  username,
+  address,
+  score,
+  isDemoGame,
+  competitionKey,
+}: {
+  username?: string | null;
+  address?: string;
+  score: number;
+  isDemoGame: boolean;
+  competitionKey?: string;
+}): string => {
+  const userIdentifier = address
+    ? username
+      ? `[${username}](https://www.tileville.xyz/u/${username})`
+      : `\`${formatAddress(address)}\``
+    : "Someone";
+
+  const gameMode = isDemoGame
+    ? `[TileVille demo mode](https://www.tileville.xyz/competitions/demo-game)`
+    : `[${competitionKey}](https://www.tileville.xyz/leaderboard?competition=${competitionKey})`;
+
+  return (
+    `🎮 Wow! ${userIdentifier} just scored ${score} points in ${gameMode} 🎯\n\n` +
+    `Can you beat this score? Try now at https://tileville.xyz`
+  );
+};
+
+export const generateAuroWalletDeepLink = (chatId: string) => {
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/verify?chatId=${chatId}`;
+};
+
+export const generateAuroWalletDeepLinkForChallengeInvite = (
+  inviteCode: string
+) => {
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=${window.location.origin}/pvp/invite/${inviteCode}`;
+};
+
+export const generateChallengeName = () => {
+  const firstWord = FIRST_WORDS[Math.floor(Math.random() * FIRST_WORDS.length)];
+  const secondWord =
+    SECOND_WORDS[Math.floor(Math.random() * SECOND_WORDS.length)];
+  return `${firstWord} ${secondWord}`;
+};
+
+export const generatePVPChallengeInviteLink = (invite_code: string) => {
+  return `${window.location.origin}/pvp/invite/${invite_code}`;
+};
+
+type generateChallengeMessageForGroupType = {
+  challengeName: string;
+  walletAddress: string;
+  speedDuration: number | null;
+  endTime: string;
+  isSpeedChallenge: boolean;
+  entryFee: number;
+  username: string | null;
+  maxParticipants: number;
+  isPublic: boolean;
+  inviteLink: string;
+};
+
+const calculateHoursRemaining = (endTime: string): number => {
+  const now = new Date();
+  const end = new Date(endTime);
+  const diffInHours = Math.ceil(
+    (end.getTime() - now.getTime()) / (1000 * 60 * 60)
+  );
+  return diffInHours;
+};
+
+export const generateChallengeMessageForGroup = ({
+  challengeName,
+  walletAddress,
+  speedDuration,
+  endTime,
+  isSpeedChallenge,
+  entryFee,
+  username,
+  maxParticipants,
+  isPublic,
+  inviteLink,
+}: generateChallengeMessageForGroupType) => {
+  const hoursRemaining = calculateHoursRemaining(endTime);
+
+  const groupMessage = `🎉 A New Challenge Awaits!
+
+🌟 **Challenge Name:** "${challengeName}"
+👤 **Created By:** ${username || `Wallet ${walletAddress.slice(0, 6)}`}
+💰 **Entry Fee:** ${entryFee} MINA
+👥 **Max Participants:** ${maxParticipants}
+⏰ **Ends in:** ${hoursRemaining} hours${
+    isSpeedChallenge
+      ? `\n⏱️ **Speed Challenge Duration:** ${speedDuration} seconds`
+      : ""
+  }
+${isPublic ? `\n👥 **Invite Link:** ${inviteLink}` : ""}
+`;
+
+  return groupMessage;
+};
+
+export const getShareContent = ({
+  inviteLink,
+  challengeName,
+  entryFee,
+}: {
+  inviteLink: string;
+  challengeName: string;
+  entryFee: number;
+}) => {
+  return {
+    twitter: `🎮 Join my TileVille challenge "${challengeName}"! 
+
+Entry fee: ${entryFee} MINA
+${inviteLink}
+
+@TileVilleSocial #TileVille #MinaProtocol #Gaming #P2E`,
+
+    telegram: `🎮 Join my TileVille challenge!
+
+Challenge: ${challengeName}
+Entry fee: ${entryFee} MINA`,
+
+    discord: `🎮 Join my TileVille challenge!
+
+Challenge: ${challengeName}
+Entry fee: ${entryFee} MINA
+
+Join here: ${inviteLink}`,
+  };
+};
+
+export const handleSocialShare = ({
+  platform,
+  inviteLink,
+  challengeName,
+  entryFee,
+}: {
+  platform: "twitter" | "telegram" | "discord";
+  inviteLink: string;
+  challengeName: string;
+  entryFee: number;
+}) => {
+  const shareContent = getShareContent({ inviteLink, challengeName, entryFee });
+  let shareUrl = "";
+
+  switch (platform) {
+    case "twitter":
+      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        shareContent.twitter
+      )}`;
+      break;
+    case "telegram":
+      shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
+        inviteLink
+      )}&text=${encodeURIComponent(shareContent.telegram)}`;
+      break;
+    case "discord":
+      shareUrl = "https://discord.com/";
+      break;
+  }
+
+  window.open(shareUrl, "_blank");
+};
+
+export const getCompetitionStatus = (
+  startDate: string,
+  endDate: string
+): "ONGOING" | "UPCOMING" | "ENDED" => {
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (now < start) {
+    return "UPCOMING";
+  } else if (now > end) {
+    return "ENDED";
+  } else {
+    return "ONGOING";
+  }
+};

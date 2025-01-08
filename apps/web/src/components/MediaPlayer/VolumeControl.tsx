@@ -19,7 +19,7 @@ export const VolumeControl = () => {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="relative flex w-fit max-w-[80px] items-center">
+      <div className="relative flex w-fit max-w-[130px] items-center">
         <input
           id="default-range"
           type="range"
@@ -41,7 +41,7 @@ export const VolumeControl = () => {
           mute(!muted);
         }}
       >
-        {muted ? <SpeakerOffIcon /> : <SpeakerLoudIcon />}
+        {muted ? <SpeakerOffIcon width={20}  height={20}/> : <SpeakerLoudIcon width={20}  height={20}/>}
       </button>
     </div>
   );

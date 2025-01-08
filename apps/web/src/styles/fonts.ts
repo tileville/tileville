@@ -3,7 +3,8 @@ import {
   Source_Sans_3,
   Fjalla_One,
   Montserrat,
-  Bilbo_Swash_Caps
+  Bilbo_Swash_Caps,
+  Roboto,
 } from "next/font/google";
 
 const inter = Inter({
@@ -27,7 +28,14 @@ const bibloSwashCaps = Bilbo_Swash_Caps({
   weight: "400",
   variable: "--font-biblo",
   subsets: ["latin"],
-})
+});
+
+const roboto = Roboto({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  display: "swap",
+});
 
 // define 2 weights of a non-variable font
 const sourceCodePro400 = Source_Sans_3({ weight: "400", subsets: ["latin"] });
@@ -42,5 +50,6 @@ export {
   sourceCodePro700,
   fjallaOne,
   monteserrat,
-  bibloSwashCaps
+  bibloSwashCaps,
+  roboto, // Add roboto to exports
 };

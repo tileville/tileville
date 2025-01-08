@@ -1,7 +1,6 @@
 "use server";
 import axios from "axios";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
-import { NFT_BUCKET_NAME } from "./constants";
 
 export async function pinFile(params: {
   file: File;
@@ -49,10 +48,10 @@ export async function pinFile(params: {
   }
 }
 
-export const fetchNFTImageUrl = async (nft_id: number) => {
+export const fetchNFTImageUrl = async (nft_id: number, bucketName: string) => {
   try {
     const { data, error } = await supabase.storage
-      .from(NFT_BUCKET_NAME)
+      .from(bucketName)
       .createSignedUrl(`${nft_id + 1}.png`, 180); // 60 seconds expiry time
     if (error) {
       throw error;

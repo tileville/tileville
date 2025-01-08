@@ -6,6 +6,7 @@ import { Theme } from "@radix-ui/themes";
 import { ClientLayout } from "./ClientLayout";
 import { PHProvider } from "./providers";
 import { Toaster } from "react-hot-toast";
+import { roboto } from "@/styles/fonts";
 
 export const metadata = {
   title: "TileVille",
@@ -51,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${roboto.variable}`}>
       <body className="gradient-bg min-h-screen">
         <Theme
           accentColor="green"
