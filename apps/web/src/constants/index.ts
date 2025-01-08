@@ -845,4 +845,4 @@ export type NFTTableName =
   (typeof NFT_TABLE_NAMES)[keyof typeof NFT_TABLE_NAMES];
 
 export const FOLLOW_TILEVILLE_URL =
-  "https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fpublish.twitter.com%2F&amp;ref_src=twsrc%5Etfw%7Ctwcamp%5Ebuttonembed%7Ctwterm%5Efollow%7Ctwgr%5EtileVille&amp;region=follow_link&amp;screen_name=tileVilleSocial";
+  "https://x.com/intent/user?screen_name=TilevilleSocial";
