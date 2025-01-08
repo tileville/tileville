@@ -41,7 +41,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const renderNavBar = () => {
     if (!isClient) return null; // Don't render anything on the server
     if (isMobile || isTablet) {
-      return <MobileNavBar />;
+      return <MobileNavBar autoConnect={true} />;
     } else {
       return <DesktopNavBar autoConnect={true} />;
     }
