@@ -82,14 +82,15 @@ export const NFTModal = ({
   const collectionOwner =
     collectionConfig.owner_address || DEFAULT_TRASURY_ADDRESS;
   const maxMintsPerWallet = collectionConfig.max_mints_per_wallet;
+  const collectionTableName = collectionConfig.table_name;
+  const collectionBucketName = collectionConfig.bucket_name;
+  const collectionDescription = collectionConfig.description;
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
-      if (nftMintResponse.success) {
+      if (nftMintResponse.success && nftMintResponse.txHash) {
         toast.success(
-          <>
-            <NFTSuccessMintContent nftTxnHash={nftMintResponse.txHash} />
-          </>,
+          <NFTSuccessMintContent nftTxnHash={nftMintResponse.txHash} />,
           {
             id: "mint-success-toast",
           }
@@ -112,6 +113,7 @@ export const NFTModal = ({
           }
         );
       }
+      setMintLoading(false);
     }
   }, [nftMintResponse]);
 
@@ -157,6 +159,9 @@ export const NFTModal = ({
       const response = await mintNft({
         nft_id,
         collection: collection,
+        collectionTableName,
+        collectionBucketName,
+        collectionDescription,
       });
 
       console.log("186 response", response);
