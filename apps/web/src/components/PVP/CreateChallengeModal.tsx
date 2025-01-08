@@ -83,14 +83,21 @@ export const CreateChallengeModal = ({
           challengeName: name,
           isSpeedChallenge,
           entryFee,
+          isPublic,
         });
       }
     } catch (err) {
       console.error("Failed to create challenge:", err);
       const error = err as Error;
-      logCreateChallengeError(
-        error?.message || "Unknown error during challenge creation"
-      );
+      logCreateChallengeError({
+        walletAddress: networkStore.address,
+        challengeId: 0, // Using 0 fallback for failed creation
+        challengeName: name,
+        isSpeedChallenge,
+        entryFee,
+        isPublic,
+        error: error?.message || "Unknown error during challenge creation",
+      });
     } finally {
       setLoading(false);
     }

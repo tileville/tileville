@@ -24,6 +24,8 @@ type PVPChallengePayload = {
   challengeName: string;
   isSpeedChallenge: boolean;
   entryFee: number;
+  isPublic: boolean;
+  error?: string;
 };
 
 type PlayPVPChallengePayload = {
