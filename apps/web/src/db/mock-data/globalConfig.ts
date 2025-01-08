@@ -2,12 +2,28 @@ export const MOCK_GLOBAL_CONFIG = {
   "nft_collections": [
     "Tileville",
     "Minaty",
-    "MinaPunks",
+    "Minapunks",
     "ZKGod"
   ],
   "nft_collections_config": {
+    "ZKGod": {
+      "table_name": "zkgod_nfts",
+      "bucket_name": "zkgod_nfts",
+      "description": "This NFT is part of Zkgod nfts collection",
+      "owner_address": "B62qpo7T2cKoCxAtEzW152mQEny7Dydq261QALnJjTrqD4bpWGEJfDr",
+      "is_mint_public": true,
+      "max_mints_per_wallet": 1,
+      "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
+      "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
+      "nft_mint_start_date_time_utc": "2024-12-26T18:30:00Z"
+    },
     "Minaty": {
+      "table_name": "minaty_nfts",
+      "bucket_name": "minaty_nfts",
+      "description": "This NFT is part of Minaty nfts collection",
+      "owner_address": "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
       "is_mint_public": false,
+      "max_mints_per_wallet": 3,
       "fee_master_public_key": "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
       "whitelisted_addresses": [
         "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
@@ -50,25 +66,22 @@ export const MOCK_GLOBAL_CONFIG = {
         "B62qrVzi6k4c1Q7fCMnLbe8Wn5TSqMrfvuAmpacKe8VJkjsjKUXH73Z"
       ],
       "reserved_price_reduce_key": "dbVHT6pf4aBcjmUHANFr3P4eEzvjHbxrFdjVbfafbhjew_J",
-      "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z",
-      "owner_address": "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
-      "max_mints_per_wallet": 3,
+      "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z"
     },
     "MinaPunks": {
+      "table_name": "minapunks_nfts",
+      "bucket_name": "minapunks_nfts",
+      "description": "This NFT is part of Minapunks nfts collection",
+      "owner_address": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "is_mint_public": true,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z",
-    },
-    "ZKGod": {
-      "is_mint_public": true,
-      "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
-      "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-26T18:30:00Z",
-      "owner_address": "B62qmhyxLwrLHaMBx6VK979xaELuyPuLGMHxGMrYLtyqMDLzdUc3Ht8",
-      "max_mints_per_wallet": 1,
+      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z"
     },
     "Tileville": {
+      "table_name": "tileville_builder_nfts",
+      "bucket_name": "builder_nfts",
+      "description": "This NFT is part of our first edition of TileVille Builders.",
       "is_mint_public": true,
       "total_nft_count": "150",
       "traits_rarity_counts": {
