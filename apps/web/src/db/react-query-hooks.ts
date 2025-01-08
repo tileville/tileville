@@ -27,7 +27,6 @@ import {
   getCompetitionByKey,
   isGameAlreadyPlayed,
   fetchGlobalConfig,
-  getAllNFTsEntries,
   fetchPVPChallengeTransaction,
   confirmChallengeParticipation,
 } from "./supabase-queries";
@@ -209,21 +208,6 @@ export const useCompetitionsData = () => {
   );
 };
 
-export const useNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}) => {
-  return useQuery(
-    ["tileville_builder_nfts", sortOrder, searchTerm, currentPage],
-    () => getAllNFTsEntries({ sortOrder, searchTerm, currentPage }),
-    {}
-  );
-};
 export const useProfileLazyQuery = (walletAddress: string) => {
   const queryClient = useQueryClient();
 
@@ -949,36 +933,6 @@ export const useTelegramVerify = ({
   );
 };
 
-export const useMinatyNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}) => {
-  return useQuery(
-    ["minaty_nfts", sortOrder, searchTerm, currentPage],
-    async () => {
-      const params = [
-        `sortOrder=${sortOrder}`,
-        `searchTerm=${encodeURIComponent(searchTerm)}`,
-        `currentPage=${currentPage}`,
-      ].join("&");
-
-      const response = await fetch(`/api/minaty-nfts?${params}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
-    {
-      keepPreviousData: true,
-    }
-  );
-};
-
 export const useSendGroupMessage = () => {
   return useMutation({
     mutationFn: async ({
@@ -1237,72 +1191,6 @@ export const useTelegramStatus = (wallet_address: string) => {
     staleTime: 1000 * 60 * 5, // 5 minutes
     cacheTime: 1000 * 60 * 30, // 30 minutes
   });
-};
-
-export const useMinaPunksNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}) => {
-  return useQuery(
-    ["minapunks_nfts", sortOrder, searchTerm, currentPage],
-    async () => {
-      const params = [
-        `sortOrder=${sortOrder}`,
-        `searchTerm=${encodeURIComponent(searchTerm)}`,
-        `currentPage=${currentPage}`,
-      ].join("&");
-
-      const response = await fetch(`/api/nfts/minapunks-nfts?${params}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
-    {
-      keepPreviousData: true,
-    }
-  );
-};
-
-export const useZKGodNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-  category = "ALL",
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-  category?: string;
-}) => {
-  return useQuery(
-    ["zkgod_nfts", sortOrder, searchTerm, currentPage, category],
-    async () => {
-      const params = [
-        `sortOrder=${sortOrder}`,
-        `searchTerm=${encodeURIComponent(searchTerm)}`,
-        `currentPage=${currentPage}`,
-        `category=${category}`,
-      ].join("&");
-
-      const response = await fetch(`/api/nfts/zkgod-nfts?${params}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
-    {
-      keepPreviousData: true,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  );
 };
 
 export interface NFTResponse {
