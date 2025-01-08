@@ -50,6 +50,23 @@ export type NFTTableNames =
   | "minapunks_nfts"
   | "zkgod_nfts";
 
+export type CompetitionErrorType = {
+  errorCode:
+    | "WALLET_NOT_CONNECTED"
+    | "VOUCHER_REDEMPTION_FAILED"
+    | "PAYMENT_FAILED"
+    | "TRANSACTION_LOG_FAILED"
+    | "NETWORK_ERROR"
+    | "UNKNOWN";
+  details: {
+    walletAddress?: string;
+    competitionName: string;
+    network: string;
+    message: string;
+    timestamp: string;
+    extraData?: Record<string, any>;
+  };
+};
 export type NFTBucketNames =
   | "builder_nfts"
   | "minaty_nfts"
