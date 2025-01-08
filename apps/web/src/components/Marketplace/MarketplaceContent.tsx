@@ -19,7 +19,6 @@ import {
 } from "@/constants";
 import { TraitsInfoBtn } from "@/components/Marketplace/TraitsInfoBtn";
 import CollectionSelector from "@/components/Marketplace/CollectionSelector";
-import { Spinner2 } from "@/components/common/Spinner";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 
@@ -304,10 +303,7 @@ export default function MarketplaceContent() {
         </div>
       </div>
 
-      {/* Pagination */}
-      {isNFTLoading ? (
-        <Spinner2 />
-      ) : (
+      {!isNFTLoading && (
         <Pagination
           currentPage={currentPage}
           totalCount={nftData?.count || 0}
