@@ -1,5 +1,8 @@
-import { BUG_REPORT_URL, FOLLOW_TILEVILLE_URL } from "@/constants";
-import { DiscordLogoIcon } from "@radix-ui/react-icons";
+import {
+  BUG_REPORT_URL,
+  FOLLOW_TILEVILLE_URL,
+  TILEVILLE_TELEGRAM_URL,
+} from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -20,18 +23,23 @@ export const XFollowBtn = () => {
   );
 };
 
-export const JoinDiscordBtn = () => {
+export const JoinTelegramBtn = () => {
   return (
     <Link
       id="follow-button"
       className="ms-auto flex cursor-pointer items-center justify-center rounded-full bg-primary px-3 py-2 font-medium text-white"
       title="Follow @tileVille on X"
-      href="https://discord.com/invite/NvNBQZX7rU"
+      href={TILEVILLE_TELEGRAM_URL}
       target="_blank"
     >
-      <DiscordLogoIcon />
+      <Image
+        src="/icons/telegramWhite.png"
+        width={16}
+        height={16}
+        alt="bug report"
+      />
       <span className="label ms-1 whitespace-nowrap text-xs" id="l">
-        Join Discord
+        Join Telegram
       </span>
     </Link>
   );

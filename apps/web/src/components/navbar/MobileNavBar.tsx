@@ -15,7 +15,7 @@ import { MobileNavButton, PrimaryButton } from "../PrimaryButton";
 import clsx from "clsx";
 import {
   BugReportBtn,
-  JoinDiscordBtn,
+  JoinTelegramBtn,
   XFollowBtn,
 } from "../NavButtons/NavButtons";
 import { FooterContent } from "../Footer/FooterContent";
@@ -139,7 +139,7 @@ export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             <div className="flex items-center gap-2 whitespace-nowrap">
               <BugReportBtn />
               <XFollowBtn />
-              <JoinDiscordBtn />
+              <JoinTelegramBtn />
             </div>
           </li>
 

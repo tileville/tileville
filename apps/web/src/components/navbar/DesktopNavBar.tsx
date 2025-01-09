@@ -27,10 +27,9 @@ import { useGlobalConfig } from "@/db/react-query-hooks";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import {
   BugReportBtn,
-  JoinDiscordBtn,
+  JoinTelegramBtn,
   XFollowBtn,
 } from "../NavButtons/NavButtons";
-import Image from "next/image";
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");
@@ -151,7 +150,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
 
         <div className="flex items-center gap-3">
           <XFollowBtn />
-          <JoinDiscordBtn />
+          <JoinTelegramBtn />
 
           <div className="flex gap-5">
             {isMounted() &&

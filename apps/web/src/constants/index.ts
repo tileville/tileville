@@ -99,7 +99,6 @@ export const isMockEnv = (): boolean => {
 export const NOVU_API_KEY = process.env.NEXT_PUBLIC_NOVU_API_KEY;
 export const NOVU_APP_ID = process.env.NEXT_PUBLIC_NOVU_APP_ID;
 
-export const BUG_REPORT_URL = "https://t.me/tilevilleBugs";
 export const COMPETITION_SCORE_TWEET_DEFAULT_CONTENT =
   "Just conquered Nicobar with a score of ${score} in @TileVilleSocial 🏆 The strategic city-builder on @MinaProtocol is a must-play. Build your dream city: https://tileville.xyz #TileVille #MinaBlockchain";
 
@@ -846,3 +845,8 @@ export type NFTTableName =
 
 export const FOLLOW_TILEVILLE_URL =
   "https://x.com/intent/user?screen_name=TilevilleSocial";
+
+export const TILEVILLE_TELEGRAM_URL = "https://t.me/tilevilleBugs";
+
+const TELEGRAM_BUG_REPORT_TOPIC_ID = 277;
+export const BUG_REPORT_URL = `${TILEVILLE_TELEGRAM_URL}/${TELEGRAM_BUG_REPORT_TOPIC_ID}`;
