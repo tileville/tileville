@@ -3,10 +3,10 @@ export const MOCK_GLOBAL_CONFIG = {
     "Tileville",
     "Minaty",
     "Minapunks",
-    "ZKGod"
+    "zkgod"
   ],
   "nft_collections_config": {
-    "ZKGod": {
+    "zkgod": {
       "table_name": "zkgod_nfts",
       "bucket_name": "zkgod_nfts",
       "description": "This NFT is part of Zkgod nfts collection",
