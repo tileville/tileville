@@ -22,6 +22,7 @@ import { FooterContent } from "../Footer/FooterContent";
 import { useNetworkStore } from "@/lib/stores/network";
 import {
   useFetchTransactions,
+  useGlobalConfig,
   useMainnetTransactionsStatus,
   useProfileLazyQuery,
 } from "@/db/react-query-hooks";
@@ -31,6 +32,7 @@ import { walletInstalled } from "@/lib/helpers";
 import { anonymousSignIn } from "@/db/supabase-queries";
 
 export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
+  useGlobalConfig("config_v1");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
