@@ -30,6 +30,7 @@ export const GameEntryFeesModal = ({
     isValid: false,
     message: "",
   });
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   const validateVoucher = useMutation({
     mutationFn: (code: string) =>
@@ -55,11 +56,13 @@ export const GameEntryFeesModal = ({
         return;
       }
     }
+    setIsPaymentLoading(true);
     logJoinCompetition({
       walletAddress: networkStore.address,
       competition_name: competition.name,
       network: networkStore.minaNetwork?.networkID || "berkeley",
     });
+
     const data = await payParticipationFees({
       participation_fee: competition.participation_fee ?? 0,
       treasury_address: competition.treasury_address || DEFAULT_TRASURY_ADDRESS,
@@ -74,6 +77,7 @@ export const GameEntryFeesModal = ({
     });
 
     console.log("DATA ID", data?.id);
+    setIsPaymentLoading(false);
     if (data?.id) {
       toast(
         `You have joined the ${competition.name} competition successfully. Redirecting you to the game screen now.`
@@ -180,13 +184,17 @@ export const GameEntryFeesModal = ({
           <Dialog.Close>
             <button
               onClick={handlePayParticipationFess}
-              className="rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90"
+              className="relative min-w-[160px] rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90 disabled:bg-primary/80"
+              disabled={isPaymentLoading}
             >
               {!!networkStore.address
                 ? vocherValidationResponse.isValid
                   ? "Redeem Code"
                   : "Pay Entry Fees"
                 : "Connect Wallet"}
+              {isPaymentLoading && (
+                <Spinner className="!absolute right-4 top-1/2" />
+              )}
             </button>
           </Dialog.Close>
         </Flex>
