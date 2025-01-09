@@ -29,7 +29,7 @@ export default function PvPChallengePage() {
     params.challengeId
   );
   const {
-    playedPVPChallenge: [logPlayPVPChallenge, logPlayPVPChallengeError],
+    playedPVPChallenge: [logPlayPVPChallenge],
   } = usePosthogEvents();
 
   const { data: challengeTransaction } = usePVPChallengeTransaction(
@@ -56,9 +56,17 @@ export default function PvPChallengePage() {
           isSpeedChallenge: challengeData.data.is_speed_challenge,
         });
       } catch (error: unknown) {
-        logPlayPVPChallengeError(
-          error instanceof Error ? error.message : String(error)
-        );
+        logPlayPVPChallenge({
+          walletAddress: networkStore.address,
+          challengeId: +params.challengeId,
+          challengeName: challengeData.data.name,
+          score: score,
+          isSpeedChallenge: challengeData.data.is_speed_challenge,
+          error:
+            error instanceof Error
+              ? error.message
+              : String(error || "Unknown error during challenge creation"),
+        });
       }
     },
     [
@@ -66,7 +74,6 @@ export default function PvPChallengePage() {
       challengeData,
       params.challengeId,
       logPlayPVPChallenge,
-      logPlayPVPChallengeError,
     ]
   );
 

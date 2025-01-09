@@ -34,6 +34,7 @@ type PlayPVPChallengePayload = {
   challengeName: string;
   score: number;
   isSpeedChallenge: boolean;
+  error?: string;
 };
 
 type NFTMintingPayload = {
