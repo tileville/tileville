@@ -4,6 +4,7 @@ import { Spinner2 } from "@/components/common/Spinner";
 import { ChallengeDetails } from "./ChallengeDetails";
 import { TransactionStatus } from "@/lib/types";
 import { ChallengeListItem } from "../ChallengeListItem";
+import { TABS } from "@/app/pvp/PVPContent";
 
 type ChallengesListType = {
   isLoadingCreated?: boolean;
@@ -34,8 +35,9 @@ export const ChallengesList = ({
     return (
       <div className="mt-8 flex  min-h-[135px] items-center justify-center rounded-xl bg-[#B4C28E] text-center">
         <p className="max-w-[380px] text-2xl font-bold  text-black ">
-          You Have not {challengesType === "created" ? "created" : "accepted"}{" "}
-          any challenges yet!
+          You Have not{" "}
+          {challengesType === TABS.CREATED.id ? "created" : "accepted"} any
+          challenges yet!
         </p>
       </div>
     );

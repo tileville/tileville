@@ -12,7 +12,7 @@ import { ChallengesList } from "@/components/PVP/ChallengesTabs/ChallengesList";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import clsx from "clsx";
 
-const TABS = {
+export const TABS = {
   ACCEPTED: {
     id: "accepted",
     label: "Accepted Challenges",

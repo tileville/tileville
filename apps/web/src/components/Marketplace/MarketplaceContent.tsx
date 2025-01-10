@@ -255,7 +255,7 @@ export default function MarketplaceContent() {
 
         {/* NFT grid */}
         <div className="mb-16">
-          {nftData?.nfts.length === 0 ? (
+          {nftData?.nfts.length === 0 && !isNFTLoading ? (
             <div className="py-36 text-center">
               <h2 className="text-center text-3xl font-semibold">
                 No Results Found
