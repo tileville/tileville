@@ -838,6 +838,7 @@ export function useTotalWins(wallet_address: string) {
 interface PastCompetition {
   competitionKey: string;
   posterUrl: string;
+  competitionName: string;
 }
 
 interface PastCompetitionsResponse {
