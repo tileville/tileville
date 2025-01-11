@@ -22,7 +22,13 @@ import CollectionSelector from "@/components/Marketplace/CollectionSelector";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 
-export default function MarketplaceContent() {
+export default function MarketplaceContent({
+  collection,
+  isMarketplaceV2,
+}: {
+  collection?: NFTCollectionType;
+  isMarketplaceV2?: boolean;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -167,10 +173,12 @@ export default function MarketplaceContent() {
       <div className="mx-auto max-w-[1280px] pt-3">
         {/* Filters and controls */}
         <div className="mb-8 flex flex-wrap gap-3">
-          <CollectionSelector
-            selectedCollection={selectedCollection}
-            onSelect={handleCollectionChange}
-          />
+          {!isMarketplaceV2 && (
+            <CollectionSelector
+              selectedCollection={selectedCollection}
+              onSelect={handleCollectionChange}
+            />
+          )}
 
           {/* View toggle buttons */}
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
