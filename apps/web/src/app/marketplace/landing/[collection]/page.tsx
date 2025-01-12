@@ -1,8 +1,15 @@
+"use client";
+
 import MarketplaceContent from "@/components/Marketplace/MarketplaceContent";
-import { NFT_COLLECTIONS } from "@/constants";
+import { NFTCollectionType } from "@/constants";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 
 export default function NFTCollection() {
+  const params = useParams<{
+    collection: NFTCollectionType;
+  }>();
+
   return (
     <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pt-20">
       <div className="relative h-[335px] w-full">
@@ -40,7 +47,7 @@ export default function NFTCollection() {
         </button>
 
         <MarketplaceContent
-          collection={NFT_COLLECTIONS.MINATY}
+          collection={params.collection}
           isMarketplaceV2={true}
         />
       </div>

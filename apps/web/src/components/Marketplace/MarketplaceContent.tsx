@@ -51,12 +51,13 @@ export default function MarketplaceContent({
   const [renderStyle, setRenderStyle] = useState(
     TOGGLE_GROUP_OPTIONS[selectedToggle].gridApplyClass
   );
+
   const [selectedCollection, setSelectedCollection] =
     useState<NFTCollectionType>(
-      (searchParams.get("collection") as NFTCollectionType) ||
+      collection ||
+        (searchParams.get("collection") as NFTCollectionType) ||
         NFT_COLLECTIONS.TILEVILLE
     );
-
   const globalConfig = useAtomValue(globalConfigAtom);
   const collectionConfig =
     globalConfig?.nft_collections_config?.[selectedCollection] || {};
@@ -118,10 +119,13 @@ export default function MarketplaceContent({
 
   const handleCollectionChange = useCallback(
     (newCollection: NFTCollectionType) => {
-      setSelectedCollection(newCollection);
-      updateSearchParams({ collection: newCollection, page: "1" });
+      if (!collection) {
+        // Only allow changing collection if no collection prop is provided
+        setSelectedCollection(newCollection);
+        updateSearchParams({ collection: newCollection, page: "1" });
+      }
     },
-    [updateSearchParams]
+    [updateSearchParams, collection]
   );
 
   const handlePageChange = useCallback(
@@ -150,13 +154,14 @@ export default function MarketplaceContent({
     setSelectedToggle(Number(searchParams.get("view")) || 0);
     setCurrentPage(Number(searchParams.get("page")) || 1);
     setSelectedCollection(
-      (searchParams.get("collection") as NFTCollectionType) ||
+      collection ||
+        (searchParams.get("collection") as NFTCollectionType) ||
         NFT_COLLECTIONS.TILEVILLE
     );
     setRenderStyle(
       TOGGLE_GROUP_OPTIONS[Number(searchParams.get("view")) || 0].gridApplyClass
     );
-  }, [searchParams]);
+  }, [searchParams, collection]);
 
   if (nftError) {
     return (
