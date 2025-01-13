@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner2 } from "@/components/common/Spinner";
 import { MarketplaceCarousel } from "@/components/Marketplace/MarketplaceCarousel";
 import { TopNFTCollections } from "@/components/Marketplace/TopNFTCollections";
 import { NFTModal } from "@/components/NFTModal";
@@ -61,15 +62,15 @@ export default function MarketplaceLanding() {
       </section>
 
       <section className="mt-8">
-        <div className="flex gap-3">
-          <h3 className="max-w-xs text-[40px] font-extrabold text-primary">
-            Explore the Exclusive NFTS on MINA!
-          </h3>
+        <div className="grid grid-cols-12">
+          <div className="col-span-3 max-w-xs text-[40px] font-extrabold text-primary flex items-center justify-center">
+            <h3>Explore the Exclusive NFTS on MINA!</h3>
+          </div>
 
-          <div className="">
+          <div className="col-span-9">
             <div className="">
               {isLoading ? (
-                "Loading.............."
+                <Spinner2 />
               ) : (
                 <div className="grid flex-1 grid-cols-4 gap-3 pr-2 text-lg">
                   {featuredNFTs?.featuredNFTs.map(
