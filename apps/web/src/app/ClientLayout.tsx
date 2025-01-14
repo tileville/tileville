@@ -7,6 +7,7 @@ import { MobileNavBar } from "@/components/navbar/MobileNavBar";
 import { isMobile, isTablet } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
+import MobileBanner from "@/components/MainMenu/MobileBanner";
 import VConsole from "vconsole";
 import { TelegramBanner } from "@/components/TelegramBanner/TelegramBanner";
 let vConsole: any;
@@ -50,9 +51,10 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const renderFooter = () => {
     if (!isClient) return null;
     if (isMobile || isTablet) {
-      return null;
+      return <MobileBanner />;
+    } else {
+      return <Footer />;
     }
-    return <Footer />;
   };
 
   return (
