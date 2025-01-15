@@ -17,8 +17,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
       "nft_mint_start_date_time_utc": "2024-12-26T18:30:00Z",
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_cover.jpg",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_profile.jpg"
-
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_profile.jpg",
+      "featured_nfts": [37]
     },
     "Minaty": {
       "table_name": "minaty_nfts",
@@ -71,7 +71,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "reserved_price_reduce_key": "dbVHT6pf4aBcjmUHANFr3P4eEzvjHbxrFdjVbfafbhjew_J",
       "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z",
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_cover.jpg",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_profile.png"
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_profile.png",
+      "featured_nfts": [73] 
     },
     "MinaPunks": {
       "table_name": "minapunks_nfts",
@@ -83,7 +84,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
       "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z",
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_cover.png",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_profile.png"
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_profile.png",
+      "featured_nfts": [] 
     },
     "Tileville": {
       "table_name": "tileville_builder_nfts",
@@ -135,7 +137,9 @@ export const MOCK_GLOBAL_CONFIG = {
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
       "nft_mint_start_date_time_utc": "2024-08-28",
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_cover.jpeg",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_profile.png"  
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_profile.png",
+      "featured_nfts": [5] 
+
     }
   }
 };

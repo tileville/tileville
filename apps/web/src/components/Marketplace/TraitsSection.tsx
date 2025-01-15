@@ -16,7 +16,7 @@ import { Json } from "@/lib/database.types";
 type TraitsSectionType = {
   traits: Json;
   collection: NFTCollectionType;
-  category: NFTCategory | null | MinaPunksCategory;
+  category: NFTCategory | null | MinaPunksCategory | undefined;
 };
 
 type Trait = {

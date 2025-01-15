@@ -1,4 +1,4 @@
-// in src/app/api/nfts/featured/route.ts
+// src/app/api/nfts/featured/route.ts
 
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { Database } from "@/lib/database.types";
@@ -14,6 +14,7 @@ interface CollectionConfig {
   fee_master_public_key?: string;
   reserved_price_reduce_key?: string;
   nft_mint_start_date_time_utc: string;
+  featured_nfts?: number[];
 }
 
 interface GlobalConfig {
@@ -42,37 +43,43 @@ export async function GET() {
       throw new Error("Invalid config structure");
     }
 
-    const queries = Object.entries(config.nft_collections_config).map(
-      async ([collectionName, collectionConfig]) => {
-        const { table_name } = collectionConfig;
+    const queries = Object.entries(config.nft_collections_config)
+      .filter(
+        ([_, collectionConfig]) =>
+          // Only process collections that have featured NFTs defined
+          collectionConfig.featured_nfts &&
+          collectionConfig.featured_nfts.length > 0
+      )
+      .map(async ([collectionName, collectionConfig]) => {
+        const { table_name, featured_nfts } = collectionConfig;
 
-        if (!table_name) {
-          console.error("Invalid table name:", String(table_name));
+        if (!table_name || !featured_nfts) {
           return null;
         }
 
+        // Fetch all featured NFTs for this collection
         const { data, error } = await supabase
           .from(table_name)
           .select("*")
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .single();
+          .in("nft_id", featured_nfts);
 
         if (error) {
-          console.error("Error fetching from table:", String(table_name));
-          console.error("Error details:", error);
+          console.error(
+            `Error fetching featured NFTs from ${table_name}:`,
+            error
+          );
           return null;
         }
 
+        // Return all featured NFTs for this collection
         return {
           collection: collectionName,
-          nft: data,
+          nfts: data,
         };
-      }
-    );
+      });
 
     const results = (await Promise.all(queries)).filter(
-      (result) => result !== null
+      (result) => result !== null && result.nfts.length > 0
     );
 
     return Response.json({
