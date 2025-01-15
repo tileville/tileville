@@ -6,8 +6,10 @@ import { MarketplaceCarousel } from "@/components/Marketplace/MarketplaceCarouse
 import { TopNFTCollections } from "@/components/Marketplace/TopNFTCollections";
 import { NFTModal } from "@/components/NFTModal";
 import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
+import { globalConfigAtom } from "@/contexts/atoms";
 import { useFeaturedNFTs } from "@/db/react-query-hooks";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
+import { useAtomValue } from "jotai";
 
 type featuredNFTType = {
   collection: NFTCollectionType;
@@ -19,18 +21,29 @@ export default function MarketplaceLanding() {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     queryText: "tileville",
   });
+
+  const globalConfig = useAtomValue(globalConfigAtom);
+  const nftCollections = globalConfig?.nft_collections;
+
+  const getCollectionConfig = (collection: string) => {
+    return globalConfig?.nft_collections_config?.[collection] || {};
+  };
+
   return (
     <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pt-20">
       <section className="mb-12">
-        <MarketplaceCarousel />
+        <MarketplaceCarousel
+          nftCollections={nftCollections}
+          getCollectionConfig={getCollectionConfig}
+        />
       </section>
       <TopNFTCollections />
 
-    <CreateCollectionContent />
+      <CreateCollectionContent />
 
       <section className="mt-8">
         <div className="grid grid-cols-12">
-          <div className="col-span-3 max-w-xs text-[40px] font-extrabold text-primary flex items-center justify-center">
+          <div className="col-span-3 flex max-w-xs items-center justify-center text-[40px] font-extrabold text-primary">
             <h3>Explore the Exclusive NFTS on MINA!</h3>
           </div>
 
