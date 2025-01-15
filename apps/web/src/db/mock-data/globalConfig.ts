@@ -2,7 +2,7 @@ export const MOCK_GLOBAL_CONFIG = {
   "nft_collections": [
     "Tileville",
     "Minaty",
-    "Minapunks",
+    "MinaPunks",
     "zkgod"
   ],
   "nft_collections_config": {
@@ -15,7 +15,10 @@ export const MOCK_GLOBAL_CONFIG = {
       "max_mints_per_wallet": 1,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-26T18:30:00Z"
+      "nft_mint_start_date_time_utc": "2024-12-26T18:30:00Z",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_cover.jpg",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_profile.jpg"
+
     },
     "Minaty": {
       "table_name": "minaty_nfts",
@@ -66,7 +69,9 @@ export const MOCK_GLOBAL_CONFIG = {
         "B62qrVzi6k4c1Q7fCMnLbe8Wn5TSqMrfvuAmpacKe8VJkjsjKUXH73Z"
       ],
       "reserved_price_reduce_key": "dbVHT6pf4aBcjmUHANFr3P4eEzvjHbxrFdjVbfafbhjew_J",
-      "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z"
+      "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_cover.jpg",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_profile.png"
     },
     "MinaPunks": {
       "table_name": "minapunks_nfts",
@@ -76,7 +81,9 @@ export const MOCK_GLOBAL_CONFIG = {
       "is_mint_public": true,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z"
+      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_cover.png",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_profile.png"
     },
     "Tileville": {
       "table_name": "tileville_builder_nfts",
@@ -126,7 +133,9 @@ export const MOCK_GLOBAL_CONFIG = {
       },
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-08-28"
+      "nft_mint_start_date_time_utc": "2024-08-28",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_cover.jpeg",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_profile.png"  
     }
   }
 };
