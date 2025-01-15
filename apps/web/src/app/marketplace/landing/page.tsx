@@ -37,7 +37,10 @@ export default function MarketplaceLanding() {
           getCollectionConfig={getCollectionConfig}
         />
       </section>
-      <TopNFTCollections />
+      <TopNFTCollections
+        nftCollections={nftCollections}
+        getCollectionConfig={getCollectionConfig}
+      />
 
       <CreateCollectionContent />
 

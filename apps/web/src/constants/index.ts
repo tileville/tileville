@@ -850,3 +850,6 @@ export const TILEVILLE_TELEGRAM_URL = "https://t.me/tilevilleBugs";
 
 const TELEGRAM_BUG_REPORT_TOPIC_ID = 277;
 export const BUG_REPORT_URL = `${TILEVILLE_TELEGRAM_URL}/${TELEGRAM_BUG_REPORT_TOPIC_ID}`;
+
+export const NFT_COLLECTION_HOSTING_REQ_DOC_URL =
+  "https://hackmd.io/@satyambnsal/B1yA-wZrkg";
