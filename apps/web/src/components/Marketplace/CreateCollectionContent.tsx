@@ -32,6 +32,7 @@ export const CreateCollectionContent = () => {
               <Link
                 className="flex min-h-[60px] w-full max-w-[250px] items-center justify-center rounded-lg bg-primary px-5 py-2 text-base font-bold text-white hover:bg-primary/80"
                 href={NFT_COLLECTION_HOSTING_REQ_DOC_URL}
+                target="_blank"
               >
                 CREATE
               </Link>
