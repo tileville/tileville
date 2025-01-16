@@ -76,6 +76,9 @@ export const NFTModal = ({
 
   const collectionConfig =
     globalConfig?.nft_collections_config?.[collection] || {};
+
+  const isPresaleNFT =
+    collection === NFT_COLLECTIONS.ZKGOD && nftID >= 100 && nftID <= 199;
   const nftMintStartDate =
     collectionConfig?.nft_mint_start_date_time_utc || new Date(2024, 0, 1);
   const isMintingNotStarted = isFuture(nftMintStartDate);
@@ -307,6 +310,8 @@ export const NFTModal = ({
                   isPublicMint={isPublicMint}
                   collectionOwner={collectionOwner}
                   maxMintsPerWallet={maxMintsPerWallet}
+                  nftMintStartDate={nftMintStartDate}
+                  isPresaleNFT={isPresaleNFT}
                 />
 
                 {isAvailableToPurchase && (

@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import {
   FIRST_WORDS,
+  NFT_COLLECTIONS,
+  NFTCollectionType,
   SECOND_WORDS,
   TILEVILLE_BOT_URL,
   TREASURY_ADDRESS,
@@ -418,4 +420,14 @@ export const getCompetitionStatus = (
   } else {
     return "ONGOING";
   }
+};
+
+export const isNFTInPresale = (
+  nftID: number,
+  collection: NFTCollectionType
+) => {
+  if (collection === NFT_COLLECTIONS.ZKGOD) {
+    return nftID >= 100 && nftID <= 199;
+  }
+  return false;
 };

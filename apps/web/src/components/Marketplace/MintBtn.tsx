@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
 import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
+import { isFuture } from "date-fns";
 
 type MintBtnType = {
   isMintingDisabled: boolean;
@@ -16,6 +17,8 @@ type MintBtnType = {
   isPublicMint: boolean;
   collectionOwner: string;
   maxMintsPerWallet?: number;
+  nftMintStartDate?: Date;
+  isPresaleNFT?: boolean;
 };
 
 const hasCollectionNFTs = (nfts: Array<any>, collectionName: string) => {
@@ -36,12 +39,13 @@ export const MintBtn = ({
   isPublicMint,
   collectionOwner,
   maxMintsPerWallet,
+  nftMintStartDate,
+  isPresaleNFT,
 }: MintBtnType) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
   });
 
-  console.log("mintNFTHitsResponse", mintNFTHitsResponse);
   // Check if user is collection owner
   const isOwner = currentUserAddress === collectionOwner;
 
@@ -49,7 +53,11 @@ export const MintBtn = ({
   const isUnauthorizedMint = !isPublicMint && !isOwner;
 
   const isNotForSoldNFT =
-    collection === NFT_COLLECTIONS.MINATY && (nftID === 100);
+    collection === NFT_COLLECTIONS.MINATY && nftID === 100;
+
+  const isPresaleLocked =
+    isPresaleNFT && nftMintStartDate ? isFuture(nftMintStartDate) : false;
+  console.log("isPresaleLocked", nftID, isPresaleLocked);
 
   const checkMintLimit = () => {
     // Collection owner is exempt from mint limits
@@ -68,13 +76,13 @@ export const MintBtn = ({
     isMintingStyledDisabled ||
     isNotForSoldNFT ||
     isUnauthorizedMint ||
-    (!isOwner && hasReachedMintLimit);
+    (!isOwner && hasReachedMintLimit) ||
+    isPresaleLocked;
 
   const getDisplayText = () => {
+    if (isPresaleLocked) return "Presale Coming Soon";
     if (isUnauthorizedMint) return "Only Owner Can Mint";
-    if (hasReachedMintLimit) {
-      return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
-    }
+    if (hasReachedMintLimit) return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
     return btnText;
   };
 
