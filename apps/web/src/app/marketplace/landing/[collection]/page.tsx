@@ -20,7 +20,7 @@ export default function NFTCollection() {
 
   const collectionProfileImage = collecitonConfig.profile_url;
   const collectionCoverImage = collecitonConfig.poster_url;
-  const collectionDescription = collecitonConfig.description;
+  const collectionDescription = collecitonConfig.description2;
 
   return (
     <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pt-20">
@@ -35,7 +35,7 @@ export default function NFTCollection() {
         />
       </div>
 
-      <div className=" mx-auto max-w-[1200px]">
+      <div className="mx-auto max-w-[1200px]">
         <div>
           <div className="relative z-10 -mt-20 h-[127px] w-[127px]">
             <Image
@@ -49,13 +49,13 @@ export default function NFTCollection() {
         </div>
 
         <h2 className="my-2 text-2xl font-extrabold">{params.collection}</h2>
-        <p className="max-w-[313px] text-sm font-semibold">
+        <p className="max-w-[500px] text-sm font-semibold">
           {collectionDescription}
         </p>
 
-        <button className="text-sm font-semibold text-primary">
+        {/* <button className="text-sm font-semibold text-primary">
           show more
-        </button>
+        </button> */}
 
         <MarketplaceContent
           collection={params.collection}
