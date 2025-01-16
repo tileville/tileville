@@ -33,19 +33,21 @@ export const NFTModalTriggerContent = ({
   isCurrentlyMiting,
 }: NFTModalTriggerContentType) => {
   return (
-    <div className="border-primary-30 group/item listItem h-full fade-slide-in relative cursor-pointer overflow-hidden rounded-md transition-colors">
+    <div className="border-primary-30 group/item listItem fade-slide-in relative h-full cursor-pointer overflow-hidden rounded-md transition-colors">
       <div className="nft-img w-full overflow-hidden">
-        <Image
-          className="h-full w-full object-cover transition-all group-hover/item:scale-110"
-          width="852"
-          height="845"
-          alt="NFT"
-          src={imgUrl}
-          quality={100}
-          priority={false}
-          placeholder="blur"
-          blurDataURL="/img/load/load.png"
-        />
+        <div className="h-[270px] max-h-[270px] min-h-[270px]">
+          <Image
+            className="h-full w-full object-cover transition-all group-hover/item:scale-110"
+            width="852"
+            height="845"
+            alt="NFT"
+            src={imgUrl}
+            quality={100}
+            priority={false}
+            placeholder="blur"
+            blurDataURL="/img/load/load.png"
+          />
+        </div>
       </div>
 
       <div className="nft-content px-2 py-3">

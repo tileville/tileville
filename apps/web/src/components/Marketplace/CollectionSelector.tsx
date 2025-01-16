@@ -17,7 +17,7 @@ const CollectionSelector: React.FC<CollectionSelectorProps> = ({
         <button className="border-primary-30 flex min-w-[190px] items-center justify-between rounded-md border bg-transparent px-3 font-semibold text-primary outline-none">
           <span>{selectedCollection}</span>
           <Image
-            src="icons/topBottomArrows.svg"
+            src="/icons/topBottomArrows.svg"
             width={24}
             height={24}
             alt="arrows"
