@@ -9,7 +9,6 @@ import { NFTModal } from "@/components/NFTModal";
 import { useNFTsWithPagination } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import { Pagination } from "@/components/common/Pagination";
-import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 import clsx from "clsx";
 import {
   NFT_COLLECTIONS,
@@ -21,6 +20,7 @@ import { TraitsInfoBtn } from "@/components/Marketplace/TraitsInfoBtn";
 import CollectionSelector from "@/components/Marketplace/CollectionSelector";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
+import { useNFTStatus } from "@/hooks/useNFTStatus";
 
 export default function MarketplaceContent() {
   const searchParams = useSearchParams();
@@ -67,8 +67,9 @@ export default function MarketplaceContent() {
     collectionTableName,
   });
 
-  const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
-    queryText: selectedCollection,
+  const { data: nftStatuses = [], isLoading: isStatusLoading } = useNFTStatus({
+    nfts: nftData?.nfts || [],
+    collection: selectedCollection,
   });
 
   const updateSearchParams = useCallback(
@@ -271,6 +272,11 @@ export default function MarketplaceContent() {
             ) : (
               <>
                 {nftData?.nfts.map((nft: any) => {
+                  console.log("nftStatuses", nftStatuses);
+                  const nftStatus = nftStatuses.find(
+                    (status) => status.name === nft.name
+                  );
+
                   return (
                     <NFTModal
                       key={nft.nft_id}
@@ -282,9 +288,7 @@ export default function MarketplaceContent() {
                       nftPrice={nft.price}
                       renderStyle={renderStyle}
                       ownerAddress={nft.owner_address}
-                      algoliaHitData={mintNFTHitsResponse.find(
-                        ({ name }) => name === nft.name
-                      )}
+                      algoliaHitData={nftStatus}
                       collection={selectedCollection}
                       NFTCategory={
                         selectedCollection === NFT_COLLECTIONS.MINATY
