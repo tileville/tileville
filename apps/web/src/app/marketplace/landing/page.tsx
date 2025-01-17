@@ -1,8 +1,8 @@
 // src/app/marketplace/page.tsx
 "use client";
 
-import { Spinner2 } from "@/components/common/Spinner";
 import { CreateCollectionContent } from "@/components/Marketplace/CreateCollectionContent";
+import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import { MarketplaceCarousel } from "@/components/Marketplace/MarketplaceCarousel";
 import { TopNFTCollections } from "@/components/Marketplace/TopNFTCollections";
 import { NFTModal } from "@/components/NFTModal";
@@ -12,9 +12,10 @@ import {
   NFTCategory,
   NFTCollectionType,
 } from "@/constants";
-import { globalConfigAtom } from "@/contexts/atoms";
+import { globalConfigAtom, globalConfigLoadingAtom } from "@/contexts/atoms";
 import { useFeaturedNFTs } from "@/db/react-query-hooks";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
+import { Skeleton } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";
 
 interface NFT {
@@ -40,6 +41,7 @@ export default function MarketplaceLanding() {
   });
 
   const globalConfig = useAtomValue(globalConfigAtom);
+  const globalConfigLoading = useAtomValue(globalConfigLoadingAtom);
   const nftCollections = globalConfig?.nft_collections;
 
   const getCollectionConfig = (collection: string) => {
@@ -49,15 +51,20 @@ export default function MarketplaceLanding() {
   return (
     <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pt-20">
       <section className="mb-12">
-        <MarketplaceCarousel
-          nftCollections={nftCollections}
-          getCollectionConfig={getCollectionConfig}
-        />
+        {globalConfigLoading ? (
+          <Skeleton className="h-[200px] w-full rounded-lg md:h-[418px]"></Skeleton>
+        ) : (
+          <MarketplaceCarousel
+            nftCollections={nftCollections}
+            getCollectionConfig={getCollectionConfig}
+          />
+        )}
       </section>
 
       <TopNFTCollections
         nftCollections={nftCollections}
         getCollectionConfig={getCollectionConfig}
+        globalConfigLoading={globalConfigLoading}
       />
 
       <CreateCollectionContent />
@@ -71,7 +78,9 @@ export default function MarketplaceLanding() {
           <div className="col-span-9">
             <div className="">
               {isLoading ? (
-                <Spinner2 />
+                <div className="grid flex-1 grid-cols-4 gap-3 pr-2 text-lg">
+                  <MarketplaceLoading nftCount={3} />
+                </div>
               ) : featuredData?.featuredNFTs?.length > 0 ? (
                 <div className="grid flex-1 grid-cols-4 gap-3 pr-2 text-lg">
                   {featuredData.featuredNFTs.map(

@@ -1,7 +1,11 @@
 import { Skeleton } from "@radix-ui/themes";
 
-const INITIAL_ARRAY = Array(10).fill(0);
-export const MarketplaceLoading = () => {
+export const MarketplaceLoading = ({
+  nftCount = 20,
+}: {
+  nftCount?: number;
+}) => {
+  const INITIAL_ARRAY = Array(nftCount).fill(0);
   return (
     <>
       {INITIAL_ARRAY.map((arr, index) => {
