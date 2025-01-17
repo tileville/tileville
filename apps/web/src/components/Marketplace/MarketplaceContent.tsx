@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useCallback, useState, useEffect } from "react";
@@ -13,6 +13,7 @@ import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 import clsx from "clsx";
 import {
   NFT_COLLECTIONS,
+  NFT_FILTER_OPTIONS,
   NFTCollectionType,
   SORT_OPTIONS,
   TOGGLE_GROUP_OPTIONS,
@@ -45,6 +46,11 @@ export default function MarketplaceContent() {
   const [renderStyle, setRenderStyle] = useState(
     TOGGLE_GROUP_OPTIONS[selectedToggle].gridApplyClass
   );
+
+  const [mintFilter, setMintFilter] = useState(
+    searchParams.get("mintFilter") || NFT_FILTER_OPTIONS[0].value
+  );
+
   const [selectedCollection, setSelectedCollection] =
     useState<NFTCollectionType>(
       (searchParams.get("collection") as NFTCollectionType) ||
@@ -85,6 +91,31 @@ export default function MarketplaceContent() {
     },
     [searchParams, router, pathname]
   );
+
+  const handleMintFilterChange = useCallback(
+    (selectedOption: string) => {
+      setMintFilter(selectedOption);
+      updateSearchParams({ mintFilter: selectedOption, page: "1" });
+    },
+    [updateSearchParams]
+  );
+
+  const filteredNFTs = useMemo(() => {
+    if (!nftData?.nfts || !mintNFTHitsResponse) return [];
+
+    return nftData.nfts.filter((nft) => {
+      const isNFTMinted = mintNFTHitsResponse.some(
+        (algoliaHit) => algoliaHit.name === nft.name
+      );
+
+      if (mintFilter === NFT_FILTER_OPTIONS[2].value) {
+        return isNFTMinted;
+      } else if (mintFilter === NFT_FILTER_OPTIONS[1].value) {
+        return !isNFTMinted;
+      }
+      return true;
+    });
+  }, [nftData?.nfts, mintNFTHitsResponse, mintFilter]);
 
   const handleSearchInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -239,6 +270,38 @@ export default function MarketplaceContent() {
               ))}
             </DropdownMenu.Content>
           </DropdownMenu.Root>
+
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <button className="border-primary-30 flex min-w-[190px] items-center justify-between rounded-md border bg-transparent px-3 font-semibold text-primary outline-none">
+                <span>
+                  {NFT_FILTER_OPTIONS.find(
+                    (option) => option.value === mintFilter
+                  )?.text || NFT_FILTER_OPTIONS[0].text}
+                </span>
+                <Image
+                  src="/icons/topBottomArrows.svg"
+                  width={24}
+                  height={24}
+                  alt="arrows"
+                />
+              </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content className="min-w-[190px] !bg-transparent backdrop-blur-2xl">
+              {NFT_FILTER_OPTIONS.map((option) => (
+                <DropdownMenu.Item
+                  key={option.id}
+                  onClick={() => handleMintFilterChange(option.value)}
+                  className={clsx(
+                    "mt-1 hover:bg-primary",
+                    mintFilter === option.value ? "bg-primary text-white" : ""
+                  )}
+                >
+                  {option.text}
+                </DropdownMenu.Item>
+              ))}
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
         </div>
 
         {/* NFT list header (for list view) */}
@@ -270,7 +333,7 @@ export default function MarketplaceContent() {
               <MarketplaceLoading />
             ) : (
               <>
-                {nftData?.nfts.map((nft: any) => {
+                {filteredNFTs.map((nft: any) => {
                   return (
                     <NFTModal
                       key={nft.nft_id}
@@ -310,6 +373,14 @@ export default function MarketplaceContent() {
           onPageChange={handlePageChange}
         />
       )}
+
+      {filteredNFTs.length === 0 && !isNFTLoading ? (
+        <div className="py-36 text-center">
+          <h2 className="text-center text-3xl font-semibold">
+            No Results Found
+          </h2>
+        </div>
+      ) : null}
     </div>
   );
 }

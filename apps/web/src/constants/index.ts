@@ -447,6 +447,24 @@ export const SORT_OPTIONS = [
   },
 ];
 
+export const NFT_FILTER_OPTIONS = [
+  {
+    text: "Show All NFTs",
+    id: 0,
+    value: "ALL",
+  },
+  {
+    text: "Not Minted NFTs",
+    id: 1,
+    value: "NOT_MINTED",
+  },
+  {
+    text: "Minted NFTs",
+    id: 2,
+    value: "MINTED",
+  },
+] as const;
+
 export const INITIAL_MINT_RESPONSE = {
   state: "idle",
   success: false,
