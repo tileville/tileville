@@ -37,13 +37,13 @@ export default function NFTCollection() {
 
       <div className="mx-auto max-w-[1200px]">
         <div>
-          <div className="relative z-10 -mt-20 h-[127px] w-[127px]">
+          <div className="relative z-10 -mt-20 h-[127px] w-[127px] rounded-[5px] border border-white">
             <Image
               src={collectionProfileImage}
               alt="Logo"
               width={127}
               height={127}
-              className="h-full w-full object-cover"
+              className="h-full w-full rounded-[5px] object-cover"
             />
           </div>
         </div>
