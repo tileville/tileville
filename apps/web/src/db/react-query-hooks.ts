@@ -522,6 +522,9 @@ export const useGlobalConfig = (config_name: string) => {
       console.error("Error loading global config:", error);
       setGlobalConfigLoading(false);
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 };
 
