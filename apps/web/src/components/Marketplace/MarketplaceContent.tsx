@@ -174,7 +174,11 @@ export default function MarketplaceContent({
   }
 
   return (
-    <div className="relative p-4 pb-0 pt-12 md:pb-28 md:pt-20">
+    <div
+      className={`relative ${
+        isMarketplaceV2 ? "pt-0" : "p-4 pb-0 pt-12 md:pb-28 md:pt-20"
+      }`}
+    >
       <div className="mx-auto max-w-[1280px] pt-3">
         {/* Filters and controls */}
         <div className="mb-8 flex flex-wrap gap-3">

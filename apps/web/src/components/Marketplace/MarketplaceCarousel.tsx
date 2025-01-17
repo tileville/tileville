@@ -127,7 +127,7 @@ export const MarketplaceCarousel = ({
                 posterUrl={collectionConfig.poster_url}
                 profileUrl={collectionConfig.profile_url}
                 collectionName={collection}
-                CollectionDescription={collectionConfig.description}
+                CollectionDescription={collectionConfig.description2}
               />
             );
           })}

@@ -103,7 +103,7 @@ export default function MarketplaceLanding() {
                             nftPrice={price}
                             ownerAddress={owner_address}
                             algoliaHitData={isNftAlreadyMinted}
-                            renderStyle="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2"
+                            renderStyle="view1"
                             collection={collection.collection}
                             NFTCategory={
                               collection.collection ===

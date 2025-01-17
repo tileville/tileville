@@ -6,18 +6,18 @@ export const CreateCollectionContent = () => {
   return (
     <section>
       <div className="rounded-xl border-primary bg-[#99B579]">
-        <div className="grid grid-cols-2 items-center gap-4">
-          <div>
+        <div className="grid grid-cols-12 items-center gap-4">
+          <div className="col-span-7">
             <Image
               src="/img/avatars/nftsPreview.png"
-              width={600}
-              height={600}
+              width={800}
+              height={800}
               alt="nfts preview"
               className="-ml-16"
             />
           </div>
 
-          <div>
+          <div className="col-span-5">
             <h2 className="text-[40px] font-extrabold text-primary">
               CREATE YOUR OWN COLLECTION
             </h2>
