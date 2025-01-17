@@ -48,7 +48,7 @@ export default function MarketplaceLanding() {
   };
 
   return (
-    <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pt-20">
+    <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pb-20 md:pt-20">
       <section className="mb-12">
         {globalConfigLoading ? (
           <Skeleton className="h-[200px] w-full rounded-lg md:h-[418px]"></Skeleton>

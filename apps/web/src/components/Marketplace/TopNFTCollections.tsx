@@ -59,7 +59,7 @@ export const TopNFTCollections = ({
 
                   <Link
                     href={`/marketplace/collection/${collection}`}
-                    className="flex min-h-[60px] w-full items-center justify-center rounded-lg bg-primary px-3 text-base font-bold text-white"
+                    className="flex min-h-[60px] w-full items-center justify-center rounded-lg bg-primary px-3 text-base font-bold text-white hover:bg-primary/80"
                   >
                     Explore
                   </Link>

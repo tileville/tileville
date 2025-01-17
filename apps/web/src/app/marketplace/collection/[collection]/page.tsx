@@ -2,7 +2,8 @@
 
 import MarketplaceContent from "@/components/Marketplace/MarketplaceContent";
 import { NFTCollectionType } from "@/constants";
-import { globalConfigAtom } from "@/contexts/atoms";
+import { globalConfigAtom, globalConfigLoadingAtom } from "@/contexts/atoms";
+import { Skeleton } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -13,6 +14,7 @@ export default function NFTCollection() {
   }>();
 
   const globalConfig = useAtomValue(globalConfigAtom);
+  const globalConfigLoading = useAtomValue(globalConfigLoadingAtom);
 
   const collecitonConfig =
     globalConfig?.nft_collections_config?.[params.collection] || {};
@@ -25,25 +27,33 @@ export default function NFTCollection() {
     <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pt-20">
       <div className="relative h-[335px] w-full">
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/0 to-black/[0.73]"></div>
-        <Image
-          src={collectionCoverImage}
-          alt="Carousel"
-          fill
-          className="object-cover"
-          priority
-        />
+        {globalConfigLoading ? (
+          <Skeleton className="h-full w-full" />
+        ) : (
+          <Image
+            src={collectionCoverImage}
+            alt="Carousel"
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
       </div>
 
       <div className="mx-auto max-w-[1200px]">
         <div>
           <div className="relative z-10 -mt-20 h-[127px] w-[127px] rounded-[5px] border border-white">
-            <Image
-              src={collectionProfileImage}
-              alt="Logo"
-              width={127}
-              height={127}
-              className="h-full w-full rounded-[5px] object-cover"
-            />
+            {globalConfigLoading ? (
+              <Skeleton className="h-full w-full" />
+            ) : (
+              <Image
+                src={collectionProfileImage}
+                alt="Logo"
+                width={127}
+                height={127}
+                className="h-full w-full rounded-[5px] object-cover"
+              />
+            )}
           </div>
         </div>
 
