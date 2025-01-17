@@ -16,7 +16,6 @@ export default function NFTCollection() {
 
   const collecitonConfig =
     globalConfig?.nft_collections_config?.[params.collection] || {};
-  console.log("collecitonConfig", collecitonConfig);
 
   const collectionProfileImage = collecitonConfig.profile_url;
   const collectionCoverImage = collecitonConfig.poster_url;
