@@ -22,7 +22,7 @@ export const TopNFTCollections = ({
       <div className="mt-4">
         {globalConfigLoading ? (
           <div className="grid grid-cols-4 gap-6 text-center">
-            {Array(3)
+            {Array(4)
               .fill(0)
               .map((arr, index) => {
                 return (
