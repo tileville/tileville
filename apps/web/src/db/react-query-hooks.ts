@@ -37,7 +37,7 @@ import {
   isMockEnv,
 } from "@/constants";
 import { useAtom } from "jotai";
-import { globalConfigAtom } from "@/contexts/atoms";
+import { globalConfigAtom, globalConfigLoadingAtom } from "@/contexts/atoms";
 import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
 import { NFTTableNames, TransactionStatus } from "@/lib/types";
@@ -496,19 +496,33 @@ export const useIsGameAlreadyPlayed = (game_id: number) => {
 
 export const useGlobalConfig = (config_name: string) => {
   const [globalConfig, setGlobalConfig] = useAtom(globalConfigAtom);
-  return useQuery(["global_config", config_name], () =>
-    fetchGlobalConfig(config_name)
-      .then((response) => {
+  const setGlobalConfigLoading = useSetAtom(globalConfigLoadingAtom);
+
+  return useQuery({
+    queryKey: ["global_config", config_name],
+    queryFn: async () => {
+      setGlobalConfigLoading(true);
+      try {
+        const response = await fetchGlobalConfig(config_name);
         const config = isMockEnv()
           ? MOCK_GLOBAL_CONFIG
           : (response.config_values as { [key: string]: any });
         setGlobalConfig({ ...globalConfig, ...config });
         return response;
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(`Failed to fetch global config from db`, error);
-      })
-  );
+        throw error;
+      } finally {
+        setGlobalConfigLoading(false);
+      }
+    },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    onError: (error) => {
+      console.error("Error loading global config:", error);
+      setGlobalConfigLoading(false);
+    },
+  });
 };
 
 export function useGetConnections(wallet_address: string) {
@@ -1211,11 +1225,13 @@ export const useNFTsWithPagination = ({
   searchTerm,
   currentPage,
   collectionTableName,
+  enabled = true,
 }: {
   sortOrder: "asc" | "desc";
   searchTerm: string;
   currentPage: number;
-  collectionTableName: NFTTableNames;
+  collectionTableName: string;
+  enabled?: boolean;
 }) => {
   return useQuery<NFTResponse, NFTError>({
     queryKey: [sortOrder, searchTerm, currentPage, collectionTableName],
@@ -1237,6 +1253,7 @@ export const useNFTsWithPagination = ({
       }
       return response.json();
     },
+    enabled: enabled && !!collectionTableName,
     keepPreviousData: true,
     staleTime: 1000 * 60,
   });
