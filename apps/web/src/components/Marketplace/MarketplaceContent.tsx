@@ -227,7 +227,9 @@ export default function MarketplaceContent({
             />
           </div>
 
-          <TraitsInfoBtn />
+          {selectedCollection === NFT_COLLECTIONS.TILEVILLE && (
+            <TraitsInfoBtn />
+          )}
 
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>

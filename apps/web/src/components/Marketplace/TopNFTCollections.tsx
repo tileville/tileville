@@ -16,7 +16,7 @@ export const TopNFTCollections = ({
   return (
     <section className="mb-6">
       <h2 className="text-[28px] font-bold text-primary underline">
-        Top NFT COLLECTIONS
+        T0P NFT COLLECTIONS
       </h2>
 
       <div className="mt-4">
@@ -58,7 +58,7 @@ export const TopNFTCollections = ({
                   </h3>
 
                   <Link
-                    href={`/marketplace/landing/${collection}`}
+                    href={`/marketplace/collection/${collection}`}
                     className="flex min-h-[60px] w-full items-center justify-center rounded-lg bg-primary px-3 text-base font-bold text-white"
                   >
                     Explore

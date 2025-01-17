@@ -44,7 +44,7 @@ const CarouselSlide = ({
 
         <div>
           <Link
-            href={`/marketplace/landing/${collectionName}`}
+            href={`/marketplace/collection/${collectionName}`}
             className="rounded-lg bg-primary px-3 py-2 font-bold text-white hover:bg-primary/80"
           >
             View Collection &gt;{" "}

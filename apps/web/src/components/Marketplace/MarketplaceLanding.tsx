@@ -1,4 +1,3 @@
-// src/app/marketplace/page.tsx
 "use client";
 
 import { CreateCollectionContent } from "@/components/Marketplace/CreateCollectionContent";
