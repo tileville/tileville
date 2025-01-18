@@ -24,12 +24,12 @@ const CarouselSlide = ({
 }) => (
   <div className="relative flex-[0_0_100%] text-white">
     <div
-      className={`relative h-[200px] w-full overflow-hidden rounded-lg md:h-[418px]`}
+      className={`relative h-[240px] md:h-[300px] w-full overflow-hidden rounded-lg lg:h-[418px]`}
     >
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/0 to-black/[0.73]"></div>
-      <div className="relative z-10 flex h-full w-full items-end justify-between p-6">
-        <div className="flex max-w-[313px] flex-col items-start gap-3 text-sm font-bold">
-          <div className="h-[94] w-[94]">
+      <div className="relative z-10 flex flex-col-reverse lg:flex-row h-full w-full items-start lg:items-end justify-between px-3 pb-7 py-3 lg:p-6">
+        <div className="flex max-w-[313px] flex-col items-start gap-2 text-sm font-bold lg:gap-3">
+          <div className="h-[50px] w-[50px] lg:h-[94] lg:w-[94]">
             <Image
               src={profileUrl}
               alt="Logo"
@@ -39,13 +39,13 @@ const CarouselSlide = ({
             />
           </div>
           <h2 className="text-2xl font-extrabold">{collectionName}</h2>
-          <p>{CollectionDescription}</p>
+          <p className="text-xs lg:text-sm">{CollectionDescription}</p>
         </div>
 
-        <div>
+        <div className="ms-auto">
           <Link
             href={`/marketplace/collection/${collectionName}`}
-            className="rounded-lg bg-primary px-3 py-2 font-bold text-white hover:bg-primary/80"
+            className="block rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white hover:bg-primary/80 lg:text-base"
           >
             View Collection &gt;{" "}
           </Link>

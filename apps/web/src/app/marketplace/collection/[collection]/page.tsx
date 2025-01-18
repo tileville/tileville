@@ -25,7 +25,7 @@ export default function NFTCollection() {
 
   return (
     <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pt-20">
-      <div className="relative h-[335px] w-full">
+      <div className="relative h-[140px] w-full md:h-[300px] lg:h-[335px]">
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/0 to-black/[0.73]"></div>
         {globalConfigLoading ? (
           <Skeleton className="h-full w-full" />
@@ -40,9 +40,9 @@ export default function NFTCollection() {
         )}
       </div>
 
-      <div className="mx-auto max-w-[1200px]">
+      <div className="mx-auto max-w-[1200px] px-2">
         <div>
-          <div className="relative z-10 -mt-20 h-[127px] w-[127px] rounded-[5px] border border-white">
+          <div className="relative z-10 -mt-10 md:-mt-20 h-[70px] w-[70px] rounded-[5px] border border-white md:h-[127px] md:w-[127px]">
             {globalConfigLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (

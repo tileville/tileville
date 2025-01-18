@@ -5,24 +5,24 @@ import Link from "next/link";
 export const CreateCollectionContent = () => {
   return (
     <section>
-      <div className="rounded-xl border-primary bg-[#99B579]">
-        <div className="grid grid-cols-12 items-center gap-4">
-          <div className="col-span-7">
+      <div className="rounded-xl border-primary bg-[#99B579] p-4">
+        <div className="grid grid-cols-12 items-center gap-2 md:gap-4">
+          <div className="col-span-12 sm:col-span-7">
             <Image
               src="/img/avatars/nftsPreview.png"
               width={800}
               height={800}
               alt="nfts preview"
-              className="-ml-16"
+              className="md:-ml-16"
             />
           </div>
 
-          <div className="col-span-5">
-            <h2 className="text-[40px] font-extrabold text-primary">
+          <div className="col-span-12 sm:col-span-5">
+            <h2 className="text-xl font-extrabold text-primary lg:text-[40px] lg:leading-tight">
               CREATE YOUR OWN COLLECTION
             </h2>
 
-            <p className="my-6 max-w-[333px] text-xl font-semibold">
+            <p className="my-3 max-w-[333px] text-base font-semibold leading-snug lg:my-6 lg:text-xl">
               Create your unique NFT collection on{" "}
               <b> TILEVILLE MARKETPLACE: </b>
               unleash your creativity now

@@ -37,7 +37,7 @@ export const NFTModalTriggerContent = ({
   return (
     <div className="border-primary-30 group/item listItem fade-slide-in relative h-full cursor-pointer overflow-hidden rounded-md transition-colors">
       <div className="nft-img w-full overflow-hidden">
-        <div className={`${isView1 && "h-[270px]"} `}>
+        <div className={`${isView1 && "h-[200px] sm:h-[270px]"} `}>
           <Image
             className="h-full w-full object-cover transition-all group-hover/item:scale-110"
             width="852"

@@ -48,8 +48,8 @@ export default function MarketplaceLanding() {
   };
 
   return (
-    <div className="mx-auto max-w-[1274px] p-4 pb-8 pt-12 md:pb-20 md:pt-20">
-      <section className="mb-12">
+    <div className="mx-auto max-w-[1274px] p-2 md:p-4 pb-8 pt-12 md:pb-20 md:pt-20">
+      <section className="mb-4 md:mb-12">
         {globalConfigLoading ? (
           <Skeleton className="h-[200px] w-full rounded-lg md:h-[418px]"></Skeleton>
         ) : (
@@ -70,18 +70,18 @@ export default function MarketplaceLanding() {
 
       <section className="mt-8">
         <div className="grid grid-cols-12">
-          <div className="col-span-3 flex max-w-xs items-center justify-center text-[40px] font-extrabold text-primary">
+          <div className="col-span-12 md:col-span-3 flex md:max-w-xs items-center justify-center text-2xl mb-4 md:mb-0 md:text-[40px] md:leading-snug font-extrabold text-primary">
             <h3>Explore the Exclusive NFTS on MINA!</h3>
           </div>
 
-          <div className="col-span-9">
+          <div className="col-span-12 md:col-span-9">
             <div className="">
               {isLoading ? (
-                <div className="grid flex-1 grid-cols-4 gap-3 pr-2 text-lg">
+                <div className="grid flex-1 grid-cols-3 lg:grid-cols-4 gap-3 pr-2 text-lg">
                   <MarketplaceLoading nftCount={3} />
                 </div>
               ) : featuredData?.featuredNFTs?.length > 0 ? (
-                <div className="grid flex-1 grid-cols-4 gap-3 pr-2 text-lg">
+                <div className="grid flex-1 grid-cols-3 lg:grid-cols-4 gap-3 pr-2 text-lg">
                   {featuredData.featuredNFTs.map(
                     (collection: FeaturedNFTCollection) =>
                       collection.nfts.map((nft: NFT) => {
