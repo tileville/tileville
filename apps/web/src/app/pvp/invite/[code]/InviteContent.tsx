@@ -22,6 +22,7 @@ import { ChallengeParticipant } from "@/types";
 import { isMobile } from "react-device-detect";
 import { InviteContentMobileWarning } from "@/components/PVP/InviteContentMobileWarning";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
+import { isFuture } from "date-fns";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
@@ -120,6 +121,17 @@ export default function InviteContent({ code }: { code: string }) {
   };
 
   const renderActionButton = () => {
+    if (!isFuture(challenge.data.end_time)) {
+      return (
+        <button
+          className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white hover:bg-[#38830A]/90 md:py-3 md:text-lg disabled:bg-primary/70 disabled:hover:bg-primary/70"
+          disabled
+        >
+          Challenge Ended
+        </button>
+      );
+    }
+
     if (!networkStore.address) {
       return (
         <button
