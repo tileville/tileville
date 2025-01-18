@@ -74,6 +74,7 @@ export default function InviteContent({ code }: { code: string }) {
           challengeName: challenge.data.name,
           isSpeedChallenge: challenge.data.is_speed_challenge,
           entryFee: challenge.data.entry_fee,
+          isPublic: challenge.data.is_public,
         });
       }
 
@@ -87,14 +88,31 @@ export default function InviteContent({ code }: { code: string }) {
           toast.success("Successfully joined the challenge!");
           router.push("/pvp");
         } else {
-          logJoinChallengeError(`Payment failed: ${paymentResult.message}`);
+          logJoinChallengeError({
+            walletAddress: networkStore.address,
+            challengeId: challenge.data.id,
+            challengeName: challenge.data.name,
+            isSpeedChallenge: challenge.data.is_speed_challenge,
+            entryFee: challenge.data.entry_fee,
+            isPublic: challenge.data.is_public,
+            error: `Payment failed: ${paymentResult.message}`,
+          });
+
           toast.error(paymentResult.message || "Payment failed");
         }
       }
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      logJoinChallengeError(errorMessage);
+      logJoinChallengeError({
+        walletAddress: networkStore.address,
+        challengeId: challenge.data.id,
+        challengeName: challenge.data.name,
+        isSpeedChallenge: challenge.data.is_speed_challenge,
+        entryFee: challenge.data.entry_fee,
+        isPublic: challenge.data.is_public,
+        error: errorMessage,
+      });
       toast.error(errorMessage || "Failed to join challenge");
     } finally {
       setPayLoading(false);
