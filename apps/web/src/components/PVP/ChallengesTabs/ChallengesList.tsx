@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Challenge, ChallengeResponse } from "@/types";
-import { Spinner2 } from "@/components/common/Spinner";
 import { ChallengeDetails } from "./ChallengeDetails";
 import { TransactionStatus } from "@/lib/types";
 import { ChallengeListItem } from "../ChallengeListItem";
 import { TABS } from "@/app/pvp/PVPContent";
+import { ChallengesListSkeleton } from "./ChallengesListSkeleton";
 
 type ChallengesListType = {
   isLoadingCreated?: boolean;
@@ -22,26 +22,7 @@ export const ChallengesList = ({
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
     null
   );
-
-  if (isLoadingCreated || isLoadingAccepted) {
-    return (
-      <div className="flex min-h-[200px] items-center justify-center">
-        <Spinner2 />
-      </div>
-    );
-  }
-
-  if (!challenges?.data?.length) {
-    return (
-      <div className="mt-8 flex  min-h-[135px] items-center justify-center rounded-xl bg-[#B4C28E] text-center">
-        <p className="max-w-[380px] text-2xl font-bold  text-black ">
-          You Have not{" "}
-          {challengesType === TABS.CREATED.id ? "created" : "accepted"} any
-          challenges yet!
-        </p>
-      </div>
-    );
-  }
+  const isLoading = isLoadingCreated || isLoadingAccepted;
 
   return (
     <div className="rounded-xl border border-[#435133] bg-[#C6C99C] px-8 pb-6 pt-8">
@@ -63,34 +44,50 @@ export const ChallengesList = ({
           <div className="h-[2px] w-full rounded-[5px] bg-[#38830A]"></div>
           <div className="my-4 max-h-[calc(100vh-460px)] overflow-auto pr-4">
             <div className="grid gap-4">
-              {challenges.data.map(({ challenge, participants }, index) => {
-                const txn_status = participants[0]
-                  .txn_status as TransactionStatus;
-                const has_played = participants[0].has_played;
-                const challengeStatus = getChallengeStatus({
-                  txn_status,
-                  has_played,
-                });
-                const updatedChallenge = {
-                  ...challenge,
-                  status: challengeStatus,
-                };
-                return (
-                  <ChallengeListItem
-                    key={challenge.id}
-                    challengeID={challenge.id}
-                    sn={index + 1}
-                    challengeName={challenge.name}
-                    challengeStatus={challengeStatus}
-                    selectedChallengeId={selectedChallenge?.id}
-                    selectChallengeFn={() => {
-                      setSelectedChallenge(updatedChallenge);
-                    }}
-                    endTime={challenge.end_time}
-                    entryFee={challenge.entry_fee}
-                  />
-                );
-              })}
+              {!challenges?.data?.length && !isLoading && (
+                <div className="mt-8 flex  min-h-[135px] items-center justify-center rounded-xl bg-[#B4C28E] text-center">
+                  <p className="max-w-[380px] text-2xl font-bold  text-black ">
+                    You Have not{" "}
+                    {challengesType === TABS.CREATED.id
+                      ? "created"
+                      : "accepted"}{" "}
+                    any challenges yet!
+                  </p>
+                </div>
+              )}
+
+              {isLoading ? (
+                <ChallengesListSkeleton />
+              ) : (
+                challenges?.data.map(({ challenge, participants }, index) => {
+                  const txn_status = participants[0]
+                    .txn_status as TransactionStatus;
+                  const has_played = participants[0].has_played;
+                  const challengeStatus = getChallengeStatus({
+                    txn_status,
+                    has_played,
+                  });
+                  const updatedChallenge = {
+                    ...challenge,
+                    status: challengeStatus,
+                  };
+                  return (
+                    <ChallengeListItem
+                      key={challenge.id}
+                      challengeID={challenge.id}
+                      sn={index + 1}
+                      challengeName={challenge.name}
+                      challengeStatus={challengeStatus}
+                      selectedChallengeId={selectedChallenge?.id}
+                      selectChallengeFn={() => {
+                        setSelectedChallenge(updatedChallenge);
+                      }}
+                      endTime={challenge.end_time}
+                      entryFee={challenge.entry_fee}
+                    />
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
@@ -100,7 +97,7 @@ export const ChallengesList = ({
             <ChallengeDetails
               challenge={selectedChallenge}
               participants={
-                challenges.data.find(
+                challenges?.data.find(
                   (c) => c.challenge.id === selectedChallenge.id
                 )?.participants || []
               }
