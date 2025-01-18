@@ -22,6 +22,7 @@ import { ChallengeParticipant } from "@/types";
 import { isMobile } from "react-device-detect";
 import { InviteContentMobileWarning } from "@/components/PVP/InviteContentMobileWarning";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
+import { isFuture } from "date-fns";
 
 export default function InviteContent({ code }: { code: string }) {
   const router = useRouter();
@@ -74,6 +75,7 @@ export default function InviteContent({ code }: { code: string }) {
           challengeName: challenge.data.name,
           isSpeedChallenge: challenge.data.is_speed_challenge,
           entryFee: challenge.data.entry_fee,
+          isPublic: challenge.data.is_public,
         });
       }
 
@@ -87,14 +89,31 @@ export default function InviteContent({ code }: { code: string }) {
           toast.success("Successfully joined the challenge!");
           router.push("/pvp");
         } else {
-          logJoinChallengeError(`Payment failed: ${paymentResult.message}`);
+          logJoinChallengeError({
+            walletAddress: networkStore.address,
+            challengeId: challenge.data.id,
+            challengeName: challenge.data.name,
+            isSpeedChallenge: challenge.data.is_speed_challenge,
+            entryFee: challenge.data.entry_fee,
+            isPublic: challenge.data.is_public,
+            error: `Payment failed: ${paymentResult.message}`,
+          });
+
           toast.error(paymentResult.message || "Payment failed");
         }
       }
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      logJoinChallengeError(errorMessage);
+      logJoinChallengeError({
+        walletAddress: networkStore.address,
+        challengeId: challenge.data.id,
+        challengeName: challenge.data.name,
+        isSpeedChallenge: challenge.data.is_speed_challenge,
+        entryFee: challenge.data.entry_fee,
+        isPublic: challenge.data.is_public,
+        error: errorMessage,
+      });
       toast.error(errorMessage || "Failed to join challenge");
     } finally {
       setPayLoading(false);
@@ -102,6 +121,17 @@ export default function InviteContent({ code }: { code: string }) {
   };
 
   const renderActionButton = () => {
+    if (!isFuture(challenge.data.end_time)) {
+      return (
+        <button
+          className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white hover:bg-[#38830A]/90 md:py-3 md:text-lg disabled:bg-primary/70 disabled:hover:bg-primary/70"
+          disabled
+        >
+          Challenge Ended
+        </button>
+      );
+    }
+
     if (!networkStore.address) {
       return (
         <button
