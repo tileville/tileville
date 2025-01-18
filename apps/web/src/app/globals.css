@@ -428,7 +428,6 @@ input[type="range"]:focus::-moz-range-thumb {
 
 .competition-tweet-btn {
   position: absolute;
-  margin: 0.5rem;
   right: 0;
   top: 0;
   transform: translate(100px, -100px);

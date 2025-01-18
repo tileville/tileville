@@ -45,7 +45,7 @@ export const CompetitionCard = ({
       className="border-primary-30 competitionCard group relative grid min-h-[320px] grid-cols-12 gap-2 overflow-hidden rounded-lg pb-3 md:gap-3 md:pb-0"
       key={competition.id}
     >
-      <div className="relative col-span-12 aspect-square w-full overflow-hidden rounded-br-md h-auto md:h-full md:col-span-4 xl:h-[400px] xl:w-[400px] md:rounded-none">
+      <div className="relative col-span-12 aspect-square h-auto w-full overflow-hidden rounded-br-md md:col-span-4 md:h-full md:rounded-none xl:h-[400px] xl:w-[400px]">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
           alt="competition poster url"
@@ -95,8 +95,7 @@ export const CompetitionCard = ({
       </div>
       <div className=" col-span-12 px-1 md:col-span-3 md:py-4">
         <div className="grid h-full grid-cols-4 flex-wrap items-center justify-between md:flex md:flex-col md:items-start">
-
-          <div className="col-span-4 py-1 mx-auto md:ms-auto md:mr-4">
+          <div className="col-span-4 mx-auto py-1 md:mr-4 md:ms-auto">
             <Link
               className="ms-auto rounded-md border-2 border-primary bg-primary bg-opacity-30 px-2 py-1 text-center font-mono text-sm leading-none text-white hover:shadow-[0_0_8px_hsl(var(--primary))]"
               href={`leaderboard?competition=${competition.unique_keyname}`}
@@ -124,7 +123,7 @@ export const CompetitionCard = ({
           </div>
           {competition.is_speed_version && (
             <div className="col-span-4">
-              <div className="mb-2 flex justify-center md:justify-start items-center gap-2 text-xl">
+              <div className="mb-2 flex items-center justify-center gap-2 text-xl md:justify-start">
                 <span>
                   <Image
                     src="/icons/speed.svg"
@@ -133,7 +132,9 @@ export const CompetitionCard = ({
                     height="30"
                   />
                 </span>
-                <p className="text-medium text-sm md:text-base">Speedy Version</p>
+                <p className="text-medium text-sm md:text-base">
+                  Speedy Version
+                </p>
                 <Tooltip.Provider delayDuration={200}>
                   <Tooltip.Root>
                     <Tooltip.Trigger asChild>
@@ -157,7 +158,7 @@ export const CompetitionCard = ({
                 </Tooltip.Provider>
               </div>
 
-              <div className="flex items-center justify-center md:justify-start gap-2 text-xl">
+              <div className="flex items-center justify-center gap-2 text-xl md:justify-start">
                 <span>
                   <TimerIcon width={24} height={24} />
                 </span>
@@ -183,8 +184,8 @@ export const CompetitionCard = ({
                     {competitionStatus === "ongoing"
                       ? "Join Now"
                       : competitionStatus === "upcoming"
-                        ? "Competition Starts Soon"
-                        : "Competition Ended"}
+                      ? "Competition Starts Soon"
+                      : "Competition Ended"}
                   </button>
                 </Tooltip.Trigger>
                 {competitionStatus === "upcoming" && (
@@ -218,7 +219,7 @@ export const CompetitionCard = ({
             className="competition-tweet-btn ms-auto flex cursor-pointer items-center rounded-full bg-primary px-2 py-1 font-medium text-white"
           >
             <i className="twitterIcon h-3 w-3"></i>
-            <span className="label whitespace-nowraw ms-1 font-medium" id="l">
+            <span className="label ms-1 whitespace-nowrap font-medium" id="l">
               Tweet about competition
             </span>
           </button>
