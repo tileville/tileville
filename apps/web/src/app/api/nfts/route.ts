@@ -1,27 +1,30 @@
 import { supabaseServiceClient as supabase } from "@/db/config/server";
-import { NFT_PAGE_SIZE } from "@/constants";
 import { NextRequest } from "next/server";
+import { NFT_PAGE_SIZE } from "@/constants";
+import { NFTTableNames } from "@/lib/types";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "desc";
   const searchTerm = searchParams.get("searchTerm") || "";
-  const currentPage = parseInt(searchParams.get("currentPage") || "1");
-  const category = searchParams.get("category") || "ALL";
+  const page = parseInt(searchParams.get("page") || "1");
+  const collectionTableName = searchParams.get("collectionTableName") || "";
 
-  const rangeStart = (currentPage - 1) * NFT_PAGE_SIZE;
-  const rangeEnd = rangeStart + NFT_PAGE_SIZE - 1;
+  const start = (page - 1) * NFT_PAGE_SIZE;
+  const end = start + NFT_PAGE_SIZE - 1;
 
   try {
     let query = supabase
-      .from("minapunks_nfts")
+      .from(collectionTableName as NFTTableNames)
       .select("*", { count: "exact" })
-      .range(rangeStart, rangeEnd)
-      .order("price", { ascending: sortOrder === "asc" });
+      .range(start, end);
 
-    if (category !== "ALL") {
-      query = query.eq("category", category);
-    }
+    query = query
+      .order("price", {
+        ascending: sortOrder === "asc",
+        nullsFirst: false,
+      })
+      .order("nft_id", { ascending: true });
 
     if (searchTerm) {
       const numericSearch = parseInt(searchTerm);
@@ -39,11 +42,13 @@ export async function GET(request: NextRequest) {
     if (error) throw error;
 
     return Response.json({
-      nfts,
+      nfts: nfts || [],
       count: count || 0,
+      currentPage: page,
+      totalPages: Math.ceil((count || 0) / NFT_PAGE_SIZE),
     });
   } catch (error: any) {
-    console.error("Error fetching MinaPunks NFTs:", error);
+    console.error("NFT fetch error:", error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 }

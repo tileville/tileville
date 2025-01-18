@@ -1,15 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Table, DropdownMenu, Skeleton } from "@radix-ui/themes";
 import {
   useCompetitionsName,
   useLeaderboardEntries,
 } from "@/db/react-query-hooks";
-import { LEADERBOARD_COLUMNS } from "@/constants";
-import { useRouter, useSearchParams } from "next/navigation";
-import TableSkeleton from "./TableSkeleton";
 import { getCompetitionStatus } from "@/lib/helpers";
+import { LEADERBOARD_COLUMNS } from "@/constants";
+import TableSkeleton from "./TableSkeleton";
 
 type SelectedCompetition = {
   id: number;
@@ -252,7 +253,13 @@ export default function LeaderboardContent() {
                         <Table.Cell>{index + 1}</Table.Cell>
                         <Table.Cell>
                           {entry.username ? (
-                            entry.username
+                            <Link
+                              href={`u/${entry.username}`}
+                              className="underline hover:no-underline"
+                              target="_blank"
+                            >
+                              {entry.username}
+                            </Link>
                           ) : (
                             <span className="ps-4">-</span>
                           )}

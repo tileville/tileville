@@ -29,6 +29,7 @@ import { TransactionStatus } from "@/lib/types";
 import { ParticipantsList } from "../ParticipantsList";
 import { useThrottleWithIncreasingDelay } from "@/hooks/useThrottleWithIncreasingDelay";
 import { ClaimPrizeButton } from "../ClaimPrizeButton";
+import { RewardsSentContent } from "../RewardsSentContent";
 
 type ChallengeDetailsProps = {
   challenge: Challenge;
@@ -244,21 +245,10 @@ export const ChallengeDetails = ({
         winner?.wallet_address === networkStore.address && (
           <div className="my-2 flex justify-center">
             {challenge.is_reward_sent ? (
-              <div className="flex items-center gap-2 rounded-md border border-primary bg-[#C6C99C] px-4 py-2 text-primary">
-                <span>
-                  🎉 Reward of {participants.length * challenge.entry_fee - 1}{" "}
-                  MINA has been sent!
-                </span>
-                {challenge.reward_txn_hash && (
-                  <Link
-                    href={getMinaScanNormalLink(challenge.reward_txn_hash)}
-                    target="_blank"
-                    className="text-primary underline hover:no-underline"
-                  >
-                    View Transaction
-                  </Link>
-                )}
-              </div>
+              <RewardsSentContent
+                rewardCount={participants.length * challenge.entry_fee - 1}
+                rewardTxnHash={challenge.reward_txn_hash}
+              />
             ) : (
               <ClaimPrizeButton
                 challengeName={challenge.name}

@@ -12,7 +12,7 @@ import { ChallengesList } from "@/components/PVP/ChallengesTabs/ChallengesList";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import clsx from "clsx";
 
-const TABS = {
+export const TABS = {
   ACCEPTED: {
     id: "accepted",
     label: "Accepted Challenges",
@@ -54,22 +54,6 @@ export default function PVPContent() {
     setCreateModalOpen(true);
   };
 
-  //TODO: Instead of hiding whole PVP content, show the tabs if wallet is not connected
-  if (!networkStore.address) {
-    return (
-      <div className="flex min-h-screen items-center justify-center p-8">
-        <button
-          className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
-          onClick={() => {
-            networkStore.connectWallet(false);
-          }}
-        >
-          Connect your wallet first
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="p-4 pb-16 pt-12 font-roboto md:pt-24">
       <div className="mx-auto max-w-[1280px]">
@@ -98,20 +82,35 @@ export default function PVPContent() {
             ))}
           </Tabs.List>
           <Box pt="3">
-            <Tabs.Content value={TABS.ACCEPTED.id}>
-              <ChallengesList
-                isLoadingAccepted={isLoadingAccepted}
-                challenges={acceptedChallenges}
-                challengesType={TABS.ACCEPTED.id}
-              />
-            </Tabs.Content>
-            <Tabs.Content value={TABS.CREATED.id}>
-              <ChallengesList
-                isLoadingCreated={isLoadingCreated}
-                challenges={createdChallenges}
-                challengesType={TABS.CREATED.id}
-              />
-            </Tabs.Content>
+            {networkStore.address ? (
+              <>
+                <Tabs.Content value={TABS.ACCEPTED.id}>
+                  <ChallengesList
+                    isLoadingAccepted={isLoadingAccepted}
+                    challenges={acceptedChallenges}
+                    challengesType={TABS.ACCEPTED.id}
+                  />
+                </Tabs.Content>
+                <Tabs.Content value={TABS.CREATED.id}>
+                  <ChallengesList
+                    isLoadingCreated={isLoadingCreated}
+                    challenges={createdChallenges}
+                    challengesType={TABS.CREATED.id}
+                  />
+                </Tabs.Content>
+              </>
+            ) : (
+              <div className="flex items-center justify-center p-8">
+                <button
+                  className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+                  onClick={() => {
+                    networkStore.connectWallet(false);
+                  }}
+                >
+                  Connect your wallet first
+                </button>
+              </div>
+            )}
           </Box>
         </Tabs.Root>
       </div>

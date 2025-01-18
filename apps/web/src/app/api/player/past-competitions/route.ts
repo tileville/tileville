@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     // Fetch competition details for these keys
     const { data: competitions, error: competitionsError } = await supabase
       .from("tileville_competitions")
-      .select("unique_keyname, poster_url")
+      .select("unique_keyname, poster_url , name")
       .in("unique_keyname", uniqueCompetitionKeys);
 
     if (competitionsError) throw competitionsError;
@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
     const pastCompetitions = competitions.map((comp) => ({
       competitionKey: comp.unique_keyname,
       posterUrl: comp.poster_url,
+      competitionName: comp.name,
     }));
 
     return Response.json({

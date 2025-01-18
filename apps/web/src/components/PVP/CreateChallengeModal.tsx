@@ -15,12 +15,6 @@ import { CustomTooltip } from "../common/CustomTooltip";
 import CustomCheckbox from "../common/CustomCheckbox";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 
-const INPUT_CLASS =
-  "min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none";
-
-const ARROW_BTN_CLASS =
-  "flex h-5 w-[26px] items-center justify-center rounded-[2px] bg-[#378209] text-white text-xl";
-
 export const CreateChallengeModal = ({
   open,
   onOpenChange,
@@ -83,14 +77,21 @@ export const CreateChallengeModal = ({
           challengeName: name,
           isSpeedChallenge,
           entryFee,
+          isPublic,
         });
       }
     } catch (err) {
       console.error("Failed to create challenge:", err);
       const error = err as Error;
-      logCreateChallengeError(
-        error?.message || "Unknown error during challenge creation"
-      );
+      logCreateChallengeError({
+        walletAddress: networkStore.address,
+        challengeId: 0, // Using 0 fallback for failed creation
+        challengeName: name,
+        isSpeedChallenge,
+        entryFee,
+        isPublic,
+        error: error?.message || "Unknown error during challenge creation",
+      });
     } finally {
       setLoading(false);
     }
@@ -114,7 +115,7 @@ export const CreateChallengeModal = ({
               <div className="relative flex items-center gap-2">
                 <input
                   type="text"
-                  className={INPUT_CLASS}
+                  className="input-v1"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -164,7 +165,7 @@ export const CreateChallengeModal = ({
                     type="number"
                     min={PVP_CHALLENGES_MIN_ENTRY_FEE}
                     step="1"
-                    className={`${INPUT_CLASS} no-spinner`}
+                    className="input-v1 no-spinner"
                     value={entryFee}
                     onChange={(e) => setEntryFee(Number(e.target.value))}
                     required
@@ -174,14 +175,14 @@ export const CreateChallengeModal = ({
                     <button
                       type="button"
                       onClick={() => setEntryFee(entryFee + 1)}
-                      className={ARROW_BTN_CLASS}
+                      className="arrow-btn"
                     >
                       &#9652;
                     </button>
                     <button
                       type="button"
                       onClick={() => setEntryFee(entryFee - 1)}
-                      className={ARROW_BTN_CLASS}
+                      className="arrow-btn"
                     >
                       &#9662;
                     </button>
@@ -205,7 +206,7 @@ export const CreateChallengeModal = ({
 
                 <div className="relative">
                   <select
-                    className={`${INPUT_CLASS} appearance-none`}
+                    className="input-v1 appearance-none"
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
                     required
@@ -222,9 +223,7 @@ export const CreateChallengeModal = ({
                     <option value="72">72 hours</option>
                   </select>
 
-                  <span
-                    className={`${ARROW_BTN_CLASS} pointer-events-none absolute right-2 top-1/2  -translate-y-1/2`}
-                  >
+                  <span className="arrow-btn pointer-events-none absolute right-2 top-1/2  -translate-y-1/2">
                     &#9662;
                   </span>
                 </div>
@@ -248,7 +247,7 @@ export const CreateChallengeModal = ({
                     type="number"
                     min="2"
                     max="10"
-                    className={`${INPUT_CLASS} no-spinner`}
+                    className="input-v1 no-spinner"
                     value={maxParticipants}
                     onChange={(e) => setMaxParticipants(Number(e.target.value))}
                     required
@@ -258,14 +257,14 @@ export const CreateChallengeModal = ({
                     <button
                       type="button"
                       onClick={() => setMaxParticipants(maxParticipants + 1)}
-                      className={ARROW_BTN_CLASS}
+                      className="arrow-btn"
                     >
                       &#9652;
                     </button>
                     <button
                       type="button"
                       onClick={() => setMaxParticipants(maxParticipants - 1)}
-                      className={ARROW_BTN_CLASS}
+                      className="arrow-btn"
                     >
                       &#9662;
                     </button>
@@ -299,7 +298,7 @@ export const CreateChallengeModal = ({
                     type="number"
                     min="60"
                     max="300"
-                    className={`${INPUT_CLASS} no-spinner disabled:border-[#7CA550] disabled:text-gray-500`}
+                    className="input-v1 no-spinner disabled:border-[#7CA550] disabled:text-gray-500"
                     value={speedDuration}
                     onChange={(e) => setSpeedDuration(Number(e.target.value))}
                     required={isSpeedChallenge}
@@ -310,7 +309,7 @@ export const CreateChallengeModal = ({
                     <button
                       type="button"
                       onClick={() => setSpeedDuration(speedDuration + 1)}
-                      className={ARROW_BTN_CLASS}
+                      className="arrow-btn"
                       disabled={!isSpeedChallenge}
                     >
                       &#9652;
@@ -318,7 +317,7 @@ export const CreateChallengeModal = ({
                     <button
                       type="button"
                       onClick={() => setSpeedDuration(speedDuration - 1)}
-                      className={ARROW_BTN_CLASS}
+                      className="arrow-btn"
                       disabled={!isSpeedChallenge}
                     >
                       &#9662;

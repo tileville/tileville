@@ -15,13 +15,14 @@ import { MobileNavButton, PrimaryButton } from "../PrimaryButton";
 import clsx from "clsx";
 import {
   BugReportBtn,
-  JoinDiscordBtn,
+  JoinTelegramBtn,
   XFollowBtn,
 } from "../NavButtons/NavButtons";
 import { FooterContent } from "../Footer/FooterContent";
 import { useNetworkStore } from "@/lib/stores/network";
 import {
   useFetchTransactions,
+  useGlobalConfig,
   useMainnetTransactionsStatus,
   useProfileLazyQuery,
 } from "@/db/react-query-hooks";
@@ -31,6 +32,7 @@ import { walletInstalled } from "@/lib/helpers";
 import { anonymousSignIn } from "@/db/supabase-queries";
 
 export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
+  useGlobalConfig("config_v1");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const isHideBackBtn = HIDE_BACK_BUTTON_PATHS.includes(pathname);
@@ -142,7 +144,7 @@ export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             <div className="flex items-center gap-2 whitespace-nowrap">
               <BugReportBtn />
               <XFollowBtn />
-              <JoinDiscordBtn />
+              <JoinTelegramBtn />
             </div>
           </li>
 

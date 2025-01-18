@@ -22,7 +22,7 @@ export type MintNFTParams = {
   name: string;
   signed_image_url: string;
   collection: string;
-  description: string;
+  collectionDescription: string;
   price: number;
   keys: ProofOfNFT[];
   owner_address: string;
@@ -32,7 +32,7 @@ export type MintNFTParams = {
 
 export function useMintMINANFT() {
   const setMintProgress = useSetAtom(mintProgressAtom);
-  const globalConfig = useAtomValue(globalConfigAtom)
+  const globalConfig = useAtomValue(globalConfigAtom);
   const mintMINANFTHelper = async (params: MintNFTParams) => {
     console.log("######## MINT NFT Flow Starts ######");
     console.log("params", params);
@@ -40,16 +40,20 @@ export function useMintMINANFT() {
       name,
       price,
       collection,
-      description,
+      collectionDescription,
       keys,
       ipfs,
       signed_image_url,
       nft_id,
     } = params;
-    const collectionConfig = globalConfig?.nft_collections_config?.[collection] || {}
-    const feeMasterPublicKey = collectionConfig.fee_master_public_key || FEEMASTER_PUBLIC_KEY_DEFAULT
-    const reserved_price_reduce_key = collectionConfig.reserved_price_reduce_key || RESERVED_PRICE_REDUCE_KEY_DEFAULT
-    console.log("feeMasterPublicKey" , feeMasterPublicKey)
+    const collectionConfig =
+      globalConfig?.nft_collections_config?.[collection] || {};
+    const feeMasterPublicKey =
+      collectionConfig.fee_master_public_key || FEEMASTER_PUBLIC_KEY_DEFAULT;
+    const reserved_price_reduce_key =
+      collectionConfig.reserved_price_reduce_key ||
+      RESERVED_PRICE_REDUCE_KEY_DEFAULT;
+    console.log("feeMasterPublicKey", feeMasterPublicKey);
     const contractAddress = MINANFT_CONTRACT_ADDRESS;
     const chain: blockchain = CHAIN_NAME;
 
@@ -135,10 +139,10 @@ export function useMintMINANFT() {
     if (collection !== undefined && collection !== "")
       nft.update({ key: `collection`, value: collection });
 
-    if (description !== undefined && description !== "")
+    if (collectionDescription !== undefined && collectionDescription !== "")
       nft.updateText({
         key: `description`,
-        text: description,
+        text: collectionDescription,
       });
 
     for (const item of keys) {
@@ -343,7 +347,11 @@ export function useMintMINANFT() {
       nonce,
     });
 
-    if (!sentTx.isSent || sentTx.error) {
+    if (
+      !sentTx.isSent ||
+      sentTx.error ||
+      sentTx.hash.toLowerCase().includes("error")
+    ) {
       setMintProgress({
         [nft_id]: {
           step: 5,
@@ -358,6 +366,7 @@ export function useMintMINANFT() {
       };
     }
 
+    // Only set success state if we actually succeeded
     setMintProgress({
       [nft_id]: {
         step: 6,
@@ -365,7 +374,10 @@ export function useMintMINANFT() {
       },
     });
 
-    return { success: true, txHash: sentTx.hash };
+    return {
+      success: true,
+      txHash: sentTx.hash,
+    };
 
     // if (sentTx.hash.toLocaleLowerCase().includes("error")) {
     //   return { success: false, message: sentTx.hash };

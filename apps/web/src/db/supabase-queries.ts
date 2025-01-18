@@ -418,54 +418,6 @@ export const fetchGlobalConfig = async (
   return data;
 };
 
-type NFTEntriesResponse = {
-  nfts: Array<Table<"tileville_builder_nfts">>;
-  count: number;
-};
-
-export const getAllNFTsEntries = async ({
-  sortOrder,
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}): Promise<NFTEntriesResponse> => {
-  const rangeStart = (currentPage - 1) * NFT_PAGE_SIZE;
-  const rangeEnd = rangeStart + NFT_PAGE_SIZE - 1;
-
-  let query = supabase
-    .from("tileville_builder_nfts")
-    .select("*", { count: "exact" })
-    .range(rangeStart, rangeEnd)
-    .order("price", { ascending: sortOrder === "asc" });
-
-  if (searchTerm) {
-    const numericSearch = parseInt(searchTerm);
-    if (!isNaN(numericSearch)) {
-      query = query.or(
-        `price.eq.${numericSearch},nft_id.eq.${numericSearch},name.ilike.%${searchTerm}%`
-      );
-    } else {
-      // Search only in name
-      query = query.ilike("name", `%${searchTerm}%`);
-    }
-  }
-
-  const { data, error, count } = await query;
-
-  if (error) {
-    console.error("Error fetching NFT entries:", error);
-    throw error;
-  }
-
-  return {
-    nfts: data as Array<Table<"tileville_builder_nfts">>,
-    count: count ?? 0,
-  };
-};
-
 export const updateChallengeTransaction = async (payload: {
   wallet_address: string;
   challenge_id: number;

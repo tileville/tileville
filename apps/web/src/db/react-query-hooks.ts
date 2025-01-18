@@ -27,7 +27,6 @@ import {
   getCompetitionByKey,
   isGameAlreadyPlayed,
   fetchGlobalConfig,
-  getAllNFTsEntries,
   fetchPVPChallengeTransaction,
   confirmChallengeParticipation,
 } from "./supabase-queries";
@@ -38,10 +37,10 @@ import {
   isMockEnv,
 } from "@/constants";
 import { useAtom } from "jotai";
-import { globalConfigAtom } from "@/contexts/atoms";
+import { globalConfigAtom, globalConfigLoadingAtom } from "@/contexts/atoms";
 import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
-import { TransactionStatus } from "@/lib/types";
+import { NFTTableNames, TransactionStatus } from "@/lib/types";
 import { useSetAtom } from "jotai";
 import { followLoadingAtom } from "@/contexts/atoms";
 
@@ -209,21 +208,6 @@ export const useCompetitionsData = () => {
   );
 };
 
-export const useNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}) => {
-  return useQuery(
-    ["tileville_builder_nfts", sortOrder, searchTerm, currentPage],
-    () => getAllNFTsEntries({ sortOrder, searchTerm, currentPage }),
-    {}
-  );
-};
 export const useProfileLazyQuery = (walletAddress: string) => {
   const queryClient = useQueryClient();
 
@@ -512,19 +496,33 @@ export const useIsGameAlreadyPlayed = (game_id: number) => {
 
 export const useGlobalConfig = (config_name: string) => {
   const [globalConfig, setGlobalConfig] = useAtom(globalConfigAtom);
-  return useQuery(["global_config", config_name], () =>
-    fetchGlobalConfig(config_name)
-      .then((response) => {
+  const setGlobalConfigLoading = useSetAtom(globalConfigLoadingAtom);
+
+  return useQuery({
+    queryKey: ["global_config", config_name],
+    queryFn: async () => {
+      setGlobalConfigLoading(true);
+      try {
+        const response = await fetchGlobalConfig(config_name);
         const config = isMockEnv()
           ? MOCK_GLOBAL_CONFIG
           : (response.config_values as { [key: string]: any });
         setGlobalConfig({ ...globalConfig, ...config });
         return response;
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(`Failed to fetch global config from db`, error);
-      })
-  );
+        throw error;
+      } finally {
+        setGlobalConfigLoading(false);
+      }
+    },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    onError: (error) => {
+      console.error("Error loading global config:", error);
+      setGlobalConfigLoading(false);
+    },
+  });
 };
 
 export function useGetConnections(wallet_address: string) {
@@ -580,7 +578,7 @@ export function useFollowUser() {
         }
         return data;
       } finally {
-        setFollowLoading(false); 
+        setFollowLoading(false);
       }
     },
     onSuccess: () => {
@@ -605,7 +603,7 @@ export function useUnfollowUser() {
       const authSignature =
         window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
       setFollowLoading(true);
-           try {
+      try {
         const response = await fetch("/api/player/unfollow", {
           method: "POST",
           headers: {
@@ -854,6 +852,7 @@ export function useTotalWins(wallet_address: string) {
 interface PastCompetition {
   competitionKey: string;
   posterUrl: string;
+  competitionName: string;
 }
 
 interface PastCompetitionsResponse {
@@ -945,36 +944,6 @@ export const useTelegramVerify = ({
         toastRef.current = null;
         onError?.(error);
       },
-    }
-  );
-};
-
-export const useMinatyNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}) => {
-  return useQuery(
-    ["minaty_nfts", sortOrder, searchTerm, currentPage],
-    async () => {
-      const params = [
-        `sortOrder=${sortOrder}`,
-        `searchTerm=${encodeURIComponent(searchTerm)}`,
-        `currentPage=${currentPage}`,
-      ].join("&");
-
-      const response = await fetch(`/api/minaty-nfts?${params}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
-    {
-      keepPreviousData: true,
     }
   );
 };
@@ -1239,68 +1208,53 @@ export const useTelegramStatus = (wallet_address: string) => {
   });
 };
 
-export const useMinaPunksNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
+export interface NFTResponse {
+  nfts: Array<any>;
+  count: number;
   currentPage: number;
-}) => {
-  return useQuery(
-    ["minapunks_nfts", sortOrder, searchTerm, currentPage],
-    async () => {
-      const params = [
-        `sortOrder=${sortOrder}`,
-        `searchTerm=${encodeURIComponent(searchTerm)}`,
-        `currentPage=${currentPage}`,
-      ].join("&");
+  totalPages: number;
+}
 
-      const response = await fetch(`/api/nfts/minapunks-nfts?${params}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
-    {
-      keepPreviousData: true,
-    }
-  );
+export type NFTError = {
+  message: string;
+  status?: number;
 };
 
-export const useZKGodNFTEntries = ({
+export const useNFTsWithPagination = ({
   sortOrder = "desc",
   searchTerm,
   currentPage,
-  category = "ALL",
+  collectionTableName,
+  enabled = true,
 }: {
   sortOrder: "asc" | "desc";
   searchTerm: string;
   currentPage: number;
-  category?: string;
+  collectionTableName: string;
+  enabled?: boolean;
 }) => {
-  return useQuery(
-    ["zkgod_nfts", sortOrder, searchTerm, currentPage, category],
-    async () => {
+  return useQuery<NFTResponse, NFTError>({
+    queryKey: [sortOrder, searchTerm, currentPage, collectionTableName],
+    queryFn: async () => {
       const params = [
         `sortOrder=${sortOrder}`,
         `searchTerm=${encodeURIComponent(searchTerm)}`,
-        `currentPage=${currentPage}`,
-        `category=${category}`,
+        `page=${currentPage}`,
+        `collectionTableName=${collectionTableName}`,
       ].join("&");
 
-      const response = await fetch(`/api/nfts/zkgod-nfts?${params}`);
+      const response = await fetch(`/api/nfts?${params}`);
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorData = await response.json();
+        throw {
+          message: errorData.error || "Failed to fetch NFTs",
+          status: response.status,
+        };
       }
       return response.json();
     },
-    {
-      keepPreviousData: true,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  );
+    enabled: enabled && !!collectionTableName,
+    keepPreviousData: true,
+    staleTime: 1000 * 60,
+  });
 };
