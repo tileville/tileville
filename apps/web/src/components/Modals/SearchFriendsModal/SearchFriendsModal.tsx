@@ -2,7 +2,6 @@ import React from "react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog } from "@radix-ui/themes";
 import Image from "next/image";
-import { PRIMARY_BUTTON_STYLES_LG } from "@/constants";
 import { SearchFriendsModalContent } from "./SearchFriendsModalContent";
 
 type SearchFriendsModalProps = {
@@ -21,9 +20,7 @@ export default function SearchFriendsModal({
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <button
-          className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center gap-3 rounded-[10px] transition-transform hover:scale-105`}
-        >
+        <button className="primary-button-styles-lg flex items-center justify-center gap-3 rounded-[10px] transition-transform hover:scale-105">
           <span>
             <Image
               src="/icons/search.svg"
