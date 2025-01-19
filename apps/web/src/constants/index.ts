@@ -800,24 +800,6 @@ export const PVP_CHALLENGES_MIN_ENTRY_FEE = Number(
 export const GROUP_COMPETITION_GAME_TOPIC_ID =
   process.env.NEXT_PUBLIC_GROUP_COMPETITION_GAME_TOPIC_ID || 3;
 
-export const MINATY_SPECIAL_NFT_MINT_RULES = {
-  address: "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
-  nftRange: {
-    start: 200,
-    end: 214,
-  },
-} as const;
-
-export const COLLECTION_MINT_RULES = {
-  [NFT_COLLECTIONS.MINATY]: {
-    maxMintsPerWallet: 3,
-    specialRules: MINATY_SPECIAL_NFT_MINT_RULES,
-  },
-  [NFT_COLLECTIONS.ZKGOD]: {
-    maxMintsPerWallet: 1,
-  },
-} as const;
-
 export const NFT_TABLE_NAMES = {
   TILEVILLE: "tileville_builder_nfts",
   MINATY: "minaty_nfts",
