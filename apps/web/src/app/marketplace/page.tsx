@@ -1,12 +1,12 @@
 import dynamic from "next/dynamic";
 
-const MarketplaceContent = dynamic(
-  () => import("@/components/Marketplace/MarketplaceContent"),
+const MarketplaceLanding = dynamic(
+  () => import("@/components/Marketplace/MarketplaceLanding"),
   {
     ssr: false,
   }
 );
 
 export default function Marketplace() {
-  return <MarketplaceContent />;
+  return <MarketplaceLanding />;
 }

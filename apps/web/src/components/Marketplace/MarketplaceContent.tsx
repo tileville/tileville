@@ -22,7 +22,13 @@ import CollectionSelector from "@/components/Marketplace/CollectionSelector";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 
-export default function MarketplaceContent() {
+export default function MarketplaceContent({
+  collection,
+  isMarketplaceV2,
+}: {
+  collection?: NFTCollectionType;
+  isMarketplaceV2?: boolean;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -45,12 +51,13 @@ export default function MarketplaceContent() {
   const [renderStyle, setRenderStyle] = useState(
     TOGGLE_GROUP_OPTIONS[selectedToggle].gridApplyClass
   );
+
   const [selectedCollection, setSelectedCollection] =
     useState<NFTCollectionType>(
-      (searchParams.get("collection") as NFTCollectionType) ||
+      collection ||
+        (searchParams.get("collection") as NFTCollectionType) ||
         NFT_COLLECTIONS.TILEVILLE
     );
-
   const globalConfig = useAtomValue(globalConfigAtom);
   const collectionConfig =
     globalConfig?.nft_collections_config?.[selectedCollection] || {};
@@ -112,10 +119,13 @@ export default function MarketplaceContent() {
 
   const handleCollectionChange = useCallback(
     (newCollection: NFTCollectionType) => {
-      setSelectedCollection(newCollection);
-      updateSearchParams({ collection: newCollection, page: "1" });
+      if (!collection) {
+        // Only allow changing collection if no collection prop is provided
+        setSelectedCollection(newCollection);
+        updateSearchParams({ collection: newCollection, page: "1" });
+      }
     },
-    [updateSearchParams]
+    [updateSearchParams, collection]
   );
 
   const handlePageChange = useCallback(
@@ -144,13 +154,14 @@ export default function MarketplaceContent() {
     setSelectedToggle(Number(searchParams.get("view")) || 0);
     setCurrentPage(Number(searchParams.get("page")) || 1);
     setSelectedCollection(
-      (searchParams.get("collection") as NFTCollectionType) ||
+      collection ||
+        (searchParams.get("collection") as NFTCollectionType) ||
         NFT_COLLECTIONS.TILEVILLE
     );
     setRenderStyle(
       TOGGLE_GROUP_OPTIONS[Number(searchParams.get("view")) || 0].gridApplyClass
     );
-  }, [searchParams]);
+  }, [searchParams, collection]);
 
   if (nftError) {
     return (
@@ -163,14 +174,20 @@ export default function MarketplaceContent() {
   }
 
   return (
-    <div className="relative p-4 pb-0 pt-12 md:pb-28 md:pt-20">
+    <div
+      className={`relative ${
+        isMarketplaceV2 ? "pt-0" : "p-4 pb-0 pt-12 md:pb-28 md:pt-20"
+      }`}
+    >
       <div className="mx-auto max-w-[1280px] pt-3">
         {/* Filters and controls */}
         <div className="mb-8 flex flex-wrap gap-3">
-          <CollectionSelector
-            selectedCollection={selectedCollection}
-            onSelect={handleCollectionChange}
-          />
+          {!isMarketplaceV2 && (
+            <CollectionSelector
+              selectedCollection={selectedCollection}
+              onSelect={handleCollectionChange}
+            />
+          )}
 
           {/* View toggle buttons */}
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
@@ -210,7 +227,9 @@ export default function MarketplaceContent() {
             />
           </div>
 
-          <TraitsInfoBtn />
+          {selectedCollection === NFT_COLLECTIONS.TILEVILLE && (
+            <TraitsInfoBtn />
+          )}
 
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>

@@ -14,6 +14,7 @@ import {
   NFTCategory,
   DEFAULT_TRASURY_ADDRESS,
   NFT_COLLECTIONS,
+  MinaPunksCategory,
 } from "@/constants";
 import Link from "next/link";
 import { getTime, isFuture } from "date-fns";
@@ -56,7 +57,7 @@ export const NFTModal = ({
   ownerAddress: string | null;
   algoliaHitData: AlgoliaHitResponse | undefined;
   collection: NFTCollectionType;
-  NFTCategory: NFTCategory | null;
+  NFTCategory: NFTCategory | null | MinaPunksCategory | undefined;
   isPublicMint: boolean;
 }) => {
   // Function to parse traits
@@ -252,6 +253,7 @@ export const NFTModal = ({
               imgUrl={img_url}
               nftName={name}
               isListStyle={renderStyle.includes("list-style")}
+              isView1={renderStyle.includes("view1")}
               isAlreadyMinted={!!algoliaHitData}
               ownerAddress={algoliaHitData?.owner || ""}
               mintDate={date}
