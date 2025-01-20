@@ -1,4 +1,3 @@
-import { FOLLOWING_BTN, PRIMARY_BUTTON_STYLES } from "@/constants";
 import { useFollowUser, useUnfollowUser } from "@/db/react-query-hooks";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,7 +30,6 @@ export const UserListItem = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isFollowLoading = useAtomValue(followLoadingAtom);
-
 
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
@@ -97,7 +95,7 @@ export const UserListItem = ({
           <button
             type="button"
             className={`${
-              isFollowing ? FOLLOWING_BTN : PRIMARY_BUTTON_STYLES
+              isFollowing ? "following-btn" : "primary-button-styles"
             } relative ms-auto`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -105,7 +103,7 @@ export const UserListItem = ({
               e.preventDefault();
               handleFollowAction();
             }}
-            disabled={isFollowLoading}  
+            disabled={isFollowLoading}
           >
             {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
 

@@ -474,21 +474,6 @@ export const TABLE_SKELETON_CONTENT = [
 ];
 
 //TODO: Replace all of these with @apply
-export const PRIMARY_BUTTON_STYLES =
-  "w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-105 transition-transform disabled:opacity-60 disabled:hover:scale-100 ";
-
-export const PRIMARY_BUTTON_STYLES_LG =
-  "w-full border border-primary bg-[#93B068] py-2 px-2 text-base font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-[1.02] transition-transform";
-
-export const FOLLOWING_BTN_LG = `${PRIMARY_BUTTON_STYLES_LG} hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-[1.02] transition-transform`;
-
-export const FOLLOWING_BTN = `${PRIMARY_BUTTON_STYLES} hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-105 transition-transform bg-transparent disabled:opacity-60 disabled:hover:scale-100 hover:diabled:bg-[#93B068] hover:disabled:text-[#830A0A]`;
-
-export const PRIMARY_OUTLINE_BUTTON =
-  "min-w-[100px] rounded-lg border border-[#378209] p-1 text-base font-bold text-[#38830A] shadow-[0px_1px_4px_0px_#89AB5D]";
-
-export const BADGE_BASE_CLASSES =
-  "flex items-center justify-center gap-1 whitespace-nowrap rounded-[5px] bg-primary/20 px-1 py-[1px] text-[10px] text-[#445137";
 
 export const PRIMARY_BUTTON_V2 = clsx(
   "rounded-md border-2 border-primary",
@@ -818,24 +803,6 @@ export const PVP_CHALLENGES_MIN_ENTRY_FEE = Number(
 export const GROUP_COMPETITION_GAME_TOPIC_ID =
   process.env.NEXT_PUBLIC_GROUP_COMPETITION_GAME_TOPIC_ID || 3;
 
-export const MINATY_SPECIAL_NFT_MINT_RULES = {
-  address: "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
-  nftRange: {
-    start: 200,
-    end: 214,
-  },
-} as const;
-
-export const COLLECTION_MINT_RULES = {
-  [NFT_COLLECTIONS.MINATY]: {
-    maxMintsPerWallet: 3,
-    specialRules: MINATY_SPECIAL_NFT_MINT_RULES,
-  },
-  [NFT_COLLECTIONS.ZKGOD]: {
-    maxMintsPerWallet: 1,
-  },
-} as const;
-
 export const NFT_TABLE_NAMES = {
   TILEVILLE: "tileville_builder_nfts",
   MINATY: "minaty_nfts",
@@ -853,3 +820,6 @@ export const TILEVILLE_TELEGRAM_URL = "https://t.me/tilevilleBugs";
 
 const TELEGRAM_BUG_REPORT_TOPIC_ID = 277;
 export const BUG_REPORT_URL = `${TILEVILLE_TELEGRAM_URL}/${TELEGRAM_BUG_REPORT_TOPIC_ID}`;
+
+export const NFT_COLLECTION_HOSTING_REQ_DOC_URL =
+  "https://hackmd.io/@satyambnsal/B1yA-wZrkg";

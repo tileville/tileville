@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { PRIMARY_BUTTON_STYLES_LG, TILEVILLE_BOT_URL } from "@/constants";
+import { TILEVILLE_BOT_URL } from "@/constants";
 import { copyToClipBoard, generateAuroWalletDeepLink } from "@/lib/helpers";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
@@ -46,7 +46,7 @@ export default function VerifyContent() {
             </p>
             <Link
               href={TILEVILLE_BOT_URL}
-              className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center md:min-h-[64px]`}
+              className="primary-button-styles-lg flex items-center justify-center md:min-h-[64px]"
             >
               Return to BOT
             </Link>
@@ -86,7 +86,7 @@ export default function VerifyContent() {
               <button
                 onClick={handleVerification}
                 disabled={isProcessing}
-                className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
+                className="primary-button-styles-lg md:min-h-[64px]"
               >
                 {getButtonText()}
               </button>
@@ -95,7 +95,7 @@ export default function VerifyContent() {
             {isMobile && !window.mina && (
               <div className="mt-6 flex flex-col gap-4">
                 <button
-                  className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center gap-4`}
+                  className="primary-button-styles-lg flex items-center justify-center gap-4"
                   onClick={() => {
                     copyToClipBoard({
                       toCopyContent: window.location.href,
@@ -109,7 +109,7 @@ export default function VerifyContent() {
 
                 <Link
                   href={generateAuroWalletDeepLink(chatId || "")}
-                  className={PRIMARY_BUTTON_STYLES_LG}
+                  className="primary-button-styles-lg"
                 >
                   Open Auro App
                 </Link>

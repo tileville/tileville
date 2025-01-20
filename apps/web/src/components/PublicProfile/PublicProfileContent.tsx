@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import EditProfileModalWrap from "./EditProfileModalWrap";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { LockClosedIcon } from "@radix-ui/react-icons";
-import { BADGE_BASE_CLASSES } from "@/constants";
 import { PublicProfileTabsPlaceholder } from "./Placeholders/PublicProfileTabsPlaceholder";
 
 export const PublicProfileContent = ({
@@ -141,7 +140,7 @@ export const PublicProfileContent = ({
 
                       {networkStore.address && !accountAuthSignature && (
                         <button
-                          className={`${BADGE_BASE_CLASSES} absolute right-3 top-3 z-10`}
+                          className="badge-base-classes absolute right-3 top-3 z-10"
                           onClick={async () => {
                             await validateOrSetSignature();
                           }}

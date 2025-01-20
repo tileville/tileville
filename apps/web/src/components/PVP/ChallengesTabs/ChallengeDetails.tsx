@@ -21,7 +21,6 @@ import { Skeleton } from "@radix-ui/themes";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { ChallengeStatus, getChallengeStatus } from "./ChallengesList";
 import { isFuture } from "date-fns";
-import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
 import { usePayPVPFees } from "@/hooks/usePayPVPFees";
 import { useState } from "react";
 import { Spinner2 } from "@/components/common/Spinner";
@@ -106,7 +105,6 @@ export const ChallengeDetails = ({
     }
     setPayLoading(true);
 
-    //TODO: Add posthog Event for challenges
     await payPVPFees({
       participation_fee: challenge.entry_fee ?? 0,
       challenge_id: challenge.id,
@@ -273,7 +271,7 @@ export const ChallengeDetails = ({
         {challengeStatus === ChallengeStatus.PAYMENT_NOT_INIT &&
           isChallengeActive && (
             <button
-              className={`${PRIMARY_OUTLINE_BUTTON} relative min-w-[120px] disabled:opacity-60`}
+              className="primary-outline-button relative min-w-[120px] disabled:opacity-60"
               onClick={handlePayParticipationFess}
             >
               Pay Now
@@ -288,7 +286,7 @@ export const ChallengeDetails = ({
           isChallengeActive && (
             <div className="flex w-full justify-between gap-2">
               <Link
-                className={`${PRIMARY_OUTLINE_BUTTON} min-w-[140px] text-center disabled:opacity-60`}
+                className="primary-outline-button min-w-[140px] text-center disabled:opacity-60"
                 onClick={handleRefreshStatus}
                 href={getMinaScanNormalLink(
                   challengeTransaction?.txn_hash || ""
@@ -299,7 +297,7 @@ export const ChallengeDetails = ({
               </Link>
 
               <button
-                className={`${PRIMARY_OUTLINE_BUTTON} min-w-[140px] disabled:opacity-60`}
+                className="primary-outline-button min-w-[140px] disabled:opacity-60"
                 onClick={handleRefreshStatus}
                 disabled={isThrottled}
               >
@@ -309,7 +307,7 @@ export const ChallengeDetails = ({
               </button>
 
               <button
-                className={`${PRIMARY_OUTLINE_BUTTON} relative min-w-[120px] disabled:opacity-60`}
+                className="primary-outline-button relative min-w-[120px] disabled:opacity-60"
                 onClick={handlePayParticipationFess}
                 disabled={payLoading}
               >
@@ -325,7 +323,7 @@ export const ChallengeDetails = ({
         {challengeStatus === ChallengeStatus.READY_TO_PLAY &&
           isChallengeActive && (
             <button
-              className={`${PRIMARY_OUTLINE_BUTTON} disabled:opacity-60`}
+              className="primary-outline-button disabled:opacity-60"
               onClick={() => {
                 router.push(`/pvp/${challenge.id}/game`);
               }}
@@ -336,7 +334,7 @@ export const ChallengeDetails = ({
         {challengeStatus === ChallengeStatus.PAYMENT_FAILED &&
           isChallengeActive && (
             <button
-              className={`${PRIMARY_OUTLINE_BUTTON} relative min-w-[120px] disabled:opacity-60`}
+              className="primary-outline-button relative min-w-[120px] disabled:opacity-60"
               onClick={handlePayParticipationFess}
             >
               Retry

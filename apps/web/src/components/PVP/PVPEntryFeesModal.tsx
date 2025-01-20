@@ -27,20 +27,12 @@ export const PVPEntryFeesModal = ({
   const { payPVPFees } = usePayPVPFees();
 
   const router = useRouter();
-  //TODO: Add new posthog events for challenge
-  //   const {
-  //     joinedCompetition: [logJoinCompetition],
-  //   } = usePosthogEvents();
 
   const handlePayParticipationFess = async () => {
     if (!networkStore.address) {
       return networkStore.connectWallet(false);
     }
-    // logJoinCompetition({
-    //   walletAddress: networkStore.address,
-    //   competition_name: competition.name,
-    //   network: networkStore.minaNetwork?.networkID || "berkeley",
-    // });
+
     const data = await payPVPFees({
       participation_fee: entryFee ?? 0,
       challenge_id: +challengeId,

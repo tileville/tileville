@@ -1,4 +1,3 @@
-import { PRIMARY_OUTLINE_BUTTON } from "@/constants";
 import Image from "next/image";
 import { Spinner2 } from "../common/Spinner";
 import {
@@ -65,7 +64,7 @@ ${getMinaScanNormalLink(participantTxnHash)}`;
           console.error("Failed to send winner message:", error);
         }
       }}
-      className={`${PRIMARY_OUTLINE_BUTTON} flex items-center gap-2`}
+      className="primary-outline-button flex items-center gap-2"
       disabled={sendPrivateGroupMessageMutation.isLoading || usernameLoading}
     >
       {sendPrivateGroupMessageMutation.isLoading ? (

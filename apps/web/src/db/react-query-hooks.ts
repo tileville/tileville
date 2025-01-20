@@ -522,6 +522,9 @@ export const useGlobalConfig = (config_name: string) => {
       console.error("Error loading global config:", error);
       setGlobalConfigLoading(false);
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 };
 
@@ -1256,5 +1259,23 @@ export const useNFTsWithPagination = ({
     enabled: enabled && !!collectionTableName,
     keepPreviousData: true,
     staleTime: 1000 * 60,
+  });
+};
+
+export const useFeaturedNFTs = () => {
+  return useQuery({
+    queryKey: ["featured-nfts"],
+    queryFn: async () => {
+      const response = await fetch("/api/nfts/featured");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw {
+          message: errorData.error || "Failed to fetch featured NFTs",
+          status: response.status,
+        };
+      }
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

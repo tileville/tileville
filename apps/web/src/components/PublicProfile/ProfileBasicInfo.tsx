@@ -7,11 +7,6 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { Skeleton } from "@radix-ui/themes";
 import { CopyIcon } from "@radix-ui/react-icons";
 import {
-  BADGE_BASE_CLASSES,
-  FOLLOWING_BTN_LG,
-  PRIMARY_BUTTON_STYLES_LG,
-} from "@/constants";
-import {
   useBlockberryBalance,
   useFollowUser,
   usePastCompetitions,
@@ -124,7 +119,7 @@ export const ProfileBasicInfo = ({
           </div>
 
           <div className="flex items-center gap-3">
-            <div className={BADGE_BASE_CLASSES}>
+            <div className="badge-base-classes">
               <span>{formatAddress(walletAddress)}</span>
               <button
                 onClick={() =>
@@ -138,7 +133,7 @@ export const ProfileBasicInfo = ({
               </button>
             </div>
 
-            <div className={BADGE_BASE_CLASSES}>
+            <div className="badge-base-classes">
               <span className="flex items-center gap-1">
                 Balance :
                 <span className="text-[#010201]">
@@ -297,7 +292,7 @@ export const ProfileBasicInfo = ({
           <button
             type="button"
             className={`${
-              isFollowing ? FOLLOWING_BTN_LG : PRIMARY_BUTTON_STYLES_LG
+              isFollowing ? "following-btn-lg" : "primary-button-styles-lg"
             } relative ms-auto`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}

@@ -42,6 +42,8 @@
     "axios": "^1.7.3",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
+    "embla-carousel-autoplay": "^8.5.2",
+    "embla-carousel-react": "^8.5.2",
     "framer-motion": "^11.2.6",
     "immer": "^10.0.3",
     "install": "^0.13.0",
