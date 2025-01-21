@@ -151,12 +151,15 @@ export const TraitsSection = ({
     const parsedTraits = parseTraits(traits);
     return (
       <div className="mt-4 space-y-6">
-        <div className="space-y-4">
-          <h3 className="font-semibold">About {category}</h3>
-          <p className="text-sm leading-relaxed text-gray-700">
-            {MINAPUNKS_ATTRIBUTES[category as MinaPunksCategory].description}
-          </p>
-        </div>
+        {MINAPUNKS_ATTRIBUTES[category as MinaPunksCategory] && (
+          <div className="space-y-4">
+            <h3 className="font-semibold">About {category}</h3>
+            <p className="text-sm leading-relaxed text-gray-700">
+              {MINAPUNKS_ATTRIBUTES[category as MinaPunksCategory]?.description}
+            </p>
+          </div>
+        )}
+
         {/* Traits */}
         <div>
           <h3 className="mb-4 font-semibold">Traits</h3>
