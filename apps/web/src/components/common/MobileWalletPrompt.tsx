@@ -1,7 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 type MobileWalletPromptProps = {

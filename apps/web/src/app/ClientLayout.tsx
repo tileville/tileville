@@ -81,7 +81,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
         {children}
         {renderFooter()}
 
-        {isMobile && !hasClosedPrompt && isClient && (
+        {isMobile && !hasClosedPrompt && isClient && !window.mina && (
           <MobileWalletPrompt
             onOpenAuro={handleOpenAuro}
             onClose={() => setHasClosedPrompt(true)}
