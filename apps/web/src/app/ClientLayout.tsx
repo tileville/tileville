@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import { usePathname, useSearchParams } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
 import { DesktopNavBar } from "@/components/navbar/DesktopNavBar";
@@ -9,6 +10,9 @@ import { useEffect, useState } from "react";
 import { Footer } from "@/components/Footer/Footer";
 import VConsole from "vconsole";
 import { TelegramBanner } from "@/components/TelegramBanner/TelegramBanner";
+import { MobileWalletPrompt } from "@/components/common/MobileWalletPrompt";
+import { useSessionStorage } from "react-use";
+import { createAuroDeepLink } from "@/lib/helpers";
 let vConsole: any;
 
 const queryClient = new QueryClient();
@@ -21,6 +25,25 @@ const StoreProtokitUpdater = dynamic(
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const [isClient, setIsClient] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [hasClosedPrompt, setHasClosedPrompt] = useSessionStorage(
+    "has_closed_auro_prompt",
+    false
+  );
+
+  const handleOpenAuro = () => {
+    const currentUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}${pathname}${
+            searchParams.toString() ? `?${searchParams.toString()}` : ""
+          }`
+        : "";
+
+    const deepLink = createAuroDeepLink(currentUrl);
+    window.location.href = deepLink;
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -64,6 +87,13 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
         <TelegramBanner />
         {children}
         {renderFooter()}
+
+        {isMobile && !hasClosedPrompt && isClient && (
+          <MobileWalletPrompt
+            onOpenAuro={handleOpenAuro}
+            onClose={() => setHasClosedPrompt(true)}
+          />
+        )}
       </QueryClientProvider>
     </JotaiProvider>
   );
