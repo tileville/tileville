@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-import { usePathname, useSearchParams } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
 import { DesktopNavBar } from "@/components/navbar/DesktopNavBar";
@@ -25,8 +24,6 @@ const StoreProtokitUpdater = dynamic(
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const [isClient, setIsClient] = useState(false);
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const [hasClosedPrompt, setHasClosedPrompt] = useSessionStorage(
     "has_closed_auro_prompt",
@@ -35,11 +32,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
 
   const handleOpenAuro = () => {
     const currentUrl =
-      typeof window !== "undefined"
-        ? `${window.location.origin}${pathname}${
-            searchParams.toString() ? `?${searchParams.toString()}` : ""
-          }`
-        : "";
+      typeof window !== "undefined" ? window.location.href : "";
 
     const deepLink = createAuroDeepLink(currentUrl);
     window.location.href = deepLink;
