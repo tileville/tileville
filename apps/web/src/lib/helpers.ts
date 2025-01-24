@@ -269,6 +269,13 @@ export const generateAuroWalletDeepLink = (chatId: string) => {
   return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/verify?chatId=${chatId}`;
 };
 
+export function createAuroDeepLink(currentUrl: string): string {
+  // Replace the domain if it's localhost
+  const url = currentUrl.replace('localhost:3000', 'tileville.xyz');
+  const encodedUrl = encodeURIComponent(url);
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=${encodedUrl}`;
+}
+
 export const generateAuroWalletDeepLinkForChallengeInvite = (
   inviteCode: string
 ) => {
