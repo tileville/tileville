@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import { Challenge, ChallengeResponse } from "@/types";
 import { ChallengeDetails } from "./ChallengeDetails";
