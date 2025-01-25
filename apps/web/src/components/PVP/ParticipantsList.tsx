@@ -2,8 +2,7 @@
 import { ChallengeParticipant } from "@/types";
 import { Badge } from "@radix-ui/themes";
 import { TransactionStatus } from "@/lib/types";
-import { getChallengeStatus } from "./ChallengesTabs/ChallengesList";
-import { getBadgeColorFromStatus } from "@/lib/helpers";
+import { getBadgeColorFromStatus, getChallengeStatus } from "@/lib/helpers";
 
 type ParticipantsListProps = {
   participants: ChallengeParticipant[];

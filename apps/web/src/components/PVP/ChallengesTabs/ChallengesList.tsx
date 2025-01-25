@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { Challenge, ChallengeResponse } from "@/types";
 import { ChallengeDetails } from "./ChallengeDetails";
@@ -6,6 +6,7 @@ import { TransactionStatus } from "@/lib/types";
 import { ChallengeListItem } from "../ChallengeListItem";
 import { TABS } from "@/app/pvp/PVPContent";
 import { ChallengesListSkeleton } from "./ChallengesListSkeleton";
+import { getChallengeStatus } from "@/lib/helpers";
 
 type ChallengesListType = {
   isLoadingCreated?: boolean;
@@ -122,17 +123,3 @@ export enum ChallengeStatus {
   UNKNOWN_ERROR = "UNKNOWN ERROR",
   PAYMENT_NOT_INIT = "PAYMENT NOT DONE",
 }
-
-export const getChallengeStatus = ({
-  txn_status,
-  has_played,
-}: {
-  txn_status: TransactionStatus;
-  has_played: boolean;
-}): ChallengeStatus => {
-  if (has_played) return ChallengeStatus.ALREADY_PLAYED;
-  if (txn_status === "NOT_INIT") return ChallengeStatus.PAYMENT_NOT_INIT;
-  if (txn_status === "PENDING") return ChallengeStatus.TXN_NOT_CONFIRMED;
-  if (txn_status === "FAILED") return ChallengeStatus.PAYMENT_FAILED;
-  return ChallengeStatus.READY_TO_PLAY;
-};

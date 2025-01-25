@@ -13,6 +13,7 @@ import {
 } from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
 import { ChallengeStatus } from "@/components/PVP/ChallengesTabs/ChallengesList";
+import { TransactionStatus } from "./types";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -431,4 +432,18 @@ export const getBadgeColorFromStatus = (challengeStatus: ChallengeStatus) => {
   } else {
     return "red";
   }
+};
+
+export const getChallengeStatus = ({
+  txn_status,
+  has_played,
+}: {
+  txn_status: TransactionStatus;
+  has_played: boolean;
+}): ChallengeStatus => {
+  if (has_played) return ChallengeStatus.ALREADY_PLAYED;
+  if (txn_status === "NOT_INIT") return ChallengeStatus.PAYMENT_NOT_INIT;
+  if (txn_status === "PENDING") return ChallengeStatus.TXN_NOT_CONFIRMED;
+  if (txn_status === "FAILED") return ChallengeStatus.PAYMENT_FAILED;
+  return ChallengeStatus.READY_TO_PLAY;
 };

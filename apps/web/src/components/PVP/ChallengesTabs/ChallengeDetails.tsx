@@ -2,6 +2,7 @@ import {
   copyToClipBoard,
   formatAddress,
   generatePVPChallengeInviteLink,
+  getChallengeStatus,
   getMinaScanNormalLink,
   handleSocialShare,
 } from "@/lib/helpers";
@@ -19,7 +20,7 @@ import {
 } from "@/db/react-query-hooks";
 import { Skeleton } from "@radix-ui/themes";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
-import { ChallengeStatus, getChallengeStatus } from "./ChallengesList";
+import { ChallengeStatus } from "./ChallengesList";
 import { isFuture } from "date-fns";
 import { usePayPVPFees } from "@/hooks/usePayPVPFees";
 import { useState } from "react";
