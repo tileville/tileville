@@ -100,15 +100,18 @@ export const CreateChallengeModal = ({
   return (
     <>
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
-        <Dialog.Content className="relative max-w-[500px] !rounded-md !bg-[#99B579] !p-8">
-          <Dialog.Title className="text-center !text-[28px] font-bold">
+        <Dialog.Content className="relative max-w-[500px] !rounded-md !bg-[#99B579] !px-3 !py-6  md:!px-8 md:!py-8">
+          <Dialog.Title className="md:!text-[28px] text-center text-base font-bold">
             Create Challenge
           </Dialog.Title>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 space-y-6 text-xs md:text-base"
+          >
             {/* Challenge Name */}
             <div className="relative">
-              <Dialog.Description className="!mb-2 block  !text-2xl font-medium">
+              <Dialog.Description className="!mb-2 block text-base font-medium md:!text-2xl">
                 Challenge Name
                 <span className="!text-2xl text-red-500">*</span>
               </Dialog.Description>
@@ -140,7 +143,7 @@ export const CreateChallengeModal = ({
                   </button>
                 </div>
 
-                <div className="absolute -right-5 -top-[7px] min-h-[15px] rounded-[5px] bg-[#90AA70] px-1 text-[10px] text-[#435133]">
+                <div className="absolute right-0 md:-right-5 -top-[7px] min-h-[15px] rounded-[5px] bg-[#90AA70] px-1 text-[8px] md:text-[10px] text-[#435133]">
                   regenerate name
                 </div>
               </div>
@@ -171,7 +174,7 @@ export const CreateChallengeModal = ({
                     required
                   />
 
-                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-1">
+                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-[2px] md:gap-1">
                     <button
                       type="button"
                       onClick={() => setEntryFee(entryFee + 1)}
@@ -253,7 +256,7 @@ export const CreateChallengeModal = ({
                     required
                   />
 
-                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-1">
+                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-[2px] md:gap-1">
                     <button
                       type="button"
                       onClick={() => setMaxParticipants(maxParticipants + 1)}
@@ -305,7 +308,7 @@ export const CreateChallengeModal = ({
                     disabled={!isSpeedChallenge}
                   />
 
-                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-1">
+                  <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-[2px] md:gap-1">
                     <button
                       type="button"
                       onClick={() => setSpeedDuration(speedDuration + 1)}
@@ -362,7 +365,7 @@ export const CreateChallengeModal = ({
                     <span>Private</span>
                   </label>
                 </div>
-                <p className="mt-2 text-sm text-[#5D6845]">
+                <p className="mt-2 text-xs text-[#5D6845] md:text-sm">
                   {isPublic
                     ? "Challenge will be shared in TileVille Telegram for anyone to join"
                     : "Challenge link shared only with players you choose"}
@@ -374,7 +377,7 @@ export const CreateChallengeModal = ({
               <button
                 type="submit"
                 disabled={loading}
-                className={`${PRIMARY_BUTTON_V2_LG} relative min-h-[50px] w-full`}
+                className={`${PRIMARY_BUTTON_V2_LG} relative min-h-[32px] w-full md:min-h-[50px]`}
               >
                 <span className="relative min-w-[250px]">
                   {loading && (
@@ -388,7 +391,7 @@ export const CreateChallengeModal = ({
             </div>
           </form>
 
-          <p className="mt-6 text-center text-sm text-[#5D6845]">
+          <p className="mt-3 text-center text-xs text-[#5D6845] md:mt-6 md:text-sm">
             Note: A fee of 1 MINA will be deducted from the total prize pool to
             cover the cost of creating the challenge.
           </p>
