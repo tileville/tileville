@@ -475,7 +475,7 @@ export const TABLE_SKELETON_CONTENT = [
 export const PRIMARY_BUTTON_V2 = clsx(
   "rounded-md border-2 border-primary",
   "bg-primary bg-opacity-30",
-  "px-2 text-center text-sm leading-none text-white",
+  "px-2 text-center text-xs leading-none text-white",
   "hover:shadow-[0_0_8px_hsl(var(--primary))]",
   "md:px-[15px] md:text-base"
 );
@@ -483,7 +483,7 @@ export const PRIMARY_BUTTON_V2 = clsx(
 export const PRIMARY_BUTTON_V2_LG = clsx(
   "rounded-md border-2 border-primary",
   "bg-primary bg-opacity-30",
-  "px-2 text-center text-xl font-bold leading-none text-white",
+  "px-2 text-center text-sm font-bold leading-none text-white",
   "md:px-[15px] md:text-2xl"
 );
 

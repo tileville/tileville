@@ -81,11 +81,11 @@
   }
 
   .input-v1 {
-    @apply min-h-[54px] w-full rounded-md border-2 border-primary bg-transparent px-2 text-xl font-medium outline-none;
+    @apply min-h-[32px] md:min-h-[54px] w-full rounded-sm md:rounded-md border md:border-2 border-primary bg-transparent px-2 text-sm md:text-xl font-medium outline-none;
   }
 
   .arrow-btn {
-    @apply flex h-5 w-[26px] items-center justify-center rounded-[2px] bg-[#378209] text-xl text-white;
+    @apply flex h-3 md:h-5 w-4 md:w-[26px] items-center justify-center rounded-[2px] bg-[#378209] text-base md:text-xl text-white;
   }
 
   .primary-button-styles {
