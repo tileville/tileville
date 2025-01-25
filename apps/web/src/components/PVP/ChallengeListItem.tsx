@@ -1,5 +1,6 @@
 import { Badge } from "@radix-ui/themes";
 import { CountdownTimerSmall } from "../common/CountdownTimerSmall";
+import { getBadgeColorFromStatus } from "@/lib/helpers";
 import { ChallengeStatus } from "./ChallengesTabs/ChallengesList";
 
 type ChallengeListItemType = {
@@ -26,10 +27,10 @@ export const ChallengeListItem = ({
   return (
     <>
       <div
-        className={`grid w-full cursor-pointer grid-cols-12 rounded-[10px] border border-[#76993E] p-4 ${
+        className={`grid w-full cursor-pointer grid-cols-12 rounded-[10px] border border-primary p-4 ${
           selectedChallengeId === challengeID
-            ? "border-primary bg-[#99B579] outline outline-2 outline-[#38830A]"
-            : "border-[#76993E]"
+            ? "border-primary bg-primary/30 outline outline-2 outline-[#38830A]"
+            : "border-primary"
         }`}
         onClick={selectChallengeFn}
       >
@@ -50,16 +51,4 @@ export const ChallengeListItem = ({
       </div>
     </>
   );
-};
-
-export const getBadgeColorFromStatus = (challengeStatus: ChallengeStatus) => {
-  if (challengeStatus === ChallengeStatus.TXN_NOT_CONFIRMED) {
-    return "yellow";
-  } else if (challengeStatus === ChallengeStatus.READY_TO_PLAY) {
-    return "green";
-  } else if (challengeStatus === ChallengeStatus.ALREADY_PLAYED) {
-    return "grass";
-  } else {
-    return "red";
-  }
 };

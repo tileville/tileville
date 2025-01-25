@@ -12,6 +12,7 @@ import {
   TREASURY_ADDRESS,
 } from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
+import { ChallengeStatus } from "@/components/PVP/ChallengesTabs/ChallengesList";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -417,5 +418,17 @@ export const getCompetitionStatus = (
     return "ENDED";
   } else {
     return "ONGOING";
+  }
+};
+
+export const getBadgeColorFromStatus = (challengeStatus: ChallengeStatus) => {
+  if (challengeStatus === ChallengeStatus.TXN_NOT_CONFIRMED) {
+    return "yellow";
+  } else if (challengeStatus === ChallengeStatus.READY_TO_PLAY) {
+    return "green";
+  } else if (challengeStatus === ChallengeStatus.ALREADY_PLAYED) {
+    return "grass";
+  } else {
+    return "red";
   }
 };

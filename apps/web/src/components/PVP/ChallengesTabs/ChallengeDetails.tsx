@@ -116,10 +116,10 @@ export const ChallengeDetails = ({
   const winner = getWinner();
 
   return (
-    <div className="relative rounded-lg border border-[#38830A] bg-[#99B579] p-6">
+    <div className="relative rounded-lg border border-primary bg-primary/40 p-6">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-bold">{challenge.name}</h2>
-        <p className="absolute right-2 top-2 flex min-h-[15px] items-center justify-center rounded-[5px] bg-[#90AA70] px-2 text-[10px] font-medium text-[#0D0D0D]">
+        <p className="absolute right-2 top-2 flex min-h-[15px] items-center justify-center rounded-[5px] bg-primary/10 px-2 text-[10px] font-medium text-[#0D0D0D]">
           <span className="mr-1">Challenge Created by:</span>
           {usernameLoading ? (
             <Skeleton className="h-2 w-20" />
@@ -137,7 +137,7 @@ export const ChallengeDetails = ({
         </p>
       </div>
       <div className="mb-4 grid grid-cols-3 gap-2">
-        <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
+        <div className="flex flex-col rounded-lg border border-primary bg-transparent p-4">
           <div>
             <Image src="/icons/timer.png" width={27} height={27} alt="timer" />
           </div>
@@ -147,7 +147,7 @@ export const ChallengeDetails = ({
           </div>
         </div>
 
-        <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
+        <div className="flex flex-col rounded-lg border border-primary bg-transparent p-4">
           <Image src="/icons/cashCoin.png" width={27} height={27} alt="money" />
           <p className="mb-1 mt-2 text-xl font-bold">
             Entry <br /> Fees
@@ -156,7 +156,7 @@ export const ChallengeDetails = ({
         </div>
 
         {challenge.is_speed_challenge && (
-          <div className="flex flex-col rounded-lg border border-[#76993E] bg-[#99B579] p-4">
+          <div className="flex flex-col rounded-lg border border-primary bg-transparent p-4">
             <Image src="/icons/rocket.png" width={27} height={27} alt="speed" />
             <p className="mb-1 mt-2 text-xl font-bold">
               Speed <br /> Challenge

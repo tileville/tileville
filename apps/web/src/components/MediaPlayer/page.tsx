@@ -42,7 +42,7 @@ export const MediaPlayer = () => {
   };
 
   return (
-    <div className="flex justify-between gap-3 rounded-xl bg-[#AEBE84] px-5 py-3 text-primary shadow-[0px_4px_4px_0px_#00000040]">
+    <div className="flex justify-between gap-3 rounded-xl bg-primary/20 px-5 py-3 text-primary shadow-[0px_4px_4px_0px_#00000040]">
       <div className="flex gap-6 lg:gap-3">
         <button
           className="flex items-center justify-center"

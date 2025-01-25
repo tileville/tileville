@@ -1,9 +1,9 @@
 // src/components/PVP/ParticipantsList.tsx
 import { ChallengeParticipant } from "@/types";
 import { Badge } from "@radix-ui/themes";
-import { getBadgeColorFromStatus } from "./ChallengeListItem";
 import { TransactionStatus } from "@/lib/types";
 import { getChallengeStatus } from "./ChallengesTabs/ChallengesList";
+import { getBadgeColorFromStatus } from "@/lib/helpers";
 
 type ParticipantsListProps = {
   participants: ChallengeParticipant[];

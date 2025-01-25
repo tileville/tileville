@@ -28,7 +28,7 @@ export const ChallengesList = ({
     <div className="rounded-xl border border-[#435133] bg-[#C6C99C] px-8 pb-6 pt-8">
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-7">
-          <h2 className="text-2xl font-semibold text-[#378209]">
+          <h2 className="text-2xl font-semibold text-primary">
             Your Challenges
           </h2>
           <div
