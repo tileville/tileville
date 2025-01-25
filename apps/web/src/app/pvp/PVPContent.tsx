@@ -55,10 +55,10 @@ export default function PVPContent() {
   };
 
   return (
-    <div className="p-4 pb-16 pt-12 font-roboto md:pt-24">
+    <div className="p-2 pb-16 pt-12 font-roboto md:pt-24">
       <div className="mx-auto max-w-[1280px]">
-        <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-primary">
+        <div className="mb-2 md:mb-8 flex items-center justify-between">
+          <h1 className="text-base md:text-2xl font-bold text-primary">
             Player-vs-Player Challenges
           </h1>
           <button
@@ -70,7 +70,7 @@ export default function PVPContent() {
         </div>
 
         <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-          <Tabs.List className="mt-4 whitespace-nowrap !text-xl !text-black">
+          <Tabs.List className="md:mt-4 whitespace-nowrap !text-sm md:!text-xl !text-black">
             {Object.values(TABS).map((tab) => (
               <Tabs.Trigger
                 key={tab.id}

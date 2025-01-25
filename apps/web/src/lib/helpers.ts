@@ -12,6 +12,8 @@ import {
   TREASURY_ADDRESS,
 } from "@/constants";
 import { data as mockTxnData } from "@/hooks/mockTxnData";
+import { ChallengeStatus } from "@/components/PVP/ChallengesTabs/ChallengesList";
+import { TransactionStatus } from "./types";
 
 export function walletInstalled() {
   return typeof mina !== "undefined";
@@ -269,6 +271,13 @@ export const generateAuroWalletDeepLink = (chatId: string) => {
   return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=https%3A%2F%2Ftileville.xyz/verify?chatId=${chatId}`;
 };
 
+export function createAuroDeepLink(currentUrl: string): string {
+  // Replace the domain if it's localhost
+  const url = currentUrl.replace('localhost:3000', 'tileville.xyz');
+  const encodedUrl = encodeURIComponent(url);
+  return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=${encodedUrl}`;
+}
+
 export const generateAuroWalletDeepLinkForChallengeInvite = (
   inviteCode: string
 ) => {
@@ -418,4 +427,30 @@ export const getCompetitionStatus = (
   } else {
     return "ONGOING";
   }
+};
+
+export const getBadgeColorFromStatus = (challengeStatus: ChallengeStatus) => {
+  if (challengeStatus === ChallengeStatus.TXN_NOT_CONFIRMED) {
+    return "yellow";
+  } else if (challengeStatus === ChallengeStatus.READY_TO_PLAY) {
+    return "green";
+  } else if (challengeStatus === ChallengeStatus.ALREADY_PLAYED) {
+    return "grass";
+  } else {
+    return "red";
+  }
+};
+
+export const getChallengeStatus = ({
+  txn_status,
+  has_played,
+}: {
+  txn_status: TransactionStatus;
+  has_played: boolean;
+}): ChallengeStatus => {
+  if (has_played) return ChallengeStatus.ALREADY_PLAYED;
+  if (txn_status === "NOT_INIT") return ChallengeStatus.PAYMENT_NOT_INIT;
+  if (txn_status === "PENDING") return ChallengeStatus.TXN_NOT_CONFIRMED;
+  if (txn_status === "FAILED") return ChallengeStatus.PAYMENT_FAILED;
+  return ChallengeStatus.READY_TO_PLAY;
 };

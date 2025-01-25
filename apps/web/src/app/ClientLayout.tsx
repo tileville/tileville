@@ -10,6 +10,9 @@ import { Footer } from "@/components/Footer/Footer";
 import MobileBanner from "@/components/MainMenu/MobileBanner";
 import VConsole from "vconsole";
 import { TelegramBanner } from "@/components/TelegramBanner/TelegramBanner";
+import { MobileWalletPrompt } from "@/components/common/MobileWalletPrompt";
+import { useSessionStorage } from "react-use";
+import { createAuroDeepLink } from "@/lib/helpers";
 let vConsole: any;
 
 const queryClient = new QueryClient();
@@ -22,6 +25,19 @@ const StoreProtokitUpdater = dynamic(
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const [isClient, setIsClient] = useState(false);
+
+  const [hasClosedPrompt, setHasClosedPrompt] = useSessionStorage(
+    "has_closed_auro_prompt",
+    false
+  );
+
+  const handleOpenAuro = () => {
+    const currentUrl =
+      typeof window !== "undefined" ? window.location.href : "";
+
+    const deepLink = createAuroDeepLink(currentUrl);
+    window.location.href = deepLink;
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -66,6 +82,13 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
         <TelegramBanner />
         {children}
         {renderFooter()}
+
+        {isMobile && !hasClosedPrompt && isClient && !window.mina && (
+          <MobileWalletPrompt
+            onOpenAuro={handleOpenAuro}
+            onClose={() => setHasClosedPrompt(true)}
+          />
+        )}
       </QueryClientProvider>
     </JotaiProvider>
   );
