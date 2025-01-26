@@ -1,11 +1,6 @@
 import { AppSupabaseClient, Table } from "@/types";
 import { supabaseUserClientComponentClient as supabase } from "@/supabase-clients/supabaseUserClientComponentClient";
-import {
-  PVPTransactionLog,
-  TransactionLog,
-  TransactionStatus,
-} from "@/lib/types";
-import { NFT_PAGE_SIZE } from "@/constants";
+import { TransactionLog, TransactionStatus } from "@/lib/types";
 
 type PlayerProfile = {
   username: string;
@@ -40,20 +35,6 @@ export async function isUsernameExist(
 
   return !!data;
 }
-
-export const getAllLeaderboardEntries = async (
-  supabase: AppSupabaseClient
-): Promise<Array<Table<"game_scores">>> => {
-  const { data, error } = await supabase
-    .from("game_scores")
-    .select("*")
-    .order("score", { ascending: false });
-
-  if (error) {
-    throw error;
-  }
-  return data;
-};
 
 export const getAllCompetitionsEntries = async (
   supabase: AppSupabaseClient
@@ -230,22 +211,6 @@ export const fetchTransactionLogById = async (
     .eq("id", id)
     .single();
   if (error) throw error;
-  return data;
-};
-
-export const getFilteredLeaderboardEntries = async (
-  competition_key: string
-): Promise<Array<Table<"game_scores">>> => {
-  const { data, error } = await supabase
-    .from("game_scores")
-    .select("*")
-    .eq("competition_key", competition_key)
-    .order("score", { ascending: false });
-
-  if (error) {
-    throw error;
-  }
-
   return data;
 };
 

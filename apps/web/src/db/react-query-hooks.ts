@@ -12,11 +12,9 @@ import {
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import {
-  getAllLeaderboardEntries,
   insertEmail,
   getAllCompetitionsEntries,
   getAllCompetitionsNames,
-  getFilteredLeaderboardEntries,
   fetchTransactionLogById,
   updateTransactionLog,
   getFilteredTransactionByStatus,
@@ -192,14 +190,6 @@ export const useProfile = ({
   );
 };
 
-export const useLeaderboardData = () => {
-  return useQuery(
-    ["leaderboard"],
-    () => getAllLeaderboardEntries(supabaseUserClientComponentClient),
-    {}
-  );
-};
-
 export const useCompetitionsData = () => {
   return useQuery(
     ["tileville_competitions"],
@@ -256,16 +246,6 @@ export const useCompetitionsName = () => {
     ["tileville_competitions_name"],
     () => getAllCompetitionsNames(supabaseUserClientComponentClient),
     {}
-  );
-};
-
-export const useFilteredLeaderboardData = (competition_key: string) => {
-  return useQuery(
-    ["leaderboard", competition_key],
-    () => getFilteredLeaderboardEntries(competition_key),
-    {
-      enabled: !!competition_key, // Only run this query if competitionId is not null
-    }
   );
 };
 
