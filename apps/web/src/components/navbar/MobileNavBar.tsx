@@ -30,6 +30,7 @@ import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { usePosthogEvents } from "@/hooks/usePosthogEvents";
 import { walletInstalled } from "@/lib/helpers";
 import { anonymousSignIn } from "@/db/supabase-queries";
+import { NavbarCommonContent } from "./NavbarCommonContent";
 
 export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");
@@ -100,12 +101,13 @@ export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
             }}
           />
         )}
+        <NavbarCommonContent />
 
         <button
           onClick={() => {
             setSidebarOpen(!sidebarOpen);
           }}
-          className="ms-auto p-2 text-black"
+          className="p-2 text-black"
         >
           <HamburgerMenuIcon />
         </button>

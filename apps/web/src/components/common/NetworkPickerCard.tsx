@@ -17,7 +17,7 @@ export default function NetworkPickerCard({
   return (
     <div
       className={
-        "bg-left-accent text-header-menu text-bg-dark hover:bg-bg-dark hover:text-left-accent group relative z-10 flex cursor-pointer items-center justify-center gap-[10px] rounded  px-2 py-1"
+        "bg-left-accent text-header-menu text-bg-dark hover:bg-bg-dark hover:text-left-accent group relative z-10 flex cursor-pointer items-center justify-center gap-1 md:gap-[10px] rounded px-2 py-1"
       }
       onClick={() => onClick?.()}
     >
@@ -26,7 +26,7 @@ export default function NetworkPickerCard({
         alt=""
         width={26}
         height={26}
-        className={"h-auto rounded-[5px]"}
+        className={"h-4 w-4  rounded-[5px] md:h-6 md:w-6"}
       />
       {text}
       {toggle && (
@@ -42,6 +42,7 @@ export default function NetworkPickerCard({
           }}
           transition={{ type: "spring", duration: 0.4, bounce: 0 }}
           animate={expanded ? "open" : "closed"}
+          className="flex-shrink-0 w-3 h-3 md:w-4 md:h-4"
         >
           <path
             d="M15 1.5L8 8.5L1 1.5"
