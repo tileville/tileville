@@ -5,14 +5,6 @@ import {
   LightningBoltIcon,
   StarFilledIcon,
   ThickArrowUpIcon,
-  HeartFilledIcon,
-  LayersIcon,
-  CrossCircledIcon,
-  ArrowRightIcon,
-  MixerHorizontalIcon,
-  DrawingPinIcon,
-  HomeIcon,
-  PersonIcon,
 } from "@radix-ui/react-icons";
 
 import PersonWaiting from "../../public/lotties/personWaiting.json";
