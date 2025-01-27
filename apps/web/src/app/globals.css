@@ -89,7 +89,7 @@
   }
 
   .primary-button-styles {
-    @apply w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-105 transition-transform disabled:opacity-60 disabled:hover:scale-100;
+    @apply w-full max-w-[128px] rounded-lg border border-primary bg-[#93B068] py-[3px] px-2 text-xs md:text-sm font-bold text-primary shadow-[0px_1px_4px_0px_#89AB5D] hover:scale-105 transition-transform disabled:opacity-60 disabled:hover:scale-100;
   }
 
   .primary-button-styles-lg {
@@ -97,7 +97,7 @@
   }
 
   .following-btn {
-     @apply primary-button-styles hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-105 transition-transform bg-transparent disabled:opacity-60 disabled:hover:scale-100 hover:disabled:bg-[#93B068] hover:disabled:text-[#830A0A];
+     @apply primary-button-styles hover:text-[#830A0A] hover:border-[#820909] hover:shadow-[2px_2px_11px_3px_#82090922] hover:scale-105 transition-transform bg-transparent disabled:opacity-60 disabled:hover:scale-100 hover:disabled:bg-[#93B068] hover:disabled:text-[#830A0A] w-auto min-w-[100px] md:min-w-[120px];
   }
 
   .following-btn-lg {
