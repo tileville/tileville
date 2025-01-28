@@ -75,12 +75,12 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     <JotaiProvider>
       <StoreProtokitUpdater />
       <QueryClientProvider client={queryClient}>
+        {" "}
         {renderNavBar()}
         <div className="mx-auto max-h-[calc(100vh-200px)]"></div>
         <TelegramBanner />
         {children}
         {renderFooter()}
-
         {isMobile && !hasClosedPrompt && isClient && !window.mina && (
           <MobileWalletPrompt
             onOpenAuro={handleOpenAuro}
