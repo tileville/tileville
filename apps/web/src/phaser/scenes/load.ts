@@ -75,6 +75,17 @@ export class LoadScene extends Scene {
     this.load.image("empty", "/img/empty.png");
     this.load.image("empty-hill", "/img/empty-hill.png");
 
+    this.load.image("farm", "/img/farm.png");
+    this.load.image("solarPanel", "/img/solarPanel.png");
+    this.load.image("farm-bw", "/img/farm-bw.png");
+    this.load.image("farm-red", "/img/farm-red.png");
+    this.load.image("pond", "/img/pond.png");
+    this.load.image("volcanoBg", "/img/volcanoBg.png");
+    this.load.image("volcanoBg-bw", "/img/volcanoBg-bw.png");
+    this.load.image("volcanoBg-red", "/img/volcanoBg-red.png");
+    this.load.image("mine", "/img/mine.png");
+    this.load.image("mine-bw", "/img/mine-bw.png");
+    this.load.image("mine-red", "/img/mine-red.png");
     this.load.image("grass", "/img/grass.png");
     this.load.image("grass-bw", "/img/grass-bw.png");
     this.load.image("grass-red", "/img/grass-red.png");
@@ -89,6 +100,7 @@ export class LoadScene extends Scene {
     this.load.image("center-bw", "/img/center-bw.png");
     this.load.image("windmill", "/img/windmill.png");
     this.load.image("propeller", "/img/propeller.png");
+    this.load.image("gold-coin", "/img/gold-coin.png");
     this.load.image("windmill-red", "/img/windmill-red.png");
     this.load.image("windmill-hill", "/img/windmill-hill.png");
     this.load.image("windmill-bw", "/img/windmill-bw.png");
@@ -97,6 +109,29 @@ export class LoadScene extends Scene {
     this.load.spritesheet("port", "/img/port-color.png", {
       frameWidth: 140,
       frameHeight: 140,
+    });
+
+    // TODO: Uncomment this while making pond map
+    // this.load.spritesheet("fish", "/img/Rest_to_right_sheet.png", {
+    //   frameWidth: 256,
+    //   frameHeight: 256,
+    // });
+
+    // TODO: Uncomment this while making waterfall map
+    // this.load.spritesheet("waterfall", "/img/waterfall.png", {
+    //   frameWidth: 256,
+    //   frameHeight: 186,
+    // });
+    // TODO: Uncomment this while making volcano map
+    this.load.spritesheet("volcano", "/img/volcano.png", {
+      frameWidth: 364,
+      frameHeight: 375,
+    });
+
+    // TODO: Uncomment this while making volcano map
+    this.load.spritesheet("sheep", "/img/sheep.png", {
+      frameWidth: 128,
+      frameHeight: 128,
     });
 
     this.load.image("blue", "/img/blue.png");
@@ -121,8 +156,8 @@ export class LoadScene extends Scene {
     this.load.image("play-button", "/img/playBtn.png");
     this.load.image("play-again-button", "/img/play-again-button.png");
     this.load.image("how-to-play-button", "/img/howtoplay.png");
-    this.load.image('play-free-demo-button', "/img/playFreeDemo.png" )
-    this.load.image('share-score-button', "/img/shareScoreBtn.png" )
+    this.load.image("play-free-demo-button", "/img/playFreeDemo.png");
+    this.load.image("share-score-button", "/img/shareScoreBtn.png");
 
     this.load.bitmapFont("font", "/font/font.png", "/font/font.fnt");
 
@@ -135,6 +170,9 @@ export class LoadScene extends Scene {
     this.load.audio("port", "/sfx/port.wav");
     this.load.audio("splash", "/sfx/splash.wav");
     this.load.audio("click", "/sfx/click.wav");
+    this.load.audio("digging", "/sfx/digging.mp3");
+
+    this.load.text("levels", "/data/levels.json");
   }
 
   create() {

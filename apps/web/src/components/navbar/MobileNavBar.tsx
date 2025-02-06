@@ -40,12 +40,14 @@ export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   const isHeaderWithBg = BACKGROUND_PATHS_HEADER.includes(pathname);
   const router = useRouter();
   const networkStore = useNetworkStore();
+
   const { data, isFetched } = useProfileLazyQuery(networkStore?.address || "");
   const { data: pendingTransactions = [] } = useFetchTransactions(
     networkStore?.address || "",
     "PENDING"
   );
   const { validateOrSetSignature } = useAuthSignature();
+
   useMainnetTransactionsStatus(
     pendingTransactions
       .filter(({ network }) => network === "mina:mainnet")
@@ -62,10 +64,12 @@ export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     if (networkStore.walletConnected && isFetched) {
       validateOrSetSignature();
       phClient.identify(networkStore.address, { username: data?.username });
+
       anonymousSignIn()
         .then(() => {
           console.log("anonymous login done");
@@ -74,6 +78,7 @@ export const MobileNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           console.log("failed to do anonymous login");
         });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkStore.walletConnected, data, isFetched]);
 

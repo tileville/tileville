@@ -138,8 +138,8 @@ export const PhaserLayer = ({
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
-      width: 1280,
-      height: 720,
+      width: 1405,
+      height: 780,
       parent: "tileville-hex",
       type: Phaser.AUTO,
       scene: [LoadScene, MenuScene, MainScene],
