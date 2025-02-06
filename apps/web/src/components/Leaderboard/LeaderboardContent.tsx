@@ -8,7 +8,7 @@ import {
   useCompetitionsName,
   useLeaderboardEntries,
 } from "@/db/react-query-hooks";
-import { getCompetitionStatus } from "@/lib/helpers";
+import { getCompetitionStatus, organizeCompetitions } from "@/lib/helpers";
 import { LEADERBOARD_COLUMNS } from "@/constants";
 import TableSkeleton from "./TableSkeleton";
 
@@ -187,35 +187,70 @@ export default function LeaderboardContent() {
                     ))}
                   </>
                 ) : (
-                  competitionData.map((competition) => {
+                  (() => {
+                    const { ongoing, upcoming, past } =
+                      organizeCompetitions(competitionData);
                     return (
-                      <DropdownMenu.Item
-                        key={competition.unique_keyname}
-                        onClick={() =>
-                          handleCompetitionChange({
-                            id: competition.id,
-                            competition_key: competition.unique_keyname,
-                            name: competition.name,
-                            start_date: competition.start_date,
-                            end_date: competition.end_date,
-                          })
-                        }
-                        className={`!md:h-8 mt-1 !h-auto py-2 transition-colors ${
-                          selectedCompetition?.competition_key ===
-                          competition.unique_keyname
-                            ? "bg-primary text-white" // Selected state
-                            : "hover:bg-primary hover:text-white" // Hover state
-                        }`}
-                      >
-                        <div className="flex w-full items-center justify-between px-2">
-                          <span>{competition.name}</span>
-                          {selectedCompetition?.id === competition.id && (
-                            <span className="text-sm">✓</span>
-                          )}
-                        </div>
-                      </DropdownMenu.Item>
+                      <>
+                        {ongoing.length > 0 && (
+                          <>
+                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
+                              Ongoing Competitions
+                            </div>
+                            {ongoing.map((competition: any) => (
+                              <CompetitionMenuItem
+                                key={competition.unique_keyname}
+                                competition={competition}
+                                isSelected={
+                                  selectedCompetition?.competition_key ===
+                                  competition.unique_keyname
+                                }
+                                onSelect={handleCompetitionChange}
+                              />
+                            ))}
+                          </>
+                        )}
+
+                        {upcoming.length > 0 && (
+                          <>
+                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
+                              Upcoming Competitions
+                            </div>
+                            {upcoming.map((competition: any) => (
+                              <CompetitionMenuItem
+                                key={competition.unique_keyname}
+                                competition={competition}
+                                isSelected={
+                                  selectedCompetition?.competition_key ===
+                                  competition.unique_keyname
+                                }
+                                onSelect={handleCompetitionChange}
+                              />
+                            ))}
+                          </>
+                        )}
+
+                        {past.length > 0 && (
+                          <>
+                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
+                              Past Competitions
+                            </div>
+                            {past.map((competition: any) => (
+                              <CompetitionMenuItem
+                                key={competition.unique_keyname}
+                                competition={competition}
+                                isSelected={
+                                  selectedCompetition?.competition_key ===
+                                  competition.unique_keyname
+                                }
+                                onSelect={handleCompetitionChange}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </>
                     );
-                  })
+                  })()
                 )}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
@@ -289,3 +324,33 @@ export default function LeaderboardContent() {
     </div>
   );
 }
+
+const CompetitionMenuItem = ({
+  competition,
+  isSelected,
+  onSelect,
+}: {
+  competition: any;
+  isSelected: boolean;
+  onSelect: (competition: SelectedCompetition) => void;
+}) => (
+  <DropdownMenu.Item
+    onClick={() =>
+      onSelect({
+        id: competition.id,
+        competition_key: competition.unique_keyname,
+        name: competition.name,
+        start_date: competition.start_date,
+        end_date: competition.end_date,
+      })
+    }
+    className={`!md:h-8 mt-1 !h-auto py-2 transition-colors ${
+      isSelected ? "bg-primary text-white" : "hover:bg-primary hover:text-white"
+    }`}
+  >
+    <div className="flex w-full items-center justify-between px-2">
+      <span>{competition.name}</span>
+      {isSelected && <span className="text-sm">✓</span>}
+    </div>
+  </DropdownMenu.Item>
+);

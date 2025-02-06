@@ -273,7 +273,7 @@ export const generateAuroWalletDeepLink = (chatId: string) => {
 
 export function createAuroDeepLink(currentUrl: string): string {
   // Replace the domain if it's localhost
-  const url = currentUrl.replace('localhost:3000', 'tileville.xyz');
+  const url = currentUrl.replace("localhost:3000", "tileville.xyz");
   const encodedUrl = encodeURIComponent(url);
   return `https://www.aurowallet.com/applinks?action=openurl&networkid=mina%3Amainnet&url=${encodedUrl}`;
 }
@@ -453,4 +453,26 @@ export const getChallengeStatus = ({
   if (txn_status === "PENDING") return ChallengeStatus.TXN_NOT_CONFIRMED;
   if (txn_status === "FAILED") return ChallengeStatus.PAYMENT_FAILED;
   return ChallengeStatus.READY_TO_PLAY;
+};
+
+export const organizeCompetitions = (competitions: any[]) => {
+  const now = new Date();
+
+  return competitions.reduce(
+    (acc, competition) => {
+      const startDate = new Date(competition.start_date);
+      const endDate = new Date(competition.end_date);
+
+      if (now >= startDate && now <= endDate) {
+        acc.ongoing.push(competition);
+      } else if (now < startDate) {
+        acc.upcoming.push(competition);
+      } else {
+        acc.past.push(competition);
+      }
+
+      return acc;
+    },
+    { ongoing: [], upcoming: [], past: [] }
+  );
 };
