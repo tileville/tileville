@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export function GET() {
   console.log("Cron job executed at:", new Date().toISOString());
-  return res.status(200).json({ message: "Cron job ran successfully!" });
+  return NextResponse.json({ message: "Cron job ran successfully!" });
 }
