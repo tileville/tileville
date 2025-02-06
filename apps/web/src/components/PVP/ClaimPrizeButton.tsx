@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Spinner2 } from "../common/Spinner";
 import {
   useSendPrivateGroupMessage,
+  useSendReward,
   useUsername,
 } from "@/db/react-query-hooks";
 import {
@@ -31,17 +32,14 @@ export const ClaimPrizeButton = ({
   participantTxnHash,
 }: ClaimPrizeButtonType) => {
   const sendPrivateGroupMessageMutation = useSendPrivateGroupMessage();
+  const { mutate: sendReward, error } = useSendReward();
 
-  const { data: winnerUsername, isLoading: usernameLoading } =
-    useUsername(winnerAddress);
+  const SendPrivateMessage = () => {
+    async () => {
+      if (!winnerAddress) return;
 
-  return (
-    <button
-      onClick={async () => {
-        if (!winnerAddress) return;
-
-        const message = `🎮 Challenge "${challengeName}" Results 🏆
-        
+      const message = `🎮 Challenge "${challengeName}" Results 🏆
+      
 Challenge ID: ${challengeId}
 Winner: ${winnerUsername || winnerAddress}
 Winner wallet Address: ${winnerAddress}
@@ -55,15 +53,38 @@ Congratulations! 🎉
 
 ${getMinaScanNormalLink(participantTxnHash)}`;
 
-        try {
-          await sendPrivateGroupMessageMutation.mutateAsync({
-            message,
-            walletAddress: winnerAddress,
-          });
-        } catch (error) {
-          console.error("Failed to send winner message:", error);
-        }
-      }}
+      try {
+        await sendPrivateGroupMessageMutation.mutateAsync({
+          message,
+          walletAddress: winnerAddress,
+        });
+      } catch (error) {
+        console.error("Failed to send winner message:", error);
+      }
+    };
+  };
+
+  const handleSendReward = () => {
+    sendReward(
+      {
+        challengeId,
+        winnerAddress,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("Reward sent successfully:", data);
+          SendPrivateMessage();
+        },
+      }
+    );
+  };
+
+  const { data: winnerUsername, isLoading: usernameLoading } =
+    useUsername(winnerAddress);
+
+  return (
+    <button
+      onClick={handleSendReward}
       className="primary-outline-button flex items-center gap-2"
       disabled={sendPrivateGroupMessageMutation.isLoading || usernameLoading}
     >

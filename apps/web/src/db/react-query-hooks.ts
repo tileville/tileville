@@ -1259,3 +1259,54 @@ export const useFeaturedNFTs = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
+
+interface SendRewardInput {
+  challengeId: number;
+  winnerAddress: string;
+}
+
+interface SendRewardResponse {
+  success: boolean;
+  message: string;
+  txHash?: string;
+}
+
+export const useSendReward = () => {
+  const toastRef = useRef<string | null>(null);
+
+  return useMutation<SendRewardResponse, Error, SendRewardInput>(
+    async ({ challengeId, winnerAddress }) => {
+      const response = await fetch("/api/pvp/claim-prize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ challengeId, winnerAddress }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send reward");
+      }
+
+      return response.json();
+    },
+    {
+      onMutate: () => {
+        toastRef.current = toast.loading("Sending reward...");
+      },
+      onSuccess: (data) => {
+        toast.success("Reward sent successfully", {
+          id: toastRef.current ?? undefined,
+        });
+        toastRef.current = null;
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to send reward", {
+          id: toastRef.current ?? undefined,
+        });
+        toastRef.current = null;
+      },
+    }
+  );
+};
