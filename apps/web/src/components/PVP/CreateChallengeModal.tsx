@@ -101,7 +101,7 @@ export const CreateChallengeModal = ({
     <>
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
         <Dialog.Content className="relative max-w-[500px] !rounded-md !bg-[#99B579] !px-3 !py-6  md:!px-8 md:!py-8">
-          <Dialog.Title className="md:!text-[28px] text-center text-base font-bold">
+          <Dialog.Title className="text-center text-base font-bold md:!text-[28px]">
             Create Challenge
           </Dialog.Title>
 
@@ -143,7 +143,7 @@ export const CreateChallengeModal = ({
                   </button>
                 </div>
 
-                <div className="absolute right-0 md:-right-5 -top-[7px] min-h-[15px] rounded-[5px] bg-[#90AA70] px-1 text-[8px] md:text-[10px] text-[#435133]">
+                <div className="absolute -top-[7px] right-0 min-h-[15px] rounded-[5px] bg-[#90AA70] px-1 text-[8px] text-[#435133] md:-right-5 md:text-[10px]">
                   regenerate name
                 </div>
               </div>

@@ -148,6 +148,9 @@ importers:
       posthog-js:
         specifier: ^1.81.1
         version: 1.139.4
+      rate-limiter-flexible:
+        specifier: ^5.0.5
+        version: 5.0.5
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -12068,6 +12071,10 @@ packages:
       randombytes: 2.1.0
       safe-buffer: 5.2.1
     dev: true
+
+  /rate-limiter-flexible@5.0.5:
+    resolution: {integrity: sha512-+/dSQfo+3FYwYygUs/V2BBdwGa9nFtakDwKt4l0bnvNB53TNT++QSFewwHX9qXrZJuMe9j+TUaU21lm5ARgqdQ==}
+    dev: false
 
   /react-device-detect@2.2.3(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==}

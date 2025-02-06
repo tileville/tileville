@@ -6,9 +6,10 @@ import { getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { HtmlRenderer } from "./common/HTMLRenderer";
-import { InfoCircledIcon, TimerIcon } from "@radix-ui/react-icons";
+import { TimerIcon } from "@radix-ui/react-icons";
 import { DEFAULT_POSTER_URL } from "@/constants";
 import Link from "next/link";
+import { CustomTooltip } from "./common/CustomTooltip";
 
 type CompetitionCardProps = {
   competition: Competition;
@@ -135,27 +136,11 @@ export const CompetitionCard = ({
                 <p className="text-medium text-sm md:text-base">
                   Speedy Version
                 </p>
-                <Tooltip.Provider delayDuration={200}>
-                  <Tooltip.Root>
-                    <Tooltip.Trigger asChild>
-                      <InfoCircledIcon
-                        width={24}
-                        height={24}
-                        className="text-black/50 hover:text-black"
-                      />
-                    </Tooltip.Trigger>
-                    <Tooltip.Portal>
-                      <Tooltip.Content
-                        className="max-w-[250px] rounded-xl bg-white p-4 shadow-sm"
-                        sideOffset={5}
-                      >
-                        In the speedy version of the game, the player will need
-                        to finish the game in specific amount of time.
-                        <Tooltip.Arrow className="TooltipArrow" />
-                      </Tooltip.Content>
-                    </Tooltip.Portal>
-                  </Tooltip.Root>
-                </Tooltip.Provider>
+
+                <CustomTooltip
+                  tooltipContent="In the speedy version of the game, the player will need
+                        to finish the game in specific amount of time."
+                />
               </div>
 
               <div className="flex items-center justify-center gap-2 text-xl md:justify-start">

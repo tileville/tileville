@@ -30,6 +30,7 @@ import {
   JoinTelegramBtn,
   XFollowBtn,
 } from "../NavButtons/NavButtons";
+import { NavbarCommonContent } from "./NavbarCommonContent";
 
 export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   useGlobalConfig("config_v1");
@@ -44,7 +45,6 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
   );
   const { validateOrSetSignature } = useAuthSignature();
   const { data: username } = useUsername(networkStore?.address);
-  const isMounted = useMountedState();
 
   useMainnetTransactionsStatus(
     pendingTransactions
@@ -152,44 +152,7 @@ export const DesktopNavBar = ({ autoConnect }: { autoConnect: boolean }) => {
           <XFollowBtn />
           <JoinTelegramBtn />
 
-          <div className="flex gap-5">
-            {isMounted() &&
-              (networkStore.walletConnected && networkStore.address ? (
-                <>
-                  <Link
-                    href={`/u/${
-                      username ? `${username}` : networkStore.address
-                    }`}
-                  >
-                    <AccountCard text={formatAddress(networkStore.address)} />
-                  </Link>
-
-                  <NetworkPicker />
-                </>
-              ) : walletInstalled() ? (
-                <HeaderCard
-                  svg={"account"}
-                  text="Connect wallet"
-                  isMiddle={true}
-                  onClick={() => {
-                    networkStore.connectWallet(false);
-                  }}
-                  className="border border-primary"
-                />
-              ) : (
-                <Link
-                  href="https://www.aurowallet.com/"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <HeaderCard
-                    svg={"account"}
-                    text="Install wallet"
-                    isMiddle={true}
-                  />
-                </Link>
-              ))}
-          </div>
+          <NavbarCommonContent />
         </div>
       </div>
     </nav>
