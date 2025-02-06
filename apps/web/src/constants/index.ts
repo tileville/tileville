@@ -667,3 +667,9 @@ export const BUG_REPORT_URL = `${TILEVILLE_TELEGRAM_URL}/${TELEGRAM_BUG_REPORT_T
 
 export const NFT_COLLECTION_HOSTING_REQ_DOC_URL =
   "https://hackmd.io/@satyambnsal/B1yA-wZrkg";
+
+export const SENDER_PUBLIC_KEY = process.env.NEXT_PUBLIC_SENDER_PUBLIC_KEY;
+export const SENDER_PRIVATE_KEY = process.env.NEXT_PUBLIC_SENDER_PRIVATE_KEY;
+
+export const MINASCAN_API_URL =
+  "https://api.minascan.io/node/devnet/v1/graphql";
