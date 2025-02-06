@@ -83,9 +83,9 @@ export const ChallengeDetails = ({
   const getWinner = (): ChallengeParticipant | null => {
     // Challenge is finished if either it's ended or max participants reached and all have played
     const isChallengeFinished =
-      (!isChallengeActive ||
-        participants.length >= challenge.max_participants) &&
-      participants.every((p) => p.has_played);
+      !isChallengeActive ||
+      (participants.length >= challenge.max_participants &&
+        participants.every((p) => p.has_played));
 
     if (!isChallengeFinished) return null;
 
@@ -117,9 +117,9 @@ export const ChallengeDetails = ({
   const winner = getWinner();
 
   return (
-    <div className="relative rounded-lg border border-primary bg-primary/40 p-2 md:p-6 text-sm md:text-base">
+    <div className="relative rounded-lg border border-primary bg-primary/40 p-2 text-sm md:p-6 md:text-base">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-base md:text-2xl font-bold">{challenge.name}</h2>
+        <h2 className="text-base font-bold md:text-2xl">{challenge.name}</h2>
         <p className="absolute right-2 top-2 flex min-h-[15px] items-center justify-center rounded-[5px] bg-primary/10 px-2 text-[10px] font-medium text-[#0D0D0D]">
           <span className="mr-1">Challenge Created by:</span>
           {usernameLoading ? (
@@ -142,7 +142,9 @@ export const ChallengeDetails = ({
           <div>
             <Image src="/icons/timer.png" width={27} height={27} alt="timer" />
           </div>
-          <p className="mb-1 mt-2 text-sm md:text-xl font-bold">Time remaining</p>
+          <p className="mb-1 mt-2 text-sm font-bold md:text-xl">
+            Time remaining
+          </p>
           <div className="mt-auto">
             <CountdownTimerSmall endTime={challenge.end_time} />
           </div>
@@ -150,7 +152,7 @@ export const ChallengeDetails = ({
 
         <div className="flex flex-col rounded-lg border border-primary bg-transparent p-2 md:p-4">
           <Image src="/icons/cashCoin.png" width={27} height={27} alt="money" />
-          <p className="mb-1 mt-2 text-sm md:text-xl font-bold">
+          <p className="mb-1 mt-2 text-sm font-bold md:text-xl">
             Entry <br /> Fees
           </p>
           <p className="mt-auto">{challenge.entry_fee} MINA</p>
@@ -159,7 +161,7 @@ export const ChallengeDetails = ({
         {challenge.is_speed_challenge && (
           <div className="flex flex-col rounded-lg border border-primary bg-transparent p-2 md:p-4">
             <Image src="/icons/rocket.png" width={27} height={27} alt="speed" />
-            <p className="mb-1 mt-2 text-sm md:text-xl font-bold">
+            <p className="mb-1 mt-2 text-sm font-bold md:text-xl">
               Speed <br /> Challenge
             </p>
             <p className="mt-auto">{challenge.speed_duration} seconds</p>
