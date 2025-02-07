@@ -269,8 +269,7 @@ export const useMainnetTransactionsStatus = (
             console.log("blockberry api response");
             if (
               res.blockConfirmationsCount >= 1 ||
-              res.txStatus === "applied" ||
-              res.txStatus === "buffered"
+              res.txStatus === "applied"
             ) {
               return updateTransactionLog(txn_hash, {
                 txn_status: "CONFIRMED",
@@ -392,7 +391,7 @@ export const usePVPChallengeTransaction = (
 export const useTransactionLogById = (wallet_address: string, id: number) => {
   return useQuery(
     ["transaction_log_by_id", wallet_address, id],
-    () => fetchTransactionLogById(wallet_address, id),
+    () => fetchTransac tionLogById(wallet_address, id),
     {
       enabled: !!wallet_address && !!id,
     }
