@@ -391,7 +391,7 @@ export const usePVPChallengeTransaction = (
 export const useTransactionLogById = (wallet_address: string, id: number) => {
   return useQuery(
     ["transaction_log_by_id", wallet_address, id],
-    () => fetchTransac tionLogById(wallet_address, id),
+    () => fetchTransactionLogById(wallet_address, id),
     {
       enabled: !!wallet_address && !!id,
     }
