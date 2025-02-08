@@ -512,6 +512,7 @@ export const MINATY_CATEGORIES = {
   SOLDIER: "SOLDIER",
   GUARDIAN: "GUARDIAN",
   TOTEM: "TOTEM",
+  ZKON: "ZKON",
 } as const;
 
 // Add these interfaces in your constants file where NFT_ATTRIBUTES is defined
