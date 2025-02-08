@@ -269,8 +269,7 @@ export const useMainnetTransactionsStatus = (
             console.log("blockberry api response");
             if (
               res.blockConfirmationsCount >= 1 ||
-              res.txStatus === "applied" ||
-              res.txStatus === "buffered"
+              res.txStatus === "applied"
             ) {
               return updateTransactionLog(txn_hash, {
                 txn_status: "CONFIRMED",
