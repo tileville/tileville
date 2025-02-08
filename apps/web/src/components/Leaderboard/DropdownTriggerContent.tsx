@@ -12,7 +12,7 @@ export const DropdownTriggerContent = ({
   selectedCompetition,
 }: DropdownTriggerContentType) => {
   return (
-    <button className="border-primary-30 flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
+    <span className="border-primary-30 flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
       {isLoading || !selectedCompetition ? (
         <Skeleton className="h-5 w-full" />
       ) : (
@@ -26,6 +26,6 @@ export const DropdownTriggerContent = ({
           alt="arrows"
         />
       </span>
-    </button>
+    </span>
   );
 };

@@ -159,10 +159,12 @@ export default function LeaderboardContent() {
             </p>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <DropdownTriggerContent
-                  isLoading={isLoading}
-                  selectedCompetition={selectedCompetition}
-                />
+                <button>
+                  <DropdownTriggerContent
+                    isLoading={isLoading}
+                    selectedCompetition={selectedCompetition}
+                  />
+                </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="min-w-[200px] max-w-[350px] !bg-transparent backdrop-blur-2xl md:min-w-[320px] md:max-w-none">
                 {competitionNameLoading ? (
