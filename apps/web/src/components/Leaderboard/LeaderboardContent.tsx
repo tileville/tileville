@@ -11,8 +11,9 @@ import {
 import { getCompetitionStatus, organizeCompetitions } from "@/lib/helpers";
 import { LEADERBOARD_COLUMNS } from "@/constants";
 import TableSkeleton from "./TableSkeleton";
+import { DropdownTriggerContent } from "./DropdownTriggerContent";
 
-type SelectedCompetition = {
+export type SelectedCompetition = {
   id: number;
   name: string;
   competition_key: string;
@@ -158,20 +159,11 @@ export default function LeaderboardContent() {
             </p>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <button className="border-primary-30 flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
-                  {isLoading || !selectedCompetition ? (
-                    <Skeleton className="h-5 w-full" />
-                  ) : (
-                    <span className="truncate">{selectedCompetition.name}</span>
-                  )}
-                  <span>
-                    <Image
-                      src="icons/topBottomArrows.svg"
-                      width={24}
-                      height={24}
-                      alt="arrows"
-                    />
-                  </span>
+                <button>
+                  <DropdownTriggerContent
+                    isLoading={isLoading}
+                    selectedCompetition={selectedCompetition}
+                  />
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="min-w-[200px] max-w-[350px] !bg-transparent backdrop-blur-2xl md:min-w-[320px] md:max-w-none">

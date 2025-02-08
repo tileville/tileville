@@ -36,6 +36,7 @@ export default function MarketplaceContent({
   const [selectedItem, setSelectedItem] = useState(
     searchParams.get("sort") || "Price: High to Low"
   );
+
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
     (searchParams.get("sortOrder") as "asc" | "desc") || "desc"
   );
