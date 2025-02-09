@@ -81,7 +81,7 @@ export default function PvPChallengePage() {
     return (
       <div className="flex min-h-screen items-center justify-center p-8">
         <button
-          className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+          className="fleprimary-btn"
           onClick={() => {
             networkStore.connectWallet(false);
           }}
