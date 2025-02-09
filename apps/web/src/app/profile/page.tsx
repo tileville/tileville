@@ -19,7 +19,7 @@ export default function Profile() {
     return (
       <div className="flex min-h-screen w-full items-center justify-center p-8">
         <button
-          className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+          className="primary-btn"
           onClick={() => {
             networkStore.connectWallet(false);
           }}
@@ -30,7 +30,9 @@ export default function Profile() {
     );
   }
 
-  return  <div className="min-h-screen flex items-center justify-center w-full">
-    <Spinner2 />
-  </div>;
+  return (
+    <div className="flex min-h-screen w-full items-center justify-center">
+      <Spinner2 />
+    </div>
+  );
 }
