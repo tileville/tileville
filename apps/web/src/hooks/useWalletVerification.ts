@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect, useRef } from "react";
 import { useNetworkStore } from "@/lib/stores/network";
 import { useAuthSignature } from "./useAuthSignature";
 import { useTelegramVerify } from "@/db/react-query-hooks";
+import { isMobile } from "react-device-detect";
 
 export const useWalletVerification = (chatId: string | null) => {
   const networkStore = useNetworkStore();
@@ -20,33 +21,41 @@ export const useWalletVerification = (chatId: string | null) => {
     },
   });
 
+  const isAuroWalletBrowser = useCallback(() => {
+    return typeof window !== "undefined" && "mina" in window;
+  }, []);
+
   const handleVerification = useCallback(async () => {
     if (!chatId || hasAttemptedVerification.current) return;
 
     setIsProcessing(true);
 
     try {
-      // If wallet not connected, connect it first
-      if (!networkStore.address) {
-        await networkStore.connectWallet(false);
+      if (isMobile) {
+        if (isAuroWalletBrowser()) {
+          // If in Auro wallet browser, proceed with wallet connection
+          if (!networkStore.address) {
+            await networkStore.connectWallet(false);
+          }
+          if (!accountAuthSignature) {
+            await validateOrSetSignature();
+          }
+          if (networkStore.address && accountAuthSignature) {
+            hasAttemptedVerification.current = true;
+            verifyMutation.mutate({
+              chatId,
+              walletAddress: networkStore.address,
+            });
+          }
+        } else {
+          // If not in Auro wallet browser, don't proceed with verification
+          setIsProcessing(false);
+          return;
+        }
+      } else {
+        // Desktop browsers should not proceed with verification
         setIsProcessing(false);
         return;
-      }
-
-      // If not signed, get signature
-      if (!accountAuthSignature) {
-        await validateOrSetSignature();
-        setIsProcessing(false);
-        return;
-      }
-
-      // If wallet connected and signed, proceed with verification
-      if (networkStore.address && accountAuthSignature) {
-        hasAttemptedVerification.current = true;
-        verifyMutation.mutate({
-          chatId,
-          walletAddress: networkStore.address,
-        });
       }
     } catch (error) {
       console.error("Verification process failed:", error);
@@ -58,10 +67,13 @@ export const useWalletVerification = (chatId: string | null) => {
     accountAuthSignature,
     validateOrSetSignature,
     verifyMutation,
+    isAuroWalletBrowser,
   ]);
 
   useEffect(() => {
     if (
+      isMobile &&
+      isAuroWalletBrowser() &&
       networkStore.address &&
       accountAuthSignature &&
       chatId &&
@@ -75,14 +87,26 @@ export const useWalletVerification = (chatId: string | null) => {
 
   const getButtonText = useCallback(() => {
     if (isProcessing || verifyMutation.isLoading) return "Processing...";
-    if (!networkStore.address) return "Connect Wallet";
-    return "Verify";
-  }, [networkStore.address, isProcessing, verifyMutation.isLoading]);
+    if (isMobile) {
+      if (isAuroWalletBrowser()) {
+        return networkStore.address ? "Verify" : "Connect Wallet";
+      } else {
+        return "Open in Auro Wallet";
+      }
+    }
+    return "Open in Auro Wallet";
+  }, [
+    networkStore.address,
+    isProcessing,
+    verifyMutation.isLoading,
+    isAuroWalletBrowser,
+  ]);
 
   return {
     handleVerification,
     getButtonText,
     isProcessing: isProcessing || verifyMutation.isLoading,
     isSuccess: verifyMutation.isSuccess,
+    isAuroWalletBrowser: isAuroWalletBrowser(),
   };
 };
