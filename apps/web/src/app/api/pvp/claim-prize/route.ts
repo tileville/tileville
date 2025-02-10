@@ -126,6 +126,7 @@ const claimPrizeHandler = async (request: NextRequest) => {
     const { success, error, txHash } = await sendMinaTokens({
       amount: prizeAmount,
       address: winnerAddress,
+      challengeId,
     });
 
     if (!success) {

@@ -1,11 +1,12 @@
-import { Client } from "mina-signer";
+import { Client, NetworkId } from "mina-signer";
 import {
   MINASCAN_API_URL,
   SENDER_PRIVATE_KEY,
   SENDER_PUBLIC_KEY,
 } from "@/constants";
+import { NETWORKS } from "@/constants/network";
 
-const client = new Client({ network: "testnet" });
+const client = new Client({ network: NETWORKS[1].chainId as NetworkId });
 
 export async function fetchNonce(publicKey: string): Promise<number | null> {
   const fetchNonceQuery = `
@@ -40,9 +41,11 @@ export async function fetchNonce(publicKey: string): Promise<number | null> {
 export async function sendMinaTokens({
   amount,
   address,
+  challengeId,
 }: {
   amount: number;
   address: string;
+  challengeId?: string;
 }): Promise<{ success: boolean; txHash?: string; error?: string }> {
   try {
     if (!SENDER_PUBLIC_KEY || !SENDER_PRIVATE_KEY) {
@@ -60,6 +63,7 @@ export async function sendMinaTokens({
       amount: amount * 1000_000_000,
       nonce,
       fee: 1000000,
+      memo: `CID ${challengeId} reward`,
     };
 
     const signedPayment = client.signPayment(payment, SENDER_PRIVATE_KEY);

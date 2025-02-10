@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { sendMinaTokens } from "@/lib/mina-transactions";
@@ -34,12 +35,6 @@ function findWinner(participants: ParticipantData[]): ParticipantData | null {
     return prev;
   });
 }
-
-// what if the challenge is running I mean challenge has not ended,
-// and there are 10 max participants
-// among then 3 participants transaction is pending, 4 people have not done transaction they are just have just joined the competiton, they are not playing
-// and 1 person has payed entry fees but have not played
-// only remaining 2 people have played the challenge
 
 function shouldProcessChallenge(challenge: ChallengeData): boolean {
   if (challenge.is_reward_sent) return false;
@@ -99,6 +94,7 @@ async function processSingleChallenge(challenge: ChallengeData) {
     const { success, txHash, error } = await sendMinaTokens({
       amount: prizeAmount,
       address: winner.wallet_address,
+      challengeId: `${challenge.id}`,
     });
 
     if (!success) {
