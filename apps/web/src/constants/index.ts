@@ -534,6 +534,7 @@ export type NFTAttributeType = {
   SOLDIER: BaseNFTAttributes;
   GUARDIAN: BaseNFTAttributes;
   TOTEM: BaseNFTAttributes;
+  ZKON: BaseNFTAttributes;
 };
 
 export type NFTCategory =
@@ -572,6 +573,10 @@ export const NFT_ATTRIBUTES: NFTAttributeType = {
   TOTEM: {
     description:
       "The Totems are the great sages of the community, preserving the balance between the communities; they are the point of reference for all. They have attained the status of Totem animals, allowing them to feel the power of freedom and privacy.",
+  },
+  ZKON: {
+    description:
+      "The Minaty ZKON Elite Troop stands as valorous defenders of privacy, sharing vital information while maintaining absolute confidentiality. As pillars of both the ZKON project and Minaty community, they represent the perfect fusion of advanced technology and privacy commitment. Their distinctive appearance features new protective masks and sharp geometric designs, echoing the secure structure of blockchain technology.",
   },
 };
 
