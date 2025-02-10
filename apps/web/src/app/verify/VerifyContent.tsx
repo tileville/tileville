@@ -2,13 +2,14 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { PRIMARY_BUTTON_STYLES_LG, TILEVILLE_BOT_URL } from "@/constants";
-import { generateAuroWalletDeepLink } from "@/lib/helpers";
+import { TILEVILLE_BOT_URL } from "@/constants";
+import { copyToClipBoard, generateAuroWalletDeepLink } from "@/lib/helpers";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
 import Image from "next/image";
 import { useWalletVerification } from "@/hooks/useWalletVerification";
 import toast from "react-hot-toast";
+import { CopyIcon } from "@radix-ui/react-icons";
 
 export default function VerifyContent() {
   const searchParams = useSearchParams();
@@ -58,7 +59,7 @@ export default function VerifyContent() {
             </p>
             <Link
               href={TILEVILLE_BOT_URL}
-              className={`${PRIMARY_BUTTON_STYLES_LG} flex items-center justify-center md:min-h-[64px]`}
+              className="primary-button-styles-lg flex items-center justify-center md:min-h-[64px]"
             >
               Return to BOT
             </Link>
@@ -75,29 +76,61 @@ export default function VerifyContent() {
             </div>
             <h1 className="mb-6 text-[28px] font-bold">Verify Your Account</h1>
 
-            <p className="mb-3 text-sm text-[#494949] md:mb-6 md:text-xl">
-              {isMobile && !isAuroWalletBrowser
-                ? "Please open this link in the Auro Wallet browser to verify your account."
-                : "Connect your wallet and complete the account verification on TileVille."}
-            </p>
+            {isMobile && window.mina && (
+              <p className="mb-3 text-sm text-[#494949] md:mb-6 md:text-xl">
+                Connect your wallet and complete the account verification on
+                TileVille.
+              </p>
+            )}
 
-            <button
-              onClick={handleButtonClick}
-              disabled={isProcessing}
-              className={`${PRIMARY_BUTTON_STYLES_LG} md:min-h-[64px]`}
-            >
-              {getButtonText()}
-            </button>
+            {isMobile && !window.mina && (
+              <p className="mb-3 text-sm text-[#494949]">
+                Copy the verification link and tap &quot;Open Auro App&quot; to
+                continue. Paste the link in Auro app&apos;s browser to connect
+                your wallet and complete verification.
+                <br />
+                <br />
+                Note: Your regular mobile browser cannot connect to wallets
+                directly. Using Auro app&apos;s built-in browser allows secure
+                wallet connection.
+              </p>
+            )}
+            {window.mina && (
+              <button
+                onClick={handleVerification}
+                disabled={isProcessing}
+                className="primary-button-styles-lg md:min-h-[64px]"
+              >
+                {getButtonText()}
+              </button>
+            )}
+
+            {isMobile && !window.mina && (
+              <div className="mt-6 flex flex-col gap-4">
+                <button
+                  className="primary-button-styles-lg flex items-center justify-center gap-4"
+                  onClick={() => {
+                    copyToClipBoard({
+                      toCopyContent: window.location.href,
+                      copiedType: "URL",
+                    });
+                  }}
+                >
+                  Copy Verification Link
+                  <CopyIcon className="h-5 w-5" />
+                </button>
+
+                <Link
+                  href={generateAuroWalletDeepLink(chatId || "")}
+                  className="primary-button-styles-lg"
+                >
+                  Open Auro App
+                </Link>
+              </div>
+            )}
           </>
         )}
       </div>
-
-      {!isMobile && !isSuccess && (
-        <p className="mt-12">
-          Note: Please open this link in the Auro Wallet browser to verify your
-          account.
-        </p>
-      )}
     </div>
   );
 }

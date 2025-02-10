@@ -18,7 +18,6 @@ import { IFormInput } from "@/app/profile/ProfileContent";
 import { Spinner } from "../../common/Spinner";
 import { WhyToolTip } from "./whyToolTip";
 import ToggleSwitch from "@/components/common/ToggleSwitch";
-import { BADGE_BASE_CLASSES } from "@/constants";
 
 type EditProfileModalType = {
   closeModal: () => void;
@@ -72,9 +71,7 @@ export const EditProfileModal = ({
       trigger={
         <>
           {isUserHasProfile ? (
-            <button
-              className={`${BADGE_BASE_CLASSES} absolute right-3 top-3 z-10`}
-            >
+            <button className="badge-base-classes absolute right-3 top-3 z-10">
               <span>
                 {isProfileIncomplete ? "Complete Profile" : "Edit Profile"}
               </span>
@@ -92,7 +89,7 @@ export const EditProfileModal = ({
       }
     >
       <div className="relative mx-auto max-h-full w-full max-w-[600px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">
-        <div className="relative px-4 py-6 md:px-12 md:py-8 max-h-[calc(100vh-20px)] overflow-auto">
+        <div className="relative max-h-[calc(100vh-20px)] overflow-auto px-4 py-6 md:px-12 md:py-8">
           <div className="mx-auto max-w-[524px]">
             <h3 className="mb-5 text-center text-2xl font-bold text-black">
               <span>Edit your Profile </span>
@@ -123,7 +120,7 @@ export const EditProfileModal = ({
                   </span>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-x-3 md:gap-x-8 gap-y-2 md:gap-y-4">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-2 md:gap-x-8 md:gap-y-4">
                 <div>
                   <label htmlFor="firstName" className="mb-1 block">
                     First Name
@@ -231,11 +228,11 @@ export const EditProfileModal = ({
                 <div className="mt-6 flex flex-col gap-4 text-base md:text-xl">
                   {/* // TODO: For the next three div put content in the Array and render them
                     // TODO: with map */}
-                  <div className="grid grid-cols-12 items-center relative">
-                    <div className="col-span-12 md:col-span-4 flex items-center gap-1 mb-2 md:mb-0">
+                  <div className="relative grid grid-cols-12 items-center">
+                    <div className="col-span-12 mb-2 flex items-center gap-1 md:col-span-4 md:mb-0">
                       <div>
                         <Image
-                        className="md:w-10 md:h-10 w-[30px] h-[30px]"
+                          className="h-[30px] w-[30px] md:h-10 md:w-10"
                           src="/icons/x.svg"
                           width={40}
                           height={40}
@@ -244,7 +241,7 @@ export const EditProfileModal = ({
                       </div>
                       <p>Twitter</p>
                     </div>
-                    <div className="col-span-12 md:col-span-8 flex flex-1 items-center gap-1 md:gap-3">
+                    <div className="col-span-12 flex flex-1 items-center gap-1 md:col-span-8 md:gap-3">
                       <div className="w-full">
                         <input
                           type="text"
@@ -253,7 +250,7 @@ export const EditProfileModal = ({
                           {...register("twitter_username.username")}
                         />
                       </div>
-                      <div className="absolute top-0 right-0 md:static">
+                      <div className="absolute right-0 top-0 md:static">
                         <ToggleSwitch
                           isPublic={watch("twitter_username.isPublic")}
                           onChange={(value) =>
@@ -263,11 +260,11 @@ export const EditProfileModal = ({
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-12 items-center relative">
-                    <div className="col-span-12 md:col-span-4 flex items-center gap-1 mb-2 md:mb-0">
+                  <div className="relative grid grid-cols-12 items-center">
+                    <div className="col-span-12 mb-2 flex items-center gap-1 md:col-span-4 md:mb-0">
                       <div>
                         <Image
-                        className="md:w-10 md:h-10 w-[30px] h-[30px]"
+                          className="h-[30px] w-[30px] md:h-10 md:w-10"
                           src="/icons/telegram.svg"
                           width={40}
                           height={40}
@@ -276,7 +273,7 @@ export const EditProfileModal = ({
                       </div>
                       <p>Telegram</p>
                     </div>
-                    <div className="col-span-12 md:col-span-8 flex flex-1 items-center gap-1 md:gap-3">
+                    <div className="col-span-12 flex flex-1 items-center gap-1 md:col-span-8 md:gap-3">
                       <div className="w-full">
                         <input
                           type="text"
@@ -285,7 +282,7 @@ export const EditProfileModal = ({
                           {...register("telegram_username.username")}
                         />
                       </div>
-                      <div className="absolute top-0 right-0 md:static">
+                      <div className="absolute right-0 top-0 md:static">
                         <ToggleSwitch
                           isPublic={watch("telegram_username.isPublic")}
                           onChange={(value) =>
@@ -295,12 +292,11 @@ export const EditProfileModal = ({
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-12 items-center relative">
-
-                    <div className="col-span-12 md:col-span-4 flex items-center gap-1 mb-2 md:mb-0">
+                  <div className="relative grid grid-cols-12 items-center">
+                    <div className="col-span-12 mb-2 flex items-center gap-1 md:col-span-4 md:mb-0">
                       <div>
                         <Image
-                        className="md:w-10 md:h-10 w-[30px] h-[30px]"
+                          className="h-[30px] w-[30px] md:h-10 md:w-10"
                           src="/icons/discord.svg"
                           width={40}
                           height={40}
@@ -309,7 +305,7 @@ export const EditProfileModal = ({
                       </div>
                       <p>Discord</p>
                     </div>
-                    <div className="col-span-12 md:col-span-8 flex flex-1 items-center gap-1 md:gap-3">
+                    <div className="col-span-12 flex flex-1 items-center gap-1 md:col-span-8 md:gap-3">
                       <div className="w-full">
                         <input
                           type="text"
@@ -318,7 +314,7 @@ export const EditProfileModal = ({
                           {...register("discord_username.username")}
                         />
                       </div>
-                      <div className="absolute top-0 right-0 md:static">
+                      <div className="absolute right-0 top-0 md:static">
                         <ToggleSwitch
                           isPublic={watch("discord_username.isPublic")}
                           onChange={(value) =>
@@ -353,7 +349,10 @@ export const EditProfileModal = ({
           </div>
         </div>
 
-        <button className="absolute right-2 top-2 md:right-6 md:top-6" onClick={closeModal}>
+        <button
+          className="absolute right-2 top-2 md:right-6 md:top-6"
+          onClick={closeModal}
+        >
           <Cross1Icon width={24} height={24} />
         </button>
       </div>

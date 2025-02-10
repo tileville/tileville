@@ -89,12 +89,52 @@ export type Database = {
         }
         Relationships: []
       }
+      minapunks_nfts: {
+        Row: {
+          category: string
+          created_at: string
+          id: number
+          img_url: string
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: number
+          img_url: string
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: number
+          img_url?: string
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Relationships: []
+      }
       minaty_nfts: {
         Row: {
           category: Database["public"]["Enums"]["nft_category"]
           created_at: string
           id: number
           img_url: string
+          is_public_mint: boolean
           name: string
           nft_id: number | null
           owner_address: string | null
@@ -107,6 +147,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url: string
+          is_public_mint?: boolean
           name: string
           nft_id?: number | null
           owner_address?: string | null
@@ -119,6 +160,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url?: string
+          is_public_mint?: boolean
           name?: string
           nft_id?: number | null
           owner_address?: string | null
@@ -173,6 +215,104 @@ export type Database = {
           twitter_username?: Json
           username?: string
           wallet_address?: string
+        }
+        Relationships: []
+      }
+      pvp_challenge_participants: {
+        Row: {
+          challenge_id: number
+          created_at: string
+          has_played: boolean
+          id: number
+          joined_at: string
+          played_at: string | null
+          score: number | null
+          txn_hash: string | null
+          txn_status: string | null
+          wallet_address: string
+        }
+        Insert: {
+          challenge_id: number
+          created_at?: string
+          has_played?: boolean
+          id?: number
+          joined_at?: string
+          played_at?: string | null
+          score?: number | null
+          txn_hash?: string | null
+          txn_status?: string | null
+          wallet_address: string
+        }
+        Update: {
+          challenge_id?: number
+          created_at?: string
+          has_played?: boolean
+          id?: number
+          joined_at?: string
+          played_at?: string | null
+          score?: number | null
+          txn_hash?: string | null
+          txn_status?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pvp_challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "pvp_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pvp_challenges: {
+        Row: {
+          created_at: string
+          created_by: string
+          end_time: string
+          entry_fee: number
+          id: number
+          invite_code: string
+          is_public: boolean
+          is_reward_sent: boolean
+          is_speed_challenge: boolean
+          max_participants: number
+          name: string
+          reward_txn_hash: string | null
+          speed_duration: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          end_time: string
+          entry_fee?: number
+          id?: number
+          invite_code: string
+          is_public?: boolean
+          is_reward_sent?: boolean
+          is_speed_challenge?: boolean
+          max_participants?: number
+          name: string
+          reward_txn_hash?: string | null
+          speed_duration?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          end_time?: string
+          entry_fee?: number
+          id?: number
+          invite_code?: string
+          is_public?: boolean
+          is_reward_sent?: boolean
+          is_speed_challenge?: boolean
+          max_participants?: number
+          name?: string
+          reward_txn_hash?: string | null
+          speed_duration?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -407,6 +547,45 @@ export type Database = {
           is_redeemed?: boolean
           redeemed_at?: string | null
           redeemed_by?: string | null
+        }
+        Relationships: []
+      }
+      zkgod_nfts: {
+        Row: {
+          created_at: string
+          id: number
+          img_url: string
+          is_public_mint: boolean
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          img_url: string
+          is_public_mint?: boolean
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          img_url?: string
+          is_public_mint?: boolean
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
         }
         Relationships: []
       }

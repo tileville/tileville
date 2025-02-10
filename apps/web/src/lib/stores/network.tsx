@@ -15,6 +15,8 @@ import { useSetAtom } from "jotai";
 import { mintProgressAtom } from "@/contexts/atoms";
 import { useMintMINANFT } from "@/hooks/useMintMINANFT";
 import { requestAccounts, requestNetwork, sendPayment } from "../helpers";
+import { useCompetitionErrorTracking } from "@/hooks/useCompetitionErrorTracking";
+import { NFTBucketNames, NFTTableNames } from "../types";
 // import uuid from "uuid";
 
 export interface NetworkState {
@@ -135,10 +137,13 @@ export const useParticipationFee = () => {
         body: JSON.stringify({ code, wallet_address }),
       }),
   });
+
   const [, setIsEntryFeePaid] = useSessionStorage(GAME_ENTRY_FEE_KEY, false);
   const {
-    joinedCompetition: [, logJoinCompetitionError],
+    joinedCompetition: [logJoinCompetition, logJoinCompetitionError],
   } = usePosthogEvents();
+  const { trackCompetitionError, COMPETITION_ERRORS } =
+    useCompetitionErrorTracking();
 
   const payParticipationFees = async ({
     participation_fee,
@@ -146,75 +151,130 @@ export const useParticipationFee = () => {
     competition_key,
     code,
     type,
+    competition_name,
   }: {
     participation_fee: number;
     treasury_address: string;
     competition_key: string;
     code?: string;
     type: "VOUCHER" | "NETWORK" | "FREE";
+    competition_name: string;
   }): Promise<{ id: number } | null | undefined> => {
     let hash;
     let network = window.mina?.isPallad
       ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
       : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
     let txn_status = "PENDING";
+
     if (!networkStore.address) {
+      trackCompetitionError(
+        COMPETITION_ERRORS.WALLET_NOT_CONNECTED(competition_name)
+      );
       networkStore.connectWallet(false);
       return null;
     }
-    switch (type) {
-      case "FREE":
-        hash = uuidv4();
-        network = "FREE";
-        txn_status = "CONFIRMED";
-        break;
-      case "VOUCHER":
-        try {
-          redeemVoucher.mutate({
-            code: code!,
-            wallet_address: networkStore.address,
-          });
-        } catch (err: any) {
-          toast(
-            `Failed to redeem voucher code. Please report a bug and help make the game better!`
-          );
-        }
-        hash = code;
-        network = "VOUCHER";
-        txn_status = "CONFIRMED";
-        break;
-      case "NETWORK":
-        hash = await sendPayment({
-          from: networkStore.address,
-          amount: participation_fee,
-        });
 
-        txn_status = "PENDING";
-
-        break;
-      default:
-    }
     try {
-      if (hash) {
-        console.log("response hash", hash);
-        setIsEntryFeePaid(true);
-        const response = await addTransactionLog({
-          txn_hash: hash,
-          wallet_address: networkStore.address,
-          network,
-          competition_key,
-          txn_status,
-          is_game_played: false,
-        });
+      // TODO: REMOVE THIS BEFORE COMMITTING THIS IS FOR TESTING
+      COMPETITION_ERRORS.PAYMENT_FAILED(
+        competition_name,
+        type,
+        "error message",
+        {
+          amount: participation_fee,
+        }
+      );
 
-        console.log("Add transaction log response", response);
-        return response;
-      } else {
-        console.log("toast error");
+      logJoinCompetition({
+        walletAddress: networkStore.address,
+        competition_name,
+        network: type,
+      });
+
+      switch (type) {
+        case "FREE":
+          hash = uuidv4();
+          network = "FREE";
+          txn_status = "CONFIRMED";
+          break;
+
+        case "VOUCHER":
+          try {
+            await redeemVoucher.mutateAsync({
+              code: code!,
+              wallet_address: networkStore.address,
+            });
+            hash = code;
+            network = "VOUCHER";
+            txn_status = "CONFIRMED";
+          } catch (err: any) {
+            trackCompetitionError(
+              COMPETITION_ERRORS.VOUCHER_REDEMPTION_FAILED(
+                competition_name,
+                type,
+                err,
+                { voucherCode: code }
+              )
+            );
+            toast(`Failed to redeem voucher code. Please report a bug`);
+            return null;
+          }
+          break;
+
+        case "NETWORK":
+          try {
+            hash = await sendPayment({
+              from: networkStore.address,
+              amount: participation_fee,
+            });
+            if (!hash) {
+              throw new Error("No transaction hash returned");
+            }
+            txn_status = "PENDING";
+          } catch (err: any) {
+            trackCompetitionError(
+              COMPETITION_ERRORS.PAYMENT_FAILED(competition_name, type, err, {
+                amount: participation_fee,
+              })
+            );
+            toast(`Transaction failed: ${err.toString()}. Please report a bug`);
+            return null;
+          }
+          break;
+      }
+
+      if (hash) {
+        try {
+          setIsEntryFeePaid(true);
+          const response = await addTransactionLog({
+            txn_hash: hash,
+            wallet_address: networkStore.address,
+            network,
+            competition_key,
+            txn_status,
+            is_game_played: false,
+          });
+          return response;
+        } catch (err: any) {
+          trackCompetitionError(
+            COMPETITION_ERRORS.TRANSACTION_LOG_FAILED(
+              competition_name,
+              network,
+              err,
+              { txnHash: hash }
+            )
+          );
+          toast("Failed to record transaction. Please report a bug.");
+          return null;
+        }
       }
     } catch (err: any) {
+      trackCompetitionError(
+        COMPETITION_ERRORS.PAYMENT_FAILED(competition_name, type, err, {
+          amount: participation_fee,
+        })
+      );
       toast("Failed to transfer entry fees😭");
-      logJoinCompetitionError(err.toString());
       return null;
     }
   };
@@ -222,30 +282,65 @@ export const useParticipationFee = () => {
   return { payParticipationFees };
 };
 
+const MINTING_STEPS = {
+  STARTED: 1,
+  IPFS_UPLOAD: 2,
+  O1JS_LOADING: 3,
+  TRANSACTION_SIGNING: 4,
+  TRANSACTION_SENDING: 5,
+  COMPLETED: 6,
+} as const;
+
 //TODO: Move this to new files
 export const useMintNFT = () => {
   const networkStore = useNetworkStore();
   const setMintProgress = useSetAtom(mintProgressAtom);
   const { mintMINANFTHelper } = useMintMINANFT();
+  const {
+    nftMinting: [logNFTMinting, logNFTMintingError],
+    nftMintingStepComplete: [logNFTMintingStepComplete],
+    nftMintingSuccess: [logNFTMintingSuccess],
+  } = usePosthogEvents();
 
   const mintNft = async ({
     nft_id,
     collection,
+    category,
+    collectionTableName,
+    collectionBucketName,
+    collectionDescription,
   }: {
     nft_id: number;
-    collection: string;
+    collection?: string;
+    category?: string;
+    collectionTableName: NFTTableNames;
+    collectionBucketName: NFTBucketNames;
+    collectionDescription: string;
   }) => {
     if (!networkStore.address) {
       networkStore.connectWallet(false);
       return null;
     }
+
     try {
+      // Step 1: Started
+      logNFTMinting({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        step: MINTING_STEPS.STARTED,
+        collection,
+        category,
+      });
+
       const nft_payload_response = await fetch(`/api/mint-nft`, {
         method: "POST",
         body: JSON.stringify({
           wallet_address: networkStore.address,
           nft_id,
           collection,
+          collectionTableName,
+          collectionBucketName,
+          collectionDescription,
         }),
         headers: {
           "Auth-Signature": "abv1",
@@ -253,19 +348,80 @@ export const useMintNFT = () => {
       });
 
       const nft_payload = await nft_payload_response.json();
-      console.log({ nft_payload });
+
       if (nft_payload.success === false) {
+        logNFTMintingError({
+          nftId: nft_id,
+          walletAddress: networkStore.address,
+          step: MINTING_STEPS.IPFS_UPLOAD,
+          error: nft_payload.message,
+          collection,
+          category,
+        });
         return nft_payload;
       }
+
+      // Step 2: IPFS Upload Complete
+      logNFTMintingStepComplete({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        price: nft_payload.price,
+        step: MINTING_STEPS.IPFS_UPLOAD,
+        collection,
+        category,
+      });
+
       setMintProgress({
         [nft_id]: {
           step: 2,
           message: "Loading O1JS and MINANFT Environment",
         },
       });
+
+      // Step 3: O1JS Loading
+      logNFTMintingStepComplete({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        price: nft_payload.price,
+        step: MINTING_STEPS.O1JS_LOADING,
+        collection,
+        category,
+      });
+
       const response = await mintMINANFTHelper(nft_payload);
+
+      if (response?.success) {
+        logNFTMintingSuccess({
+          nftId: nft_id,
+          walletAddress: networkStore.address,
+          price: nft_payload.price,
+          txHash: response?.txHash,
+          step: MINTING_STEPS.COMPLETED,
+          collection,
+          category,
+        });
+      } else {
+        logNFTMintingError({
+          nftId: nft_id,
+          walletAddress: networkStore.address,
+          price: nft_payload.price,
+          error: response?.message || "Unknown error",
+          step: MINTING_STEPS.TRANSACTION_SIGNING,
+          collection,
+          category,
+        });
+      }
+
       return response;
     } catch (error: any) {
+      logNFTMintingError({
+        nftId: nft_id,
+        walletAddress: networkStore.address,
+        step: MINTING_STEPS.TRANSACTION_SIGNING,
+        error: error.toString(),
+        collection,
+        category,
+      });
       toast(`Txn failed with error ${error.toString()}. report a bug`);
     }
   };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NETWORKS, Network } from "@/constants/network";
+import { NETWORKS } from "@/constants/network";
 import { walletInstalled } from "@/lib/helpers";
 import { useNetworkStore } from "@/lib/stores/network";
 
@@ -104,7 +104,7 @@ export default function NetworkPicker() {
                 <Image
                   src={minaLogo}
                   className={
-                    "group-hover:border-left-accent rounded-[5px] border border-foreground"
+                    "group-hover:border-left-accent rounded-[5px] border border-foreground w-3 h-3 md:w-6 md:h-6"
                   }
                   alt={""}
                   width={24}

@@ -13,7 +13,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types:local": "export $(cat .env.local | xargs) &&  supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts",
+    "generate:types:local": "export $(cat .env.development | xargs) &&  supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts",
     "generate:types:prod": "export $(cat .env.production | xargs) && supabase gen types typescript --project-id ${SUPABASE_PROJECT_REF} --schema public > src/lib/database.types.ts"
   },
   "dependencies": {
@@ -41,6 +41,8 @@
     "axios": "^1.7.3",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
+    "embla-carousel-autoplay": "^8.5.2",
+    "embla-carousel-react": "^8.5.2",
     "framer-motion": "^11.2.6",
     "immer": "^10.0.3",
     "install": "^0.13.0",
@@ -56,6 +58,7 @@
     "path": "^0.12.7",
     "phaser": "^3.80.1",
     "posthog-js": "^1.81.1",
+    "rate-limiter-flexible": "^5.0.5",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
@@ -70,6 +73,7 @@
     "tileville-chain-dev": "0.0.5",
     "truncate-middle": "^1.0.6",
     "uuid": "^10.0.0",
+    "vconsole": "^3.15.1",
     "zustand": "^4.4.6"
   },
   "devDependencies": {

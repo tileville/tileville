@@ -12,11 +12,9 @@ import {
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import {
-  getAllLeaderboardEntries,
   insertEmail,
   getAllCompetitionsEntries,
   getAllCompetitionsNames,
-  getFilteredLeaderboardEntries,
   fetchTransactionLogById,
   updateTransactionLog,
   getFilteredTransactionByStatus,
@@ -27,7 +25,8 @@ import {
   getCompetitionByKey,
   isGameAlreadyPlayed,
   fetchGlobalConfig,
-  getAllNFTsEntries,
+  fetchPVPChallengeTransaction,
+  confirmChallengeParticipation,
 } from "./supabase-queries";
 import {
   ACCOUNT_AUTH_LOCAL_KEY,
@@ -36,9 +35,12 @@ import {
   isMockEnv,
 } from "@/constants";
 import { useAtom } from "jotai";
-import { globalConfigAtom } from "@/contexts/atoms";
-import { PublicProfile } from "@/types";
+import { globalConfigAtom, globalConfigLoadingAtom } from "@/contexts/atoms";
+import { ChallengeResponse, PublicProfile } from "@/types";
 import { MOCK_GLOBAL_CONFIG } from "./mock-data/globalConfig";
+import { NFTTableNames, TransactionStatus } from "@/lib/types";
+import { useSetAtom } from "jotai";
+import { followLoadingAtom } from "@/contexts/atoms";
 
 export const useSendEmail = ({
   onSuccess,
@@ -188,14 +190,6 @@ export const useProfile = ({
   );
 };
 
-export const useLeaderboardData = () => {
-  return useQuery(
-    ["leaderboard"],
-    () => getAllLeaderboardEntries(supabaseUserClientComponentClient),
-    {}
-  );
-};
-
 export const useCompetitionsData = () => {
   return useQuery(
     ["tileville_competitions"],
@@ -204,21 +198,6 @@ export const useCompetitionsData = () => {
   );
 };
 
-export const useNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}) => {
-  return useQuery(
-    ["tileville_builder_nfts", sortOrder, searchTerm, currentPage],
-    () => getAllNFTsEntries({ sortOrder, searchTerm, currentPage }),
-    {}
-  );
-};
 export const useProfileLazyQuery = (walletAddress: string) => {
   const queryClient = useQueryClient();
 
@@ -270,16 +249,6 @@ export const useCompetitionsName = () => {
   );
 };
 
-export const useFilteredLeaderboardData = (competition_key: string) => {
-  return useQuery(
-    ["leaderboard", competition_key],
-    () => getFilteredLeaderboardEntries(competition_key),
-    {
-      enabled: !!competition_key, // Only run this query if competitionId is not null
-    }
-  );
-};
-
 export const useMainnetTransactionsStatus = (
   txns: { txn_hash: string; txn_status: string }[]
 ) => {
@@ -300,8 +269,7 @@ export const useMainnetTransactionsStatus = (
             console.log("blockberry api response");
             if (
               res.blockConfirmationsCount >= 1 ||
-              res.txStatus === "applied" ||
-              res.txStatus === "buffered"
+              res.txStatus === "applied"
             ) {
               return updateTransactionLog(txn_hash, {
                 txn_status: "CONFIRMED",
@@ -364,6 +332,58 @@ export const useMainnetTransactionStatusForMint = (txn_hash: string) => {
     {
       enabled: !!txn_hash,
       retry: 5,
+    }
+  );
+};
+
+export const useMainnetPVPTransactionsStatus = (
+  txn_hash: string,
+  txn_status: TransactionStatus,
+  challenge_id: number
+) => {
+  return useQuery(
+    ["transaction_status_mainnet_pvp", txn_hash],
+    () => {
+      console.log(txn_hash, txn_status, challenge_id, 383);
+      //TODO: Add counter for blockberry API to track how many times we calling this
+      console.log(`Calling Blockberry api to check pvp txn status`);
+      return fetch(
+        `${BLOCKBERRY_MAINNET_BASE_URL}/v1/block-confirmation/${txn_hash}`,
+        {
+          headers: {
+            "x-api-key": BLOCKBERRY_API_KEY,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          console.log("response blockberrry", res);
+          if (res.blockConfirmationsCount >= 1 || res.txStatus === "applied") {
+            return confirmChallengeParticipation(
+              txn_hash,
+              challenge_id,
+              "CONFIRMED"
+            );
+          }
+        });
+    },
+    {
+      staleTime: Infinity,
+      enabled: !!txn_hash && txn_status === "PENDING",
+      retry: 5,
+    }
+  );
+};
+
+export const usePVPChallengeTransaction = (
+  wallet_address: string,
+  challenge_id: string | number
+) => {
+  return useQuery(
+    ["pvp_challenge_transaction", wallet_address, challenge_id],
+    () => fetchPVPChallengeTransaction(wallet_address, challenge_id),
+    {
+      enabled: !!wallet_address && !!challenge_id,
     }
   );
 };
@@ -455,19 +475,36 @@ export const useIsGameAlreadyPlayed = (game_id: number) => {
 
 export const useGlobalConfig = (config_name: string) => {
   const [globalConfig, setGlobalConfig] = useAtom(globalConfigAtom);
-  return useQuery(["global_config", config_name], () =>
-    fetchGlobalConfig(config_name)
-      .then((response) => {
+  const setGlobalConfigLoading = useSetAtom(globalConfigLoadingAtom);
+
+  return useQuery({
+    queryKey: ["global_config", config_name],
+    queryFn: async () => {
+      setGlobalConfigLoading(true);
+      try {
+        const response = await fetchGlobalConfig(config_name);
         const config = isMockEnv()
           ? MOCK_GLOBAL_CONFIG
           : (response.config_values as { [key: string]: any });
         setGlobalConfig({ ...globalConfig, ...config });
         return response;
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(`Failed to fetch global config from db`, error);
-      })
-  );
+        throw error;
+      } finally {
+        setGlobalConfigLoading(false);
+      }
+    },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    onError: (error) => {
+      console.error("Error loading global config:", error);
+      setGlobalConfigLoading(false);
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 };
 
 export function useGetConnections(wallet_address: string) {
@@ -489,6 +526,7 @@ export function useGetConnections(wallet_address: string) {
 
 export function useFollowUser() {
   const queryClient = useQueryClient();
+  const setFollowLoading = useSetAtom(followLoadingAtom);
 
   return useMutation({
     mutationFn: async ({
@@ -498,12 +536,11 @@ export function useFollowUser() {
       follower_wallet: string;
       target_wallet: string;
     }) => {
-      const authSignature =
-        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
-
-      console.log("target wallet", target_wallet);
-      console.log("follower_wallet", follower_wallet);
+      setFollowLoading(true);
       try {
+        const authSignature =
+          window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
         const response = await fetch("/api/player/follow", {
           method: "POST",
           headers: {
@@ -522,8 +559,8 @@ export function useFollowUser() {
           throw new Error(data.error);
         }
         return data;
-      } catch (error) {
-        throw error;
+      } finally {
+        setFollowLoading(false);
       }
     },
     onSuccess: () => {
@@ -535,6 +572,7 @@ export function useFollowUser() {
 
 export function useUnfollowUser() {
   const queryClient = useQueryClient();
+  const setFollowLoading = useSetAtom(followLoadingAtom);
 
   return useMutation({
     mutationFn: async ({
@@ -546,9 +584,7 @@ export function useUnfollowUser() {
     }) => {
       const authSignature =
         window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
-
-      console.log("target wallet", target_wallet);
-      console.log("follower_wallet", follower_wallet);
+      setFollowLoading(true);
       try {
         const response = await fetch("/api/player/unfollow", {
           method: "POST",
@@ -570,6 +606,8 @@ export function useUnfollowUser() {
         return data;
       } catch (error) {
         throw error;
+      } finally {
+        setFollowLoading(false);
       }
     },
     onSuccess: () => {
@@ -796,6 +834,7 @@ export function useTotalWins(wallet_address: string) {
 interface PastCompetition {
   competitionKey: string;
   posterUrl: string;
+  competitionName: string;
 }
 
 interface PastCompetitionsResponse {
@@ -891,36 +930,6 @@ export const useTelegramVerify = ({
   );
 };
 
-export const useMinatyNFTEntries = ({
-  sortOrder = "desc",
-  searchTerm,
-  currentPage,
-}: {
-  sortOrder: "asc" | "desc";
-  searchTerm: string;
-  currentPage: number;
-}) => {
-  return useQuery(
-    ["minaty_nfts", sortOrder, searchTerm, currentPage],
-    async () => {
-      const params = [
-        `sortOrder=${sortOrder}`,
-        `searchTerm=${encodeURIComponent(searchTerm)}`,
-        `currentPage=${currentPage}`,
-      ].join("&");
-
-      const response = await fetch(`/api/minaty-nfts?${params}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
-    {
-      keepPreviousData: true,
-    }
-  );
-};
-
 export const useSendGroupMessage = () => {
   return useMutation({
     mutationFn: async ({
@@ -942,5 +951,310 @@ export const useSendGroupMessage = () => {
       });
       return response.json();
     },
+  });
+};
+
+export const useSendPrivateGroupMessage = () => {
+  const toastRef = useRef<string | null>(null);
+
+  return useMutation({
+    mutationFn: async ({
+      message,
+      walletAddress,
+    }: {
+      message: string;
+      walletAddress: string;
+    }) => {
+      const response = await fetch("/api/telegram/private-group-message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send message");
+      }
+
+      return response.json();
+    },
+    onMutate: () => {
+      toastRef.current = toast.loading("Notifying about your win...");
+    },
+    onSuccess: () => {
+      toast.success(
+        "Team has been notified of your win! Prize will be sent to your wallet soon.",
+        {
+          id: toastRef.current ?? undefined,
+        }
+      );
+      toastRef.current = null;
+    },
+    onError: (error: Error) => {
+      toast.error(
+        error.message ||
+          "Failed to notify team. Please try again or contact support.",
+        {
+          id: toastRef.current ?? undefined,
+        }
+      );
+      toastRef.current = null;
+    },
+  });
+};
+
+export const useCreatedChallenges = (walletAddress: string) => {
+  return useQuery({
+    queryKey: ["created-challenges", walletAddress],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/created?wallet_address=${walletAddress}`
+      );
+      const data = await response.json();
+      return data as ChallengeResponse;
+    },
+    enabled: !!walletAddress,
+  });
+};
+
+export const useAcceptedChallenges = (walletAddress: string) => {
+  return useQuery({
+    queryKey: ["accepted-challenges", walletAddress],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/pvp/challenges/accepted?wallet_address=${walletAddress}`
+      );
+      const data = await response.json();
+      return data as ChallengeResponse;
+    },
+    enabled: !!walletAddress,
+  });
+};
+
+export const useCreateChallenge = (wallet_address: string) => {
+  const queryClient = useQueryClient();
+
+  const authSignature = window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY);
+  if (!authSignature) {
+    console.warn("Auth signature missing in storage");
+    throw new Error("Auth signature missing!");
+  }
+
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      entry_fee: number;
+      end_time: string;
+      max_participants: number;
+      is_speed_challenge: boolean;
+      speed_duration?: number;
+      is_public: boolean;
+    }) => {
+      const response = await fetch("/api/pvp/challenges", {
+        method: "POST",
+        headers: {
+          "Auth-Signature": authSignature,
+          "Wallet-Address": wallet_address,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["created_challenges"] });
+    },
+  });
+};
+
+export const useInviteChallenge = (code: string) => {
+  return useQuery({
+    queryKey: ["invite-challenge", code],
+    queryFn: async () => {
+      const response = await fetch(`/api/pvp/challenges/${code}`);
+      const data = await response.json();
+      return data;
+    },
+    enabled: !!code,
+  });
+};
+
+export const useJoinChallenge = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+    }) => {
+      const response = await fetch("/api/pvp/challenges/join", {
+        method: "POST",
+        body: JSON.stringify({ challenge_id, wallet_address }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to join challenge");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate relevant queries to refetch the latest data
+      queryClient.invalidateQueries({ queryKey: ["invite-challenge"] });
+    },
+  });
+};
+
+export const useSavePvPScore = () => {
+  return useMutation({
+    mutationFn: async ({
+      challenge_id,
+      wallet_address,
+      score,
+    }: {
+      challenge_id: number;
+      wallet_address: string;
+      score: number;
+    }) => {
+      const authSignature =
+        window.localStorage.getItem(ACCOUNT_AUTH_LOCAL_KEY) || "";
+
+      const response = await fetch("/api/pvp/challenges/submit-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Wallet-Address": wallet_address,
+          "Auth-Signature": authSignature,
+        },
+        body: JSON.stringify({
+          challenge_id,
+          score,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save PVP score");
+      }
+
+      return response.json();
+    },
+  });
+};
+
+export const useChallengeById = (challengeId: string | number) => {
+  return useQuery({
+    queryKey: ["challenge", challengeId],
+    queryFn: async () => {
+      const response = await fetch(`/api/pvp/challenge/${challengeId}`);
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || "Failed to fetch challenge");
+      }
+      return data;
+    },
+    enabled: !!challengeId,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+};
+
+export const useTelegramStatus = (wallet_address: string) => {
+  return useQuery({
+    queryKey: ["telegram-status", wallet_address],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/telegram/status?wallet_address=${wallet_address}`
+      );
+      const data = await response.json();
+      return data.verified;
+    },
+    enabled: !!wallet_address,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+  });
+};
+
+export interface NFTResponse {
+  nfts: Array<any>;
+  count: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+export type NFTError = {
+  message: string;
+  status?: number;
+};
+
+export const useNFTsWithPagination = ({
+  sortOrder = "desc",
+  searchTerm,
+  currentPage,
+  collectionTableName,
+  enabled = true,
+}: {
+  sortOrder: "asc" | "desc";
+  searchTerm: string;
+  currentPage: number;
+  collectionTableName: string;
+  enabled?: boolean;
+}) => {
+  return useQuery<NFTResponse, NFTError>({
+    queryKey: [sortOrder, searchTerm, currentPage, collectionTableName],
+    queryFn: async () => {
+      const params = [
+        `sortOrder=${sortOrder}`,
+        `searchTerm=${encodeURIComponent(searchTerm)}`,
+        `page=${currentPage}`,
+        `collectionTableName=${collectionTableName}`,
+      ].join("&");
+
+      const response = await fetch(`/api/nfts?${params}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw {
+          message: errorData.error || "Failed to fetch NFTs",
+          status: response.status,
+        };
+      }
+      return response.json();
+    },
+    enabled: enabled && !!collectionTableName,
+    keepPreviousData: true,
+    staleTime: 1000 * 60,
+  });
+};
+
+export const useFeaturedNFTs = () => {
+  return useQuery({
+    queryKey: ["featured-nfts"],
+    queryFn: async () => {
+      const response = await fetch("/api/nfts/featured");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw {
+          message: errorData.error || "Failed to fetch featured NFTs",
+          status: response.status,
+        };
+      }
+      return response.json();
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

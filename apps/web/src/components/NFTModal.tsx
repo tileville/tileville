@@ -12,6 +12,9 @@ import {
   isMockEnv,
   NFTCollectionType,
   NFTCategory,
+  DEFAULT_TRASURY_ADDRESS,
+  NFT_COLLECTIONS,
+  MinaPunksCategory,
 } from "@/constants";
 import Link from "next/link";
 import { getTime, isFuture } from "date-fns";
@@ -29,6 +32,7 @@ import { TraitsSection } from "./Marketplace/TraitsSection";
 import { AlreadyMintedContent } from "./Marketplace/AlreadyMintedContent";
 import { NFTModalTriggerContent } from "./Marketplace/NFTModalTriggerContent";
 import { CountdownTimer } from "./common/CountdownTimer";
+import { CollectionDescription } from "./Marketplace/CollectionDescription";
 
 export const NFTModal = ({
   traits,
@@ -41,6 +45,7 @@ export const NFTModal = ({
   algoliaHitData,
   collection,
   NFTCategory,
+  isPublicMint,
 }: {
   traits: Json;
   img_url: string;
@@ -52,7 +57,8 @@ export const NFTModal = ({
   ownerAddress: string | null;
   algoliaHitData: AlgoliaHitResponse | undefined;
   collection: NFTCollectionType;
-  NFTCategory: NFTCategory | null;
+  NFTCategory: NFTCategory | null | MinaPunksCategory | undefined;
+  isPublicMint: boolean;
 }) => {
   // Function to parse traits
   const [mintLoading, setMintLoading] = useState(false);
@@ -69,17 +75,23 @@ export const NFTModal = ({
   const { switchNetwork } = useSwitchNetwork();
   const [mintKey] = useLocalStorage("MINTING_ENABLE", "");
 
-  const collectionConfig = globalConfig?.nft_collections_config?.[collection] || {}
-  const nftMintStartDate = collectionConfig?.nft_mint_start_date_time_utc || new Date(2024, 0, 1)
-  const isMintingNotStarted = isFuture(nftMintStartDate)
+  const collectionConfig =
+    globalConfig?.nft_collections_config?.[collection] || {};
+  const nftMintStartDate =
+    collectionConfig?.nft_mint_start_date_time_utc || new Date(2024, 0, 1);
+  const isMintingNotStarted = isFuture(nftMintStartDate);
+  const collectionOwner =
+    collectionConfig.owner_address || DEFAULT_TRASURY_ADDRESS;
+  const maxMintsPerWallet = collectionConfig.max_mints_per_wallet;
+  const collectionTableName = collectionConfig.table_name;
+  const collectionBucketName = collectionConfig.bucket_name;
+  const collectionDescription = collectionConfig.description;
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
-      if (nftMintResponse.success) {
+      if (nftMintResponse.success && nftMintResponse.txHash) {
         toast.success(
-          <>
-            <NFTSuccessMintContent nftTxnHash={nftMintResponse.txHash} />
-          </>,
+          <NFTSuccessMintContent nftTxnHash={nftMintResponse.txHash} />,
           {
             id: "mint-success-toast",
           }
@@ -102,6 +114,7 @@ export const NFTModal = ({
           }
         );
       }
+      setMintLoading(false);
     }
   }, [nftMintResponse]);
 
@@ -117,7 +130,10 @@ export const NFTModal = ({
   }
 
   const handleMint = async (nft_id: number) => {
-    if (!isMockEnv() && networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId) {
+    if (
+      !isMockEnv() &&
+      networkStore.minaNetwork?.chainId !== MAINNET_NETWORK.chainId
+    ) {
       await switchNetwork(MAINNET_NETWORK);
       return;
     }
@@ -144,6 +160,9 @@ export const NFTModal = ({
       const response = await mintNft({
         nft_id,
         collection: collection,
+        collectionTableName,
+        collectionBucketName,
+        collectionDescription,
       });
 
       console.log("186 response", response);
@@ -234,6 +253,7 @@ export const NFTModal = ({
               imgUrl={img_url}
               nftName={name}
               isListStyle={renderStyle.includes("list-style")}
+              isView1={renderStyle.includes("view1")}
               isAlreadyMinted={!!algoliaHitData}
               ownerAddress={algoliaHitData?.owner || ""}
               mintDate={date}
@@ -243,8 +263,7 @@ export const NFTModal = ({
               isCurrentlyMiting={mintProgress[nftID]?.step > 0 && !error}
             />
           </div>
-        </Dialog.Trigger>
-
+        </Dialog.Trigger>{" "}
         <Dialog.Content className="relative !m-0 !max-w-[1020px] !rounded-md !p-0">
           <div className="grid md:grid-cols-2">
             <div className="h-full w-full">
@@ -270,10 +289,8 @@ export const NFTModal = ({
                 </span>
               </div>
               <Flex direction="column" gap="3" mt="4" justify="center">
-              {isMintingNotStarted && (
-                  <CountdownTimer
-                    initialTime={getTime(nftMintStartDate)}
-                  />
+                {isMintingNotStarted && (
+                  <CountdownTimer initialTime={getTime(nftMintStartDate)} />
                 )}
                 <MintBtn
                   isMintingDisabled={isMintingDisabled}
@@ -289,6 +306,9 @@ export const NFTModal = ({
                   nftID={nftID}
                   collection={collection}
                   currentUserAddress={networkStore.address || ""}
+                  isPublicMint={isPublicMint}
+                  collectionOwner={collectionOwner}
+                  maxMintsPerWallet={maxMintsPerWallet}
                 />
 
                 {isAvailableToPurchase && (
@@ -328,11 +348,23 @@ export const NFTModal = ({
                     />
                   )}
               </Flex>
-              <TraitsSection
-                traits={traits}
-                collection={collection}
-                category={NFTCategory}
-              />
+              {/* Inside Dialog.Content, before closing div */}
+
+              <div>
+                {collection === NFT_COLLECTIONS.ZKGOD && (
+                  <CollectionDescription />
+                )}
+              </div>
+              {traits &&
+                typeof traits === "object" &&
+                traits !== null &&
+                Object.keys(traits).length > 0 && (
+                  <TraitsSection
+                    traits={traits}
+                    collection={collection}
+                    category={NFTCategory}
+                  />
+                )}
             </div>
           </div>
           <Dialog.Close>

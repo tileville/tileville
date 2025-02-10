@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { LoadScene, MainScene, MenuScene } from "./scenes";
 import {
+  useSavePvPScore,
   useSaveScore,
   useSendGroupMessage,
   useUsername,
@@ -15,12 +16,16 @@ type PhaserLayerProps = {
   isDemoGame: boolean;
   isGamePlayAllowed: boolean;
   competitionKey: string;
-  gameId: number;
+  gameId?: number;
   txnHash?: string | undefined;
   txnStatus?: string | undefined;
   scoreTweetContent: string;
   isSpeedVersion: boolean | undefined;
   speedDuration: number | undefined;
+  challengeId?: number;
+  isPvPGame?: boolean;
+  challengeName?: string;
+  trackGameCompletion?: (score: number) => void;
 };
 
 export const PhaserLayer = ({
@@ -32,12 +37,17 @@ export const PhaserLayer = ({
   scoreTweetContent,
   isSpeedVersion,
   speedDuration,
+  challengeId,
+  isPvPGame,
+  challengeName,
+  trackGameCompletion,
 }: PhaserLayerProps) => {
   const { address } = useNetworkStore();
   const [showGameInfoModal, setShowGameInfoModal] = useState(false);
   const sendGroupMessageMutation = useSendGroupMessage();
 
   const { data: username } = useUsername(address);
+  const pvpScoreMutation = useSavePvPScore();
 
   const handleSendGroupMessageDemo = useCallback(
     (score: number, groupTopicId: string) => {
@@ -85,15 +95,45 @@ export const PhaserLayer = ({
         return;
       }
 
-      leaderboardMutation.mutate({
-        competition_key: competitionKey,
-        game_id: gameId,
-        score: score,
-        wallet_address: address,
-      });
+      // For PVP games
+      if (isPvPGame && challengeId) {
+        pvpScoreMutation.mutate(
+          {
+            challenge_id: challengeId,
+            wallet_address: address,
+            score: score,
+          },
+          {
+            onSuccess: () => {
+              console.log("PVP game score saved successfully");
+              trackGameCompletion?.(score);
+            },
+            onError: (error) => {
+              toast.error("Failed to save PVP game score");
+              console.error("Error saving PVP score:", error);
+            },
+          }
+        );
+        return;
+      } else {
+        leaderboardMutation.mutate({
+          competition_key: competitionKey,
+          game_id: gameId ? gameId : 0,
+          score: score,
+          wallet_address: address,
+        });
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [leaderboardMutation, address, isDemoGame]
+    [
+      leaderboardMutation,
+      pvpScoreMutation,
+      address,
+      isDemoGame,
+      isPvPGame,
+      challengeId,
+      trackGameCompletion,
+    ]
   );
 
   useEffect(() => {
@@ -120,6 +160,8 @@ export const PhaserLayer = ({
     game.registry.set("isSpeedVersion", isSpeedVersion);
     game.registry.set("speedDuration", speedDuration);
     game.registry.set("handleSendGroupMessageDemo", handleSendGroupMessageDemo); //
+    game.registry.set("isPvpGame", isPvPGame);
+    game.registry.set("challengeName", challengeName);
 
     return () => {
       game.destroy(true);

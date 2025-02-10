@@ -1,10 +1,11 @@
-import { FOLLOWING_BTN, PRIMARY_BUTTON_STYLES } from "@/constants";
 import { useFollowUser, useUnfollowUser } from "@/db/react-query-hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Spinner2 } from "../common/Spinner";
+import { useAtomValue } from "jotai";
+import { followLoadingAtom } from "@/contexts/atoms";
 
 type UserListItemType = {
   userInfo: {
@@ -28,6 +29,7 @@ export const UserListItem = ({
 }: UserListItemType) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const isFollowLoading = useAtomValue(followLoadingAtom);
 
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
@@ -66,8 +68,8 @@ export const UserListItem = ({
 
   return (
     <Link href={`/u/${userInfo.username}`} className={className}>
-      <div className="flex items-center gap-4">
-        <div className="h-[50px] w-[50px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-4 border-[#D3F49E]">
+      <div className="flex items-center gap-2 md:gap-4">
+        <div className="h-[30px] w-[30px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-2 border-[#D3F49E] md:h-[50px] md:w-[50px] md:border-4">
           <Image
             src={userInfo.avatar_url}
             width={200}
@@ -78,11 +80,13 @@ export const UserListItem = ({
         </div>
 
         <div>
-          <p className="text-xl">{userInfo.fullname}</p>
+          <p className="text-base md:text-xl">{userInfo.fullname}</p>
           <div className="flex items-center gap-1">
-            <p className="text-xs text-[#626262]">@{userInfo.username}</p>
+            <p className="text-[10px] text-[#626262] md:text-xs">
+              @{userInfo.username}
+            </p>
             {isFollowsYou && (
-              <span className="block rounded-[2px] bg-[#A5BC8B] px-1 py-[1px] text-xs text-primary">
+              <span className="block rounded-[2px] bg-[#A5BC8B] px-1 py-[1px] text-[10px] text-primary md:text-xs">
                 follows you
               </span>
             )}
@@ -93,7 +97,7 @@ export const UserListItem = ({
           <button
             type="button"
             className={`${
-              isFollowing ? FOLLOWING_BTN : PRIMARY_BUTTON_STYLES
+              isFollowing ? "following-btn" : "primary-button-styles"
             } relative ms-auto`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -101,7 +105,7 @@ export const UserListItem = ({
               e.preventDefault();
               handleFollowAction();
             }}
-            disabled={isLoading}
+            disabled={isFollowLoading}
           >
             {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
 

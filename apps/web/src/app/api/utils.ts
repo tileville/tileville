@@ -31,7 +31,6 @@ export async function isSignatureValid(
     };
 
     const verifyResult = signClient.verifyMessage(verifyBody);
-    console.log("verification result", verifyResult, verifyBody);
     return verifyResult;
   } catch (error) {
     console.error(`Failed to verify message`, error);

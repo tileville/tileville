@@ -2,11 +2,11 @@
 import React from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { DropdownMenu } from "@radix-ui/themes";
 import { NFTModal } from "@/components/NFTModal";
-import { useNFTEntries, useMinatyNFTEntries } from "@/db/react-query-hooks";
+import { useNFTsWithPagination } from "@/db/react-query-hooks";
 import { MarketplaceLoading } from "@/components/Marketplace/maretplaceLoading";
 import { Pagination } from "@/components/common/Pagination";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
@@ -19,9 +19,16 @@ import {
 } from "@/constants";
 import { TraitsInfoBtn } from "@/components/Marketplace/TraitsInfoBtn";
 import CollectionSelector from "@/components/Marketplace/CollectionSelector";
-import { Spinner2 } from "@/components/common/Spinner";
+import { useAtomValue } from "jotai";
+import { globalConfigAtom } from "@/contexts/atoms";
 
-export default function MarketplaceContent() {
+export default function MarketplaceContent({
+  collection,
+  isMarketplaceV2,
+}: {
+  collection?: NFTCollectionType;
+  isMarketplaceV2?: boolean;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -29,6 +36,7 @@ export default function MarketplaceContent() {
   const [selectedItem, setSelectedItem] = useState(
     searchParams.get("sort") || "Price: High to Low"
   );
+
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
     (searchParams.get("sortOrder") as "asc" | "desc") || "desc"
   );
@@ -44,35 +52,31 @@ export default function MarketplaceContent() {
   const [renderStyle, setRenderStyle] = useState(
     TOGGLE_GROUP_OPTIONS[selectedToggle].gridApplyClass
   );
+
   const [selectedCollection, setSelectedCollection] =
     useState<NFTCollectionType>(
-      (searchParams.get("collection") as NFTCollectionType) ||
+      collection ||
+        (searchParams.get("collection") as NFTCollectionType) ||
         NFT_COLLECTIONS.TILEVILLE
     );
+  const globalConfig = useAtomValue(globalConfigAtom);
+  const collectionConfig =
+    globalConfig?.nft_collections_config?.[selectedCollection] || {};
+  const collectionTableName = collectionConfig.table_name;
 
-  const { data: tilevilleData, isLoading: tilevilleLoading } = useNFTEntries({
+  const {
+    data: nftData,
+    isLoading: isNFTLoading,
+    error: nftError,
+  } = useNFTsWithPagination({
     sortOrder,
     searchTerm,
     currentPage,
+    collectionTableName,
   });
-
-  const { data: minatyData, isLoading: minatyLoading } = useMinatyNFTEntries({
-    sortOrder,
-    searchTerm,
-    currentPage,
-  });
-
-  const displayData = useMemo(() => {
-    return selectedCollection === NFT_COLLECTIONS.TILEVILLE
-      ? tilevilleData
-      : minatyData;
-  }, [selectedCollection, tilevilleData, minatyData]);
 
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
-    queryText:
-      selectedCollection === "Tileville"
-        ? "Tileville Builder"
-        : selectedCollection,
+    queryText: selectedCollection,
   });
 
   const updateSearchParams = useCallback(
@@ -116,10 +120,13 @@ export default function MarketplaceContent() {
 
   const handleCollectionChange = useCallback(
     (newCollection: NFTCollectionType) => {
-      setSelectedCollection(newCollection);
-      updateSearchParams({ collection: newCollection, page: "1" });
+      if (!collection) {
+        // Only allow changing collection if no collection prop is provided
+        setSelectedCollection(newCollection);
+        updateSearchParams({ collection: newCollection, page: "1" });
+      }
     },
-    [updateSearchParams]
+    [updateSearchParams, collection]
   );
 
   const handlePageChange = useCallback(
@@ -148,23 +155,40 @@ export default function MarketplaceContent() {
     setSelectedToggle(Number(searchParams.get("view")) || 0);
     setCurrentPage(Number(searchParams.get("page")) || 1);
     setSelectedCollection(
-      (searchParams.get("collection") as NFTCollectionType) ||
+      collection ||
+        (searchParams.get("collection") as NFTCollectionType) ||
         NFT_COLLECTIONS.TILEVILLE
     );
     setRenderStyle(
       TOGGLE_GROUP_OPTIONS[Number(searchParams.get("view")) || 0].gridApplyClass
     );
-  }, [searchParams]);
+  }, [searchParams, collection]);
+
+  if (nftError) {
+    return (
+      <div className="py-36 text-center">
+        <h2 className="text-center text-3xl font-semibold text-red-500">
+          Error loading NFTs: {nftError.message || "An unknown error occurred"}
+        </h2>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative p-4 pb-0 pt-12 md:pb-28 md:pt-20">
+    <div
+      className={`relative ${
+        isMarketplaceV2 ? "pt-0" : "p-4 pb-0 pt-12 md:pb-28 md:pt-20"
+      }`}
+    >
       <div className="mx-auto max-w-[1280px] pt-3">
         {/* Filters and controls */}
         <div className="mb-8 flex flex-wrap gap-3">
-          <CollectionSelector
-            selectedCollection={selectedCollection}
-            onSelect={handleCollectionChange}
-          />
+          {!isMarketplaceV2 && (
+            <CollectionSelector
+              selectedCollection={selectedCollection}
+              onSelect={handleCollectionChange}
+            />
+          )}
 
           {/* View toggle buttons */}
           <ul className="grid w-fit grid-cols-3 overflow-hidden rounded-md">
@@ -204,7 +228,9 @@ export default function MarketplaceContent() {
             />
           </div>
 
-          <TraitsInfoBtn />
+          {selectedCollection === NFT_COLLECTIONS.TILEVILLE && (
+            <TraitsInfoBtn />
+          )}
 
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
@@ -249,7 +275,7 @@ export default function MarketplaceContent() {
 
         {/* NFT grid */}
         <div className="mb-16">
-          {displayData?.nfts.length === 0 ? (
+          {nftData?.nfts.length === 0 && !isNFTLoading ? (
             <div className="py-36 text-center">
               <h2 className="text-center text-3xl font-semibold">
                 No Results Found
@@ -260,11 +286,11 @@ export default function MarketplaceContent() {
           )}
 
           <div className={`${renderStyle} pr-2 text-lg`}>
-            {tilevilleLoading || minatyLoading ? (
+            {isNFTLoading ? (
               <MarketplaceLoading />
             ) : (
               <>
-                {displayData?.nfts.map((nft: any) => {
+                {nftData?.nfts.map((nft: any) => {
                   return (
                     <NFTModal
                       key={nft.nft_id}
@@ -283,8 +309,11 @@ export default function MarketplaceContent() {
                       NFTCategory={
                         selectedCollection === NFT_COLLECTIONS.MINATY
                           ? nft.category
+                          : selectedCollection === NFT_COLLECTIONS.MINAPUNKS
+                          ? nft.category
                           : null
                       }
+                      isPublicMint={nft.is_public_mint === false ? false : true}
                     />
                   );
                 })}
@@ -294,13 +323,10 @@ export default function MarketplaceContent() {
         </div>
       </div>
 
-      {/* Pagination */}
-      {tilevilleLoading || minatyLoading ? (
-        <Spinner2 />
-      ) : (
+      {!isNFTLoading && (
         <Pagination
           currentPage={currentPage}
-          totalCount={displayData.count}
+          totalCount={nftData?.count || 0}
           onPageChange={handlePageChange}
         />
       )}

@@ -46,7 +46,7 @@ export default function AccountCard({
   return (
     <div
       className={cn(
-        "group flex cursor-pointer items-center justify-center gap-[10px] rounded",
+        "group flex cursor-pointer items-center justify-center gap-1 md:gap-[10px] rounded",
         "border-right-accent text-header-menu text-bg-dark p-1 px-2 transition duration-75 ease-in",
         "hover:bg-bg-dark hover:text-right-accent lg:justify-normal",
         expanded
@@ -58,7 +58,7 @@ export default function AccountCard({
     >
       <AccountSVG
         className={cn(
-          "group-hover:stroke-right-accent h-[24px] w-[24px] stroke-black",
+          "group-hover:stroke-right-accent h-[16px] w-[16px] stroke-black md:h-[24px] md:w-[24px]",
           expanded && "stroke-right-accent"
         )}
       />

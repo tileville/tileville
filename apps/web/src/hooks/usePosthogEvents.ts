@@ -18,6 +18,36 @@ type JoinCompetitionPayload = {
   network: string;
 };
 
+type PVPChallengePayload = {
+  walletAddress: string;
+  challengeId: number;
+  challengeName: string;
+  isSpeedChallenge: boolean;
+  entryFee: number;
+  isPublic: boolean;
+  error?: string;
+};
+
+type PlayPVPChallengePayload = {
+  walletAddress: string;
+  challengeId: number;
+  challengeName: string;
+  score: number;
+  isSpeedChallenge: boolean;
+  error?: string;
+};
+
+type NFTMintingPayload = {
+  nftId: number;
+  walletAddress: string;
+  step: number;
+  price?: number;
+  txHash?: string;
+  error?: string;
+  category?: string;
+  collection?: string;
+};
+
 /**
  *
  * The way you create a logger event is you create two set of events for every action.
@@ -39,7 +69,7 @@ function usePosthogEvents() {
 
   function createEventLogger<PayloadType extends Properties | null | undefined>(
     eventName: string
-  ): EventLogger<PayloadType> {
+  ): [(payload: PayloadType) => void, (payload: PayloadType) => void] {
     const logEvent: GenericEventLogger<PayloadType> = (
       event: string,
       payload: PayloadType
@@ -47,9 +77,10 @@ function usePosthogEvents() {
       ph.capture(event, payload);
     };
 
+    // Return tuple of success and error loggers
     return [
       (payload) => logEvent(eventName, payload),
-      (errorMessage) => logApplicationError({ error: errorMessage }),
+      (payload) => logEvent(`${eventName} Error`, payload), // Changed to accept payload instead of just error message
     ];
   }
 
@@ -69,6 +100,23 @@ function usePosthogEvents() {
     createEventLogger,
     joinedCompetition:
       createEventLogger<JoinCompetitionPayload>("Competition joined"),
+    createdPVPChallenge: createEventLogger<PVPChallengePayload>(
+      "PVP Challenge Created"
+    ),
+    joinedPVPChallenge: createEventLogger<PVPChallengePayload>(
+      "PVP Challenge Joined"
+    ),
+    playedPVPChallenge: createEventLogger<PlayPVPChallengePayload>(
+      "PVP Challenge Played"
+    ),
+    nftMinting: createEventLogger<NFTMintingPayload>("NFT Minting"),
+    nftMintingStepComplete: createEventLogger<NFTMintingPayload>(
+      "NFT Minting Step Complete"
+    ),
+    nftMintingError: createEventLogger<NFTMintingPayload>("NFT Minting Error"),
+    nftMintingSuccess: createEventLogger<NFTMintingPayload>(
+      "NFT Minting Success"
+    ),
   };
 }
 

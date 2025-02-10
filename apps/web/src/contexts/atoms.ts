@@ -16,8 +16,12 @@ export const globalConfigAtom = atom<{ [key: string]: any }>(
   GLOBAL_CONFIG_DEFAULT
 );
 
+export const globalConfigLoadingAtom = atom<boolean>(true);
+
 export const mintProgressAtom = atom<{
   [key: number]: { step: number; message: string };
 }>({});
 
 export const algoliaHitsResponseAtom = atom<AlgoliaHitResponse[]>([]);
+
+export const followLoadingAtom = atom<boolean>(false);

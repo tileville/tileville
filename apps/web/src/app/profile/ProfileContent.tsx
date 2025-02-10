@@ -186,7 +186,7 @@ export default function Profile({ initialTab }: { initialTab: string }) {
     return (
       <div className="flex min-h-screen w-full items-center justify-center p-8">
         <button
-          className="flex cursor-pointer items-center rounded-full bg-primary px-3 py-2 font-medium text-white"
+          className="primary-btn"
           onClick={() => {
             networkStore.connectWallet(false);
           }}

@@ -1,19 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Table, DropdownMenu, Skeleton } from "@radix-ui/themes";
 import {
   useCompetitionsName,
   useLeaderboardEntries,
 } from "@/db/react-query-hooks";
+import { getCompetitionStatus, organizeCompetitions } from "@/lib/helpers";
 import { LEADERBOARD_COLUMNS } from "@/constants";
-import { useRouter, useSearchParams } from "next/navigation";
 import TableSkeleton from "./TableSkeleton";
+import { DropdownTriggerContent } from "./DropdownTriggerContent";
 
-type SelectedCompetition = {
+export type SelectedCompetition = {
   id: number;
   name: string;
   competition_key: string;
+  start_date: string;
+  end_date: string;
 };
 
 type LeaderboardResult = {
@@ -35,6 +40,31 @@ const skeletonItems = Array.from(
   })
 );
 
+const CompetitionStatusTag = ({
+  status,
+}: {
+  status: "ONGOING" | "UPCOMING" | "ENDED";
+}) => {
+  const getTagStyles = () => {
+    switch (status) {
+      case "ONGOING":
+        return "bg-primary/20 text-primary";
+      case "UPCOMING":
+        return "bg-blue-500/20 text-blue-700";
+      case "ENDED":
+        return "bg-gray-500/20 text-gray-700";
+    }
+  };
+
+  return (
+    <span
+      className={`rounded-full px-3 py-1 text-sm font-medium ${getTagStyles()}`}
+    >
+      {status}
+    </span>
+  );
+};
+
 export default function LeaderboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -47,12 +77,12 @@ export default function LeaderboardContent() {
     isLoading: competitionNameLoading,
   } = useCompetitionsName();
 
-  const [selectedCompetition, setSelectedCompetition] = useState<SelectedCompetition | null>(null);
+  const [selectedCompetition, setSelectedCompetition] =
+    useState<SelectedCompetition | null>(null);
 
   // Add useEffect to set initial competition when data is loaded
   useEffect(() => {
     if (competitionData && competitionData.length > 0) {
-      // If there's a competition in URL params, use that
       if (competitionParam) {
         const matchedCompetition = competitionData.find(
           (comp) => comp.unique_keyname === competitionParam
@@ -62,14 +92,17 @@ export default function LeaderboardContent() {
             id: matchedCompetition.id,
             name: matchedCompetition.name,
             competition_key: matchedCompetition.unique_keyname,
+            start_date: matchedCompetition.start_date,
+            end_date: matchedCompetition.end_date,
           });
         }
       } else {
-        // If no competition in URL params, use the first competition from the list
         setSelectedCompetition({
           id: competitionData[0].id,
           name: competitionData[0].name,
           competition_key: competitionData[0].unique_keyname,
+          start_date: competitionData[0].start_date,
+          end_date: competitionData[0].end_date,
         });
       }
     }
@@ -77,7 +110,7 @@ export default function LeaderboardContent() {
 
   // Modify the useLeaderboardEntries call to only fetch when selectedCompetition exists
   const { data: leaderboardData = [], isLoading } = useLeaderboardEntries(
-    selectedCompetition?.competition_key || ''
+    selectedCompetition?.competition_key || ""
   );
 
   useEffect(() => {
@@ -90,6 +123,8 @@ export default function LeaderboardContent() {
           id: matchedCompetition.id,
           name: matchedCompetition.name,
           competition_key: matchedCompetition.unique_keyname,
+          start_date: matchedCompetition.start_date,
+          end_date: matchedCompetition.end_date,
         });
       }
     }
@@ -124,20 +159,11 @@ export default function LeaderboardContent() {
             </p>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <button className="border-primary-30 flex h-10 items-center justify-between truncate rounded-md border bg-transparent px-2 text-sm font-semibold text-primary outline-none md:min-w-[224px] md:px-3 md:text-base">
-                  {isLoading || !selectedCompetition ? (
-                    <Skeleton className="h-5 w-full" />
-                  ) : (
-                    <span className="truncate">{selectedCompetition.name}</span>
-                  )}
-                  <span>
-                    <Image
-                      src="icons/topBottomArrows.svg"
-                      width={24}
-                      height={24}
-                      alt="arrows"
-                    />
-                  </span>
+                <button>
+                  <DropdownTriggerContent
+                    isLoading={isLoading}
+                    selectedCompetition={selectedCompetition}
+                  />
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="min-w-[200px] max-w-[350px] !bg-transparent backdrop-blur-2xl md:min-w-[320px] md:max-w-none">
@@ -153,34 +179,83 @@ export default function LeaderboardContent() {
                     ))}
                   </>
                 ) : (
-                  competitionData?.map((competition) => (
-                    <DropdownMenu.Item
-                      key={competition.id}
-                      onClick={() =>
-                        handleCompetitionChange({
-                          id: competition.id,
-                          competition_key: competition.unique_keyname,
-                          name: competition.name,
-                        })
-                      }
-                      className={`!md:h-8 !h-auto py-2 mt-1 transition-colors ${selectedCompetition?.id === competition.id
-                          ? "bg-primary text-white" // Selected state
-                          : "hover:bg-primary hover:text-white" // Hover state
-                        }`}
-                    >
-                      <div className="flex items-center justify-between px-2 w-full">
-                        <span>{competition.name}</span>
-                        {selectedCompetition?.id === competition.id && (
-                          <span className="text-sm">✓</span>
+                  (() => {
+                    const { ongoing, upcoming, past } =
+                      organizeCompetitions(competitionData);
+                    return (
+                      <>
+                        {ongoing.length > 0 && (
+                          <>
+                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
+                              Ongoing Competitions
+                            </div>
+                            {ongoing.map((competition: any) => (
+                              <CompetitionMenuItem
+                                key={competition.unique_keyname}
+                                competition={competition}
+                                isSelected={
+                                  selectedCompetition?.competition_key ===
+                                  competition.unique_keyname
+                                }
+                                onSelect={handleCompetitionChange}
+                              />
+                            ))}
+                          </>
                         )}
-                      </div>
-                    </DropdownMenu.Item>
 
-                  ))
+                        {upcoming.length > 0 && (
+                          <>
+                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
+                              Upcoming Competitions
+                            </div>
+                            {upcoming.map((competition: any) => (
+                              <CompetitionMenuItem
+                                key={competition.unique_keyname}
+                                competition={competition}
+                                isSelected={
+                                  selectedCompetition?.competition_key ===
+                                  competition.unique_keyname
+                                }
+                                onSelect={handleCompetitionChange}
+                              />
+                            ))}
+                          </>
+                        )}
+
+                        {past.length > 0 && (
+                          <>
+                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
+                              Past Competitions
+                            </div>
+                            {past.map((competition: any) => (
+                              <CompetitionMenuItem
+                                key={competition.unique_keyname}
+                                competition={competition}
+                                isSelected={
+                                  selectedCompetition?.competition_key ===
+                                  competition.unique_keyname
+                                }
+                                onSelect={handleCompetitionChange}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </>
+                    );
+                  })()
                 )}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           </div>
+
+          {selectedCompetition && (
+            <CompetitionStatusTag
+              status={getCompetitionStatus(
+                selectedCompetition.start_date,
+                selectedCompetition.end_date
+              )}
+            />
+          )}
         </div>
         <Table.Root>
           <Table.Header>
@@ -205,7 +280,13 @@ export default function LeaderboardContent() {
                         <Table.Cell>{index + 1}</Table.Cell>
                         <Table.Cell>
                           {entry.username ? (
-                            entry.username
+                            <Link
+                              href={`u/${entry.username}`}
+                              className="underline hover:no-underline"
+                              target="_blank"
+                            >
+                              {entry.username}
+                            </Link>
                           ) : (
                             <span className="ps-4">-</span>
                           )}
@@ -235,3 +316,33 @@ export default function LeaderboardContent() {
     </div>
   );
 }
+
+const CompetitionMenuItem = ({
+  competition,
+  isSelected,
+  onSelect,
+}: {
+  competition: any;
+  isSelected: boolean;
+  onSelect: (competition: SelectedCompetition) => void;
+}) => (
+  <DropdownMenu.Item
+    onClick={() =>
+      onSelect({
+        id: competition.id,
+        competition_key: competition.unique_keyname,
+        name: competition.name,
+        start_date: competition.start_date,
+        end_date: competition.end_date,
+      })
+    }
+    className={`!md:h-8 mt-1 !h-auto py-2 transition-colors ${
+      isSelected ? "bg-primary text-white" : "hover:bg-primary hover:text-white"
+    }`}
+  >
+    <div className="flex w-full items-center justify-between px-2">
+      <span>{competition.name}</span>
+      {isSelected && <span className="text-sm">✓</span>}
+    </div>
+  </DropdownMenu.Item>
+);

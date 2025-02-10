@@ -7,11 +7,6 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { Skeleton } from "@radix-ui/themes";
 import { CopyIcon } from "@radix-ui/react-icons";
 import {
-  BADGE_BASE_CLASSES,
-  FOLLOWING_BTN_LG,
-  PRIMARY_BUTTON_STYLES_LG,
-} from "@/constants";
-import {
   useBlockberryBalance,
   useFollowUser,
   usePastCompetitions,
@@ -124,7 +119,7 @@ export const ProfileBasicInfo = ({
           </div>
 
           <div className="flex items-center gap-3">
-            <div className={BADGE_BASE_CLASSES}>
+            <div className="badge-base-classes">
               <span>{formatAddress(walletAddress)}</span>
               <button
                 onClick={() =>
@@ -138,7 +133,7 @@ export const ProfileBasicInfo = ({
               </button>
             </div>
 
-            <div className={BADGE_BASE_CLASSES}>
+            <div className="badge-base-classes">
               <span className="flex items-center gap-1">
                 Balance :
                 <span className="text-[#010201]">
@@ -178,8 +173,8 @@ export const ProfileBasicInfo = ({
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
                 <button
-                   className="hover:scale-110 transition-all"
-                   onClick={() => {
+                  className="transition-all hover:scale-110"
+                  onClick={() => {
                     copyToClipBoard({
                       toCopyContent: emailAddress,
                       copiedType: "Email address",
@@ -211,7 +206,7 @@ export const ProfileBasicInfo = ({
           <Link
             target="_blank"
             href={`https://discord.com/users/${discordUsername}`}
-            className="hover:scale-110 transition-all"
+            className="transition-all hover:scale-110"
           >
             <Image
               src="/icons/discord.svg"
@@ -225,7 +220,7 @@ export const ProfileBasicInfo = ({
           <Link
             target="_blank"
             href={`https://t.me/${telegramUsername.replace("@", "")}`}
-            className="hover:scale-110 transition-all"
+            className="transition-all hover:scale-110"
           >
             <Image
               src="/icons/telegram.svg"
@@ -239,13 +234,13 @@ export const ProfileBasicInfo = ({
           <Link
             target="_blank"
             href={`https://twitter.com/${twitterUsername.replace("@", "")}`}
-            className="hover:scale-110 transition-all"
+            className="transition-all hover:scale-110"
           >
             <Image src="/icons/x.svg" width={20} height={20} alt="x" />
           </Link>
         )}
       </div>
-      <div className="mb-3">
+      <div className="mb-3 mt-auto">
         {competitonsLoading ? (
           <div className="flex items-center justify-center p-3">
             <Spinner2 />
@@ -258,21 +253,31 @@ export const ProfileBasicInfo = ({
         ) : (
           <div>
             <h3 className="text-base font-bold text-[#435133]">Past Games</h3>
-            <div className="grid max-w-full grid-cols-3 gap-3 overflow-auto">
+            <div className="flex max-w-full gap-3 overflow-auto overflow-y-hidden pb-2">
               {pastCompetitions?.competitions?.map((competition) => {
                 return (
-                  <div key={competition.competitionKey} className="w-full">
+                  <div
+                    key={competition.competitionKey}
+                    className="group relative w-full min-w-[30%] flex-[0.33]"
+                  >
                     <Link
                       href={`/leaderboard?competition=${competition.competitionKey}`}
                       className="block h-20 w-full rounded-[10px] shadow-[0px_4px_4px_0px_#00000040]"
                     >
                       <Image
-                        className="h-full w-full rounded-[10px] object-cover"
+                        className="h-full w-full rounded-[10px] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                         width={100}
                         height={100}
                         src={competition.posterUrl}
                         alt={competition.posterUrl}
                       />
+                      <div className="absolute inset-0 flex items-center justify-center rounded-[10px] bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="translate-y-4 text-center text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                          <p className="text-xs font-semibold">
+                            {competition.competitionName}
+                          </p>
+                        </div>
+                      </div>
                     </Link>
                   </div>
                 );
@@ -287,7 +292,7 @@ export const ProfileBasicInfo = ({
           <button
             type="button"
             className={`${
-              isFollowing ? FOLLOWING_BTN_LG : PRIMARY_BUTTON_STYLES_LG
+              isFollowing ? "following-btn-lg" : "primary-button-styles-lg"
             } relative ms-auto`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
