@@ -1,6 +1,0 @@
-{
-    "crons": [{
-      "path": "/api/pvp/claim-prize/cron",
-      "schedule": "0 */4 * * *" 
-    }]
-  }

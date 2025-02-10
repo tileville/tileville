@@ -6,7 +6,7 @@ import {
 } from "@/constants";
 import { NETWORKS } from "@/constants/network";
 
-const client = new Client({ network: NETWORKS[1].chainId as NetworkId });
+const client = new Client({ network: NETWORKS[0].chainId as NetworkId });
 
 export async function fetchNonce(publicKey: string): Promise<number | null> {
   const fetchNonceQuery = `
@@ -53,6 +53,7 @@ export async function sendMinaTokens({
     }
 
     const nonce = await fetchNonce(SENDER_PUBLIC_KEY);
+    console.log(`NONCE FOR CID ${challengeId} is ${nonce}`);
     if (!nonce) {
       throw new Error("Failed to fetch nonce");
     }

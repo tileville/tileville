@@ -54,25 +54,21 @@ function shouldProcessChallenge(challenge: ChallengeData): boolean {
   // Otherwise, only process if challenge has ended
   return isAfter(currentTime, endTime);
 }
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+let lastPaymentTime = 0; // Track when the last payment was made
+
 async function processSingleChallenge(challenge: ChallengeData) {
   try {
     console.log(`Processing challenge ${challenge.id}...`);
-    console.log(
-      `Participants:`,
-      JSON.stringify(challenge.participants, null, 2)
-    );
 
     // Find winner
     const winner = findWinner(challenge.participants);
     if (!winner) {
-      console.log(`No winner found. Participant details:`, {
-        totalParticipants: challenge.participants.length,
-        playedParticipants: challenge.participants.filter((p) => p.has_played)
-          .length,
-        confirmedParticipants: challenge.participants.filter(
-          (p) => p.txn_status === "CONFIRMED"
-        ).length,
-      });
+      console.log(`No winner found for challenge id ${challenge.id}`);
       return {
         success: false,
         message: "No winner found",
@@ -98,6 +94,18 @@ async function processSingleChallenge(challenge: ChallengeData) {
         challengeId: challenge.id,
       };
     }
+
+    // Wait for 1 minute if less than 60 seconds have passed since last payment
+    const now = Date.now();
+    const timeSinceLastPayment = now - lastPaymentTime;
+    if (lastPaymentTime !== 0 && timeSinceLastPayment < 60000) {
+      const waitTime = 60000 - timeSinceLastPayment;
+      console.log(
+        `Waiting ${waitTime / 1000} seconds before processing payment...`
+      );
+      await wait(waitTime);
+    }
+
     // Send prize
     console.log(
       `Sending ${prizeAmount} MINA to ${winner.wallet_address} for challenge ${challenge.id}`
@@ -107,6 +115,11 @@ async function processSingleChallenge(challenge: ChallengeData) {
       address: winner.wallet_address,
       challengeId: `${challenge.id}`,
     });
+
+    // Update lastPaymentTime after successful payment
+    if (success) {
+      lastPaymentTime = Date.now();
+    }
 
     if (!success) {
       console.error(
@@ -215,10 +228,11 @@ export async function GET(request: NextRequest) {
     console.log(`Processing ${challengesToProcess.length} challenges`);
 
     // Process each challenge
-    const results = await Promise.all(
-      challengesToProcess.map((challenge) => processSingleChallenge(challenge))
-    );
-
+    const results = [];
+    for (const challenge of challengesToProcess) {
+      const result = await processSingleChallenge(challenge);
+      results.push(result);
+    }
     // Summarize results
     const successful = results.filter((r) => r.success);
     const failed = results.filter((r) => !r.success);
