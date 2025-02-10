@@ -68,6 +68,11 @@ export async function sendMinaTokens({
 
     const signedPayment = client.signPayment(payment, SENDER_PRIVATE_KEY);
 
+    if (!client) {
+      console.error("Failed to initialize MINA client");
+      throw new Error("MINA client initialization failed");
+    }
+
     if (!client.verifyPayment(signedPayment)) {
       throw new Error("Payment verification failed");
     }

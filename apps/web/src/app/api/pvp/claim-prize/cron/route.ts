@@ -57,11 +57,22 @@ function shouldProcessChallenge(challenge: ChallengeData): boolean {
 async function processSingleChallenge(challenge: ChallengeData) {
   try {
     console.log(`Processing challenge ${challenge.id}...`);
+    console.log(
+      `Participants:`,
+      JSON.stringify(challenge.participants, null, 2)
+    );
 
     // Find winner
     const winner = findWinner(challenge.participants);
     if (!winner) {
-      console.log(`No winner found for challenge ${challenge.id}`);
+      console.log(`No winner found. Participant details:`, {
+        totalParticipants: challenge.participants.length,
+        playedParticipants: challenge.participants.filter((p) => p.has_played)
+          .length,
+        confirmedParticipants: challenge.participants.filter(
+          (p) => p.txn_status === "CONFIRMED"
+        ).length,
+      });
       return {
         success: false,
         message: "No winner found",
