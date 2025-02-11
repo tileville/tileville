@@ -12,6 +12,13 @@ const DEFAULT_FEE = 100_000_000;
 
 const client = new Client({ network: NETWORKS[1].chainId as NetworkId });
 
+const NO_CACHE_HEADERS = {
+  "Content-Type": "application/json",
+  "Cache-Control": "no-cache, no-store, must-revalidate",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
 interface FetchNonceResponse {
   data?: {
     account?: {
@@ -38,7 +45,7 @@ export async function fetchNonce(publicKey: string): Promise<number | null> {
   );
 
   const fetchNonceQuery = `
-    query FetchNonce($publicKey: String!) {
+    query FetchNonce($publicKey: String!, $timestamp: Float!) {
       account(publicKey: $publicKey) {
         nonce
       }
@@ -48,14 +55,19 @@ export async function fetchNonce(publicKey: string): Promise<number | null> {
   try {
     const fetchNonceBody = JSON.stringify({
       query: fetchNonceQuery,
-      variables: { publicKey },
+      variables: {
+        publicKey,
+        timestamp: Date.now(),
+      },
       operationName: "FetchNonce",
+      fetchPolicy: "network-only",
     });
 
     const nonceResponse = await fetch(MINASCAN_API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: NO_CACHE_HEADERS,
       body: fetchNonceBody,
+      cache: "no-store",
     });
 
     if (!nonceResponse.ok) {
@@ -159,7 +171,7 @@ export async function sendMinaTokens({
 
     const paymentResponse = await fetch(MINASCAN_API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: NO_CACHE_HEADERS,
       body: JSON.stringify({
         query: sendPaymentMutationQuery,
         variables: {
