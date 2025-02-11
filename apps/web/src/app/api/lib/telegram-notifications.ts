@@ -82,3 +82,56 @@ export async function sendChallengeJoinNotification({
     return false;
   }
 }
+
+export async function sendRewardTransactionNotification({
+  challengeId,
+  winnerAddress,
+  amount,
+  success,
+  txHash,
+  error,
+}: {
+  challengeId: number;
+  winnerAddress: string;
+  amount: number;
+  success: boolean;
+  txHash?: string;
+  error?: string;
+}) {
+  try {
+    // Get winner's username
+    const { data: winnerProfile } = await supabase
+      .from("player_profile")
+      .select("username")
+      .eq("wallet_address", winnerAddress)
+      .single();
+
+    const winnerName = winnerProfile?.username || `Wallet ${winnerAddress}`;
+
+    const message = success
+      ? `✅ Reward Transaction Success!\n\n` +
+        `Challenge ID: ${challengeId}\n` +
+        `Winner: ${winnerName}\n` +
+        `Amount: ${amount} MINA\n` +
+        `Transaction Hash: ${txHash}\n\n` +
+        `View on MinaScan: https://minascan.io/mainnet/tx/${txHash}`
+      : `❌ Reward Transaction Failed!\n\n` +
+        `Challenge ID: ${challengeId}\n` +
+        `Winner: ${winnerName}\n` +
+        `Amount: ${amount} MINA\n` +
+        `Error: ${error}`;
+
+    await fetch(`http://localhost:3000/api/telegram/private-group-message`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error sending reward transaction notification:", error);
+    return false;
+  }
+}

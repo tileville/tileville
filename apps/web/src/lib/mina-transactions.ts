@@ -6,6 +6,7 @@ import {
 } from "@/constants";
 import { NETWORKS } from "@/constants/network";
 import { formatAddress } from "./helpers";
+import { sendRewardTransactionNotification } from "@/app/api/lib/telegram-notifications";
 
 const MINA_CONVERSION_FACTOR = 1_000_000_000;
 const DEFAULT_FEE = 100_000_000;
@@ -208,6 +209,14 @@ export async function sendMinaTokens({
       timestamp: new Date().toISOString(),
     });
 
+    await sendRewardTransactionNotification({
+      challengeId: Number(challengeId),
+      winnerAddress: address,
+      amount,
+      success: true,
+      txHash,
+    });
+
     return {
       success: true,
       txHash,
@@ -219,6 +228,14 @@ export async function sendMinaTokens({
       recipient: address.slice(0, 10) + "...",
       challengeId,
       timestamp: new Date().toISOString(),
+    });
+
+    await sendRewardTransactionNotification({
+      challengeId: Number(challengeId),
+      winnerAddress: address,
+      amount,
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to send tokens",
     });
 
     return {
