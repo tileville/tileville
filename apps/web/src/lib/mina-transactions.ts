@@ -10,6 +10,7 @@ import { sendRewardTransactionNotification } from "@/app/api/lib/telegram-notifi
 
 const MINA_CONVERSION_FACTOR = 1_000_000_000;
 const DEFAULT_FEE = 100_000_000;
+const MAX_TRANSFER_AMOUNT = 15;
 
 const client = new Client({ network: NETWORKS[1].chainId as NetworkId });
 
@@ -119,13 +120,36 @@ export async function sendMinaTokens({
   challengeId,
 }: SendMinaTokensParams): Promise<SendMinaTokensResult> {
   console.info("[Mina] Initiating token transfer:", {
-    to: address.slice(0, 10) + "...",
+    to: address,
     amount,
     challengeId,
     timestamp: new Date().toISOString(),
   });
 
   try {
+    if (amount > MAX_TRANSFER_AMOUNT) {
+      const error = `Transfer amount ${amount} MINA exceeds maximum limit of ${MAX_TRANSFER_AMOUNT} MINA`;
+      console.error("[Mina] Transfer amount exceeds limit:", {
+        amount,
+        maxLimit: MAX_TRANSFER_AMOUNT,
+        challengeId,
+        timestamp: new Date().toISOString(),
+      });
+
+      await sendRewardTransactionNotification({
+        challengeId: Number(challengeId),
+        winnerAddress: address,
+        amount,
+        success: false,
+        error: `🚨 ALERT: High Value Transfer Blocked!\nTransfer amount ${amount} MINA exceeds maximum limit of ${MAX_TRANSFER_AMOUNT} MINA`,
+      });
+
+      return {
+        success: false,
+        error,
+      };
+    }
+
     if (!SENDER_PUBLIC_KEY || !SENDER_PRIVATE_KEY) {
       throw new Error("Missing sender credentials");
     }
