@@ -12,7 +12,7 @@ const MINA_CONVERSION_FACTOR = 1_000_000_000;
 const DEFAULT_FEE = 100_000_000;
 const MAX_TRANSFER_AMOUNT = 15;
 
-const client = new Client({ network: NETWORKS[1].chainId as NetworkId });
+const client = new Client({ network: NETWORKS[0].chainId as NetworkId });
 
 const NO_CACHE_HEADERS = {
   "Content-Type": "application/json",
@@ -194,7 +194,7 @@ export async function sendMinaTokens({
       }
     `;
 
-    const paymentResponse = await fetch(MINASCAN_API_URL, {
+    const paymentResponse = await fetch(NETWORKS[0].graphql, {
       method: "POST",
       headers: NO_CACHE_HEADERS,
       body: JSON.stringify({
