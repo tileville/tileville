@@ -5,10 +5,38 @@ import {
   SENDER_PUBLIC_KEY,
 } from "@/constants";
 import { NETWORKS } from "@/constants/network";
+import { formatAddress } from "./helpers";
 
-const client = new Client({ network: NETWORKS[0].chainId as NetworkId });
+const MINA_CONVERSION_FACTOR = 1_000_000_000;
+const DEFAULT_FEE = 100_000_000;
+
+const client = new Client({ network: NETWORKS[1].chainId as NetworkId });
+
+interface FetchNonceResponse {
+  data?: {
+    account?: {
+      nonce: number;
+    };
+  };
+  errors?: Array<{ message: string }>;
+}
+
+interface SendPaymentResponse {
+  data?: {
+    sendPayment?: {
+      payment?: {
+        hash: string;
+      };
+    };
+  };
+  errors?: Array<{ message: string }>;
+}
 
 export async function fetchNonce(publicKey: string): Promise<number | null> {
+  console.info(
+    `[Mina] Fetching nonce for public key: ${formatAddress(publicKey)}`
+  );
+
   const fetchNonceQuery = `
     query FetchNonce($publicKey: String!) {
       account(publicKey: $publicKey) {
@@ -30,53 +58,94 @@ export async function fetchNonce(publicKey: string): Promise<number | null> {
       body: fetchNonceBody,
     });
 
-    const nonceResponseJson = await nonceResponse.json();
-    return nonceResponseJson.data.account.nonce;
+    if (!nonceResponse.ok) {
+      throw new Error(`HTTP error! status: ${nonceResponse.status}`);
+    }
+
+    const nonceResponseJson =
+      (await nonceResponse.json()) as FetchNonceResponse;
+
+    if (nonceResponseJson.errors) {
+      throw new Error(
+        `GraphQL errors: ${JSON.stringify(nonceResponseJson.errors)}`
+      );
+    }
+
+    const nonce = nonceResponseJson.data?.account?.nonce;
+    if (nonce === undefined) {
+      throw new Error("Nonce not found in response");
+    }
+
+    console.info(`[Mina] Successfully fetched nonce: ${nonce}`);
+    return nonce;
   } catch (error) {
-    console.error("Failed to fetch nonce from GraphQL endpoint:", error);
+    console.error("[Mina] Failed to fetch nonce:", {
+      error: error instanceof Error ? error.message : "Unknown error",
+      publicKey: formatAddress(publicKey),
+      timestamp: new Date().toISOString(),
+    });
     return null;
   }
+}
+
+interface SendMinaTokensParams {
+  amount: number;
+  address: string;
+  challengeId?: string;
+}
+
+interface SendMinaTokensResult {
+  success: boolean;
+  txHash?: string;
+  error?: string;
 }
 
 export async function sendMinaTokens({
   amount,
   address,
   challengeId,
-}: {
-  amount: number;
-  address: string;
-  challengeId?: string;
-}): Promise<{ success: boolean; txHash?: string; error?: string }> {
+}: SendMinaTokensParams): Promise<SendMinaTokensResult> {
+  console.info("[Mina] Initiating token transfer:", {
+    to: address.slice(0, 10) + "...",
+    amount,
+    challengeId,
+    timestamp: new Date().toISOString(),
+  });
+
   try {
     if (!SENDER_PUBLIC_KEY || !SENDER_PRIVATE_KEY) {
-      throw new Error("SENDER PUBLIC OR PRIVATE KEY IS MISSING");
+      throw new Error("Missing sender credentials");
+    }
+
+    if (!client) {
+      throw new Error("MINA client initialization failed");
     }
 
     const nonce = await fetchNonce(SENDER_PUBLIC_KEY);
-    console.log(`NONCE FOR CID ${challengeId} is ${nonce}`);
     if (!nonce) {
       throw new Error("Failed to fetch nonce");
     }
 
+    console.info(`[Mina] Preparing payment for CID ${challengeId}`, {
+      nonce,
+      timestamp: new Date().toISOString(),
+    });
+
     const payment = {
       from: SENDER_PUBLIC_KEY,
       to: address,
-      amount: amount * 1000_000_000,
+      amount: amount * MINA_CONVERSION_FACTOR,
       nonce,
-      fee: 1000000,
-      memo: `CID ${challengeId} reward`,
+      fee: DEFAULT_FEE,
+      memo: challengeId ? `CID ${challengeId} reward` : undefined,
     };
 
     const signedPayment = client.signPayment(payment, SENDER_PRIVATE_KEY);
-
-    if (!client) {
-      console.error("Failed to initialize MINA client");
-      throw new Error("MINA client initialization failed");
-    }
-
     if (!client.verifyPayment(signedPayment)) {
       throw new Error("Payment verification failed");
     }
+
+    console.info("[Mina] Payment signed and verified successfully");
 
     const sendPaymentMutationQuery = `
       mutation SendPayment($input: SendPaymentInput!, $signature: SignatureInput!) {
@@ -88,36 +157,61 @@ export async function sendMinaTokens({
       }
     `;
 
-    const graphQlVariables = {
-      input: signedPayment.data,
-      signature: signedPayment.signature,
-    };
-
     const paymentResponse = await fetch(MINASCAN_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: sendPaymentMutationQuery,
-        variables: graphQlVariables,
+        variables: {
+          input: signedPayment.data,
+          signature: signedPayment.signature,
+        },
         operationName: "SendPayment",
       }),
     });
 
-    const paymentResponseJson = await paymentResponse.json();
-
     if (!paymentResponse.ok) {
-      throw new Error(JSON.stringify(paymentResponseJson));
+      throw new Error(`HTTP error! status: ${paymentResponse.status}`);
     }
+
+    const paymentResponseJson =
+      (await paymentResponse.json()) as SendPaymentResponse;
+
+    if (paymentResponseJson.errors) {
+      throw new Error(
+        `GraphQL errors: ${JSON.stringify(paymentResponseJson.errors)}`
+      );
+    }
+
+    const txHash = paymentResponseJson.data?.sendPayment?.payment?.hash;
+    if (!txHash) {
+      throw new Error("Transaction hash not found in response");
+    }
+
+    console.info("[Mina] Transaction completed successfully:", {
+      txHash,
+      amount,
+      recipient: address.slice(0, 10) + "...",
+      challengeId,
+      timestamp: new Date().toISOString(),
+    });
 
     return {
       success: true,
-      txHash: paymentResponseJson.data.sendPayment.payment.hash,
+      txHash,
     };
-  } catch (error: any) {
-    console.error("Error sending MINA tokens:", error);
+  } catch (error) {
+    console.error("[Mina] Transaction failed:", {
+      error: error instanceof Error ? error.message : "Unknown error",
+      amount,
+      recipient: address.slice(0, 10) + "...",
+      challengeId,
+      timestamp: new Date().toISOString(),
+    });
+
     return {
       success: false,
-      error: error.message || "Failed to send tokens",
+      error: error instanceof Error ? error.message : "Failed to send tokens",
     };
   }
 }
