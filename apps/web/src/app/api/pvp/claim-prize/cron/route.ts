@@ -98,8 +98,8 @@ async function processSingleChallenge(challenge: ChallengeData) {
     // Wait for 1 minute if less than 60 seconds have passed since last payment
     const now = Date.now();
     const timeSinceLastPayment = now - lastPaymentTime;
-    if (lastPaymentTime !== 0 && timeSinceLastPayment < 60000) {
-      const waitTime = 60000 - timeSinceLastPayment;
+    if (lastPaymentTime !== 0 && timeSinceLastPayment < 120000) {
+      const waitTime = 120000 - timeSinceLastPayment;
       console.log(
         `Waiting ${waitTime / 1000} seconds before processing payment...`
       );
