@@ -121,13 +121,16 @@ export async function sendRewardTransactionNotification({
         `Amount: ${amount} MINA\n` +
         `Error: ${error}`;
 
-    await fetch(`http://localhost:3000/api/telegram/private-group-message`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message }),
-    });
+    await fetch(
+      `https://www.tileville.xyz/api/telegram/private-group-message`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      }
+    );
 
     return true;
   } catch (error) {
