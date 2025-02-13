@@ -17,6 +17,7 @@ type TraitsSectionType = {
   traits: Json;
   collection: NFTCollectionType;
   category: NFTCategory | null | MinaPunksCategory | undefined;
+  nftDescription?: string;
 };
 
 type Trait = {
@@ -53,6 +54,7 @@ export const TraitsSection = ({
   traits,
   collection,
   category,
+  nftDescription,
 }: TraitsSectionType) => {
   if (collection === NFT_COLLECTIONS.TILEVILLE) {
     const parsedTraits = parseTraits(traits);
@@ -105,10 +107,18 @@ export const TraitsSection = ({
     return (
       <div className="mt-4 space-y-6">
         <div className="space-y-4">
-          <h3 className="font-semibold">About {category}</h3>
-          <p className="text-sm leading-relaxed text-gray-700">
-            {categoryData.description}
-          </p>
+          {nftDescription ? (
+            <p className="text-sm leading-relaxed text-gray-700">
+              {nftDescription}
+            </p>
+          ) : (
+            <>
+              <h3 className="font-semibold">About {category}</h3>
+              <p className="text-sm leading-relaxed text-gray-700">
+                {categoryData.description}
+              </p>
+            </>
+          )}
         </div>
         {/* Traits */}
         <div>

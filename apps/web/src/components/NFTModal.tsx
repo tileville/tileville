@@ -46,6 +46,7 @@ export const NFTModal = ({
   collection,
   NFTCategory,
   isPublicMint,
+  nftDescription,
 }: {
   traits: Json;
   img_url: string;
@@ -59,6 +60,7 @@ export const NFTModal = ({
   collection: NFTCollectionType;
   NFTCategory: NFTCategory | null | MinaPunksCategory | undefined;
   isPublicMint: boolean;
+  nftDescription?: string;
 }) => {
   // Function to parse traits
   const [mintLoading, setMintLoading] = useState(false);
@@ -363,6 +365,7 @@ export const NFTModal = ({
                     traits={traits}
                     collection={collection}
                     category={NFTCategory}
+                    nftDescription={nftDescription}
                   />
                 )}
             </div>

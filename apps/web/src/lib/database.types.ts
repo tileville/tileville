@@ -95,6 +95,7 @@ export type Database = {
           created_at: string
           id: number
           img_url: string
+          is_public_mint: boolean
           name: string
           nft_id: number | null
           owner_address: string | null
@@ -107,6 +108,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url: string
+          is_public_mint?: boolean
           name: string
           nft_id?: number | null
           owner_address?: string | null
@@ -119,6 +121,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url?: string
+          is_public_mint?: boolean
           name?: string
           nft_id?: number | null
           owner_address?: string | null
@@ -132,6 +135,7 @@ export type Database = {
         Row: {
           category: Database["public"]["Enums"]["nft_category"]
           created_at: string
+          description: string | null
           id: number
           img_url: string
           is_public_mint: boolean
@@ -145,6 +149,7 @@ export type Database = {
         Insert: {
           category: Database["public"]["Enums"]["nft_category"]
           created_at?: string
+          description?: string | null
           id?: number
           img_url: string
           is_public_mint?: boolean
@@ -158,6 +163,7 @@ export type Database = {
         Update: {
           category?: Database["public"]["Enums"]["nft_category"]
           created_at?: string
+          description?: string | null
           id?: number
           img_url?: string
           is_public_mint?: boolean
@@ -597,7 +603,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      nft_category: "FOUNDER" | "DESIGNER" | "SOLDIER" | "GUARDIAN" | "TOTEM"
+      nft_category:
+        | "FOUNDER"
+        | "DESIGNER"
+        | "SOLDIER"
+        | "GUARDIAN"
+        | "TOTEM"
+        | "YOUR_NEW_CATEGORY"
+        | "ZKON"
     }
     CompositeTypes: {
       [_ in never]: never

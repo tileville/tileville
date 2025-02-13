@@ -313,6 +313,7 @@ export default function MarketplaceContent({
                           ? nft.category
                           : null
                       }
+                      nftDescription={nft?.description}
                       isPublicMint={nft.is_public_mint === false ? false : true}
                     />
                   );
