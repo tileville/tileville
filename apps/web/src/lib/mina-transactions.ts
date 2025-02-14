@@ -160,7 +160,7 @@ export async function sendMinaTokens({
       throw new Error("MINA client initialization failed");
     }
 
-    const nonce = await fetchNonce(graphql);
+    const nonce = await fetchNonce(SENDER_PUBLIC_KEY);
     if (!nonce) {
       throw new Error("Failed to fetch nonce");
     }
