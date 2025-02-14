@@ -1,10 +1,5 @@
 import { Client, NetworkId } from "mina-signer";
-import {
-  isMockEnv,
-  MINASCAN_API_URL,
-  SENDER_PRIVATE_KEY,
-  SENDER_PUBLIC_KEY,
-} from "@/constants";
+import { isMockEnv, SENDER_PRIVATE_KEY, SENDER_PUBLIC_KEY } from "@/constants";
 import { NETWORKS } from "@/constants/network";
 import { formatAddress } from "./helpers";
 import { sendRewardTransactionNotification } from "@/app/api/lib/telegram-notifications";
@@ -18,6 +13,8 @@ const client = new Client({
     ? (NETWORKS[1].chainId as NetworkId)
     : (NETWORKS[0].chainId as NetworkId),
 });
+
+const graphql = isMockEnv() ? NETWORKS[1].graphql : NETWORKS[0].graphql;
 
 const NO_CACHE_HEADERS = {
   "Content-Type": "application/json",
@@ -70,7 +67,7 @@ export async function fetchNonce(publicKey: string): Promise<number | null> {
       fetchPolicy: "network-only",
     });
 
-    const nonceResponse = await fetch(MINASCAN_API_URL, {
+    const nonceResponse = await fetch(graphql, {
       method: "POST",
       headers: NO_CACHE_HEADERS,
       body: fetchNonceBody,
@@ -163,7 +160,7 @@ export async function sendMinaTokens({
       throw new Error("MINA client initialization failed");
     }
 
-    const nonce = await fetchNonce(SENDER_PUBLIC_KEY);
+    const nonce = await fetchNonce(graphql);
     if (!nonce) {
       throw new Error("Failed to fetch nonce");
     }
@@ -198,8 +195,6 @@ export async function sendMinaTokens({
         }
       }
     `;
-
-    const graphql = isMockEnv() ? NETWORKS[1].graphql : NETWORKS[0].graphql;
 
     const paymentResponse = await fetch(graphql, {
       method: "POST",
