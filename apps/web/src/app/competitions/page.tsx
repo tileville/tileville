@@ -4,7 +4,7 @@ import { GameEntryFeesModal } from "@/components/GameEntryFeesModal";
 import { useState } from "react";
 import CompetitionLoading from "./competitionLoading";
 import { Competition } from "@/types";
-import { CompetitionCard } from "@/components/CompetitionCard";
+import { CompetitionCard } from "@/components/Competitions/CompetitionCard";
 import { CompetitionsHeader } from "@/components/Competitions/CompetitionsHeader";
 
 export default function Competitions() {

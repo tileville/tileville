@@ -4,12 +4,12 @@ import { Competition } from "@/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { CountdownTimer } from "./common/CountdownTimer";
-import { HtmlRenderer } from "./common/HTMLRenderer";
+import { CountdownTimer } from "../common/CountdownTimer";
+import { HtmlRenderer } from "../common/HTMLRenderer";
 import { TimerIcon } from "@radix-ui/react-icons";
 import { DEFAULT_POSTER_URL } from "@/constants";
 import Link from "next/link";
-import { CustomTooltip } from "./common/CustomTooltip";
+import { CustomTooltip } from "../common/CustomTooltip";
 
 type CompetitionCardProps = {
   competition: Competition;
