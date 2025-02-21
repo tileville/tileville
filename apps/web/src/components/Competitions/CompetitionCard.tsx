@@ -1,15 +1,14 @@
 import Image from "next/image";
-import { Competition } from "@/types";
-
+import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Competition } from "@/types";
 import { getTime, isAfter, isBefore } from "date-fns";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { CountdownTimer } from "../common/CountdownTimer";
 import { HtmlRenderer } from "../common/HTMLRenderer";
-import { TimerIcon } from "@radix-ui/react-icons";
 import { DEFAULT_POSTER_URL } from "@/constants";
-import Link from "next/link";
-import { CustomTooltip } from "../common/CustomTooltip";
+import { CompetitionTweetButton } from "./CompetitionTweetButton";
+import { SpeedVersionContent } from "./SpeedVersionContent";
 
 type CompetitionCardProps = {
   competition: Competition;
@@ -123,36 +122,7 @@ export const CompetitionCard = ({
             )}
           </div>
           {competition.is_speed_version && (
-            <div className="col-span-4">
-              <div className="mb-2 flex items-center justify-center gap-2 text-xl md:justify-start">
-                <span>
-                  <Image
-                    src="/icons/speed.svg"
-                    alt="speed"
-                    width="30"
-                    height="30"
-                  />
-                </span>
-                <p className="text-medium text-sm md:text-base">
-                  Speedy Version
-                </p>
-
-                <CustomTooltip
-                  tooltipContent="In the speedy version of the game, the player will need
-                        to finish the game in specific amount of time."
-                />
-              </div>
-
-              <div className="flex items-center justify-center gap-2 text-xl md:justify-start">
-                <span>
-                  <TimerIcon width={24} height={24} />
-                </span>
-                <p className="text-medium text-sm md:text-base">Game Time:-</p>
-                <p className="text-medium text-sm md:text-base">
-                  {competition.speed_duration} Secs
-                </p>
-              </div>
-            </div>
+            <SpeedVersionContent speedDuration={competition.speed_duration} />
           )}
           <div className="md:flex-0 col-span-4 flex w-full flex-1 flex-grow md:flex-none">
             <Tooltip.Provider delayDuration={300}>
@@ -191,23 +161,9 @@ export const CompetitionCard = ({
       </div>
       {competition.competition_tweet_content &&
         competitionStatus !== "over" && (
-          <button
-            onClick={() => {
-              window.open(
-                `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  competition.competition_tweet_content
-                )}`,
-                "_blank",
-                "noopener,noreferrer"
-              );
-            }}
-            className="competition-tweet-btn ms-auto flex cursor-pointer items-center rounded-full bg-primary px-2 py-1 font-medium text-white"
-          >
-            <i className="twitterIcon h-3 w-3"></i>
-            <span className="label ms-1 whitespace-nowrap font-medium" id="l">
-              Tweet about competition
-            </span>
-          </button>
+          <CompetitionTweetButton
+            tweetContent={competition.competition_tweet_content}
+          />
         )}
     </div>
   );

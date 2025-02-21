@@ -11,6 +11,7 @@ import { getCompetitionStatus, organizeCompetitions } from "@/lib/helpers";
 import { LEADERBOARD_COLUMNS } from "@/constants";
 import TableSkeleton from "./TableSkeleton";
 import { DropdownTriggerContent } from "./DropdownTriggerContent";
+import { CompetitionMenuItem } from "./CompetitionMenuItem";
 
 export type SelectedCompetition = {
   id: number;
@@ -315,33 +316,3 @@ export default function LeaderboardContent() {
     </div>
   );
 }
-
-const CompetitionMenuItem = ({
-  competition,
-  isSelected,
-  onSelect,
-}: {
-  competition: any;
-  isSelected: boolean;
-  onSelect: (competition: SelectedCompetition) => void;
-}) => (
-  <DropdownMenu.Item
-    onClick={() =>
-      onSelect({
-        id: competition.id,
-        competition_key: competition.unique_keyname,
-        name: competition.name,
-        start_date: competition.start_date,
-        end_date: competition.end_date,
-      })
-    }
-    className={`!md:h-8 mt-1 !h-auto py-2 transition-colors ${
-      isSelected ? "bg-primary text-white" : "hover:bg-primary hover:text-white"
-    }`}
-  >
-    <div className="flex w-full items-center justify-between px-2">
-      <span>{competition.name}</span>
-      {isSelected && <span className="text-sm">✓</span>}
-    </div>
-  </DropdownMenu.Item>
-);

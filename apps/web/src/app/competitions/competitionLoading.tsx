@@ -20,26 +20,16 @@ export default function CompetitionLoading() {
                 <h2 className="h-4 text-xl font-semibold">{competition}</h2>
               </Skeleton>
               <div className="flex flex-col">
-                <Skeleton className="">
-                  <p className="mb-2 text-sm">{competition}</p>
-                </Skeleton>
-
-                <Skeleton className="">
-                  <p className="mb-2 text-sm">{competition}</p>
-                </Skeleton>
-
-                <Skeleton className="">
-                  <p className="mb-2 text-sm">{competition}</p>
-                </Skeleton>
-
-                <Skeleton className="">
-                  <p className="mb-2 text-sm">{competition}</p>
-                </Skeleton>
-
-
-                <Skeleton className="">
-                  <p className="mb-2 text-sm">{competition}</p>
-                </Skeleton>
+                {new Array(5).fill(1).map((_, index) => {
+                  return (
+                    <Skeleton
+                      className=""
+                      key={`leaderboard-skeleton-${index}`}
+                    >
+                      <p className="mb-2 text-sm">{competition}</p>
+                    </Skeleton>
+                  );
+                })}
 
                 <Skeleton className="w-3/4">
                   <p className="mb-2 text-sm">{competition}</p>
