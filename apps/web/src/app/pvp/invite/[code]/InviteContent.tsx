@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { copyToClipBoard, formatAddress } from "@/lib/helpers";
 import { Spinner2 } from "@/components/common/Spinner";
-// import { useNetworkStore } from "@/lib/stores/network";
 import { useNetworkStore } from "@/lib/stores/network";
 import toast from "react-hot-toast";
 import { CountdownTimerSmall } from "@/components/common/CountdownTimerSmall";
@@ -124,7 +123,7 @@ export default function InviteContent({ code }: { code: string }) {
     if (!isFuture(challenge.data.end_time)) {
       return (
         <button
-          className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white hover:bg-[#38830A]/90 md:py-3 md:text-lg disabled:bg-primary/70 disabled:hover:bg-primary/70"
+          className="mt-4 w-full rounded-lg bg-[#38830A] py-2 text-sm font-semibold text-white hover:bg-[#38830A]/90 disabled:bg-primary/70 disabled:hover:bg-primary/70 md:py-3 md:text-lg"
           disabled
         >
           Challenge Ended

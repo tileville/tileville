@@ -15,27 +15,14 @@ export default function VerifyContent() {
   const searchParams = useSearchParams();
   const chatId = searchParams.get("chatId");
 
-  const {
-    handleVerification,
-    getButtonText,
-    isProcessing,
-    isSuccess,
-    isAuroWalletBrowser,
-  } = useWalletVerification(chatId);
+  const { handleVerification, getButtonText, isProcessing, isSuccess } =
+    useWalletVerification(chatId);
 
   useEffect(() => {
     if (!chatId) {
       toast.error("Invalid verification link");
     }
   }, [chatId]);
-
-  const handleButtonClick = () => {
-    if (isMobile && !isAuroWalletBrowser) {
-      window.location.href = generateAuroWalletDeepLink(chatId || "");
-    } else {
-      handleVerification();
-    }
-  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 font-roboto">
