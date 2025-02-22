@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Spinner } from "../common/Spinner";
 import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
+import { PalladNotSupportedContent } from "./PalladNotSupportedContent";
 
 type MintBtnType = {
   isMintingDisabled: boolean;
@@ -49,7 +50,7 @@ export const MintBtn = ({
   const isUnauthorizedMint = !isPublicMint && !isOwner;
 
   const isNotForSoldNFT =
-    collection === NFT_COLLECTIONS.MINATY && (nftID === 100);
+    collection === NFT_COLLECTIONS.MINATY && nftID === 100;
 
   const checkMintLimit = () => {
     // Collection owner is exempt from mint limits
@@ -125,34 +126,7 @@ export const MintBtn = ({
                   </p>
                 </div>
               ) : (
-                <div className="max-w-md">
-                  <p className="mb-2 font-bold">
-                    Pallad wallet is not supported yet. Please use Auro wallet
-                    instead.
-                  </p>
-                  <ol className="mb-2 list-inside list-decimal text-sm">
-                    <li>
-                      Open a new tab and go to{" "}
-                      <span className="rounded bg-gray-200 px-1 font-mono">
-                        chrome://extensions
-                      </span>
-                    </li>
-                    <li>
-                      Find &quot;Pallad Wallet&quot; in your list of extensions
-                    </li>
-                    <li>Toggle the switch to disable it</li>
-                  </ol>
-                  <div className="mt-2 text-sm">
-                    <a
-                      href="https://chromewebstore.google.com/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      Get Auro Wallet
-                    </a>
-                  </div>
-                </div>
+                <PalladNotSupportedContent />
               )}
               <Tooltip.Arrow className="TooltipArrow" />
             </Tooltip.Content>

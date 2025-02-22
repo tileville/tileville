@@ -32,7 +32,7 @@ import { TraitsSection } from "./Marketplace/TraitsSection";
 import { AlreadyMintedContent } from "./Marketplace/AlreadyMintedContent";
 import { NFTModalTriggerContent } from "./Marketplace/NFTModalTriggerContent";
 import { CountdownTimer } from "./common/CountdownTimer";
-import { CollectionDescription } from "./Marketplace/CollectionDescription";
+import { ZkGodCollectionDescription } from "./Marketplace/ZkGodCollectionDescription";
 
 export const NFTModal = ({
   traits,
@@ -354,7 +354,7 @@ export const NFTModal = ({
 
               <div>
                 {collection === NFT_COLLECTIONS.ZKGOD && (
-                  <CollectionDescription />
+                  <ZkGodCollectionDescription />
                 )}
               </div>
               {traits &&
