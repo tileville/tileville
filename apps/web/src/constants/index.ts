@@ -682,3 +682,6 @@ export const MINASCAN_API_URL =
 
 export const LAUNCH_COMPETITION_FORM_LINk =
   "https://docs.google.com/forms/d/e/1FAIpQLSdwNysGNvo5YRu88rQ1L36dT4swot4pXe1YedpHoKMdB50I8g/viewform";
+
+export const AURO_WALLET_CHROME_STORE_LINK =
+  "https://chromewebstore.google.com/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae";

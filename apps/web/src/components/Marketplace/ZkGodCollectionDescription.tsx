@@ -1,4 +1,4 @@
-export const CollectionDescription = () => {
+export const ZkGodCollectionDescription = () => {
   return (
     <div className="mt-6 rounded-lg bg-[#1E2321]/95 p-6 shadow-xl backdrop-blur-lg">
       <h3 className="mb-4 text-2xl font-bold text-[#C2FF00]">
