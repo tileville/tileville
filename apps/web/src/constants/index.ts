@@ -679,3 +679,6 @@ export const SENDER_PRIVATE_KEY = process.env.NEXT_PUBLIC_SENDER_PRIVATE_KEY;
 
 export const MINASCAN_API_URL =
   "https://api.minascan.io/node/devnet/v1/graphql";
+
+export const LAUNCH_COMPETITION_FORM_LINk =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdwNysGNvo5YRu88rQ1L36dT4swot4pXe1YedpHoKMdB50I8g/viewform";

@@ -9,9 +9,7 @@ import { useUsername } from "@/db/react-query-hooks";
 export default function MainMenu() {
   const [focusedButtonIndex, setFocusedButtonIndex] = useState<number>(0);
   const networkStore = useNetworkStore();
-  const { data: username, isLoading: usernameLoading } = useUsername(
-    networkStore?.address
-  );
+  const { data: username } = useUsername(networkStore?.address);
   const [navigationItems, setNavigationItems] = useState(NAVIGATION_MENU_ITEMS);
 
   useEffect(() => {
