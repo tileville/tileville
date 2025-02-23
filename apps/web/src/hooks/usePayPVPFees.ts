@@ -1,6 +1,6 @@
 import { useNetworkStore } from "@/lib/stores/network";
 // import { usePosthogEvents } from "./usePosthogEvents";
-import { NETWORKS } from "@/constants/network";
+// import { NETWORKS } from "@/constants/network";
 import { sendPayment } from "@/lib/helpers";
 import { updateChallengeTransaction } from "@/db/supabase-queries";
 import { TransactionStatus } from "o1js";
@@ -25,9 +25,9 @@ export const usePayPVPFees = () => {
     participation_fee: number;
     challenge_id: number;
   }): Promise<PayPVPFeesResponse> => {
-    const network = window.mina?.isPallad
-      ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
-      : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
+    // const network = window.mina?.isPallad
+    //   ? networkStore.minaNetwork?.palladNetworkID || NETWORKS[1].palladNetworkID
+    //   : networkStore.minaNetwork?.networkID || NETWORKS[1].networkID;
 
     const txn_status: TransactionStatus = "PENDING";
 

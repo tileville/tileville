@@ -6,10 +6,10 @@ type GenericEventLogger<PayloadType> = (
   errorMessage?: string
 ) => void;
 
-type EventLogger<PayloadType> = [
-  (payload: PayloadType) => void,
-  (errorMessage?: string) => void
-];
+// type EventLogger<PayloadType> = [
+//   (payload: PayloadType) => void,
+//   (errorMessage?: string) => void
+// ];
 
 type Properties = Record<string, any>;
 type JoinCompetitionPayload = {
