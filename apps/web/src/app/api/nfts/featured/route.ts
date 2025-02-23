@@ -1,5 +1,3 @@
-// src/app/api/nfts/featured/route.ts
-
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { Database } from "@/lib/database.types";
 
@@ -46,7 +44,6 @@ export async function GET() {
     const queries = Object.entries(config.nft_collections_config)
       .filter(
         ([_, collectionConfig]) =>
-          // Only process collections that have featured NFTs defined
           collectionConfig.featured_nfts &&
           collectionConfig.featured_nfts.length > 0
       )
@@ -57,7 +54,6 @@ export async function GET() {
           return null;
         }
 
-        // Fetch all featured NFTs for this collection
         const { data, error } = await supabase
           .from(table_name)
           .select("*")
@@ -71,7 +67,6 @@ export async function GET() {
           return null;
         }
 
-        // Return all featured NFTs for this collection
         return {
           collection: collectionName,
           nfts: data,

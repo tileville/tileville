@@ -17,7 +17,6 @@ interface GameStats {
   total_games: number;
 }
 
-// Private/Full Profile
 interface PlayerProfile {
   wallet_address: string;
   username?: string;
@@ -34,7 +33,6 @@ interface PlayerProfile {
   total_rewards?: number;
 }
 
-// Public Profile (after transformation)
 interface PublicPlayerProfile {
   wallet_address: string;
   username?: string;

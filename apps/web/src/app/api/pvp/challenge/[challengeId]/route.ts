@@ -6,7 +6,6 @@ export async function GET(
   { params }: { params: { challengeId: string } }
 ) {
   try {
-    // Fetch the challenge with its participants
     const { data: challenge, error: challengeError } = await supabase
       .from("pvp_challenges")
       .select(

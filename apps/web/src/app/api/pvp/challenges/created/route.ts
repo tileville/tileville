@@ -1,4 +1,3 @@
-// src/app/api/pvp/challenges/created/route.ts
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 
@@ -20,7 +19,6 @@ export async function GET(request: NextRequest) {
 
     if (challengesError) throw challengesError;
 
-    // Transform data to ensure participants is always an array
     const formattedData = challenges.map((challenge) => ({
       challenge: {
         id: challenge.id,
@@ -37,7 +35,6 @@ export async function GET(request: NextRequest) {
         is_reward_sent: challenge.is_reward_sent,
         reward_txn_hash: challenge.reward_txn_hash,
       },
-      // Ensure participants is always an array
       participants: Array.isArray(challenge.participants)
         ? challenge.participants
         : challenge.participants

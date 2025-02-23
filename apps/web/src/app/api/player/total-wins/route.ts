@@ -1,4 +1,3 @@
-// src/app/api/player/total-wins/route.ts
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 
@@ -7,7 +6,6 @@ export async function GET(request: NextRequest) {
   const wallet_address = searchParams.get("wallet_address") || "";
 
   try {
-    // First get all competition names
     const { data: competitions } = await supabase
       .from("tileville_competitions")
       .select("unique_keyname");
@@ -15,11 +13,9 @@ export async function GET(request: NextRequest) {
     let totalWins = 0;
     const processedCompetitions = new Set();
 
-    // For each competition, check if user is in top 10
     for (const competition of competitions || []) {
       const competitionKey = competition.unique_keyname;
 
-      // Get all scores for this competition, ordered by score
       const { data: scores } = await supabase
         .from("game_scores")
         .select("wallet_address, score")
@@ -27,7 +23,6 @@ export async function GET(request: NextRequest) {
         .order("score", { ascending: false })
         .limit(10);
 
-      // Check if player is in top 10
       const isInTop10 = scores?.some(
         (score) => score.wallet_address === wallet_address
       );

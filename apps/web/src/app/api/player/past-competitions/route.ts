@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // First get all game scores for the user
     const { data: userScores, error: scoresError } = await supabase
       .from("game_scores")
       .select("competition_key")
@@ -21,17 +20,14 @@ export async function GET(request: NextRequest) {
 
     if (scoresError) throw scoresError;
 
-    // Get unique competition keys
     const uniqueCompetitionKeys = [
       ...new Set(userScores?.map((score) => score.competition_key)),
     ];
 
-    // If user hasn't played any competitions
     if (uniqueCompetitionKeys.length === 0) {
       return Response.json({ success: true, competitions: [] });
     }
 
-    // Fetch competition details for these keys
     const { data: competitions, error: competitionsError } = await supabase
       .from("tileville_competitions")
       .select("unique_keyname, poster_url , name")
@@ -39,7 +35,6 @@ export async function GET(request: NextRequest) {
 
     if (competitionsError) throw competitionsError;
 
-    // Transform data to return only required fields
     const pastCompetitions = competitions.map((comp) => ({
       competitionKey: comp.unique_keyname,
       posterUrl: comp.poster_url,

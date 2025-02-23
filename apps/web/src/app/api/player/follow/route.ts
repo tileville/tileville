@@ -3,9 +3,6 @@ import { NextRequest } from "next/server";
 import { withAuth } from "../../authMiddleware";
 import { sendPersonalNotification } from "../../lib/telegram-notifications";
 
-//  follower_wallet: person who is doing the following
-//  target_wallet: person who is being followed by the follower_wallet
-
 const postHandler = async (request: NextRequest) => {
   try {
     const { follower_wallet, target_wallet } = await request.json();
@@ -22,14 +19,12 @@ const postHandler = async (request: NextRequest) => {
       );
     }
 
-    // Get follower's username for notification
     const { data: followerProfile } = await supabase
       .from("player_profile")
       .select("username")
       .eq("wallet_address", follower_wallet)
       .single();
 
-    // Get target user's telegram auth
     const { data: targetTelegramAuth } = await supabase
       .from("telegram_auth")
       .select("chat_id")
@@ -76,7 +71,6 @@ const postHandler = async (request: NextRequest) => {
     if (updateError || updateFollowerError)
       throw updateError || updateFollowerError;
 
-    // Send notification if target user has telegram connected
     if (targetTelegramAuth?.chat_id) {
       const followerName =
         followerProfile?.username || `Wallet ${follower_wallet.slice(0, 6)}`;
@@ -106,6 +100,6 @@ const postHandler = async (request: NextRequest) => {
       { status: 500 }
     );
   }
-}
+};
 
 export const POST = withAuth(postHandler);

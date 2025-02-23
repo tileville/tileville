@@ -1,4 +1,3 @@
-// src/app/api/pvp/challenges/accepted/route.ts
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 
@@ -7,7 +6,6 @@ export async function GET(request: NextRequest) {
   const wallet_address = searchParams.get("wallet_address") || "";
 
   try {
-    // First get all challenges this user has joined
     const { data: userParticipations, error: participationError } =
       await supabase
         .from("pvp_challenge_participants")
@@ -16,14 +14,12 @@ export async function GET(request: NextRequest) {
 
     if (participationError) throw participationError;
 
-    // Get the challenge IDs the user has participated in
     const challengeIds = userParticipations.map((p) => p.challenge_id);
 
     if (challengeIds.length === 0) {
       return Response.json({ success: true, data: [] });
     }
 
-    // Get all challenges with all their participants
     const { data: challenges, error: challengesError } = await supabase
       .from("pvp_challenges")
       .select(

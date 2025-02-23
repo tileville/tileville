@@ -26,7 +26,6 @@ const privateProfileHandler = async (request: NextRequest) => {
 
   const authenticatedWallet = request.headers.get("Wallet-Address");
 
-  // Verify the requesting user is accessing their own private data
   if (authenticatedWallet !== wallet_address) {
     return Response.json(
       {

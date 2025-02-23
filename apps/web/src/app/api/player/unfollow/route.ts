@@ -2,14 +2,12 @@ import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 import { withAuth } from "../../authMiddleware";
 
-// Changed from export async function to const
 const postHandler = async (request: NextRequest) => {
   try {
     const { follower_wallet, target_wallet } = await request.json();
 
     const auth_wallet = request.headers.get("Wallet-Address");
 
-    // Verify follower_wallet matches authenticated wallet
     if (follower_wallet !== auth_wallet) {
       return Response.json(
         {
@@ -20,7 +18,6 @@ const postHandler = async (request: NextRequest) => {
       );
     }
 
-    // Rest of your code stays exactly the same...
     const { data: targetProfile, error: targetError } = await supabase
       .from("player_profile")
       .select("followers")
@@ -37,7 +34,6 @@ const postHandler = async (request: NextRequest) => {
 
     if (followerError) throw followerError;
 
-    // Remove from arrays
     const newTargetFollowers = (targetProfile.followers || []).filter(
       (wallet: string) => wallet !== follower_wallet
     );
@@ -46,7 +42,6 @@ const postHandler = async (request: NextRequest) => {
       (wallet: string) => wallet !== target_wallet
     );
 
-    // Update both profiles
     const { error: updateError } = await supabase
       .from("player_profile")
       .update({ followers: newTargetFollowers })

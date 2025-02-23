@@ -74,7 +74,6 @@ async function getPaymentTxsFromBlockberry(wallet_address: string) {
       options
     );
     const result = await response.json();
-    //console.log("paymentTxs", result);
     return result;
   } catch (err) {
     console.error(err);

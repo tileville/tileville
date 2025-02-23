@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
   console.log({ name });
 
   try {
-    // Determine which table to query based on NFT name prefix
     let tableName: NFTTableNames;
     if (name.toLowerCase().includes("minaty")) {
       tableName = "minaty_nfts";
@@ -22,7 +21,6 @@ export async function POST(request: NextRequest) {
       tableName = "tileville_builder_nfts";
     }
 
-    // Query the appropriate table
     const { data: nftData, error: nftFetchError } = await supabase
       .from(tableName)
       .select("*")
@@ -56,7 +54,6 @@ export async function POST(request: NextRequest) {
       traits: any;
     } = nftData[0];
 
-    // Ensure price is valid
     if (typeof price !== "number" || price <= 0) {
       return Response.json(
         {

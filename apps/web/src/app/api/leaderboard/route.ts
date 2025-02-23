@@ -16,11 +16,10 @@ export async function GET(request: NextRequest) {
     const wallet_addresses =
       scoreEntries?.map(({ wallet_address }) => wallet_address) || [];
 
-    const { data: gameScoreUsers = [], error: fetchUsernamesError } =
-      await supabase
-        .from("player_profile")
-        .select("wallet_address,username")
-        .in("wallet_address", wallet_addresses);
+    const { data: gameScoreUsers = [] } = await supabase
+      .from("player_profile")
+      .select("wallet_address,username")
+      .in("wallet_address", wallet_addresses);
 
     const result = scoreEntries?.map((scoreEntry) => {
       const wallet_address = scoreEntry.wallet_address;

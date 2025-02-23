@@ -1,4 +1,3 @@
-// src/app/api/pvp/challenges/[code]/route.ts
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
 
@@ -7,7 +6,6 @@ export async function GET(
   { params }: { params: { code: string } }
 ) {
   try {
-    // Fetch the challenge with its participants
     const { data: challenge, error: challengeError } = await supabase
       .from("pvp_challenges")
       .select(

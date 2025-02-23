@@ -63,4 +63,3 @@ export async function POST(request: NextRequest) {
 }
 
 export const GET = withAuth(getHandler);
-// export const GET = getHandler;
