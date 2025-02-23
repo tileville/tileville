@@ -1,7 +1,7 @@
 "use client";
 
 import { HomeIcon } from "@radix-ui/react-icons";
-import { Trait, traitsContent } from "./trait-content";
+import { Trait, traitsContent } from "./traitContent";
 import { useState, useEffect, useRef } from "react";
 
 export default function TraitsInfo() {

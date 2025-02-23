@@ -42,7 +42,7 @@ export default function NFTCollection() {
 
       <div className="mx-auto max-w-[1200px] px-2">
         <div>
-          <div className="relative z-10 -mt-10 md:-mt-20 h-[70px] w-[70px] rounded-[5px] border border-white md:h-[127px] md:w-[127px]">
+          <div className="relative z-10 -mt-10 h-[70px] w-[70px] rounded-[5px] border border-white md:-mt-20 md:h-[127px] md:w-[127px]">
             {globalConfigLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (
@@ -61,10 +61,6 @@ export default function NFTCollection() {
         <p className="max-w-[500px] text-sm font-semibold">
           {collectionDescription}
         </p>
-
-        {/* <button className="text-sm font-semibold text-primary">
-          show more
-        </button> */}
 
         <MarketplaceContent
           collection={params.collection}

@@ -1,5 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import { faqContent } from "./faq-content";
+import { faqContent } from "./faqContent";
 
 export default function FAQPage() {
   return (
