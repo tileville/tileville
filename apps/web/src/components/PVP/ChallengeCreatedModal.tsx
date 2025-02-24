@@ -3,13 +3,88 @@ import { CopyIcon, Cross1Icon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { copyToClipBoard, handleSocialShare } from "@/lib/helpers";
 
-type ChallengeCreatedModalProps = {
+// Types
+interface SocialShareButtonProps {
+  platform: "twitter" | "telegram" | "discord";
+  onClick: () => void;
+}
+
+interface ChallengeCreatedModalProps {
   open: boolean;
   onClose: () => void;
   inviteLink: string;
   challengeName: string;
   entryFee: number;
-};
+}
+
+// Component for social share buttons
+const SocialShareButton = ({ platform, onClick }: SocialShareButtonProps) => (
+  <button onClick={onClick}>
+    <Image
+      src={`/icons/${platform === "twitter" ? "x" : platform}.svg`}
+      width={40}
+      height={40}
+      alt={platform === "twitter" ? "X" : platform}
+    />
+  </button>
+);
+
+// Component for the invite link section
+const InviteLinkSection = ({ inviteLink }: { inviteLink: string }) => (
+  <div className="w-full">
+    <h3 className="mb-2 text-2xl font-bold">Share Invite Link</h3>
+    <div className="flex items-center gap-2 rounded-lg p-2">
+      <input
+        type="text"
+        value={inviteLink}
+        readOnly
+        className="min-h-[42px] flex-1 rounded-[5px] border border-[#38830A] bg-transparent px-2 text-center text-base text-black outline-none"
+      />
+      <button
+        onClick={() =>
+          copyToClipBoard({
+            toCopyContent: inviteLink,
+            copiedType: "Invite Link",
+          })
+        }
+        className="flex items-center gap-2 rounded-md bg-[#38830A] px-4 py-2 text-base font-bold text-white hover:bg-[#38830A]/90"
+      >
+        <CopyIcon />
+        Copy
+      </button>
+    </div>
+  </div>
+);
+
+// Component for social sharing section
+const SocialShareSection = ({
+  inviteLink,
+  challengeName,
+  entryFee,
+}: Pick<
+  ChallengeCreatedModalProps,
+  "inviteLink" | "challengeName" | "entryFee"
+>) => (
+  <div className="w-full">
+    <h3 className="mb-4 text-xl font-bold">Share Invite Link on Socials</h3>
+    <div className="flex justify-center gap-3">
+      {["twitter", "telegram"].map((platform: any) => (
+        <SocialShareButton
+          key={platform}
+          platform={platform as "twitter" | "telegram" | "discord"}
+          onClick={() =>
+            handleSocialShare({
+              platform,
+              inviteLink,
+              challengeName,
+              entryFee,
+            })
+          }
+        />
+      ))}
+    </div>
+  </div>
+);
 
 export const ChallengeCreatedModal = ({
   open,
@@ -41,67 +116,13 @@ export const ChallengeCreatedModal = ({
             </p>
           </div>
 
-          <div className="w-full">
-            <h3 className="mb-2 text-2xl font-bold">Share Invite Link</h3>
-            <div className="flex items-center gap-2 rounded-lg p-2">
-              <input
-                type="text"
-                value={inviteLink}
-                readOnly
-                className="min-h-[42px] flex-1 rounded-[5px] border border-[#38830A] bg-transparent px-2 text-center text-base text-black outline-none"
-              />
+          <InviteLinkSection inviteLink={inviteLink} />
 
-              <button
-                onClick={() =>
-                  copyToClipBoard({
-                    toCopyContent: inviteLink,
-                    copiedType: "Invite Link",
-                  })
-                }
-                className="flex items-center gap-2 rounded-md bg-[#38830A] px-4 py-2 text-base font-bold text-white hover:bg-[#38830A]/90"
-              >
-                <CopyIcon />
-                Copy
-              </button>
-            </div>
-          </div>
-
-          <div className="w-full">
-            <h3 className="mb-4 text-xl font-bold">
-              Share Invite Link on Socials
-            </h3>
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() =>
-                  handleSocialShare({
-                    platform: "twitter",
-                    inviteLink,
-                    challengeName,
-                    entryFee,
-                  })
-                }
-              >
-                <Image src="/icons/x.svg" width={40} height={40} alt="X" />
-              </button>
-              <button
-                onClick={() =>
-                  handleSocialShare({
-                    platform: "telegram",
-                    inviteLink,
-                    challengeName,
-                    entryFee,
-                  })
-                }
-              >
-                <Image
-                  src="/icons/telegram.svg"
-                  width={40}
-                  height={40}
-                  alt="Telegram"
-                />
-              </button>
-            </div>
-          </div>
+          <SocialShareSection
+            inviteLink={inviteLink}
+            challengeName={challengeName}
+            entryFee={entryFee}
+          />
 
           <p className="max-w-sm text-sm text-gray-600">
             Note: The challenges you create will be listed under the
