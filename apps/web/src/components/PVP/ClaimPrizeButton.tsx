@@ -10,7 +10,7 @@ import {
   getMinaScanNormalLink,
 } from "@/lib/helpers";
 
-type ClaimPrizeButtonType = {
+interface ClaimPrizeButtonProps {
   challengeName: string;
   challengeId: number;
   winnerAddress: string;
@@ -19,26 +19,32 @@ type ClaimPrizeButtonType = {
   participantsLength: number;
   inviteCode: string;
   participantTxnHash: string;
-};
+}
 
-export const ClaimPrizeButton = ({
+interface WinnerMessageData {
+  challengeName: string;
+  challengeId: number;
+  winnerAddress: string;
+  winnerUsername: string | undefined | null;
+  winnerScore: number;
+  challengeEntryFees: number;
+  participantsLength: number;
+  inviteCode: string;
+  participantTxnHash: string;
+}
+
+const generateWinnerMessage = ({
   challengeName,
   challengeId,
   winnerAddress,
+  winnerUsername,
   winnerScore,
   challengeEntryFees,
   participantsLength,
   inviteCode,
   participantTxnHash,
-}: ClaimPrizeButtonType) => {
-  const sendPrivateGroupMessageMutation = useSendPrivateGroupMessage();
-  const { mutate: sendReward, error } = useSendReward();
-
-  const SendPrivateMessage = () => {
-    async () => {
-      if (!winnerAddress) return;
-
-      const message = `🎮 Challenge "${challengeName}" Results 🏆
+}: WinnerMessageData): string => {
+  return `🎮 Challenge "${challengeName}" Results 🏆
       
 Challenge ID: ${challengeId}
 Winner: ${winnerUsername || winnerAddress}
@@ -52,16 +58,47 @@ Challenge Link: ${generatePVPChallengeInviteLink(inviteCode)}
 Congratulations! 🎉
 
 ${getMinaScanNormalLink(participantTxnHash)}`;
+};
 
-      try {
-        await sendPrivateGroupMessageMutation.mutateAsync({
-          message,
-          walletAddress: winnerAddress,
-        });
-      } catch (error) {
-        console.error("Failed to send winner message:", error);
-      }
-    };
+export const ClaimPrizeButton = ({
+  challengeName,
+  challengeId,
+  winnerAddress,
+  winnerScore,
+  challengeEntryFees,
+  participantsLength,
+  inviteCode,
+  participantTxnHash,
+}: ClaimPrizeButtonProps) => {
+  const sendPrivateGroupMessageMutation = useSendPrivateGroupMessage();
+  const { mutate: sendReward, isError: isRewardError } = useSendReward();
+  const { data: winnerUsername, isLoading: usernameLoading } =
+    useUsername(winnerAddress);
+
+  const sendPrivateMessage = async () => {
+    if (!winnerAddress) return;
+
+    const message = generateWinnerMessage({
+      challengeName,
+      challengeId,
+      winnerAddress,
+      winnerUsername,
+      winnerScore,
+      challengeEntryFees,
+      participantsLength,
+      inviteCode,
+      participantTxnHash,
+    });
+
+    try {
+      await sendPrivateGroupMessageMutation.mutateAsync({
+        message,
+        walletAddress: winnerAddress,
+      });
+    } catch (error) {
+      console.error("Failed to send winner message:", error);
+      throw error; // Re-throw to be handled by the reward sending flow
+    }
   };
 
   const handleSendReward = () => {
@@ -71,24 +108,34 @@ ${getMinaScanNormalLink(participantTxnHash)}`;
         winnerAddress,
       },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           console.log("Reward sent successfully:", data);
-          SendPrivateMessage();
+          try {
+            await sendPrivateMessage();
+          } catch (error) {
+            console.error("Error in reward claim process:", error);
+            // Here you could add toast notification or other error handling UI
+          }
+        },
+        onError: (error) => {
+          console.error("Failed to send reward:", error);
+          // Here you could add toast notification or other error handling UI
         },
       }
     );
   };
 
-  const { data: winnerUsername, isLoading: usernameLoading } =
-    useUsername(winnerAddress);
+  const isLoading =
+    sendPrivateGroupMessageMutation.isLoading || usernameLoading;
+  const isDisabled = isLoading || isRewardError;
 
   return (
     <button
       onClick={handleSendReward}
       className="primary-outline-button flex items-center gap-2"
-      disabled={sendPrivateGroupMessageMutation.isLoading || usernameLoading}
+      disabled={isDisabled}
     >
-      {sendPrivateGroupMessageMutation.isLoading ? (
+      {isLoading ? (
         <>
           <Spinner2 size={16} />
           <span>Sending...</span>

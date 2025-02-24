@@ -13,14 +13,8 @@ import { useAuthSignature } from "@/hooks/useAuthSignature";
 import clsx from "clsx";
 
 export const TABS = {
-  ACCEPTED: {
-    id: "accepted",
-    label: "Accepted Challenges",
-  },
-  CREATED: {
-    id: "created",
-    label: "Created Challenges",
-  },
+  ACCEPTED: { id: "accepted", label: "Accepted Challenges" },
+  CREATED: { id: "created", label: "Created Challenges" },
 };
 
 export default function PVPContent() {
@@ -29,21 +23,24 @@ export default function PVPContent() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
 
+  const address = networkStore.address || "";
   const { data: acceptedChallenges, isLoading: isLoadingAccepted } =
-    useAcceptedChallenges(networkStore.address || "");
-
+    useAcceptedChallenges(address);
   const { data: createdChallenges, isLoading: isLoadingCreated } =
-    useCreatedChallenges(networkStore.address || "");
+    useCreatedChallenges(address);
+
+  const handleConnectWallet = async () => {
+    try {
+      await networkStore.connectWallet(false);
+    } catch (error) {
+      console.error("Failed to connect with wallet", error);
+    }
+  };
 
   const handleCreateChallenge = async () => {
     if (!networkStore.address) {
-      try {
-        networkStore.connectWallet(false);
-      } catch (error) {
-        console.error(`Failed to connect with wallet`, error);
-      } finally {
-        return;
-      }
+      await handleConnectWallet();
+      return;
     }
 
     if (!accountAuthSignature) {
@@ -52,6 +49,37 @@ export default function PVPContent() {
     }
 
     setCreateModalOpen(true);
+  };
+
+  const renderTabContent = () => {
+    if (!networkStore.address) {
+      return (
+        <div className="flex items-center justify-center p-8">
+          <button className="primary-btn" onClick={handleConnectWallet}>
+            Connect your wallet first
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <Tabs.Content value={TABS.ACCEPTED.id}>
+          <ChallengesList
+            isLoading={isLoadingAccepted}
+            challenges={acceptedChallenges}
+            challengesType={TABS.ACCEPTED.id}
+          />
+        </Tabs.Content>
+        <Tabs.Content value={TABS.CREATED.id}>
+          <ChallengesList
+            isLoading={isLoadingCreated}
+            challenges={createdChallenges}
+            challengesType={TABS.CREATED.id}
+          />
+        </Tabs.Content>
+      </>
+    );
   };
 
   return (
@@ -75,43 +103,13 @@ export default function PVPContent() {
               <Tabs.Trigger
                 key={tab.id}
                 value={tab.id}
-                className={`${activeTab === tab.id ? "!font-bold" : ""}`}
+                className={activeTab === tab.id ? "!font-bold" : ""}
               >
                 {tab.label}
               </Tabs.Trigger>
             ))}
           </Tabs.List>
-          <Box pt="3">
-            {networkStore.address ? (
-              <>
-                <Tabs.Content value={TABS.ACCEPTED.id}>
-                  <ChallengesList
-                    isLoadingAccepted={isLoadingAccepted}
-                    challenges={acceptedChallenges}
-                    challengesType={TABS.ACCEPTED.id}
-                  />
-                </Tabs.Content>
-                <Tabs.Content value={TABS.CREATED.id}>
-                  <ChallengesList
-                    isLoadingCreated={isLoadingCreated}
-                    challenges={createdChallenges}
-                    challengesType={TABS.CREATED.id}
-                  />
-                </Tabs.Content>
-              </>
-            ) : (
-              <div className="flex items-center justify-center p-8">
-                <button
-                  className="primary-btn"
-                  onClick={() => {
-                    networkStore.connectWallet(false);
-                  }}
-                >
-                  Connect your wallet first
-                </button>
-              </div>
-            )}
-          </Box>
+          <Box pt="3">{renderTabContent()}</Box>
         </Tabs.Root>
       </div>
 
