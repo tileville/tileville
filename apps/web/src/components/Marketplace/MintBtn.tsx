@@ -5,7 +5,7 @@ import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 import { PalladNotSupportedContent } from "./PalladNotSupportedContent";
 
-type MintBtnType = {
+type MintBtnProps = {
   isMintingDisabled: boolean;
   mintLoading: boolean;
   isMintingStyledDisabled: boolean;
@@ -19,7 +19,10 @@ type MintBtnType = {
   maxMintsPerWallet?: number;
 };
 
-const hasCollectionNFTs = (nfts: Array<any>, collectionName: string) => {
+const countCollectionNFTs = (
+  nfts: Array<any>,
+  collectionName: string
+): number => {
   return nfts.filter((nft) =>
     nft.name.toLowerCase().includes(collectionName.toLowerCase())
   ).length;
@@ -37,61 +40,59 @@ export const MintBtn = ({
   isPublicMint,
   collectionOwner,
   maxMintsPerWallet,
-}: MintBtnType) => {
+}: MintBtnProps) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
   });
 
   console.log("mintNFTHitsResponse", mintNFTHitsResponse);
-  // Check if user is collection owner
+
+  // Derived states
   const isOwner = currentUserAddress === collectionOwner;
-
-  // Check if the current user is authorized to mint
   const isUnauthorizedMint = !isPublicMint && !isOwner;
+  const isSpecialNFT = collection === NFT_COLLECTIONS.MINATY && nftID === 100;
 
-  const isNotForSoldNFT =
-    collection === NFT_COLLECTIONS.MINATY && nftID === 100;
-
-  const checkMintLimit = () => {
+  const hasReachedMintLimit = (() => {
     // Collection owner is exempt from mint limits
     if (isOwner) return false;
 
-    // If maxMintsPerWallet is undefined, there is no limit
+    // No limit if maxMintsPerWallet is undefined or no NFT data
     if (!maxMintsPerWallet || !mintNFTHitsResponse || !collection) return false;
 
-    const userNFTCount = hasCollectionNFTs(mintNFTHitsResponse, collection);
+    const userNFTCount = countCollectionNFTs(mintNFTHitsResponse, collection);
     return userNFTCount >= maxMintsPerWallet;
-  };
-
-  const hasReachedMintLimit = checkMintLimit();
+  })();
 
   const isButtonDisabled =
     isMintingStyledDisabled ||
-    isNotForSoldNFT ||
+    isSpecialNFT ||
     isUnauthorizedMint ||
     (!isOwner && hasReachedMintLimit);
 
-  const getDisplayText = () => {
+  const buttonText = (() => {
     if (isUnauthorizedMint) return "Only Owner Can Mint";
-    if (hasReachedMintLimit) {
-      return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
-    }
+    if (hasReachedMintLimit) return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
     return btnText;
-  };
+  })();
+
+  const buttonClasses = clsx({
+    "relative h-10 rounded-md border-primary px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed":
+      true,
+    "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
+      isButtonDisabled,
+    "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
+      !isMintingDisabled,
+  });
+
+  const shouldShowTooltip =
+    window.mina?.isPallad || isUnauthorizedMint || hasReachedMintLimit;
 
   return (
     <Tooltip.Provider delayDuration={100}>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <button
-            className={clsx({
-              "relative h-10 rounded-md border-primary px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed":
-                true,
-              "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
-                isButtonDisabled,
-              "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
-                !isMintingDisabled,
-            })}
+            className={buttonClasses}
             onClick={() => handleMint(nftID)}
             disabled={isButtonDisabled}
           >
@@ -100,13 +101,11 @@ export const MintBtn = ({
                 <Spinner />
               </span>
             )}
-            {getDisplayText()}
+            {buttonText}
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          {(window.mina?.isPallad ||
-            isUnauthorizedMint ||
-            hasReachedMintLimit) && (
+          {shouldShowTooltip && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}

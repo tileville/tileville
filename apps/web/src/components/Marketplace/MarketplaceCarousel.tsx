@@ -1,33 +1,39 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-import { NFTCollectionType } from "@/constants";
 import Link from "next/link";
+import { NFTCollectionType } from "@/constants";
 
-type MarketplaceCarouselType = {
-  nftCollections: NFTCollectionType[];
-  getCollectionConfig: (collection: string) => any;
+type CollectionConfigType = {
+  poster_url: string;
+  profile_url: string;
+  description2: string;
 };
 
-const CarouselSlide = ({
-  posterUrl,
-  profileUrl,
-  collectionName,
-  CollectionDescription,
-}: {
+type MarketplaceCarouselProps = {
+  nftCollections: NFTCollectionType[];
+  getCollectionConfig: (collection: string) => CollectionConfigType;
+};
+
+type CarouselSlideProps = {
   posterUrl: string;
   profileUrl: string;
   collectionName: string;
   CollectionDescription: string;
+};
+
+const CarouselSlide: React.FC<CarouselSlideProps> = ({
+  posterUrl,
+  profileUrl,
+  collectionName,
+  CollectionDescription,
 }) => (
   <div className="relative flex-[0_0_100%] text-white">
-    <div
-      className={`relative h-[240px] md:h-[300px] w-full overflow-hidden rounded-lg lg:h-[418px]`}
-    >
+    <div className="relative h-[240px] w-full overflow-hidden rounded-lg md:h-[300px] lg:h-[418px]">
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/0 to-black/[0.73]"></div>
-      <div className="relative z-10 flex flex-col-reverse lg:flex-row h-full w-full items-start lg:items-end justify-between px-3 pb-7 py-3 lg:p-6">
+      <div className="relative z-10 flex h-full w-full flex-col-reverse items-start justify-between px-3 py-3 pb-7 lg:flex-row lg:items-end lg:p-6">
         <div className="flex max-w-[313px] flex-col items-start gap-2 text-sm font-bold lg:gap-3">
           <div className="h-[50px] w-[50px] lg:h-[94] lg:w-[94]">
             <Image
@@ -62,13 +68,12 @@ const CarouselSlide = ({
   </div>
 );
 
-const DotButton = ({
-  selected,
-  onClick,
-}: {
+type DotButtonProps = {
   selected: boolean;
   onClick: () => void;
-}) => (
+};
+
+const DotButton: React.FC<DotButtonProps> = ({ selected, onClick }) => (
   <button
     className={`mx-1 h-[2px] w-11 rounded-full transition-all ${
       selected ? "bg-primary" : "bg-white"
@@ -77,10 +82,13 @@ const DotButton = ({
   />
 );
 
-export const MarketplaceCarousel = ({
+export const MarketplaceCarousel: React.FC<MarketplaceCarouselProps> = ({
   nftCollections,
   getCollectionConfig,
-}: MarketplaceCarouselType) => {
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
   const autoplayOptions = {
     delay: 4000,
     rootNode: (emblaRoot: any) => emblaRoot.parentElement,
@@ -89,9 +97,6 @@ export const MarketplaceCarousel = ({
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay(autoplayOptions),
   ]);
-
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
 
   const scrollTo = useCallback(
     (index: number) => emblaApi?.scrollTo(index),
@@ -106,41 +111,54 @@ export const MarketplaceCarousel = ({
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!emblaApi) return;
 
     onInit(emblaApi);
     onSelect(emblaApi);
+
     emblaApi.on("reInit", onInit);
     emblaApi.on("select", onSelect);
+
+    // Cleanup event listeners
+    return () => {
+      emblaApi.off("reInit", onInit);
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi, onInit, onSelect]);
+
+  const renderSlides = () => {
+    return nftCollections?.map((collection) => {
+      const collectionConfig = getCollectionConfig(collection);
+      return (
+        <CarouselSlide
+          key={collection}
+          posterUrl={collectionConfig.poster_url}
+          profileUrl={collectionConfig.profile_url}
+          collectionName={collection}
+          CollectionDescription={collectionConfig.description2}
+        />
+      );
+    });
+  };
+
+  const renderDots = () => {
+    return scrollSnaps.map((_, index) => (
+      <DotButton
+        key={index}
+        selected={index === selectedIndex}
+        onClick={() => scrollTo(index)}
+      />
+    ));
+  };
 
   return (
     <div className="relative mx-auto max-w-[1280px]">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {nftCollections?.map((collection) => {
-            const collectionConfig = getCollectionConfig(collection);
-            return (
-              <CarouselSlide
-                key={collection}
-                posterUrl={collectionConfig.poster_url}
-                profileUrl={collectionConfig.profile_url}
-                collectionName={collection}
-                CollectionDescription={collectionConfig.description2}
-              />
-            );
-          })}
-        </div>
+        <div className="flex">{renderSlides()}</div>
       </div>
       <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform">
-        {scrollSnaps.map((_, index) => (
-          <DotButton
-            key={index}
-            selected={index === selectedIndex}
-            onClick={() => scrollTo(index)}
-          />
-        ))}
+        {renderDots()}
       </div>
     </div>
   );
