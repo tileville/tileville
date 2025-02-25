@@ -13,6 +13,7 @@ export const MediaPlayer = () => {
   const { load, togglePlayPause, playing } = useGlobalAudioPlayer();
   const [songIndex, setSongIndex] = useState(0);
 
+  // Load the current track whenever the songIndex changes
   useEffect(() => {
     load(TRACKS[songIndex].url, {
       autoplay: true,
@@ -21,50 +22,54 @@ export const MediaPlayer = () => {
     });
   }, [songIndex, load]);
 
-  const handleTogglePlayPause = () => {
-    togglePlayPause();
-  };
+  // Navigation handlers
+  const handleTogglePlayPause = () => togglePlayPause();
 
   const handleNextTrack = () => {
-    if (songIndex >= TRACKS.length - 1) {
-      setSongIndex(0);
-    } else {
-      setSongIndex(songIndex + 1);
-    }
+    setSongIndex((prevIndex) =>
+      prevIndex >= TRACKS.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   const handlePreviousTrack = () => {
-    if (songIndex <= 0) {
-      setSongIndex(TRACKS.length - 1);
-    } else {
-      setSongIndex(songIndex - 1);
-    }
+    setSongIndex((prevIndex) =>
+      prevIndex <= 0 ? TRACKS.length - 1 : prevIndex - 1
+    );
   };
+
+  // UI Components
+  const PlayPauseButton = () => (
+    <button
+      className="flex items-center justify-center"
+      onClick={handleTogglePlayPause}
+    >
+      {playing ? <PauseIcon /> : <PlayIcon />}
+    </button>
+  );
+
+  const NavigationButtons = () => (
+    <div className="flex gap-6 lg:gap-3">
+      <button
+        className="flex items-center justify-center"
+        onClick={handlePreviousTrack}
+      >
+        <TrackPreviousIcon />
+      </button>
+
+      <PlayPauseButton />
+
+      <button
+        className="flex items-center justify-center"
+        onClick={handleNextTrack}
+      >
+        <TrackNextIcon />
+      </button>
+    </div>
+  );
 
   return (
     <div className="flex justify-between gap-3 rounded-xl bg-primary/20 px-5 py-3 text-primary shadow-[0px_4px_4px_0px_#00000040]">
-      <div className="flex gap-6 lg:gap-3">
-        <button
-          className="flex items-center justify-center"
-          onClick={handlePreviousTrack}
-        >
-          <TrackPreviousIcon />
-        </button>
-
-        <button
-          className="flex items-center justify-center"
-          onClick={handleTogglePlayPause}
-        >
-          {playing ? <PauseIcon /> : <PlayIcon />}
-        </button>
-
-        <button
-          className="flex items-center justify-center"
-          onClick={handleNextTrack}
-        >
-          <TrackNextIcon />
-        </button>
-      </div>
+      <NavigationButtons />
 
       <div className="h-4 w-[1px] bg-primary/10"></div>
 

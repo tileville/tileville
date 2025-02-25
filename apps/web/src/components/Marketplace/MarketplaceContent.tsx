@@ -21,6 +21,7 @@ import CollectionSelector from "@/components/Marketplace/CollectionSelector";
 import { useAtomValue } from "jotai";
 import { globalConfigAtom } from "@/contexts/atoms";
 
+// Type definitions
 type NFTItem = {
   nft_id: string;
   traits: any;
@@ -38,6 +39,15 @@ type MarketplaceContentProps = {
   isMarketplaceV2?: boolean;
 };
 
+type URLParams = {
+  search?: string;
+  sort?: string;
+  sortOrder?: "asc" | "desc";
+  view?: string;
+  page?: string;
+  collection?: string;
+};
+
 export default function MarketplaceContent({
   collection,
   isMarketplaceV2 = false,
@@ -47,30 +57,31 @@ export default function MarketplaceContent({
   const pathname = usePathname();
   const globalConfig = useAtomValue(globalConfigAtom);
 
-  // State derived from URL parameters with defaults
-  const [searchTerm, setSearchTerm] = useState(
-    searchParams.get("search") || ""
-  );
-  const [selectedItem, setSelectedItem] = useState(
-    searchParams.get("sort") || "Price: High to Low"
-  );
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
-    (searchParams.get("sortOrder") as "asc" | "desc") || "desc"
-  );
-  const [selectedToggle, setSelectedToggle] = useState(
-    Number(searchParams.get("view")) || 0
-  );
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get("page")) || 1
-  );
-  const [selectedCollection, setSelectedCollection] =
-    useState<NFTCollectionType>(
+  // Extract URL parameters with defaults
+  const getInitialParams = () => ({
+    search: searchParams.get("search") || "",
+    sort: searchParams.get("sort") || "Price: High to Low",
+    sortOrder: (searchParams.get("sortOrder") as "asc" | "desc") || "desc",
+    view: Number(searchParams.get("view")) || 0,
+    page: Number(searchParams.get("page")) || 1,
+    collection:
       collection ||
-        (searchParams.get("collection") as NFTCollectionType) ||
-        NFT_COLLECTIONS.TILEVILLE
-    );
+      (searchParams.get("collection") as NFTCollectionType) ||
+      NFT_COLLECTIONS.TILEVILLE,
+  });
+
+  // State initialization
+  const [searchTerm, setSearchTerm] = useState(getInitialParams().search);
+  const [selectedItem, setSelectedItem] = useState(getInitialParams().sort);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
+    getInitialParams().sortOrder
+  );
+  const [selectedToggle, setSelectedToggle] = useState(getInitialParams().view);
+  const [currentPage, setCurrentPage] = useState(getInitialParams().page);
+  const [selectedCollection, setSelectedCollection] =
+    useState<NFTCollectionType>(getInitialParams().collection);
   const [renderStyle, setRenderStyle] = useState(
-    TOGGLE_GROUP_OPTIONS[selectedToggle].gridApplyClass
+    TOGGLE_GROUP_OPTIONS[getInitialParams().view].gridApplyClass
   );
 
   // Get collection configuration
@@ -78,7 +89,7 @@ export default function MarketplaceContent({
     globalConfig?.nft_collections_config?.[selectedCollection] || {};
   const collectionTableName = collectionConfig.table_name;
 
-  // Fetch NFT data
+  // Data fetching
   const {
     data: nftData,
     isLoading: isNFTLoading,
@@ -96,15 +107,17 @@ export default function MarketplaceContent({
 
   // URL parameter handling
   const updateSearchParams = useCallback(
-    (newParams: Record<string, string>) => {
+    (newParams: URLParams) => {
       const params = new URLSearchParams(searchParams.toString());
+
       Object.entries(newParams).forEach(([key, value]) => {
-        if (value) {
-          params.set(key, value);
+        if (value !== undefined && value !== null && value !== "") {
+          params.set(key, String(value));
         } else {
           params.delete(key);
         }
       });
+
       router.push(`${pathname}?${params.toString()}`);
     },
     [searchParams, router, pathname]
@@ -149,7 +162,7 @@ export default function MarketplaceContent({
   const handlePageChange = useCallback(
     (newPage: number) => {
       setCurrentPage(newPage);
-      updateSearchParams({ page: newPage.toString() });
+      updateSearchParams({ page: String(newPage) });
     },
     [updateSearchParams]
   );
@@ -159,29 +172,24 @@ export default function MarketplaceContent({
       setSelectedToggle(newToggle);
       const newRenderStyle = TOGGLE_GROUP_OPTIONS[newToggle].gridApplyClass;
       setRenderStyle(newRenderStyle);
-      updateSearchParams({ view: newToggle.toString() });
+      updateSearchParams({ view: String(newToggle) });
     },
     [updateSearchParams]
   );
 
   // Sync state with URL parameters
   useEffect(() => {
-    setSearchTerm(searchParams.get("search") || "");
-    setSelectedItem(searchParams.get("sort") || "Price: High to Low");
-    setSortOrder((searchParams.get("sortOrder") as "asc" | "desc") || "desc");
-    setSelectedToggle(Number(searchParams.get("view")) || 0);
-    setCurrentPage(Number(searchParams.get("page")) || 1);
-    setSelectedCollection(
-      collection ||
-        (searchParams.get("collection") as NFTCollectionType) ||
-        NFT_COLLECTIONS.TILEVILLE
-    );
-    setRenderStyle(
-      TOGGLE_GROUP_OPTIONS[Number(searchParams.get("view")) || 0].gridApplyClass
-    );
+    const params = getInitialParams();
+    setSearchTerm(params.search);
+    setSelectedItem(params.sort);
+    setSortOrder(params.sortOrder);
+    setSelectedToggle(params.view);
+    setCurrentPage(params.page);
+    setSelectedCollection(params.collection);
+    setRenderStyle(TOGGLE_GROUP_OPTIONS[params.view].gridApplyClass);
   }, [searchParams, collection]);
 
-  // Render functions
+  // Component rendering functions
   const renderFilterControls = () => (
     <div className="mb-8 flex flex-wrap gap-3">
       {!isMarketplaceV2 && (
@@ -286,9 +294,8 @@ export default function MarketplaceContent({
         )}
         collection={selectedCollection}
         NFTCategory={
-          selectedCollection === NFT_COLLECTIONS.MINATY
-            ? nft.category
-            : selectedCollection === NFT_COLLECTIONS.MINAPUNKS
+          selectedCollection === NFT_COLLECTIONS.MINATY ||
+          selectedCollection === NFT_COLLECTIONS.MINAPUNKS
             ? nft.category
             : null
         }
@@ -296,6 +303,22 @@ export default function MarketplaceContent({
         isPublicMint={nft.is_public_mint === false ? false : true}
       />
     ));
+  };
+
+  const renderListHeader = () => {
+    if (renderStyle === TOGGLE_GROUP_OPTIONS[2].gridApplyClass) {
+      return (
+        <div className="list-header">
+          <div className="nft-item">Item</div>
+          <div className="Last-sold">Last Sold</div>
+          <div>Owner</div>
+          <div>Listed Time</div>
+          <div>Listed Price</div>
+          <div>MINTED</div>
+        </div>
+      );
+    }
+    return null;
   };
 
   // Error handling
@@ -318,18 +341,7 @@ export default function MarketplaceContent({
     >
       <div className="mx-auto max-w-[1280px] pt-3">
         {renderFilterControls()}
-
-        {/* NFT list header (for list view) */}
-        {renderStyle === TOGGLE_GROUP_OPTIONS[2].gridApplyClass && (
-          <div className="list-header">
-            <div className="nft-item">Item</div>
-            <div className="Last-sold">Last Sold</div>
-            <div>Owner</div>
-            <div>Listed Time</div>
-            <div>Listed Price</div>
-            <div>MINTED</div>
-          </div>
-        )}
+        {renderListHeader()}
 
         {/* NFT grid */}
         <div className="mb-16">

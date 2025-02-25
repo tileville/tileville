@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useCallback, useState } from "react";
 import { useDebounce } from "react-use";
 
-type SearchFriendsModalContentType = {
+type SearchFriendsModalContentProps = {
   walletAddress?: string;
   loggedInUserWalletAddress: string;
   loggedInUserFollowing: Set<string>;
@@ -19,7 +19,7 @@ export const SearchFriendsModalContent = ({
   loggedInUserWalletAddress,
   loggedInUserFollowing,
   loggedInUserFollowers,
-}: SearchFriendsModalContentType) => {
+}: SearchFriendsModalContentProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -34,7 +34,7 @@ export const SearchFriendsModalContent = ({
   );
 
   const { data: users = [], isLoading } = useGetAllUsers(
-    walletAddress ? walletAddress : "all",
+    walletAddress || "all",
     debouncedQuery
   );
 
@@ -60,7 +60,7 @@ export const SearchFriendsModalContent = ({
       );
     }
 
-    if (users.length === 0) {
+    if (!users.length) {
       return (
         <div className="flex min-h-[400px] items-center justify-center text-center">
           <div>
@@ -78,12 +78,7 @@ export const SearchFriendsModalContent = ({
         {users.map((user: User) => (
           <li key={user.username}>
             <UserListItem
-              userInfo={{
-                wallet_address: user.wallet_address,
-                avatar_url: user.avatar_url,
-                username: user.username,
-                fullname: user.fullname,
-              }}
+              userInfo={user}
               isFollowing={loggedInUserFollowing.has(user.wallet_address)}
               isFollowsYou={loggedInUserFollowers.has(user.wallet_address)}
               loggedInUserWalletAddress={loggedInUserWalletAddress}
@@ -105,7 +100,6 @@ export const SearchFriendsModalContent = ({
             alt="search"
           />
         </div>
-
         <input
           type="text"
           className="w-full rounded-lg bg-[#748A5B] py-2 pl-10 pr-8 font-semibold outline outline-[#38830A] placeholder:text-[#90B27B]"
@@ -114,7 +108,6 @@ export const SearchFriendsModalContent = ({
           onChange={handleSearchChange}
           autoComplete="off"
         />
-
         {searchQuery && (
           <button
             onClick={handleClearSearch}
@@ -125,7 +118,7 @@ export const SearchFriendsModalContent = ({
         )}
       </div>
 
-      <span className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <span className="text-xl font-bold">
           {debouncedQuery
             ? `Search Results (${users.length})`
@@ -136,7 +129,7 @@ export const SearchFriendsModalContent = ({
             <Spinner2 /> Searching...
           </span>
         )}
-      </span>
+      </div>
 
       {renderContent()}
     </>
