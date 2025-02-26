@@ -19,6 +19,7 @@ const postHandler = async (request: NextRequest) => {
     collectionTableName,
     collectionBucketName,
     collectionDescription,
+    imageFormat
   } = payload;
 
   // const authSignature = request.headers.get("Auth-Signature");
@@ -39,7 +40,7 @@ const postHandler = async (request: NextRequest) => {
       );
     }
 
-    const image_url = await fetchNFTImageUrl(nft_id, collectionBucketName);
+    const image_url = await fetchNFTImageUrl(nft_id, collectionBucketName , imageFormat);
     if (!image_url) {
       return Response.json(
         {
@@ -58,7 +59,7 @@ const postHandler = async (request: NextRequest) => {
     } = nftData;
     const nft_image: any = await createFileFromImageUrl({
       image_url,
-      name: `${nft_id}.png`,
+      name: `${nft_id}.${imageFormat}`,
     });
     console.log({ image_url, traits });
     const modified_traits: ProofOfNFT[] = traits.map(

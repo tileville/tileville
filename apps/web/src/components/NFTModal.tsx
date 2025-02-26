@@ -88,6 +88,7 @@ export const NFTModal = ({
   const collectionTableName = collectionConfig.table_name;
   const collectionBucketName = collectionConfig.bucket_name;
   const collectionDescription = collectionConfig.description;
+  const imageFormat = collectionConfig.img_format || "png";
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
@@ -165,6 +166,7 @@ export const NFTModal = ({
         collectionTableName,
         collectionBucketName,
         collectionDescription,
+        imageFormat,
       });
 
       console.log("186 response", response);

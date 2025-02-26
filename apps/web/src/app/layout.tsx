@@ -64,7 +64,7 @@ export default function RootLayout({
         >
           <PHProvider>
             <div className="gradient-bg min-h-screen !bg-fixed">
-              <NextTopLoader showSpinner={true} color="#378209" />
+              <NextTopLoader showSpinner={false} color="#378209" />
               <ClientLayout>
                 <div>{children}</div>
               </ClientLayout>

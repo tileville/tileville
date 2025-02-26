@@ -309,6 +309,7 @@ export const useMintNFT = () => {
     collectionTableName,
     collectionBucketName,
     collectionDescription,
+    imageFormat
   }: {
     nft_id: number;
     collection?: string;
@@ -316,6 +317,7 @@ export const useMintNFT = () => {
     collectionTableName: NFTTableNames;
     collectionBucketName: NFTBucketNames;
     collectionDescription: string;
+    imageFormat: string
   }) => {
     if (!networkStore.address) {
       networkStore.connectWallet(false);
@@ -341,6 +343,7 @@ export const useMintNFT = () => {
           collectionTableName,
           collectionBucketName,
           collectionDescription,
+          imageFormat
         }),
         headers: {
           "Auth-Signature": "abv1",

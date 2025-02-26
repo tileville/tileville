@@ -53,13 +53,14 @@ export function useMintMINANFT() {
     const reserved_price_reduce_key =
       collectionConfig.reserved_price_reduce_key ||
       RESERVED_PRICE_REDUCE_KEY_DEFAULT;
+    const image_format = collectionConfig.img_format || "png";
     console.log("feeMasterPublicKey", feeMasterPublicKey);
     const contractAddress = MINANFT_CONTRACT_ADDRESS;
     const chain: blockchain = CHAIN_NAME;
 
     const image = await createFileFromImageUrl({
       image_url: signed_image_url,
-      name: `${nft_id}.png`,
+      name: `${nft_id}.${image_format}`,
     });
 
     const owner = await getAccount();

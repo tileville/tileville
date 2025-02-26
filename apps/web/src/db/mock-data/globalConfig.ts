@@ -19,7 +19,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_cover.jpg",
       "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_profile.jpg",
       "featured_nfts": [37],
-      "description2": "The Anonymity Revolution, We descend as guardians where privacy fades. Each piece isn't just art - it's your key to digital freedom. Join the revolution."
+      "description2": "The Anonymity Revolution, We descend as guardians where privacy fades. Each piece isn't just art - it's your key to digital freedom. Join the revolution.",
+      "img_format": "png"
     },
     "Minaty": {
       "table_name": "minaty_nfts",
@@ -74,7 +75,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_cover.jpg",
       "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_profile.jpg",
       "featured_nfts": [73] ,
-      "description2": "Build a private, confidential club and a vip pass for Mina Protocol | Put on your mask, spread the vision"
+      "description2": "Build a private, confidential club and a vip pass for Mina Protocol | Put on your mask, spread the vision",
+      "img_format": "png"
     },
     "MinaPunks": {
       "table_name": "minapunks_nfts",
@@ -88,7 +90,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_cover.png",
       "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_profile.png",
       "featured_nfts": [],
-      "description2": "The MinaPunks NFT collection is a symbol of ownership and anonymity on the shining Mina blockchain. Punk owners are now inseparably connected to the Mina network." 
+      "description2": "The MinaPunks NFT collection is a symbol of ownership and anonymity on the shining Mina blockchain. Punk owners are now inseparably connected to the Mina network." ,
+      "img_format": "png"
     },
     "Tileville": {
       "table_name": "tileville_builder_nfts",
@@ -142,8 +145,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_cover.jpeg",
       "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_profile.png",
       "featured_nfts": [5],
-      "description2": "TileVille is a strategic city-building game on the Mina blockchain, where players construct and manage their own cities on the island of Nicobar using hexagonal tiles." 
-
+      "description2": "TileVille is a strategic city-building game on the Mina blockchain, where players construct and manage their own cities on the island of Nicobar using hexagonal tiles.",
+      "img_format": "png"
     }
   }
 };
