@@ -24,21 +24,17 @@ export const CompetitionCard = ({
 }: CompetitionCardProps) => {
   const [competitionStatus, setCompetitionStatus] =
     useState<CompetitionStatus>("upcoming");
-  const [currentDate] = useState(new Date());
 
   useEffect(() => {
-    const isStartBeforeCurrent = isBefore(competition.start_date, currentDate);
-    const isStartAfterCurrent = isAfter(competition.start_date, currentDate);
-    const isEndAfterCurrent = isAfter(competition.end_date, currentDate);
-    const isEndBeforeCurrent = isBefore(competition.end_date, currentDate);
-    if (isStartAfterCurrent) {
+    const currentDate = new Date();
+    if (isAfter(competition.start_date, currentDate)) {
       setCompetitionStatus("upcoming");
-    } else if (isEndBeforeCurrent) {
+    } else if (isBefore(competition.end_date, currentDate)) {
       setCompetitionStatus("over");
-    } else if (isStartBeforeCurrent && isEndAfterCurrent) {
+    } else {
       setCompetitionStatus("ongoing");
     }
-  }, []);
+  }, [competition.start_date, competition.end_date]);
 
   return (
     <div
@@ -48,7 +44,7 @@ export const CompetitionCard = ({
       <div className="relative col-span-12 aspect-square h-auto w-full overflow-hidden rounded-br-md md:col-span-4 md:h-full md:rounded-none xl:h-[400px] xl:w-[400px]">
         <Image
           src={competition.poster_url ?? DEFAULT_POSTER_URL}
-          alt="competition poster url"
+          alt="competition poster"
           fill
           className="h-full w-full object-cover object-left transition-transform group-hover:scale-110"
           sizes="(max-width: 1600px) 100%"
@@ -68,7 +64,6 @@ export const CompetitionCard = ({
               {competition.participation_fee} MINA
             </p>
           </div>
-
           {competitionStatus === "upcoming" && (
             <>
               <div className="h-full w-[1px] bg-primary/30"></div>
@@ -83,7 +78,6 @@ export const CompetitionCard = ({
               </div>
             </>
           )}
-
           <div className="h-full w-[1px] bg-primary/30"></div>
           <div className="flex items-center gap-2">
             <p>Prize Money 🤑:</p>
@@ -93,7 +87,7 @@ export const CompetitionCard = ({
           </div>
         </div>
       </div>
-      <div className=" col-span-12 px-1 md:col-span-3 md:py-4">
+      <div className="col-span-12 px-1 md:col-span-3 md:py-4">
         <div className="grid h-full grid-cols-4 flex-wrap items-center justify-between md:flex md:flex-col md:items-start">
           <div className="col-span-4 mx-auto py-1 md:mr-4 md:ms-auto">
             <Link
@@ -105,26 +99,16 @@ export const CompetitionCard = ({
           </div>
           <div className="col-span-4 mx-auto mb-1 flex items-center gap-2">
             {competitionStatus === "upcoming" && (
-              <div>
-                <h3 className="py-2 text-xl font-medium md:py-4">
-                  Competition Starts In
-                </h3>
-                <CountdownTimer initialTime={getTime(competition.start_date)} />
-              </div>
+              <CountdownTimer initialTime={getTime(competition.start_date)} />
             )}
             {competitionStatus === "ongoing" && (
-              <div>
-                <h3 className="py-2 text-xl font-medium md:py-4">
-                  Competition Ends In
-                </h3>
-                <CountdownTimer initialTime={getTime(competition.end_date)} />
-              </div>
+              <CountdownTimer initialTime={getTime(competition.end_date)} />
             )}
           </div>
           {competition.is_speed_version && (
             <SpeedVersionContent speedDuration={competition.speed_duration} />
           )}
-          <div className="md:flex-0 col-span-4 flex w-full flex-1 flex-grow md:flex-none">
+          <div className="col-span-4 flex w-full md:flex-none">
             <JoinCompetitionButton
               competitionStatus={competitionStatus}
               joinCompetition={() => {
@@ -148,9 +132,8 @@ export const CompetitionCard = ({
 export const getDateDifference = (date1: string, date2: string): string => {
   const time1 = new Date(date1);
   const time2 = new Date(date2);
-
-  const differenceMs = time2.getTime() - time1.getTime();
-  const totalHours = Math.round(differenceMs / (1000 * 60 * 60));
-
+  const totalHours = Math.round(
+    (time2.getTime() - time1.getTime()) / (1000 * 60 * 60)
+  );
   return `${totalHours} hour${totalHours !== 1 ? "s" : ""}`;
 };

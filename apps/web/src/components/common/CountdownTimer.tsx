@@ -7,76 +7,65 @@ type CountdownTimerProps = {
   className?: string;
 };
 
+const formatTimeUnit = (unit: number) => unit.toString().padStart(2, "0");
+
 export const useCountdownTimer = (initialTime: number) => {
-  const [countDownTime, setCountDownTIme] = useState({
+  const [countDownTime, setCountDownTime] = useState({
     days: "00",
     hours: "00",
     minutes: "00",
     seconds: "00",
   });
-  let intervalId: NodeJS.Timer;
-
-  const getTimeDifference = (initialTime: number) => {
-    const currentTime = getTime(new Date());
-
-    const timeDiffrence = Math.abs(initialTime - currentTime);
-    const days =
-      Math.floor(timeDiffrence / (24 * 60 * 60 * 1000)) >= 10
-        ? Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))
-        : `0${Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))}`;
-
-    const hours =
-      Math.floor((timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)) >=
-      10
-        ? Math.floor((timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60))
-        : `0${Math.floor(
-            (timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)
-          )}`;
-    const minutes =
-      Math.floor((timeDiffrence % (60 * 60 * 1000)) / (1000 * 60)) >= 10
-        ? Math.floor((timeDiffrence % (60 * 60 * 1000)) / (1000 * 60))
-        : `0${Math.floor((timeDiffrence % (60 * 60 * 1000)) / (1000 * 60))}`;
-    const seconds =
-      Math.floor((timeDiffrence % (60 * 1000)) / 1000) >= 10
-        ? Math.floor((timeDiffrence % (60 * 1000)) / 1000)
-        : `0${Math.floor((timeDiffrence % (60 * 1000)) / 1000)}`;
-    if (timeDiffrence < 0) {
-      setCountDownTIme({
-        days: "00",
-        hours: "00",
-        minutes: "00",
-        seconds: "00",
-      });
-      clearInterval(intervalId);
-    } else {
-      setCountDownTIme({
-        days: days.toString(),
-        hours: hours.toString(),
-        minutes: minutes.toString(),
-        seconds: seconds.toString(),
-      });
-    }
-  };
 
   useEffect(() => {
-    if (Number.isInteger(initialTime)) {
-      intervalId = setInterval(() => {
-        getTimeDifference(initialTime);
-      }, 1000);
-    }
-    return () => {
-      clearInterval(intervalId);
+    if (!Number.isInteger(initialTime)) return;
+
+    const updateCountdown = () => {
+      const currentTime = getTime(new Date());
+      const timeDifference = Math.max(0, initialTime - currentTime);
+
+      const days = formatTimeUnit(
+        Math.floor(timeDifference / (24 * 60 * 60 * 1000))
+      );
+      const hours = formatTimeUnit(
+        Math.floor((timeDifference % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60))
+      );
+      const minutes = formatTimeUnit(
+        Math.floor((timeDifference % (60 * 60 * 1000)) / (1000 * 60))
+      );
+      const seconds = formatTimeUnit(
+        Math.floor((timeDifference % (60 * 1000)) / 1000)
+      );
+
+      setCountDownTime({ days, hours, minutes, seconds });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    updateCountdown();
+    const intervalId = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(intervalId);
   }, [initialTime]);
+
   return { countDownTime };
 };
+
+const TimeUnit = ({ value, label }: { value: string; label: string }) => (
+  <div className="relative flex flex-col items-center gap-1">
+    <div className="flex items-center justify-center rounded-lg bg-primary/30 px-2 py-1 text-center">
+      <span className="text-center font-semibold text-primary">{value}</span>
+    </div>
+    <span className="text-center text-xs capitalize text-black/60">
+      {+value === 1 ? label.slice(0, -1) : label}
+    </span>
+  </div>
+);
 
 export const CountdownTimer = ({
   initialTime,
   className,
 }: CountdownTimerProps) => {
   const { countDownTime } = useCountdownTimer(initialTime);
+
   return (
     <div
       className={clsx(
@@ -85,49 +74,13 @@ export const CountdownTimer = ({
       )}
     >
       <div className="flex justify-center gap-3">
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.days}
-            </span>
-          </div>
-          <span className="text-center text-xs capitalize text-black/60">
-            {+countDownTime?.days == 1 ? "Day" : "Days"}
-          </span>
-        </div>
+        <TimeUnit value={countDownTime.days} label="Days" />
         :
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.hours}
-            </span>
-          </div>
-          <span className="text-center text-xs font-medium text-black/60">
-            {+countDownTime?.hours == 1 ? "Hour" : "Hours"}
-          </span>
-        </div>
+        <TimeUnit value={countDownTime.hours} label="Hours" />
         :
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.minutes}
-            </span>
-          </div>
-          <span className="text-center text-xs capitalize text-black/60">
-            {+countDownTime?.minutes == 1 ? "Minute" : "Minutes"}
-          </span>
-        </div>
+        <TimeUnit value={countDownTime.minutes} label="Minutes" />
         :
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.seconds}
-            </span>
-          </div>
-          <span className="text-center text-xs capitalize text-black/60">
-            {+countDownTime?.seconds == 1 ? "Second" : "Seconds"}
-          </span>
-        </div>
+        <TimeUnit value={countDownTime.seconds} label="Seconds" />
       </div>
     </div>
   );
