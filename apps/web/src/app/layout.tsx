@@ -7,6 +7,7 @@ import { ClientLayout } from "./ClientLayout";
 import { PHProvider } from "./providers";
 import { Toaster } from "react-hot-toast";
 import { roboto } from "@/styles/fonts";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata = {
   title: "TileVille",
@@ -63,6 +64,7 @@ export default function RootLayout({
         >
           <PHProvider>
             <div className="gradient-bg min-h-screen !bg-fixed">
+              <NextTopLoader showSpinner={true} color="#378209" />
               <ClientLayout>
                 <div>{children}</div>
               </ClientLayout>
