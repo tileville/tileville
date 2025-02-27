@@ -1,7 +1,7 @@
 import { Dialog, Flex } from "@radix-ui/themes";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { useNetworkStore, useParticipationFee } from "@/lib/stores/network";
@@ -46,7 +46,7 @@ export const GameEntryFeesModal = ({
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   // Refs
-  let timeoutId: NodeJS.Timeout;
+  const timeoutIdRef = useRef<NodeJS.Timeout>();
 
   // Mutations
   const validateVoucher = useMutation({
@@ -56,6 +56,19 @@ export const GameEntryFeesModal = ({
       setVoucherValidationResponse(response);
     },
   });
+
+  // Computed values
+  const paymentType = voucherValidationResponse.isValid
+    ? "VOUCHER"
+    : competition.participation_fee === 0
+    ? "FREE"
+    : "NETWORK";
+
+  const actionButtonText = !networkStore.address
+    ? "Connect Wallet"
+    : voucherValidationResponse.isValid
+    ? "Redeem Code"
+    : "Pay Entry Fees";
 
   // Handlers
   const handlePayParticipationFees = async () => {
@@ -77,12 +90,6 @@ export const GameEntryFeesModal = ({
       network: networkStore.minaNetwork?.networkID || "berkeley",
     });
 
-    const paymentType = voucherValidationResponse.isValid
-      ? "VOUCHER"
-      : competition.participation_fee === 0
-      ? "FREE"
-      : "NETWORK";
-
     const data = await payParticipationFees({
       participation_fee: competition.participation_fee ?? 0,
       treasury_address: competition.treasury_address || DEFAULT_TRASURY_ADDRESS,
@@ -99,7 +106,7 @@ export const GameEntryFeesModal = ({
         `You have joined the ${competition.name} competition successfully. Redirecting you to the game screen now.`
       );
 
-      timeoutId = setTimeout(() => {
+      timeoutIdRef.current = setTimeout(() => {
         router.push(
           `/competitions/${competition.unique_keyname}/game/${data.id}`
         );
@@ -126,10 +133,17 @@ export const GameEntryFeesModal = ({
     setIsVoucherCode(false);
   };
 
+  const handleVoucherInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVoucherValidationResponse({ isValid: false, message: "" });
+    setVoucherCode(e.target.value);
+  };
+
   // Effects
   useEffect(() => {
     return () => {
-      clearTimeout(timeoutId);
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
     };
   }, []);
 
@@ -143,16 +157,15 @@ export const GameEntryFeesModal = ({
           type="text"
           placeholder="Enter 14 character voucher code"
           className="border-primary-30 h-full w-full rounded-md border bg-transparent px-2 py-2 font-medium outline-none placeholder:text-primary/30"
-          onChange={(e) => {
-            setVoucherValidationResponse({ isValid: false, message: "" });
-            setVoucherCode(e.target.value);
-          }}
+          onChange={handleVoucherInputChange}
           value={voucherCode}
+          aria-label="Voucher code"
         />
         <button
           className="relative flex min-w-[100px] items-center justify-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90 disabled:bg-primary/80"
           onClick={handleApplyVoucher}
           disabled={voucherCode.length === 0 || validateVoucher.isLoading}
+          aria-label="Apply voucher"
         >
           {validateVoucher.isLoading && (
             <span className="absolute left-2 top-[5px] w-5">
@@ -164,6 +177,7 @@ export const GameEntryFeesModal = ({
         <button
           className="text-xs font-medium text-black/70 underline"
           onClick={handleRemoveVoucher}
+          aria-label="Remove voucher"
         >
           remove
         </button>
@@ -175,7 +189,7 @@ export const GameEntryFeesModal = ({
     if (voucherValidationResponse.isValid) {
       return (
         <span className="text-primary">
-          Voucher code is valid. click on redeem code button to join the
+          Voucher code is valid. Click on redeem code button to join the
           competition for free.
         </span>
       );
@@ -192,11 +206,6 @@ export const GameEntryFeesModal = ({
     return null;
   };
 
-  const getActionButtonText = () => {
-    if (!networkStore.address) return "Connect Wallet";
-    return voucherValidationResponse.isValid ? "Redeem Code" : "Pay Entry Fees";
-  };
-
   // Render
   return (
     <Dialog.Root open={open}>
@@ -204,11 +213,14 @@ export const GameEntryFeesModal = ({
         <Dialog.Title>Pay Participation Fees</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           You need to pay one time participation fees of{" "}
-          {competition.participation_fee} MINA token to join{" "}
-          <strong>{competition.name}</strong> competition.
+          <span className="font-medium">
+            {competition.participation_fee} MINA
+          </span>{" "}
+          token to join <strong>{competition.name}</strong> competition.
           <button
             className="block text-xs font-medium text-primary"
             onClick={() => setIsVoucherCode(true)}
+            aria-expanded={isShowVoucherCode}
           >
             Have a voucher code?
           </button>
@@ -231,7 +243,7 @@ export const GameEntryFeesModal = ({
               className="relative min-w-[160px] rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90 disabled:bg-primary/80"
               disabled={isPaymentLoading}
             >
-              {getActionButtonText()}
+              {actionButtonText}
               {isPaymentLoading && (
                 <Spinner className="!absolute right-4 top-1/2" />
               )}
