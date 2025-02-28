@@ -19,6 +19,11 @@ import { Spinner } from "../../common/Spinner";
 import { WhyToolTip } from "./whyToolTip";
 import ToggleSwitch from "@/components/common/ToggleSwitch";
 
+// Constants
+const INPUT_PRIMARY_CLASSES =
+  "border-primary min-h-10 h-[40px] w-full rounded-md border-2 bg-transparent px-2 font-medium outline-none placeholder:text-primary/30 text-base";
+
+// Types
 type EditProfileModalType = {
   closeModal: () => void;
   modalOpen: boolean;
@@ -40,9 +45,6 @@ type EditProfileModalType = {
   isUserHasProfile: boolean;
 };
 
-const INPUT_PRIMARY_CLASSES =
-  "border-primary min-h-10 h-[40px] w-full rounded-md border-2 bg-transparent px-2 font-medium outline-none placeholder:text-primary/30 text-base";
-
 type SocialMediaFieldProps = {
   iconSrc: string;
   platform: string;
@@ -52,6 +54,19 @@ type SocialMediaFieldProps = {
   setValue: UseFormSetValue<IFormInput>;
 };
 
+type FormFieldProps = {
+  label: string;
+  id: string;
+  placeholder: string;
+  register: UseFormRegister<IFormInput>;
+  registerOptions?: object;
+  error?: FieldError | undefined;
+  errorMessage?: string;
+  type?: string;
+  required?: boolean;
+};
+
+// Component Functions
 const SocialMediaField = ({
   iconSrc,
   platform,
@@ -92,18 +107,6 @@ const SocialMediaField = ({
   </div>
 );
 
-type FormFieldProps = {
-  label: string;
-  id: string;
-  placeholder: string;
-  register: UseFormRegister<IFormInput>;
-  registerOptions?: object;
-  error?: FieldError | undefined;
-  errorMessage?: string;
-  type?: string;
-  required?: boolean;
-};
-
 const FormField = ({
   label,
   id,
@@ -143,6 +146,7 @@ const FormField = ({
   </div>
 );
 
+// Main Component
 export const EditProfileModal = ({
   closeModal,
   modalOpen,
@@ -203,6 +207,70 @@ export const EditProfileModal = ({
     );
   };
 
+  const renderAvatar = () => (
+    <div
+      className="group relative mx-auto h-[85px] w-[85px] rounded-full"
+      onClick={handleToggle}
+    >
+      <Image
+        src={avatarUrl}
+        width={80}
+        height={80}
+        alt="profile"
+        className="h-full w-full rounded-full object-cover"
+      />
+
+      <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
+      <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
+        <CameraIcon />
+      </span>
+    </div>
+  );
+
+  const renderFormButtons = () => (
+    <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
+      <button
+        className="h-[40px] rounded-lg border border-primary bg-primary/30 px-5 py-1 text-lg text-white hover:bg-primary/50 md:text-xl"
+        onClick={closeModal}
+        type="button"
+      >
+        cancel
+      </button>
+
+      <button
+        className="h-[40px] rounded-lg bg-primary px-3 text-lg text-white hover:bg-primary/90 md:text-xl"
+        type="submit"
+        disabled={isLoading}
+      >
+        Save Changes
+        {isLoading && <Spinner className="ms-5 align-middle" />}
+      </button>
+    </div>
+  );
+
+  const renderSocialMediaFields = () => (
+    <div className="mt-4 md:mt-8">
+      <h3 className="text-xl font-bold">Social Media Links</h3>
+      <p className="text-sm text-[#C60000]">
+        at least provide us with one social link.
+      </p>
+
+      <div className="mt-6 flex flex-col gap-4 text-base md:text-xl">
+        {socialMediaPlatforms.map((platform) => (
+          <SocialMediaField
+            key={platform.name}
+            iconSrc={platform.iconSrc}
+            platform={platform.name}
+            register={register}
+            fieldName={platform.fieldName}
+            watch={watch}
+            setValue={setValue}
+          />
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <Modal
       isOpen={modalOpen}
@@ -222,25 +290,7 @@ export const EditProfileModal = ({
               onSubmit={handleSubmit(onSubmit)}
               className="left-left text-base text-black"
             >
-              <div className="">
-                <div
-                  className="group relative mx-auto h-[85px] w-[85px] rounded-full"
-                  onClick={handleToggle}
-                >
-                  <Image
-                    src={avatarUrl}
-                    width={80}
-                    height={80}
-                    alt="profile"
-                    className="h-full w-full rounded-full object-cover"
-                  />
-
-                  <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
-                  <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                    <CameraIcon />
-                  </span>
-                </div>
-              </div>
+              {renderAvatar()}
 
               <div className="grid grid-cols-2 gap-x-3 gap-y-2 md:gap-x-8 md:gap-y-4">
                 <FormField
@@ -290,45 +340,8 @@ export const EditProfileModal = ({
                 />
               </div>
 
-              <div className="mt-4 md:mt-8">
-                <h3 className="text-xl font-bold">Social Media Links</h3>
-                <p className="text-sm text-[#C60000]">
-                  at least provide us with one social link.
-                </p>
-
-                <div className="mt-6 flex flex-col gap-4 text-base md:text-xl">
-                  {socialMediaPlatforms.map((platform) => (
-                    <SocialMediaField
-                      key={platform.name}
-                      iconSrc={platform.iconSrc}
-                      platform={platform.name}
-                      register={register}
-                      fieldName={platform.fieldName}
-                      watch={watch}
-                      setValue={setValue}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
-                <button
-                  className="h-[40px] rounded-lg border border-primary bg-primary/30 px-5 py-1 text-lg text-white hover:bg-primary/50 md:text-xl"
-                  onClick={closeModal}
-                  type="button"
-                >
-                  cancel
-                </button>
-
-                <button
-                  className="h-[40px] rounded-lg bg-primary px-3 text-lg text-white hover:bg-primary/90 md:text-xl"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  Save Changes
-                  {isLoading && <Spinner className="ms-5 align-middle" />}
-                </button>
-              </div>
+              {renderSocialMediaFields()}
+              {renderFormButtons()}
             </form>
           </div>
         </div>
