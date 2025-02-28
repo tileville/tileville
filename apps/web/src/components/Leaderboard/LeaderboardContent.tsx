@@ -13,6 +13,7 @@ import TableSkeleton from "./TableSkeleton";
 import { DropdownTriggerContent } from "./DropdownTriggerContent";
 import { CompetitionMenuItem } from "./CompetitionMenuItem";
 
+// Type definitions
 export type SelectedCompetition = {
   id: number;
   name: string;
@@ -31,8 +32,12 @@ type LeaderboardResult = {
   wallet_address: string;
 };
 
-const SKELETON_ITEM_COUNT = 10;
+type CompetitionStatusProps = {
+  status: "ONGOING" | "UPCOMING" | "ENDED";
+};
 
+// Constants
+const SKELETON_ITEM_COUNT = 10;
 const skeletonItems = Array.from(
   { length: SKELETON_ITEM_COUNT },
   (_, index) => ({
@@ -40,11 +45,8 @@ const skeletonItems = Array.from(
   })
 );
 
-const CompetitionStatusTag = ({
-  status,
-}: {
-  status: "ONGOING" | "UPCOMING" | "ENDED";
-}) => {
+// Helper components
+const CompetitionStatusTag = ({ status }: CompetitionStatusProps) => {
   const getTagStyles = () => {
     switch (status) {
       case "ONGOING":
@@ -70,6 +72,11 @@ export default function LeaderboardContent() {
   const searchParams = useSearchParams();
   const competitionParam = searchParams.get("competition");
 
+  // State
+  const [selectedCompetition, setSelectedCompetition] =
+    useState<SelectedCompetition | null>(null);
+
+  // Data fetching
   const {
     data: competitionData,
     isError: isCompetitionError,
@@ -77,59 +84,41 @@ export default function LeaderboardContent() {
     isLoading: competitionNameLoading,
   } = useCompetitionsName();
 
-  const [selectedCompetition, setSelectedCompetition] =
-    useState<SelectedCompetition | null>(null);
-
-  // Add useEffect to set initial competition when data is loaded
-  useEffect(() => {
-    if (competitionData && competitionData.length > 0) {
-      if (competitionParam) {
-        const matchedCompetition = competitionData.find(
-          (comp) => comp.unique_keyname === competitionParam
-        );
-        if (matchedCompetition) {
-          setSelectedCompetition({
-            id: matchedCompetition.id,
-            name: matchedCompetition.name,
-            competition_key: matchedCompetition.unique_keyname,
-            start_date: matchedCompetition.start_date,
-            end_date: matchedCompetition.end_date,
-          });
-        }
-      } else {
-        setSelectedCompetition({
-          id: competitionData[0].id,
-          name: competitionData[0].name,
-          competition_key: competitionData[0].unique_keyname,
-          start_date: competitionData[0].start_date,
-          end_date: competitionData[0].end_date,
-        });
-      }
-    }
-  }, [competitionData, competitionParam]);
-
-  // Modify the useLeaderboardEntries call to only fetch when selectedCompetition exists
   const { data: leaderboardData = [], isLoading } = useLeaderboardEntries(
     selectedCompetition?.competition_key || ""
   );
 
+  // Helper functions
+  const createSelectedCompetition = (
+    competition: any
+  ): SelectedCompetition => ({
+    id: competition.id,
+    name: competition.name,
+    competition_key: competition.unique_keyname,
+    start_date: competition.start_date,
+    end_date: competition.end_date,
+  });
+
+  const findCompetitionByKey = (key: string) => {
+    if (!competitionData) return null;
+    return competitionData.find((comp) => comp.unique_keyname === key);
+  };
+
+  // Effects
   useEffect(() => {
-    if (competitionData && competitionParam) {
-      const matchedCompetition = competitionData.find(
-        (comp) => comp.unique_keyname === competitionParam
-      );
+    if (!competitionData || competitionData.length === 0) return;
+
+    if (competitionParam) {
+      const matchedCompetition = findCompetitionByKey(competitionParam);
       if (matchedCompetition) {
-        setSelectedCompetition({
-          id: matchedCompetition.id,
-          name: matchedCompetition.name,
-          competition_key: matchedCompetition.unique_keyname,
-          start_date: matchedCompetition.start_date,
-          end_date: matchedCompetition.end_date,
-        });
+        setSelectedCompetition(createSelectedCompetition(matchedCompetition));
       }
+    } else {
+      setSelectedCompetition(createSelectedCompetition(competitionData[0]));
     }
   }, [competitionData, competitionParam]);
 
+  // Event handlers
   const handleCompetitionChange = (competition: SelectedCompetition) => {
     setSelectedCompetition(competition);
     const newSearchParams = new URLSearchParams(
@@ -141,6 +130,94 @@ export default function LeaderboardContent() {
     });
   };
 
+  // Render helpers
+  const renderCompetitionSection = (competitions: any[], title: string) => {
+    if (competitions.length === 0) return null;
+
+    return (
+      <>
+        <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
+          {title}
+        </div>
+        {competitions.map((competition) => (
+          <CompetitionMenuItem
+            key={competition.unique_keyname}
+            competition={competition}
+            isSelected={
+              selectedCompetition?.competition_key ===
+              competition.unique_keyname
+            }
+            onSelect={handleCompetitionChange}
+          />
+        ))}
+      </>
+    );
+  };
+
+  const renderCompetitionDropdown = () => {
+    if (competitionNameLoading) {
+      return skeletonItems.map((item) => (
+        <DropdownMenu.Item
+          key={item.id}
+          className="!md:h-8 !h-auto py-2 hover:bg-primary"
+        >
+          <Skeleton className="h-5 w-full" />
+        </DropdownMenu.Item>
+      ));
+    }
+
+    const { ongoing, upcoming, past } = organizeCompetitions(competitionData);
+
+    return (
+      <>
+        {renderCompetitionSection(ongoing, "Ongoing Competitions")}
+        {renderCompetitionSection(upcoming, "Upcoming Competitions")}
+        {renderCompetitionSection(past, "Past Competitions")}
+      </>
+    );
+  };
+
+  const renderLeaderboardContent = () => {
+    if (isLoading) {
+      return <TableSkeleton />;
+    }
+
+    if (leaderboardData.length === 0) {
+      return (
+        <Table.Row>
+          <Table.Cell colSpan={5}>
+            <h2 className="text-center text-2xl font-semibold">
+              No games are played yet :(
+            </h2>
+          </Table.Cell>
+        </Table.Row>
+      );
+    }
+
+    return leaderboardData.map((entry: LeaderboardResult, index: number) => (
+      <Table.Row key={entry.id}>
+        <Table.Cell>{index + 1}</Table.Cell>
+        <Table.Cell>
+          {entry.username ? (
+            <Link
+              href={`u/${entry.username}`}
+              className="underline hover:no-underline"
+              target="_blank"
+            >
+              {entry.username}
+            </Link>
+          ) : (
+            <span className="ps-4">-</span>
+          )}
+        </Table.Cell>
+        <Table.RowHeaderCell>{entry.wallet_address}</Table.RowHeaderCell>
+        <Table.Cell>{entry.game_id}</Table.Cell>
+        <Table.Cell>{entry.score}</Table.Cell>
+      </Table.Row>
+    ));
+  };
+
+  // Error handling
   if (isCompetitionError) {
     return (
       <div className="p-30">
@@ -149,9 +226,11 @@ export default function LeaderboardContent() {
     );
   }
 
+  // Main render
   return (
     <div className="p-4 pb-8 pt-16 md:py-40">
       <div className="mx-auto max-w-[1280px]">
+        {/* Competition selector */}
         <div className="mb-3 flex items-center justify-between gap-3">
           <div className="grid grid-cols-2 items-center gap-2 md:flex md:gap-3">
             <p className="col-auto whitespace-nowrap text-sm md:text-base">
@@ -167,83 +246,7 @@ export default function LeaderboardContent() {
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="min-w-[200px] max-w-[350px] !bg-transparent backdrop-blur-2xl md:min-w-[320px] md:max-w-none">
-                {competitionNameLoading ? (
-                  <>
-                    {skeletonItems.map((item) => (
-                      <DropdownMenu.Item
-                        key={item.id}
-                        className="!md:h-8 !h-auto py-2 hover:bg-primary"
-                      >
-                        <Skeleton className="h-5 w-full" />
-                      </DropdownMenu.Item>
-                    ))}
-                  </>
-                ) : (
-                  (() => {
-                    const { ongoing, upcoming, past } =
-                      organizeCompetitions(competitionData);
-                    return (
-                      <>
-                        {ongoing.length > 0 && (
-                          <>
-                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
-                              Ongoing Competitions
-                            </div>
-                            {ongoing.map((competition: any) => (
-                              <CompetitionMenuItem
-                                key={competition.unique_keyname}
-                                competition={competition}
-                                isSelected={
-                                  selectedCompetition?.competition_key ===
-                                  competition.unique_keyname
-                                }
-                                onSelect={handleCompetitionChange}
-                              />
-                            ))}
-                          </>
-                        )}
-
-                        {upcoming.length > 0 && (
-                          <>
-                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
-                              Upcoming Competitions
-                            </div>
-                            {upcoming.map((competition: any) => (
-                              <CompetitionMenuItem
-                                key={competition.unique_keyname}
-                                competition={competition}
-                                isSelected={
-                                  selectedCompetition?.competition_key ===
-                                  competition.unique_keyname
-                                }
-                                onSelect={handleCompetitionChange}
-                              />
-                            ))}
-                          </>
-                        )}
-
-                        {past.length > 0 && (
-                          <>
-                            <div className="border-b border-primary/20 px-4 py-2 text-sm font-semibold text-primary">
-                              Past Competitions
-                            </div>
-                            {past.map((competition: any) => (
-                              <CompetitionMenuItem
-                                key={competition.unique_keyname}
-                                competition={competition}
-                                isSelected={
-                                  selectedCompetition?.competition_key ===
-                                  competition.unique_keyname
-                                }
-                                onSelect={handleCompetitionChange}
-                              />
-                            ))}
-                          </>
-                        )}
-                      </>
-                    );
-                  })()
-                )}
+                {renderCompetitionDropdown()}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           </div>
@@ -257,6 +260,8 @@ export default function LeaderboardContent() {
             />
           )}
         </div>
+
+        {/* Leaderboard table */}
         <Table.Root>
           <Table.Header>
             <Table.Row className="whitespace-nowrap">
@@ -268,49 +273,7 @@ export default function LeaderboardContent() {
             </Table.Row>
           </Table.Header>
 
-          <Table.Body>
-            {isLoading ? (
-              <TableSkeleton />
-            ) : (
-              <>
-                {leaderboardData.length > 0 ? (
-                  leaderboardData.map(
-                    (entry: LeaderboardResult, index: number) => (
-                      <Table.Row key={entry.id}>
-                        <Table.Cell>{index + 1}</Table.Cell>
-                        <Table.Cell>
-                          {entry.username ? (
-                            <Link
-                              href={`u/${entry.username}`}
-                              className="underline hover:no-underline"
-                              target="_blank"
-                            >
-                              {entry.username}
-                            </Link>
-                          ) : (
-                            <span className="ps-4">-</span>
-                          )}
-                        </Table.Cell>
-                        <Table.RowHeaderCell>
-                          {entry.wallet_address}
-                        </Table.RowHeaderCell>
-                        <Table.Cell>{entry.game_id}</Table.Cell>
-                        <Table.Cell>{entry.score}</Table.Cell>
-                      </Table.Row>
-                    )
-                  )
-                ) : (
-                  <Table.Row>
-                    <Table.Cell colSpan={5}>
-                      <h2 className="text-center text-2xl font-semibold">
-                        No games are played yet :(
-                      </h2>
-                    </Table.Cell>
-                  </Table.Row>
-                )}
-              </>
-            )}
-          </Table.Body>
+          <Table.Body>{renderLeaderboardContent()}</Table.Body>
         </Table.Root>
       </div>
     </div>
