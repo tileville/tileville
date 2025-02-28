@@ -19,6 +19,11 @@ import { Spinner } from "../../common/Spinner";
 import { WhyToolTip } from "./whyToolTip";
 import ToggleSwitch from "@/components/common/ToggleSwitch";
 
+// Constants
+const INPUT_PRIMARY_CLASSES =
+  "border-primary min-h-10 h-[40px] w-full rounded-md border-2 bg-transparent px-2 font-medium outline-none placeholder:text-primary/30 text-base";
+
+// Types
 type EditProfileModalType = {
   closeModal: () => void;
   modalOpen: boolean;
@@ -40,9 +45,108 @@ type EditProfileModalType = {
   isUserHasProfile: boolean;
 };
 
-const INPUT_PRIMARY_CLASSES =
-  "border-primary min-h-10 h-[40px] w-full rounded-md border-2 bg-transparent px-2 font-medium outline-none placeholder:text-primary/30 text-base";
+type SocialMediaFieldProps = {
+  iconSrc: string;
+  platform: string;
+  register: UseFormRegister<IFormInput>;
+  fieldName: string;
+  watch: UseFormWatch<IFormInput>;
+  setValue: UseFormSetValue<IFormInput>;
+};
 
+type FormFieldProps = {
+  label: string;
+  id: string;
+  placeholder: string;
+  register: UseFormRegister<IFormInput>;
+  registerOptions?: object;
+  error?: FieldError | undefined;
+  errorMessage?: string;
+  type?: string;
+  required?: boolean;
+};
+
+// Component Functions
+const SocialMediaField = ({
+  iconSrc,
+  platform,
+  register,
+  fieldName,
+  watch,
+  setValue,
+}: SocialMediaFieldProps) => (
+  <div className="relative grid grid-cols-12 items-center">
+    <div className="col-span-12 mb-2 flex items-center gap-1 md:col-span-4 md:mb-0">
+      <div>
+        <Image
+          className="h-[30px] w-[30px] md:h-10 md:w-10"
+          src={iconSrc}
+          width={40}
+          height={40}
+          alt={platform.toLowerCase()}
+        />
+      </div>
+      <p>{platform}</p>
+    </div>
+    <div className="col-span-12 flex flex-1 items-center gap-1 md:col-span-8 md:gap-3">
+      <div className="w-full">
+        <input
+          type="text"
+          placeholder="username"
+          className={INPUT_PRIMARY_CLASSES}
+          {...register(`${fieldName}.username`)}
+        />
+      </div>
+      <div className="absolute right-0 top-0 md:static">
+        <ToggleSwitch
+          isPublic={watch(`${fieldName}.isPublic`)}
+          onChange={(value) => setValue(`${fieldName}.isPublic`, value)}
+        />
+      </div>
+    </div>
+  </div>
+);
+
+const FormField = ({
+  label,
+  id,
+  placeholder,
+  register,
+  registerOptions = {},
+  error,
+  errorMessage,
+  type = "text",
+  required = false,
+}: FormFieldProps) => (
+  <div>
+    <label htmlFor={id} className="mb-1 block">
+      {label}
+      {required && <span className="text-red-500">*</span>}
+    </label>
+
+    <div>
+      <input
+        type={type}
+        className={INPUT_PRIMARY_CLASSES}
+        id={id}
+        placeholder={placeholder}
+        {...register(id, registerOptions)}
+      />
+    </div>
+
+    {error && (
+      <span
+        className={`${
+          error ? "opacity-100" : ""
+        } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
+      >
+        {errorMessage || `${label} is required..`}
+      </span>
+    )}
+  </div>
+);
+
+// Main Component
 export const EditProfileModal = ({
   closeModal,
   modalOpen,
@@ -63,37 +167,122 @@ export const EditProfileModal = ({
   setValue,
   isUserHasProfile,
 }: EditProfileModalType) => {
+  const socialMediaPlatforms = [
+    {
+      name: "Twitter",
+      iconSrc: "/icons/x.svg",
+      fieldName: "twitter_username",
+    },
+    {
+      name: "Telegram",
+      iconSrc: "/icons/telegram.svg",
+      fieldName: "telegram_username",
+    },
+    {
+      name: "Discord",
+      iconSrc: "/icons/discord.svg",
+      fieldName: "discord_username",
+    },
+  ];
+
+  const renderTriggerButton = () => {
+    if (isUserHasProfile) {
+      return (
+        <button className="badge-base-classes absolute right-3 top-3 z-10">
+          <span>
+            {isProfileIncomplete ? "Complete Profile" : "Edit Profile"}
+          </span>
+          <span className="text-white">
+            <Pencil1Icon />
+          </span>
+        </button>
+      );
+    }
+
+    return (
+      <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90">
+        <PlusIcon />
+        Create Profile
+      </button>
+    );
+  };
+
+  const renderAvatar = () => (
+    <div
+      className="group relative mx-auto h-[85px] w-[85px] rounded-full"
+      onClick={handleToggle}
+    >
+      <Image
+        src={avatarUrl}
+        width={80}
+        height={80}
+        alt="profile"
+        className="h-full w-full rounded-full object-cover"
+      />
+
+      <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
+      <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
+        <CameraIcon />
+      </span>
+    </div>
+  );
+
+  const renderFormButtons = () => (
+    <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
+      <button
+        className="h-[40px] rounded-lg border border-primary bg-primary/30 px-5 py-1 text-lg text-white hover:bg-primary/50 md:text-xl"
+        onClick={closeModal}
+        type="button"
+      >
+        cancel
+      </button>
+
+      <button
+        className="h-[40px] rounded-lg bg-primary px-3 text-lg text-white hover:bg-primary/90 md:text-xl"
+        type="submit"
+        disabled={isLoading}
+      >
+        Save Changes
+        {isLoading && <Spinner className="ms-5 align-middle" />}
+      </button>
+    </div>
+  );
+
+  const renderSocialMediaFields = () => (
+    <div className="mt-4 md:mt-8">
+      <h3 className="text-xl font-bold">Social Media Links</h3>
+      <p className="text-sm text-[#C60000]">
+        at least provide us with one social link.
+      </p>
+
+      <div className="mt-6 flex flex-col gap-4 text-base md:text-xl">
+        {socialMediaPlatforms.map((platform) => (
+          <SocialMediaField
+            key={platform.name}
+            iconSrc={platform.iconSrc}
+            platform={platform.name}
+            register={register}
+            fieldName={platform.fieldName}
+            watch={watch}
+            setValue={setValue}
+          />
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <Modal
       isOpen={modalOpen}
       setIsOpen={setModalOpen}
       onClose={closeModal}
-      trigger={
-        <>
-          {isUserHasProfile ? (
-            <button className="badge-base-classes absolute right-3 top-3 z-10">
-              <span>
-                {isProfileIncomplete ? "Complete Profile" : "Edit Profile"}
-              </span>
-              <span className="text-white">
-                <Pencil1Icon />
-              </span>
-            </button>
-          ) : (
-            <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90">
-              <PlusIcon />
-              Create Profile
-            </button>
-          )}
-        </>
-      }
+      trigger={renderTriggerButton()}
     >
-      <div className="relative mx-auto max-h-full w-full max-w-[600px] rounded-[5px] bg-[#99B579] font-roboto  shadow-md">
+      <div className="relative mx-auto max-h-full w-full max-w-[600px] rounded-[5px] bg-[#99B579] font-roboto shadow-md">
         <div className="relative max-h-[calc(100vh-20px)] overflow-auto px-4 py-6 md:px-12 md:py-8">
           <div className="mx-auto max-w-[524px]">
             <h3 className="mb-5 text-center text-2xl font-bold text-black">
               <span>Edit your Profile </span>
-
               <WhyToolTip />
             </h3>
 
@@ -101,250 +290,58 @@ export const EditProfileModal = ({
               onSubmit={handleSubmit(onSubmit)}
               className="left-left text-base text-black"
             >
-              <div className="">
-                <div
-                  className="group relative mx-auto h-[85px] w-[85px] rounded-full"
-                  onClick={handleToggle}
-                >
-                  <Image
-                    src={avatarUrl}
-                    width={80}
-                    height={80}
-                    alt="profile"
-                    className="h-full w-full rounded-full object-cover"
-                  />
+              {renderAvatar()}
 
-                  <div className="pointer-events-none absolute inset-0 h-full w-full rounded-full transition-colors group-hover:bg-black/30"></div>
-                  <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-black/10 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                    <CameraIcon />
-                  </span>
-                </div>
-              </div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-2 md:gap-x-8 md:gap-y-4">
-                <div>
-                  <label htmlFor="firstName" className="mb-1 block">
-                    First Name
-                    <span className="text-red-500">*</span>
-                  </label>
+                <FormField
+                  label="First Name"
+                  id="firstName"
+                  placeholder="First Name"
+                  register={register}
+                  registerOptions={{ required: true }}
+                  error={firstNameError}
+                  required={true}
+                />
 
-                  <div>
-                    <input
-                      type="text"
-                      className={INPUT_PRIMARY_CLASSES}
-                      placeholder="First Name"
-                      {...register("firstName", {
-                        required: true,
-                      })}
-                    />
-                  </div>
+                <FormField
+                  label="Last Name"
+                  id="lastName"
+                  placeholder="Last Name"
+                  register={register}
+                />
 
-                  {firstNameError && (
-                    <span className="mt-1 block text-sm text-red-500">
-                      First Name is required..
-                    </span>
-                  )}
-                </div>
+                <FormField
+                  label="Username"
+                  id="username"
+                  placeholder="Username"
+                  register={register}
+                  registerOptions={{ required: true }}
+                  error={userNameError}
+                  errorMessage={userNameErrorMsg}
+                  required={true}
+                />
 
-                <div>
-                  <label htmlFor="lastName" className="mb-1 block">
-                    Last Name
-                  </label>
-
-                  <div>
-                    <input
-                      type="text"
-                      className={INPUT_PRIMARY_CLASSES}
-                      id="lastName"
-                      placeholder="Last Name"
-                      {...register("lastName")}
-                    />
-                  </div>
-                </div>
-                <div className="">
-                  <label htmlFor="username" className="mb-1 block">
-                    Username
-                    <span className="text-red-500">*</span>
-                  </label>
-
-                  <div>
-                    <input
-                      type="text"
-                      className={INPUT_PRIMARY_CLASSES}
-                      id="username"
-                      placeholder="Username"
-                      {...register("username", {
-                        required: true,
-                      })}
-                    />
-                  </div>
-
-                  <span
-                    className={`${
-                      userNameError ? "opacity-100" : ""
-                    } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
-                  >
-                    {userNameErrorMsg}
-                  </span>
-                </div>
-
-                <div className="">
-                  <label htmlFor="username" className="mb-1 block">
-                    Email-id
-                    <span className="text-red-500">*</span>
-                  </label>
-
-                  <div>
-                    <input
-                      type="email"
-                      className={INPUT_PRIMARY_CLASSES}
-                      id="email"
-                      placeholder="Email"
-                      {...register("email_address.email", {
-                        required: true,
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Invalid email address",
-                        },
-                      })}
-                    />
-                  </div>
-
-                  <span
-                    className={`${
-                      emailError ? "opacity-100" : ""
-                    } mt-1 block text-xs text-red-500 opacity-0 transition-opacity`}
-                  >
-                    {emailErrorMsg}
-                  </span>
-                </div>
+                <FormField
+                  label="Email-id"
+                  id="email_address.email"
+                  placeholder="Email"
+                  register={register}
+                  registerOptions={{
+                    required: true,
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  }}
+                  error={emailError}
+                  errorMessage={emailErrorMsg}
+                  type="email"
+                  required={true}
+                />
               </div>
 
-              <div className="mt-4 md:mt-8">
-                <h3 className="text-xl font-bold">Social Media Links</h3>
-                <p className="text-sm text-[#C60000]">
-                  at least provide us with one social link.
-                </p>
-
-                <div className="mt-6 flex flex-col gap-4 text-base md:text-xl">
-                  {/* // TODO: For the next three div put content in the Array and render them
-                    // TODO: with map */}
-                  <div className="relative grid grid-cols-12 items-center">
-                    <div className="col-span-12 mb-2 flex items-center gap-1 md:col-span-4 md:mb-0">
-                      <div>
-                        <Image
-                          className="h-[30px] w-[30px] md:h-10 md:w-10"
-                          src="/icons/x.svg"
-                          width={40}
-                          height={40}
-                          alt="x"
-                        />
-                      </div>
-                      <p>Twitter</p>
-                    </div>
-                    <div className="col-span-12 flex flex-1 items-center gap-1 md:col-span-8 md:gap-3">
-                      <div className="w-full">
-                        <input
-                          type="text"
-                          placeholder="username"
-                          className={`${INPUT_PRIMARY_CLASSES} w-full`}
-                          {...register("twitter_username.username")}
-                        />
-                      </div>
-                      <div className="absolute right-0 top-0 md:static">
-                        <ToggleSwitch
-                          isPublic={watch("twitter_username.isPublic")}
-                          onChange={(value) =>
-                            setValue("twitter_username.isPublic", value)
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="relative grid grid-cols-12 items-center">
-                    <div className="col-span-12 mb-2 flex items-center gap-1 md:col-span-4 md:mb-0">
-                      <div>
-                        <Image
-                          className="h-[30px] w-[30px] md:h-10 md:w-10"
-                          src="/icons/telegram.svg"
-                          width={40}
-                          height={40}
-                          alt="x"
-                        />
-                      </div>
-                      <p>Telegram</p>
-                    </div>
-                    <div className="col-span-12 flex flex-1 items-center gap-1 md:col-span-8 md:gap-3">
-                      <div className="w-full">
-                        <input
-                          type="text"
-                          placeholder="username"
-                          className={`${INPUT_PRIMARY_CLASSES} w-full`}
-                          {...register("telegram_username.username")}
-                        />
-                      </div>
-                      <div className="absolute right-0 top-0 md:static">
-                        <ToggleSwitch
-                          isPublic={watch("telegram_username.isPublic")}
-                          onChange={(value) =>
-                            setValue("telegram_username.isPublic", value)
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="relative grid grid-cols-12 items-center">
-                    <div className="col-span-12 mb-2 flex items-center gap-1 md:col-span-4 md:mb-0">
-                      <div>
-                        <Image
-                          className="h-[30px] w-[30px] md:h-10 md:w-10"
-                          src="/icons/discord.svg"
-                          width={40}
-                          height={40}
-                          alt="x"
-                        />
-                      </div>
-                      <p>Discord</p>
-                    </div>
-                    <div className="col-span-12 flex flex-1 items-center gap-1 md:col-span-8 md:gap-3">
-                      <div className="w-full">
-                        <input
-                          type="text"
-                          placeholder="username"
-                          className={`${INPUT_PRIMARY_CLASSES} w-full`}
-                          {...register("discord_username.username")}
-                        />
-                      </div>
-                      <div className="absolute right-0 top-0 md:static">
-                        <ToggleSwitch
-                          isPublic={watch("discord_username.isPublic")}
-                          onChange={(value) =>
-                            setValue("discord_username.isPublic", value)
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="ms-auto grid grid-cols-2 gap-3 pt-8">
-                <button
-                  className="h-[40px] rounded-lg border border-primary bg-primary/30 px-5 py-1 text-lg text-white hover:bg-primary/50 md:text-xl"
-                  onClick={closeModal}
-                  type="button"
-                >
-                  cancel
-                </button>
-
-                <button
-                  className="h-[40px] rounded-lg bg-primary px-3 text-lg text-white hover:bg-primary/90 md:text-xl"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  Save Changes
-                  {isLoading && <Spinner className="ms-5 align-middle" />}
-                </button>
-              </div>
+              {renderSocialMediaFields()}
+              {renderFormButtons()}
             </form>
           </div>
         </div>
