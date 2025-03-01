@@ -19,12 +19,6 @@ type MintBtnType = {
   maxMintsPerWallet?: number;
 };
 
-const hasCollectionNFTs = (nfts: Array<any>, collectionName: string) => {
-  return nfts.filter((nft) =>
-    nft.name.toLowerCase().includes(collectionName.toLowerCase())
-  ).length;
-};
-
 export const MintBtn = ({
   isMintingDisabled,
   isMintingStyledDisabled,
@@ -42,41 +36,66 @@ export const MintBtn = ({
     owner: currentUserAddress || "none",
   });
 
-  console.log("mintNFTHitsResponse", mintNFTHitsResponse);
-  // Check if user is collection owner
+  // Check user permissions and states
   const isOwner = currentUserAddress === collectionOwner;
-
-  // Check if the current user is authorized to mint
   const isUnauthorizedMint = !isPublicMint && !isOwner;
-
   const isNotForSoldNFT =
     collection === NFT_COLLECTIONS.MINATY && nftID === 100;
+  const isPalladWallet = window.mina?.isPallad;
 
-  const checkMintLimit = () => {
-    // Collection owner is exempt from mint limits
-    if (isOwner) return false;
+  // Check collection mint limits
+  const userCollectionNFTCount = maxMintsPerWallet
+    ? countUserNFTs(mintNFTHitsResponse, collection)
+    : 0;
 
-    // If maxMintsPerWallet is undefined, there is no limit
-    if (!maxMintsPerWallet || !mintNFTHitsResponse || !collection) return false;
+  const hasReachedMintLimit =
+    !isOwner &&
+    maxMintsPerWallet !== undefined &&
+    userCollectionNFTCount >= maxMintsPerWallet;
 
-    const userNFTCount = hasCollectionNFTs(mintNFTHitsResponse, collection);
-    return userNFTCount >= maxMintsPerWallet;
-  };
-
-  const hasReachedMintLimit = checkMintLimit();
-
+  // Determine final button state
   const isButtonDisabled =
     isMintingStyledDisabled ||
     isNotForSoldNFT ||
     isUnauthorizedMint ||
-    (!isOwner && hasReachedMintLimit);
+    hasReachedMintLimit;
 
+  // Determine display text based on status
   const getDisplayText = () => {
     if (isUnauthorizedMint) return "Only Owner Can Mint";
-    if (hasReachedMintLimit) {
-      return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
-    }
+    if (hasReachedMintLimit) return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
     return btnText;
+  };
+
+  // Determine if tooltip should be shown
+  const shouldShowTooltip =
+    isPalladWallet || isUnauthorizedMint || hasReachedMintLimit;
+
+  // Get tooltip content based on status
+  const getTooltipContent = () => {
+    if (isUnauthorizedMint) {
+      return (
+        <div className="max-w-md">
+          <p className="mb-2 font-bold">
+            This NFT is currently only available for minting by the collection
+            owner.
+          </p>
+        </div>
+      );
+    }
+
+    if (hasReachedMintLimit) {
+      return (
+        <div className="max-w-md">
+          <p className="mb-2 font-bold">
+            You have reached the maximum number of NFTs allowed for this
+            collection.
+          </p>
+        </div>
+      );
+    }
+
+    return <PalladNotSupportedContent />;
   };
 
   return (
@@ -84,14 +103,15 @@ export const MintBtn = ({
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <button
-            className={clsx({
-              "relative h-10 rounded-md border-primary px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed":
-                true,
-              "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
-                isButtonDisabled,
-              "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
-                !isMintingDisabled,
-            })}
+            className={clsx(
+              "relative h-10 rounded-md border-primary px-5 py-2 text-sm font-medium text-white focus-visible:outline-none disabled:cursor-not-allowed",
+              {
+                "bg-[#a3b2a0] disabled:bg-[#a3b2a0] disabled:hover:bg-[#a3b2a0]":
+                  isButtonDisabled,
+                "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
+                  !isMintingDisabled,
+              }
+            )}
             onClick={() => handleMint(nftID)}
             disabled={isButtonDisabled}
           >
@@ -104,30 +124,12 @@ export const MintBtn = ({
           </button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          {(window.mina?.isPallad ||
-            isUnauthorizedMint ||
-            hasReachedMintLimit) && (
+          {shouldShowTooltip && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
             >
-              {isUnauthorizedMint ? (
-                <div className="max-w-md">
-                  <p className="mb-2 font-bold">
-                    This NFT is currently only available for minting by the
-                    collection owner.
-                  </p>
-                </div>
-              ) : hasReachedMintLimit ? (
-                <div className="max-w-md">
-                  <p className="mb-2 font-bold">
-                    You have reached the maximum number of NFTs allowed for this
-                    collection.
-                  </p>
-                </div>
-              ) : (
-                <PalladNotSupportedContent />
-              )}
+              {getTooltipContent()}
               <Tooltip.Arrow className="TooltipArrow" />
             </Tooltip.Content>
           )}
@@ -136,3 +138,12 @@ export const MintBtn = ({
     </Tooltip.Provider>
   );
 };
+
+// Helper function to count user's NFTs in a specific collection
+function countUserNFTs(nfts: Array<any>, collectionName: string): number {
+  if (!nfts?.length) return 0;
+
+  return nfts.filter((nft) =>
+    nft.name.toLowerCase().includes(collectionName.toLowerCase())
+  ).length;
+}
