@@ -25,25 +25,34 @@ export const Pagination = ({
     pageSize: NFT_PAGE_SIZE,
   });
 
+  // Don't render pagination if there's only one page
   if (currentPage === 0 || paginationRange.length < 2) {
     return null;
   }
 
-  const onNext = () => {
-    onPageChange(currentPage + 1);
+  const lastPage = paginationRange[paginationRange.length - 1];
+  const isFirstPage = currentPage === 1;
+  const isLastPage = currentPage === lastPage;
+
+  const handlePrevious = () => {
+    if (!isFirstPage) {
+      onPageChange(currentPage - 1);
+    }
   };
 
-  const onPrevious = () => {
-    onPageChange(currentPage - 1);
+  const handleNext = () => {
+    if (!isLastPage) {
+      onPageChange(currentPage + 1);
+    }
   };
-  const lastPage = paginationRange[paginationRange.length - 1];
 
   return (
-    <div
+    <nav
       className={clsx(
         "fixed bottom-0 left-0 z-10 mt-4 flex w-full items-center justify-center bg-primary-foreground md:bottom-[54px] md:justify-end md:bg-transparent",
         containerClassName
       )}
+      aria-label="Pagination"
     >
       <ul
         className={clsx(
@@ -51,62 +60,83 @@ export const Pagination = ({
           className
         )}
       >
-        <li
-          onClick={onPrevious}
-          className={`flex h-7 w-7 items-center justify-center ${
-            currentPage === 1 ? "pointer-events-none" : ""
-          }`}
-        >
-          <ChevronLeft
-            className={`${
-              currentPage !== 1
-                ? "cursor-pointer fill-primary"
-                : "cursor-not-allowed fill-primary/50"
-            }   `}
-          />
+        {/* Previous Page Button */}
+        <li>
+          <button
+            onClick={handlePrevious}
+            className={clsx("flex h-7 w-7 items-center justify-center", {
+              "cursor-not-allowed": isFirstPage,
+              "cursor-pointer": !isFirstPage,
+            })}
+            disabled={isFirstPage}
+            aria-label="Go to previous page"
+          >
+            <ChevronLeft
+              className={clsx("", {
+                "cursor-pointer fill-primary": !isFirstPage,
+                "cursor-not-allowed fill-primary/50": isFirstPage,
+              })}
+            />
+          </button>
         </li>
+
+        {/* Page Numbers */}
         {paginationRange.map((pageNumber, idx) => {
           if (pageNumber === DOTS) {
             return (
               <li
                 className="flex h-7 w-7 items-end justify-center text-primary"
-                key={idx}
+                key={`dots-${idx}`}
+                aria-hidden="true"
               >
                 &#8230;
               </li>
             );
           }
+
+          const isCurrentPage = pageNumber === currentPage;
+
           return (
-            <li
-              key={idx}
-              className={`flex h-7 w-7 items-center justify-center text-primary transition-colors ${
-                pageNumber === currentPage
-                  ? "bg-primary-50 border-primary-200 rounded-[4px] border font-medium text-primary shadow-md"
-                  : "cursor-pointer hover:text-primary/60"
-              }`}
-              onClick={() => {
-                onPageChange(pageNumber as number);
-              }}
-            >
-              {pageNumber}
+            <li key={`page-${pageNumber}`}>
+              <button
+                className={clsx(
+                  "flex h-7 w-7 items-center justify-center text-primary transition-colors",
+                  {
+                    "bg-primary-50 border-primary-200 rounded-[4px] border font-medium text-primary shadow-md":
+                      isCurrentPage,
+                    "cursor-pointer hover:text-primary/60": !isCurrentPage,
+                  }
+                )}
+                onClick={() => onPageChange(pageNumber as number)}
+                aria-label={`Go to page ${pageNumber}`}
+                aria-current={isCurrentPage ? "page" : undefined}
+              >
+                {pageNumber}
+              </button>
             </li>
           );
         })}
-        <li
-          onClick={onNext}
-          className={clsx("flex h-7 w-7 items-center justify-center", {
-            "pointer-events-none": currentPage === lastPage,
-          })}
-        >
-          <ChevronRight
-            className={`${
-              currentPage !== lastPage
-                ? "cursor-pointer fill-primary"
-                : "cursor-not-allowed fill-primary/50"
-            }  `}
-          />
+
+        {/* Next Page Button */}
+        <li>
+          <button
+            onClick={handleNext}
+            className={clsx("flex h-7 w-7 items-center justify-center", {
+              "pointer-events-none": isLastPage,
+              "cursor-pointer": !isLastPage,
+            })}
+            disabled={isLastPage}
+            aria-label="Go to next page"
+          >
+            <ChevronRight
+              className={clsx("", {
+                "cursor-pointer fill-primary": !isLastPage,
+                "cursor-not-allowed fill-primary/50": isLastPage,
+              })}
+            />
+          </button>
         </li>
       </ul>
-    </div>
+    </nav>
   );
 };

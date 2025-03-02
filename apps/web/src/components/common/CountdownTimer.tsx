@@ -1,133 +1,145 @@
 import clsx from "clsx";
 import { getTime } from "date-fns";
+import React from "react";
 import { useEffect, useState } from "react";
 
 type CountdownTimerProps = {
   initialTime: number;
   className?: string;
+  onComplete?: () => void;
 };
 
-export const useCountdownTimer = (initialTime: number) => {
-  const [countDownTime, setCountDownTIme] = useState({
-    days: "00",
-    hours: "00",
-    minutes: "00",
-    seconds: "00",
-  });
-  let intervalId: NodeJS.Timer;
+type TimeUnits = {
+  days: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+};
 
-  const getTimeDifference = (initialTime: number) => {
-    const currentTime = getTime(new Date());
+const DEFAULT_TIME: TimeUnits = {
+  days: "00",
+  hours: "00",
+  minutes: "00",
+  seconds: "00",
+};
 
-    const timeDiffrence = Math.abs(initialTime - currentTime);
-    const days =
-      Math.floor(timeDiffrence / (24 * 60 * 60 * 1000)) >= 10
-        ? Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))
-        : `0${Math.floor(timeDiffrence / (24 * 60 * 60 * 1000))}`;
-
-    const hours =
-      Math.floor((timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)) >=
-      10
-        ? Math.floor((timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60))
-        : `0${Math.floor(
-            (timeDiffrence % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)
-          )}`;
-    const minutes =
-      Math.floor((timeDiffrence % (60 * 60 * 1000)) / (1000 * 60)) >= 10
-        ? Math.floor((timeDiffrence % (60 * 60 * 1000)) / (1000 * 60))
-        : `0${Math.floor((timeDiffrence % (60 * 60 * 1000)) / (1000 * 60))}`;
-    const seconds =
-      Math.floor((timeDiffrence % (60 * 1000)) / 1000) >= 10
-        ? Math.floor((timeDiffrence % (60 * 1000)) / 1000)
-        : `0${Math.floor((timeDiffrence % (60 * 1000)) / 1000)}`;
-    if (timeDiffrence < 0) {
-      setCountDownTIme({
-        days: "00",
-        hours: "00",
-        minutes: "00",
-        seconds: "00",
-      });
-      clearInterval(intervalId);
-    } else {
-      setCountDownTIme({
-        days: days.toString(),
-        hours: hours.toString(),
-        minutes: minutes.toString(),
-        seconds: seconds.toString(),
-      });
-    }
-  };
+export const useCountdownTimer = (
+  initialTime: number,
+  onComplete?: () => void
+) => {
+  const [countDownTime, setCountDownTime] = useState<TimeUnits>(DEFAULT_TIME);
+  const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    if (Number.isInteger(initialTime)) {
-      intervalId = setInterval(() => {
-        getTimeDifference(initialTime);
-      }, 1000);
+    if (!Number.isInteger(initialTime)) {
+      console.warn("Invalid initialTime provided to countdown timer");
+      return;
     }
+
+    const calculateTimeDifference = () => {
+      const currentTime = getTime(new Date());
+      const timeDifference = initialTime - currentTime;
+
+      if (timeDifference <= 0) {
+        setCountDownTime(DEFAULT_TIME);
+
+        if (!isComplete) {
+          setIsComplete(true);
+          onComplete?.();
+        }
+
+        return false;
+      }
+
+      // Calculate time units
+      const days = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+      const hours = Math.floor(
+        (timeDifference % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)
+      );
+      const minutes = Math.floor(
+        (timeDifference % (60 * 60 * 1000)) / (1000 * 60)
+      );
+      const seconds = Math.floor((timeDifference % (60 * 1000)) / 1000);
+
+      // Format time units
+      setCountDownTime({
+        days: days.toString().padStart(2, "0"),
+        hours: hours.toString().padStart(2, "0"),
+        minutes: minutes.toString().padStart(2, "0"),
+        seconds: seconds.toString().padStart(2, "0"),
+      });
+
+      return true;
+    };
+
+    // Calculate initially
+    const shouldContinue = calculateTimeDifference();
+    if (!shouldContinue) return;
+
+    // Set up interval
+    const intervalId = setInterval(calculateTimeDifference, 1000);
+
     return () => {
       clearInterval(intervalId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialTime]);
-  return { countDownTime };
+  }, [initialTime, isComplete, onComplete]);
+
+  return { countDownTime, isComplete };
 };
 
 export const CountdownTimer = ({
   initialTime,
   className,
+  onComplete,
 }: CountdownTimerProps) => {
-  const { countDownTime } = useCountdownTimer(initialTime);
+  const { countDownTime } = useCountdownTimer(initialTime, onComplete);
+
+  const timeUnits = [
+    {
+      value: countDownTime.days,
+      label: +countDownTime.days === 1 ? "Day" : "Days",
+    },
+    {
+      value: countDownTime.hours,
+      label: +countDownTime.hours === 1 ? "Hour" : "Hours",
+    },
+    {
+      value: countDownTime.minutes,
+      label: +countDownTime.minutes === 1 ? "Minute" : "Minutes",
+    },
+    {
+      value: countDownTime.seconds,
+      label: +countDownTime.seconds === 1 ? "Second" : "Seconds",
+    },
+  ];
+
   return (
     <div
       className={clsx(
-        className,
-        "flex h-full w-full flex-col items-center justify-center gap-8 sm:gap-16"
+        "flex h-full w-full flex-col items-center justify-center gap-8 sm:gap-16",
+        className
       )}
+      role="timer"
+      aria-live="polite"
     >
       <div className="flex justify-center gap-3">
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.days}
-            </span>
-          </div>
-          <span className="text-center text-xs capitalize text-black/60">
-            {+countDownTime?.days == 1 ? "Day" : "Days"}
-          </span>
-        </div>
-        :
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.hours}
-            </span>
-          </div>
-          <span className="text-center text-xs font-medium text-black/60">
-            {+countDownTime?.hours == 1 ? "Hour" : "Hours"}
-          </span>
-        </div>
-        :
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.minutes}
-            </span>
-          </div>
-          <span className="text-center text-xs capitalize text-black/60">
-            {+countDownTime?.minutes == 1 ? "Minute" : "Minutes"}
-          </span>
-        </div>
-        :
-        <div className="relative flex flex-col items-center gap-1">
-          <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
-            <span className="text-center font-semibold text-primary">
-              {countDownTime?.seconds}
-            </span>
-          </div>
-          <span className="text-center text-xs capitalize text-black/60">
-            {+countDownTime?.seconds == 1 ? "Second" : "Seconds"}
-          </span>
-        </div>
+        {timeUnits.map((unit, index) => (
+          <React.Fragment key={unit.label}>
+            <div className="relative flex flex-col items-center gap-1">
+              <div className="flex items-center justify-between rounded-lg bg-primary/30 px-2 py-1 text-center">
+                <span className="text-center font-semibold text-primary">
+                  {unit.value}
+                </span>
+              </div>
+              <span className="text-center text-xs capitalize text-black/60">
+                {unit.label}
+              </span>
+            </div>
+            {index < timeUnits.length - 1 && (
+              <span className="self-center font-semibold">:</span>
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );
