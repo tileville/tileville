@@ -487,6 +487,7 @@ export const NFT_COLLECTIONS = {
   MINATY: "Minaty",
   MINAPUNKS: "MinaPunks",
   ZKGOD: "zkgod",
+  ZEKO: "Zeko",
 } as const;
 
 export const MINAPUNKS_CATEGORIES = {
@@ -503,7 +504,8 @@ export type NFTCollectionType =
   | "Tileville"
   | "Minaty"
   | "MinaPunks"
-  | "zkgod";
+  | "zkgod"
+  | "Zeko";
 
 export const MINATY_CATEGORIES = {
   ALL: "ALL",
