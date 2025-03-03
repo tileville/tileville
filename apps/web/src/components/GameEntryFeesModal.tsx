@@ -21,10 +21,10 @@ export const GameEntryFeesModal = ({
   handleClose,
   competition,
 }: GameEntryFeesModalProps) => {
-  let timeoutId: NodeJS.Timeout;
+  const router = useRouter();
   const networkStore = useNetworkStore();
   const { payParticipationFees } = useParticipationFee();
-  const [isShowVoucherCode, setIsVoucherCode] = useState(false);
+  const [isShowVoucherCode, setIsShowVoucherCode] = useState(false);
   const [voucherCode, setVoucherCode] = useState("");
   const [vocherValidationResponse, setVoucherValidationResponse] = useState({
     isValid: false,
@@ -32,74 +32,94 @@ export const GameEntryFeesModal = ({
   });
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
-  const validateVoucher = useMutation({
-    mutationFn: (code: string) =>
-      fetch(`/api/vouchers?code=${code}`).then((res) => res.json()),
-    onSuccess: (response) => {
-      console.log("mutation response", response);
-      setVoucherValidationResponse(response);
-    },
-  });
-
-  const router = useRouter();
   const {
     joinedCompetition: [logJoinCompetition],
   } = usePosthogEvents();
 
-  const handlePayParticipationFess = async () => {
+  // Using tanstack query for voucher validation
+  const validateVoucher = useMutation({
+    mutationFn: (code: string) =>
+      fetch(`/api/vouchers?code=${code}`).then((res) => res.json()),
+    onSuccess: (response) => {
+      setVoucherValidationResponse(response);
+    },
+  });
+
+  // Handle payment for competition participation
+  const handlePayParticipationFees = async () => {
+    // Check wallet connection
     if (!networkStore.address) {
       try {
-        networkStore.connectWallet(false);
+        await networkStore.connectWallet(false);
+        return; // Early return until wallet is connected
       } catch (error) {
         console.error(`Failed to connect with wallet`, error);
-      } finally {
+        toast.error("Failed to connect with wallet. Please try again.");
         return;
       }
     }
+
     setIsPaymentLoading(true);
+
+    // Log analytics event
     logJoinCompetition({
       walletAddress: networkStore.address,
       competition_name: competition.name,
       network: networkStore.minaNetwork?.networkID || "berkeley",
     });
 
-    const data = await payParticipationFees({
-      participation_fee: competition.participation_fee ?? 0,
-      treasury_address: competition.treasury_address || DEFAULT_TRASURY_ADDRESS,
-      competition_key: competition.unique_keyname,
-      type: vocherValidationResponse.isValid
+    try {
+      const paymentType = vocherValidationResponse.isValid
         ? "VOUCHER"
         : competition.participation_fee === 0
         ? "FREE"
-        : "NETWORK",
-      code: voucherCode,
-      competition_name: competition.name,
-    });
+        : "NETWORK";
 
-    console.log("DATA ID", data?.id);
-    setIsPaymentLoading(false);
-    if (data?.id) {
-      toast(
-        `You have joined the ${competition.name} competition successfully. Redirecting you to the game screen now.`
-      );
-      timeoutId = setTimeout(() => {
-        router.push(
-          `/competitions/${competition.unique_keyname}/game/${data.id}`
+      const data = await payParticipationFees({
+        participation_fee: competition.participation_fee ?? 0,
+        treasury_address:
+          competition.treasury_address || DEFAULT_TRASURY_ADDRESS,
+        competition_key: competition.unique_keyname,
+        type: paymentType,
+        code: voucherCode,
+        competition_name: competition.name,
+      });
+
+      if (data?.id) {
+        toast.success(
+          `You have joined the ${competition.name} competition successfully. Redirecting you to the game screen now.`
         );
-      }, 3000);
-      handleClose();
-    } else {
-      toast(
-        `Failed to connect wallet. Please make sure your wallet extension is unlocked. If issue still persists, Please report a bug!`
-      );
+
+        // Redirect after successful payment
+        setTimeout(() => {
+          router.push(
+            `/competitions/${competition.unique_keyname}/game/${data.id}`
+          );
+        }, 3000);
+
+        handleClose();
+      } else {
+        toast.error(
+          `Failed to process payment. Please make sure your wallet extension is unlocked and try again.`
+        );
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Something went wrong with the payment. Please try again.");
+    } finally {
+      setIsPaymentLoading(false);
     }
   };
 
-  useEffect(() => {
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, []);
+  // Reset voucher state
+  const resetVoucher = () => {
+    setVoucherCode("");
+    setVoucherValidationResponse({
+      isValid: false,
+      message: "",
+    });
+    setIsShowVoucherCode(false);
+  };
 
   return (
     <Dialog.Root open={open}>
@@ -109,11 +129,10 @@ export const GameEntryFeesModal = ({
           You need to pay one time participation fees of{" "}
           {competition.participation_fee} MINA token to join{" "}
           <strong>{competition.name}</strong> competition.
+          {/* Voucher section */}
           <button
             className="block text-xs font-medium text-primary"
-            onClick={() => {
-              setIsVoucherCode(true);
-            }}
+            onClick={() => setIsShowVoucherCode(true)}
           >
             Have a voucher code?
           </button>
@@ -129,11 +148,10 @@ export const GameEntryFeesModal = ({
                 }}
                 value={voucherCode}
               />
+
               <button
                 className="relative flex min-w-[100px] items-center justify-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90 disabled:bg-primary/80"
-                onClick={() => {
-                  validateVoucher.mutate(voucherCode);
-                }}
+                onClick={() => validateVoucher.mutate(voucherCode)}
                 disabled={voucherCode.length === 0 || validateVoucher.isLoading}
               >
                 {validateVoucher.isLoading && (
@@ -143,23 +161,16 @@ export const GameEntryFeesModal = ({
                 )}
                 <span className="inline-block">Apply</span>
               </button>
-              {isShowVoucherCode && (
-                <button
-                  className="text-xs font-medium text-black/70 underline"
-                  onClick={() => {
-                    setVoucherCode("");
-                    setVoucherValidationResponse({
-                      isValid: false,
-                      message: "",
-                    });
-                    setIsVoucherCode(false);
-                  }}
-                >
-                  remove
-                </button>
-              )}
+
+              <button
+                className="text-xs font-medium text-black/70 underline"
+                onClick={resetVoucher}
+              >
+                remove
+              </button>
             </div>
           )}
+          {/* Voucher validation message */}
           {vocherValidationResponse.isValid ? (
             <span className="text-primary">
               Voucher code is valid. click on redeem code button to join the
@@ -172,6 +183,7 @@ export const GameEntryFeesModal = ({
           )}
         </Dialog.Description>
 
+        {/* Action buttons */}
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
             <button
@@ -183,7 +195,7 @@ export const GameEntryFeesModal = ({
           </Dialog.Close>
           <Dialog.Close>
             <button
-              onClick={handlePayParticipationFess}
+              onClick={handlePayParticipationFees}
               className="relative min-w-[160px] rounded-md bg-primary px-3 text-sm font-medium text-white hover:bg-primary/90 disabled:bg-primary/80"
               disabled={isPaymentLoading}
             >
