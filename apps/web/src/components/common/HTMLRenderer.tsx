@@ -1,22 +1,37 @@
 import { useState, useEffect } from "react";
 import DOMPurify from "isomorphic-dompurify";
 
+type HtmlRendererProps = {
+  htmlContent?: string;
+  className?: string;
+  allowedTags?: string[];
+};
+
 export const HtmlRenderer = ({
   htmlContent = "",
-}: {
-  htmlContent?: string;
-}) => {
+  className = "",
+  allowedTags,
+}: HtmlRendererProps) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted || !htmlContent) {
     return null;
   }
 
-  const sanitizedHtml = DOMPurify.sanitize(htmlContent);
+  // Configure DOMPurify options
+  const purifyOptions = allowedTags ? { ALLOWED_TAGS: allowedTags } : {};
 
-  return <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
+  // Sanitize HTML to prevent XSS
+  const sanitizedHtml = DOMPurify.sanitize(htmlContent, purifyOptions);
+
+  return (
+    <div
+      className={className}
+      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+    />
+  );
 };

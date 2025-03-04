@@ -7,13 +7,15 @@ import { Spinner2 } from "../common/Spinner";
 import { useAtomValue } from "jotai";
 import { followLoadingAtom } from "@/contexts/atoms";
 
-type UserListItemType = {
-  userInfo: {
-    wallet_address: string;
-    avatar_url: string;
-    username: string;
-    fullname: string;
-  };
+type UserInfo = {
+  wallet_address: string;
+  avatar_url: string;
+  username: string;
+  fullname: string;
+};
+
+type UserListItemProps = {
+  userInfo: UserInfo;
   isFollowing: boolean;
   isFollowsYou: boolean;
   loggedInUserWalletAddress: string;
@@ -26,7 +28,7 @@ export const UserListItem = ({
   isFollowsYou,
   loggedInUserWalletAddress,
   className = "",
-}: UserListItemType) => {
+}: UserListItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isFollowLoading = useAtomValue(followLoadingAtom);
@@ -34,7 +36,18 @@ export const UserListItem = ({
   const followMutation = useFollowUser();
   const unfollowMutation = useUnfollowUser();
 
-  const handleFollowAction = async () => {
+  const isCurrentUser = loggedInUserWalletAddress === userInfo.wallet_address;
+
+  const getButtonText = () => {
+    if (isFollowing) {
+      return isHovered ? "Unfollow" : "Following";
+    }
+    return "Follow";
+  };
+
+  const handleFollowAction = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
     if (!loggedInUserWalletAddress) {
       toast.error("Please connect your wallet first");
       return;
@@ -42,17 +55,16 @@ export const UserListItem = ({
 
     setIsLoading(true);
     try {
+      const mutationParams = {
+        follower_wallet: loggedInUserWalletAddress,
+        target_wallet: userInfo.wallet_address,
+      };
+
       if (isFollowing) {
-        await unfollowMutation.mutateAsync({
-          follower_wallet: loggedInUserWalletAddress,
-          target_wallet: userInfo.wallet_address,
-        });
+        await unfollowMutation.mutateAsync(mutationParams);
         toast.success("Successfully unfollowed user");
       } else {
-        await followMutation.mutateAsync({
-          follower_wallet: loggedInUserWalletAddress,
-          target_wallet: userInfo.wallet_address,
-        });
+        await followMutation.mutateAsync(mutationParams);
         toast.success("Successfully followed user");
       }
     } catch (error: any) {
@@ -64,11 +76,10 @@ export const UserListItem = ({
     }
   };
 
-  const isCurrentUser = loggedInUserWalletAddress === userInfo.wallet_address;
-
   return (
     <Link href={`/u/${userInfo.username}`} className={className}>
       <div className="flex items-center gap-2 md:gap-4">
+        {/* User Avatar */}
         <div className="h-[30px] w-[30px] flex-shrink-0 flex-grow-0 basis-auto rounded-full border-2 border-[#D3F49E] md:h-[50px] md:w-[50px] md:border-4">
           <Image
             src={userInfo.avatar_url}
@@ -79,6 +90,7 @@ export const UserListItem = ({
           />
         </div>
 
+        {/* User Info */}
         <div>
           <p className="text-base md:text-xl">{userInfo.fullname}</p>
           <div className="flex items-center gap-1">
@@ -93,6 +105,7 @@ export const UserListItem = ({
           </div>
         </div>
 
+        {/* Follow/Unfollow Button */}
         {!isCurrentUser && (
           <button
             type="button"
@@ -101,13 +114,11 @@ export const UserListItem = ({
             } relative ms-auto`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            onClick={(e) => {
-              e.preventDefault();
-              handleFollowAction();
-            }}
+            onClick={handleFollowAction}
             disabled={isFollowLoading}
+            aria-label={isFollowing ? "Unfollow user" : "Follow user"}
           >
-            {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
+            {getButtonText()}
 
             {isLoading && (
               <span className="absolute right-4 top-1/2 -translate-y-1/2">
