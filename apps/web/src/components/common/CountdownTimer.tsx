@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { getTime } from "date-fns";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type CountdownTimerProps = {
   initialTime: number;
