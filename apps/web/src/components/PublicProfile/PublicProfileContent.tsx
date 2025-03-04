@@ -20,19 +20,21 @@ import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { PublicProfileTabsPlaceholder } from "./Placeholders/PublicProfileTabsPlaceholder";
 
-export const PublicProfileContent = ({
-  params = {
-    handle: "",
-  },
-}: {
+type PublicProfileContentProps = {
   params?: { handle: string };
-}) => {
+};
+
+export const PublicProfileContent = ({
+  params = { handle: "" },
+}: PublicProfileContentProps) => {
+  // Hooks and state management
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") || "collection";
   const networkStore = useNetworkStore();
   const [isProfileOwner, setIsProfileOwner] = useState(false);
   const { validateOrSetSignature, accountAuthSignature } = useAuthSignature();
-  let isUserHasProfile;
+
+  // Data fetching
   const {
     data: publicProfileData,
     isLoading: isPublicLoading,
@@ -41,6 +43,7 @@ export const PublicProfileContent = ({
 
   const publicProfile = publicProfileData?.data;
 
+  // Determine if user is profile owner
   useEffect(() => {
     if (publicProfile?.wallet_address && networkStore.address) {
       setIsProfileOwner(publicProfile.wallet_address === networkStore.address);
@@ -49,6 +52,7 @@ export const PublicProfileContent = ({
     }
   }, [publicProfile?.wallet_address, networkStore.address]);
 
+  // Only fetch private data if needed (user is owner and has auth)
   const shouldFetchPrivateData = Boolean(
     networkStore.address && accountAuthSignature && isProfileOwner
   );
@@ -58,14 +62,15 @@ export const PublicProfileContent = ({
       shouldFetchPrivateData ? publicProfile?.wallet_address || "" : ""
     );
 
+  // Get connections data
   const { data: connections, isLoading: connectionsLoading } =
     useGetConnections(publicProfile?.wallet_address || "");
 
-  const {
-    data: loggedInUserConnections,
-    // isLoading: loggedInUserConnectionsLoading,
-  } = useGetConnections(networkStore.address || "");
+  const { data: loggedInUserConnections } = useGetConnections(
+    networkStore.address || ""
+  );
 
+  // Prepare connection sets for efficient lookups
   const loggedInUserFollowing = new Set<string>(
     loggedInUserConnections?.following?.map(
       (f: Connection) => f.wallet_address
@@ -78,26 +83,27 @@ export const PublicProfileContent = ({
     ) || []
   );
 
-  const profileData =
-    shouldFetchPrivateData && privateProfileData?.data
-      ? {
-          ...publicProfile,
-          ...privateProfileData.data,
-          discord_username:
-            privateProfileData.data.social_accounts?.discord.username ||
-            publicProfile?.discord_username,
-          telegram_username:
-            privateProfileData.data.social_accounts?.telegram.username ||
-            publicProfile?.telegram_username,
-          twitter_username:
-            privateProfileData.data.social_accounts?.twitter.username ||
-            publicProfile?.twitter_username,
-          email_address:
-            privateProfileData.data.email_address.email ||
-            publicProfile?.email_address,
-        }
-      : publicProfile;
+  // Merge public and private profile data
+  const profileData = shouldFetchPrivateData
+    ? {
+        ...publicProfile,
+        ...privateProfileData?.data,
+        discord_username:
+          privateProfileData?.data?.social_accounts?.discord.username ||
+          publicProfile?.discord_username,
+        telegram_username:
+          privateProfileData?.data?.social_accounts?.telegram.username ||
+          publicProfile?.telegram_username,
+        twitter_username:
+          privateProfileData?.data?.social_accounts?.twitter.username ||
+          publicProfile?.twitter_username,
+        email_address:
+          privateProfileData?.data?.email_address.email ||
+          publicProfile?.email_address,
+      }
+    : publicProfile;
 
+  // Error handling
   if (publicError) {
     return (
       <div className="flex min-h-screen items-center justify-center text-red-500">
@@ -106,19 +112,118 @@ export const PublicProfileContent = ({
     );
   }
 
+  // Loading state
   const isLoading =
     isPublicLoading || (shouldFetchPrivateData && isPrivateLoading);
 
-  if (!isLoading && !profileData) {
-    isUserHasProfile = false;
-    // return (
-    //   <div className="flex min-h-screen items-center justify-center">
-    //     Profile not found
-    //   </div>
-    // );
-  } else {
-    isUserHasProfile = true;
-  }
+  // Determine if user has a profile
+  const isUserHasProfile = !isLoading && !!profileData;
+
+  // Render components
+  const renderProfileBasicInfo = () => {
+    if (isLoading) {
+      return <ProfileBasicInfoPLaceholder />;
+    }
+
+    return (
+      <>
+        {isProfileOwner && accountAuthSignature && (
+          <EditProfileModalWrap isUserHasProfile={isUserHasProfile} />
+        )}
+
+        {networkStore.address && !accountAuthSignature && (
+          <button
+            className="badge-base-classes absolute right-3 top-3 z-10"
+            onClick={async () => {
+              await validateOrSetSignature();
+            }}
+          >
+            <span>Sign in</span>
+            <span className="text-white">
+              <LockClosedIcon />
+            </span>
+          </button>
+        )}
+
+        <ProfileBasicInfo
+          avatar_url={profileData?.avatar_url}
+          username={profileData?.username || ""}
+          fullName={profileData?.fullname || ""}
+          walletAddress={profileData?.wallet_address || ""}
+          followersCount={profileData?.followers?.length || 0}
+          followingCount={profileData?.following?.length || 0}
+          discordUsername={profileData?.discord_username || null}
+          telegramUsername={profileData?.telegram_username || null}
+          twitterUsername={profileData?.twitter_username || null}
+          isFollowing={loggedInUserFollowing.has(
+            profileData?.wallet_address || ""
+          )}
+          loggedInUserWalletAddress={networkStore.address || ""}
+          isProfileOwner={isProfileOwner}
+          emailAddress={profileData?.email_address || null}
+          loggedInUserFollowing={loggedInUserFollowing}
+          loggedInUserFollowers={loggedInUserFollowers}
+        />
+      </>
+    );
+  };
+
+  const renderAchievements = () => (
+    <Achievements
+      highestScore={profileData?.highest_score}
+      isPublicLoading={isPublicLoading}
+      totalGames={profileData?.total_games}
+      totalRewards={profileData?.total_rewards}
+      walletAddress={profileData?.wallet_address}
+    />
+  );
+
+  const renderConnections = () => {
+    if (connectionsLoading) {
+      return <ConnectionsPlaceholder />;
+    }
+
+    return (
+      <Connections
+        loggedInUserWalletAddress={networkStore.address || ""}
+        loggedInUserFollowing={loggedInUserFollowing}
+        loggedInUserFollowers={loggedInUserFollowers}
+        isLoading={connectionsLoading}
+        following={connections?.following}
+        followers={connections?.followers}
+      />
+    );
+  };
+
+  const renderProfileTabs = () => {
+    if (isLoading) {
+      return <PublicProfileTabsPlaceholder />;
+    }
+
+    return (
+      <PublicProfileTabs
+        walletAddress={
+          isUserHasProfile
+            ? profileData?.wallet_address || ""
+            : networkStore.address
+        }
+        initialTab={initialTab}
+        username={profileData?.username || ""}
+        isProfileOwner={isProfileOwner}
+      />
+    );
+  };
+
+  const renderCreateProfilePrompt = () => (
+    <div className="relative col-[span_24_/_span_24]">
+      <div className="flex flex-col items-center justify-center gap-4 rounded-xl bg-primary/10 p-6 text-center">
+        <div className="text-lg font-medium text-primary">
+          Create your profile to start tracking your achievements!
+        </div>
+        <EditProfileModalWrap isUserHasProfile={isUserHasProfile} />
+      </div>
+    </div>
+  );
 
   return (
     <div>
@@ -128,108 +233,23 @@ export const PublicProfileContent = ({
             {isUserHasProfile ? (
               <>
                 <div className="relative col-[span_24_/_span_24] md:col-span-12 xl:col-[span_7_/_span_7]">
-                  {isLoading ? (
-                    <ProfileBasicInfoPLaceholder />
-                  ) : (
-                    <>
-                      {isProfileOwner && accountAuthSignature && (
-                        <EditProfileModalWrap
-                          isUserHasProfile={isUserHasProfile}
-                        />
-                      )}
-
-                      {networkStore.address && !accountAuthSignature && (
-                        <button
-                          className="badge-base-classes absolute right-3 top-3 z-10"
-                          onClick={async () => {
-                            await validateOrSetSignature();
-                          }}
-                        >
-                          <span>Sign in</span>
-                          <span className="text-white">
-                            <LockClosedIcon />
-                          </span>
-                        </button>
-                      )}
-
-                      <ProfileBasicInfo
-                        avatar_url={profileData?.avatar_url}
-                        username={profileData?.username || ""}
-                        fullName={profileData?.fullname || ""}
-                        walletAddress={profileData?.wallet_address || ""}
-                        followersCount={profileData?.followers?.length || 0}
-                        followingCount={profileData?.following?.length || 0}
-                        discordUsername={profileData?.discord_username || null}
-                        telegramUsername={
-                          profileData?.telegram_username || null
-                        }
-                        twitterUsername={profileData?.twitter_username || null}
-                        isFollowing={loggedInUserFollowing.has(
-                          profileData?.wallet_address || ""
-                        )}
-                        loggedInUserWalletAddress={networkStore.address || ""}
-                        isProfileOwner={isProfileOwner}
-                        emailAddress={profileData?.email_address || null}
-                        loggedInUserFollowing={loggedInUserFollowing}
-                        loggedInUserFollowers={loggedInUserFollowers}
-                      />
-                    </>
-                  )}
+                  {renderProfileBasicInfo()}
                 </div>
 
                 <div className="col-[span_24_/_span_24] md:col-span-12 xl:col-[span_9_/_span_9]">
-                  <Achievements
-                    highestScore={profileData?.highest_score}
-                    isPublicLoading={isPublicLoading}
-                    totalGames={profileData?.total_games}
-                    totalRewards={profileData?.total_rewards}
-                    walletAddress={profileData?.wallet_address}
-                  />
+                  {renderAchievements()}
                 </div>
 
                 <div className="col-[span_24_/_span_24] grid gap-4 md:col-[span_12_/_span_12] xl:col-[span_8_/_span_8]">
-                  {connectionsLoading ? (
-                    <ConnectionsPlaceholder />
-                  ) : (
-                    <>
-                      <Connections
-                        loggedInUserWalletAddress={networkStore.address || ""}
-                        loggedInUserFollowing={loggedInUserFollowing}
-                        loggedInUserFollowers={loggedInUserFollowers}
-                        isLoading={connectionsLoading}
-                        following={connections?.following}
-                        followers={connections?.followers}
-                      />
-                    </>
-                  )}
+                  {renderConnections()}
                 </div>
               </>
             ) : (
-              <div className="relative col-[span_24_/_span_24]">
-                <div className="flex flex-col items-center justify-center gap-4 rounded-xl bg-primary/10 p-6 text-center">
-                  <div className="text-lg font-medium text-primary">
-                    Create your profile to start tracking your achievements!
-                  </div>
-                  <EditProfileModalWrap isUserHasProfile={isUserHasProfile} />
-                </div>
-              </div>
+              renderCreateProfilePrompt()
             )}
 
             <div className="col-[span_24_/_span_24] xl:col-[span_17_/_span_17]">
-              {isLoading ? (
-                <PublicProfileTabsPlaceholder />
-              ) : (
-                <PublicProfileTabs
-                  walletAddress={
-                    isUserHasProfile
-                      ? profileData?.wallet_address || ""
-                      : networkStore.address
-                  }
-                  initialTab={initialTab}
-                  username={profileData?.username || ""}
-                  isProfileOwner={isProfileOwner}
-                />
-              )}
+              {renderProfileTabs()}
             </div>
           </div>
         </div>
