@@ -1309,3 +1309,99 @@ export const useSendReward = () => {
     }
   );
 };
+
+export const useNotifications = (walletAddress: string) => {
+  return useQuery({
+    queryKey: ["notifications", walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return [];
+
+      const response = await fetch(
+        `/api/notifications?wallet=${walletAddress}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch notifications");
+      }
+
+      return response.json() as Promise<Notification[]>;
+    },
+    enabled: !!walletAddress,
+    refetchInterval: 60000, // Refetch every minute
+  });
+};
+
+// Mark a notification as read
+export const useMarkNotificationAsRead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (notificationId: number) => {
+      const response = await fetch("/api/notifications/mark-read", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ notificationId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to mark notification as read");
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, notificationId) => {
+      // Update the cache to mark the notification as read
+      queryClient.setQueriesData(
+        { queryKey: ["notifications"] },
+        (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return oldData.map((notification: Notification) =>
+            notification.id === notificationId
+              ? { ...notification, read: true }
+              : notification
+          );
+        }
+      );
+    },
+  });
+};
+
+// Mark all notifications as read
+export const useMarkAllNotificationsAsRead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (walletAddress: string) => {
+      const response = await fetch("/api/notifications/mark-all-read", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ walletAddress }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to mark all notifications as read");
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, walletAddress) => {
+      // Update the cache to mark all notifications as read
+      queryClient.setQueriesData(
+        { queryKey: ["notifications", walletAddress] },
+        (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return oldData.map((notification: Notification) => ({
+            ...notification,
+            read: true,
+          }));
+        }
+      );
+    },
+  });
+};
