@@ -19,6 +19,7 @@ import EditProfileModalWrap from "./EditProfileModalWrap";
 import { useAuthSignature } from "@/hooks/useAuthSignature";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { PublicProfileTabsPlaceholder } from "./Placeholders/PublicProfileTabsPlaceholder";
+import BasicProfileCard from "./BasicProfileCard";
 
 export const PublicProfileContent = ({
   params = {
@@ -124,6 +125,16 @@ export const PublicProfileContent = ({
     <div>
       <div className="fade-slide-in p-4 pb-24 pt-12 md:pt-40">
         <div className="mx-auto max-w-[1280px] font-roboto">
+          <BasicProfileCard
+            username="playername"
+            fullName="Player Name"
+            walletAddress="B62qjSxomZEQ..."
+            avatarUrl="/img/avatars/1.jpeg"
+            nftCount={5}
+            gameCount={12}
+            highestScore={345}
+            isOwner={true}
+          />
           <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] gap-3">
             {isUserHasProfile ? (
               <>
