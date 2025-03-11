@@ -158,9 +158,8 @@ No, it's optional but recommended for the best experience.
 
 ### Where else can I connect with the TileVille community?
 Join our:
-- [Twitter](https://twitter.com/tileVille)
-- [Discord server](https://discord.gg/tileville)
-- [Telegram group](https://t.me/tileVille)
+- [Twitter](https://twitter.com/tileVillesocial)
+- [Telegram group](https://t.me/tileVillebugs)
 
 ## Still have questions?
-Join our [Telegram community](https://t.me/tileVille) where our team and experienced players can help answer any other questions you might have.
+Join our [Telegram community](https://t.me/tileVillebugs) where our team and experienced players can help answer any other questions you might have.
