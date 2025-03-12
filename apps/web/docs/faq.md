@@ -3,163 +3,253 @@
 ## General
 
 ### What is TileVille?
-TileVille is a strategic tile-placement game built on the Mina blockchain. Players build cities by strategically placing hexagonal tiles, competing for high scores in competitions, or challenging other players in PvP matches.
+
+TileVille is a strategic tile-placement game built on the Mina blockchain. Players arrange hexagonal tiles to create roads, cities, and landscapes while competing for high scores in competitions or challenging friends in PvP mode.
 
 ### Is TileVille free to play?
-The practice mode is completely free. Competitions and PvP challenges typically require an entry fee paid in MINA tokens, which go toward the prize pool for winners.
 
-### Which browsers are supported?
-TileVille works best on Chrome, Firefox, and Safari. For mobile play, we recommend using the Auro wallet browser for the best experience.
+TileVille offers both free and paid gameplay options. You can play the demo game without any cost, but competitions and challenges may require entry fees paid in MINA tokens.
 
-### Do I need a wallet to play?
-Yes, you need a Mina blockchain wallet to play TileVille. We recommend using [Auro Wallet](https://www.aurowallet.com/), which is available as a browser extension and mobile app.
+### What blockchain does TileVille use?
 
-### How do I connect my wallet?
-Click the "Connect Wallet" button in the top right corner of the screen and follow the prompts to connect your Auro Wallet.
+TileVille is built on the Mina Protocol, known for its lightweight blockchain technology that maintains a constant size regardless of transaction volume.
+
+### How do I get started?
+
+1. Connect your Mina wallet (Auro Wallet recommended)
+2. Create a profile with your name and username
+3. Try the demo game to learn the mechanics
+4. Join a competition or challenge friends in PvP mode
+
+## Wallet & Connection
+
+### What wallet do I need to play TileVille?
+
+We recommend using [Auro Wallet](https://www.aurowallet.com/), which is compatible with the Mina blockchain. Pallad wallet is currently not supported.
+
+### Why can't I connect with Pallad wallet?
+
+Currently, TileVille only supports Auro wallet. To use TileVille with Pallad:
+
+1. Open Chrome extensions (`chrome://extensions`)
+2. Disable Pallad Wallet temporarily
+3. Install and use Auro Wallet
+
+### How much MINA do I need to play?
+
+This depends on the competition or challenge you want to join. Most competitions have entry fees ranging from 1-5 MINA. You'll also need a small amount (approximately 0.1 MINA) to cover transaction fees.
+
+### What networks does TileVille support?
+
+TileVille supports both Mina Mainnet and Berkeley Testnet. For competitions and NFT minting, Mainnet is required.
 
 ## Gameplay
 
-### How do I play TileVille?
-The objective is to build the best possible city by strategically placing tiles. Each tile has different sides (roads, residential, commercial, etc.) that need to match with adjacent tiles. Check out our [Game Guide](/guide) for detailed instructions.
+### How do I play the game?
 
-### What's the difference between Practice, Competitions, and PvP?
-- **Practice**: Free play with no stakes, perfect for learning.
-- **Competitions**: Time-limited events with entry fees and prize pools.
-- **PvP**: Direct challenges against other players with winner-takes-all prizes.
+TileVille is inspired by Six Sided Streets:
 
-### What are Speed Challenges?
-Speed challenges add a time limit to complete your city. You must place all available tiles within the time limit (usually 3-5 minutes). This mode rewards quick thinking and efficiency.
+1. Place hexagonal tiles to create roads, cities, and landscapes
+2. Connect matching edges to score points
+3. Plan your tile placement strategically to maximize your score
+4. Complete the game by placing all available tiles
 
-### Can I save my progress in a game?
-Games in progress in competitions and PvP challenges are automatically saved. You can return to them from your profile's "Active Games" section.
+### What are the scoring rules?
 
-### What happens if I run out of time in a Speed Challenge?
-Your city will be scored based on the tiles you managed to place before time ran out. Any unplaced tiles will count against your final score.
+Points are awarded for:
 
-## Competitions & Rewards
+- Connecting road segments to create complete routes
+- Building cities by connecting city segments
+- Creating landscapes by grouping similar terrain types
+- Completing special patterns or challenges
+- Bonus points for efficient use of space
 
-### How do competitions work?
-Competitions run for a set period (usually a few days to a week). Players pay an entry fee to join and play their best game. The highest scores on the leaderboard when the competition ends win prizes.
+### What is a "Speed Challenge"?
 
-### How are competition prizes distributed?
-Prize distribution varies by competition, but typically:
-- 1st place: 50% of the prize pool
-- 2nd place: 30% of the prize pool
-- 3rd place: 15% of the prize pool
-- 4th-10th place: Share the remaining 5%
+Speed Challenges add a time constraint to the game. You must place all tiles within the specified time limit (typically 60-300 seconds). These challenges test both strategy and quick decision-making.
 
-### When do I receive my winnings?
-Prizes are distributed automatically via smart contract within 24 hours after the competition ends and all scores are verified on the blockchain.
+### Can I play on mobile?
 
-### What happens if there's a tie?
-In case of a tie, the player who submitted their score first wins the higher position.
+While TileVille works on mobile browsers, we recommend playing on a desktop for the best experience. If using mobile, we recommend using the Auro wallet's built-in browser for a smoother experience.
 
-## PvP Challenges
+## Competitions & PvP
+
+### What's the difference between Competitions and PvP Challenges?
+
+- **Competitions**: Organized events with fixed durations, entry fees, and prize pools. Players compete against all participants for the highest score.
+- **PvP Challenges**: Player-created head-to-head challenges with customizable parameters like entry fees, time limits, and maximum participants.
+
+### How do competition rewards work?
+
+For official competitions, rewards are distributed to top performers based on the prize pool. The exact distribution depends on the competition rules, but typically:
+
+- First place: 50-60% of the prize pool
+- Second place: 25-30% of the prize pool
+- Third place: 10-15% of the prize pool
+
+### How do PvP challenge rewards work?
+
+The winner of a PvP challenge receives the entire prize pool (total entry fees from all participants) minus a 1 MINA platform fee.
 
 ### How do I create a PvP challenge?
-Go to the PvP section, click "Create Challenge," set your parameters (entry fee, time limit, max participants), and share your challenge link.
 
-### How does the prize pool work in PvP?
-The prize pool equals the total entry fees from all participants minus a 1 MINA platform fee. The player with the highest score wins the entire prize pool.
+1. Navigate to the PvP section
+2. Click "Create Challenge"
+3. Set parameters (name, entry fee, end time, max participants)
+4. Optional: Enable "Speed Challenge" and set time limit
+5. Pay the 1 MINA creation fee
+6. Share the invite link with friends
 
-### Can I join multiple challenges at once?
-Yes, you can join as many challenges as you wish, provided you pay the entry fee for each.
+### How do I invite friends to my challenge?
 
-### What happens if I create a challenge but no one joins?
-If your challenge expires with no participants, any entry fee you paid will be refunded to your wallet minus transaction fees.
+After creating a challenge, you'll receive an invite link that you can share via:
 
-## NFTs & Digital Collection
+- Direct message
+- Social media (Twitter/X, Telegram)
+- Email
+- Our Telegram community
 
-### What are TileVille Builder NFTs?
-TileVille Builder NFTs are unique digital assets that represent special buildings or features in the game. Some provide gameplay bonuses when used.
+## NFTs & Digital Collectibles
 
-### How do I get NFTs?
-You can:
-- Win them in competitions
-- Purchase them from our marketplace
-- Trade with other players on platforms like minanft.io
+### What NFTs are available in TileVille?
 
-### What makes TileVille NFTs special?
-Each NFT has unique traits that affect its appearance and functionality in the game. Some are purely collectible, while others provide gameplay advantages.
+TileVille features several NFT collections:
 
-### Do I need NFTs to play?
-No, NFTs are entirely optional. They enhance the experience but aren't required to enjoy the game.
+- TileVille Builder NFTs: Gameplay enhancers with unique traits
+- Minaty: Community-created artwork
+- MinaPunks: Pixel art collectibles
+- ZKGod: Privacy and zero-knowledge themed artwork
 
-## Wallet & Transactions
+### What utility do TileVille Builder NFTs have?
 
-### What blockchain does TileVille use?
-TileVille is built on the Mina blockchain, known for its lightweight and efficient design.
+TileVille Builder NFTs provide gameplay advantages such as:
 
-### Why are my transactions pending?
-Mina blockchain transactions typically confirm within 2-3 minutes. During periods of high network congestion, it may take longer.
+- Extended time limits in Speed Challenges
+- Additional starting tiles
+- Special scoring multipliers
+- Unique game boards
+- Access to exclusive competitions
 
-### Is there a minimum MINA balance needed to play?
-You'll need enough MINA to cover:
-- Entry fees for competitions or challenges
-- Transaction fees (typically very small on Mina)
-- A small reserve for wallet functionality
+### How do I mint an NFT?
 
-We recommend having at least 1 MINA more than any entry fee you plan to pay.
+1. Navigate to the Marketplace section
+2. Browse available NFT collections
+3. Select an NFT you want to mint
+4. Connect your wallet and ensure you have sufficient MINA
+5. Click "MINT NFT" and confirm the transaction
 
-### Why did my transaction fail?
-Common reasons include:
-- Insufficient balance
-- Network congestion
-- Wallet connection issues
+### Can I sell or transfer my NFTs?
 
-You can check the status of your transaction on [MinaScan](https://minascan.io/).
+Yes, NFTs can be sold or transferred through MINANFT.io. From your profile's Digital Collection:
+
+1. Click on the NFT you want to manage
+2. Choose "Sell" or "Transfer"
+3. Follow the instructions on MINANFT.io
 
 ## Account & Profile
 
-### How do I change my username?
-Go to your profile page and click "Edit Profile" to update your username and other information.
+### How do I create or edit my profile?
 
-### Can I link my social media accounts?
-Yes, you can connect your Twitter, Discord, and Telegram accounts in your profile settings. This makes it easier to find friends and receive notifications.
+1. Connect your wallet
+2. Click "Edit Profile" or "Complete Profile"
+3. Fill in required fields (name, username)
+4. Add optional information (social media handles, email)
+5. Save changes
 
-### What are followers and following?
-You can follow other players to keep track of their achievements and challenge them more easily. When someone follows you, they'll see your updates in their feed.
+### Are my social media handles and email visible to others?
 
-### How do I recover my account if I lose access to my wallet?
-Your TileVille account is tied to your blockchain wallet. If you lose access to your wallet, you'll need to use your wallet's recovery methods (usually a seed phrase).
+You can control the visibility of your contact information. Each field has a toggle to set it as public or private.
 
-## Technical Issues
+### How do I follow other players?
 
-### The game isn't loading. What should I do?
+1. Visit a player's profile
+2. Click the "Follow" button
+3. You can view your followers and following from your profile
+
+### How do I search for friends?
+
+1. From your profile, click "Search Friends"
+2. Enter a name or username
+3. Browse results and follow players you want to connect with
+
+## Notifications & Updates
+
+### How can I get notified about new competitions?
+
+Connect your Telegram account in Preferences to receive notifications about:
+
+- New competitions
+- Challenge updates
+- Prize claim alerts
+- Player challenges
+
+### Where can I find TileVille's community?
+
+Join our [Telegram group](https://t.me/tilevillegame) to connect with other players, get game updates, and participate in community events.
+
+### How can I report bugs or provide feedback?
+
+Use the "Bug Report" button in the top navigation to report any issues. For general feedback, use our [feedback form](https://forms.gle/example).
+
+## Transactions & Payments
+
+### Why is my transaction pending?
+
+Mina blockchain transactions typically take 2-3 minutes to confirm. If a transaction is taking longer:
+
+1. Check the transaction status on [MinaScan](https://minascan.io)
+2. Wait a few more minutes as network congestion can cause delays
+3. If problems persist, use the "Bug Report" feature
+
+### What happens if my payment fails?
+
+If your payment fails, you can retry from the same screen. No funds will be deducted for failed transactions, but you may need to pay network fees for each attempt.
+
+### How do I claim my prize?
+
+For PvP challenges, once all participants have played and the challenge ends:
+
+1. The winner can click "Claim Prize" from the challenge details
+2. Confirm the transaction
+3. The prize will be sent directly to your wallet
+
+For competitions, prizes are distributed automatically when the competition ends.
+
+## Troubleshooting
+
+### I can't connect my wallet
+
 Try these steps:
-1. Refresh the page
-2. Clear your browser cache
-3. Ensure your wallet is connected
+
+1. Ensure your wallet extension is unlocked
+2. Refresh the page
+3. Clear browser cache and cookies
+4. Disable other wallet extensions temporarily
+5. Try a different browser
+
+### The game isn't loading properly
+
+Try these steps:
+
+1. Refresh the browser
+2. Clear cache and cookies
+3. Disable browser extensions
 4. Try a different browser
+5. On mobile, ensure you're in landscape mode
 
-### I paid an entry fee but can't play the game
-Check your "Active Games" in your profile. If you don't see your game there, please contact support with your transaction hash.
+### I paid the entry fee but can't play
 
-### Why can't I place a tile in a seemingly valid position?
-All edges of a tile must match the adjacent tiles. Check that roads connect to roads, residential to residential, etc.
+This could happen if your transaction is still pending. Check:
 
-### I found a bug. How do I report it?
-Use the "Bug Report" button in the navigation menu. Please provide as much detail as possible, including screenshots if applicable.
+1. Transaction status on MinaScan
+2. Wait 5-10 minutes for confirmation
+3. Refresh the page
+4. If the issue persists, use the "Bug Report" feature
 
-## TileVille Telegram & Community
+### Where can I get help if my issue isn't listed here?
 
-### What benefits do I get from connecting my Telegram?
-Connecting your Telegram account allows you to:
-- Receive notifications about new competitions
-- Get alerts when someone challenges you
-- Be notified when you win prizes
-- Interact with the TileVille community
+For additional support:
 
-### How do I connect my Telegram account?
-Click the "Connect Telegram" button in your profile settings and follow the prompts to link your account with our TileVille bot.
-
-### Is the Telegram integration mandatory?
-No, it's optional but recommended for the best experience.
-
-### Where else can I connect with the TileVille community?
-Join our:
-- [Twitter](https://twitter.com/tileVillesocial)
-- [Telegram group](https://t.me/tileVillebugs)
-
-## Still have questions?
-Join our [Telegram community](https://t.me/tileVillebugs) where our team and experienced players can help answer any other questions you might have.
+1. Join our [Telegram group](https://t.me/tilevillebugs)
+2. Report a bug using the "Bug Report" button
+3. Contact us at support@tileville.com
