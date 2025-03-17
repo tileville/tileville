@@ -3,29 +3,55 @@ export const MOCK_GLOBAL_CONFIG = {
     "Tileville",
     "Minaty",
     "MinaPunks",
-    "zkgod"
+    "zkgod",
+    "Zeko"
   ],
   "nft_collections_config": {
+    "Zeko": {
+      "img_format": "png",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images//zeko_cover.png",
+      "table_name": "zeko_nfts",
+      "bucket_name": "zeko_nfts",
+      "description": "This NFT is part of zeko nfts collection",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images//zeko_profile.png",
+      "description2": "Zeko is a zero-knowledge cross-chain scaling protocol for builders shaping the future of finance, AI, gaming and the next-generation internet.",
+      "featured_nfts": [],
+      "owner_address": "B62qk1KqJq2m59NJuPmHHWDFsejzc21Hr8gcHqWYfhM51dwpsVxtEQS",
+      "is_mint_public": true,
+      "max_mints_per_wallet": 1,
+      "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
+      "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
+      "nft_mint_start_date_time_utc": "2025-01-17T12:00:00Z"
+    },
     "zkgod": {
+      "img_format": "png",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_cover.jpg",
       "table_name": "zkgod_nfts",
       "bucket_name": "zkgod_nfts",
       "description": "This NFT is part of Zkgod nfts collection",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_profile.jpg",
+      "description2": "The Anonymity Revolution, We descend as guardians where privacy fades. Each piece isn't just art - it's your key to digital freedom. Join the revolution.",
+      "featured_nfts": [
+        37
+      ],
       "owner_address": "B62qpo7T2cKoCxAtEzW152mQEny7Dydq261QALnJjTrqD4bpWGEJfDr",
       "is_mint_public": true,
       "max_mints_per_wallet": 1,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-26T18:30:00Z",
-      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_cover.jpg",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/zkgod_profile.jpg",
-      "featured_nfts": [37],
-      "description2": "The Anonymity Revolution, We descend as guardians where privacy fades. Each piece isn't just art - it's your key to digital freedom. Join the revolution.",
-      "img_format": "png"
+      "nft_mint_start_date_time_utc": "2025-01-17T12:00:00Z"
     },
     "Minaty": {
+      "img_format": "png",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_cover.jpg",
       "table_name": "minaty_nfts",
       "bucket_name": "minaty_nfts",
       "description": "This NFT is part of Minaty nfts collection",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_profile.jpg",
+      "description2": "Build a private, confidential club and a vip pass for Mina Protocol | Put on your mask, spread the vision",
+      "featured_nfts": [
+        73
+      ],
       "owner_address": "B62qkX4VQYdmgc7dmLyiPpMhLRfrWjWnyoGGhdqF4bXtTcbv6E1HWsD",
       "is_mint_public": false,
       "max_mints_per_wallet": 3,
@@ -71,32 +97,36 @@ export const MOCK_GLOBAL_CONFIG = {
         "B62qrVzi6k4c1Q7fCMnLbe8Wn5TSqMrfvuAmpacKe8VJkjsjKUXH73Z"
       ],
       "reserved_price_reduce_key": "dbVHT6pf4aBcjmUHANFr3P4eEzvjHbxrFdjVbfafbhjew_J",
-      "nft_mint_start_date_time_utc": "2024-12-16T23:00:00Z",
-      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_cover.jpg",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minaty_profile.jpg",
-      "featured_nfts": [73] ,
-      "description2": "Build a private, confidential club and a vip pass for Mina Protocol | Put on your mask, spread the vision",
-      "img_format": "png"
+      "nft_mint_start_date_time_utc": "2025-02-09T12:00:00Z"
     },
     "MinaPunks": {
+      "img_format": "png",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_cover.png",
       "table_name": "minapunks_nfts",
       "bucket_name": "minapunks_nfts",
       "description": "This NFT is part of Minapunks nfts collection",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images//minapunksProfile.png",
+      "description2": "The MinaPunks NFT collection is a symbol of ownership and anonymity on the shining Mina blockchain. Punk owners are now inseparably connected to the Mina network.",
+      "featured_nfts": [
+        47
+      ],
       "owner_address": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "is_mint_public": true,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z",
-      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_cover.png",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/minapunks_profile.png",
-      "featured_nfts": [],
-      "description2": "The MinaPunks NFT collection is a symbol of ownership and anonymity on the shining Mina blockchain. Punk owners are now inseparably connected to the Mina network." ,
-      "img_format": "png"
+      "nft_mint_start_date_time_utc": "2024-12-23T01:00:00Z"
     },
     "Tileville": {
+      "img_format": "png",
+      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_cover.jpeg",
       "table_name": "tileville_builder_nfts",
       "bucket_name": "builder_nfts",
       "description": "This NFT is part of our first edition of TileVille Builders.",
+      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_profile.png",
+      "description2": "TileVille is a strategic city-building game on the Mina blockchain, where players construct and manage their own cities on the island of Nicobar using hexagonal tiles.",
+      "featured_nfts": [
+        6
+      ],
       "is_mint_public": true,
       "total_nft_count": "150",
       "traits_rarity_counts": {
@@ -141,12 +171,7 @@ export const MOCK_GLOBAL_CONFIG = {
       },
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2024-08-28",
-      "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_cover.jpeg",
-      "profile_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images/tileville_profile.png",
-      "featured_nfts": [5],
-      "description2": "TileVille is a strategic city-building game on the Mina blockchain, where players construct and manage their own cities on the island of Nicobar using hexagonal tiles.",
-      "img_format": "png"
+      "nft_mint_start_date_time_utc": "2024-08-28"
     }
   }
-};
+}
