@@ -8,7 +8,7 @@ export const MOCK_GLOBAL_CONFIG = {
   ],
   "nft_collections_config": {
     "Zeko": {
-      "img_format": "png",
+      "img_format": "gif",
       "poster_url": "https://oqymtqolwjujkayjyxdt.supabase.co/storage/v1/object/public/collection_images//zeko_cover.png",
       "table_name": "zeko_nfts",
       "bucket_name": "zeko_nfts",
@@ -21,7 +21,8 @@ export const MOCK_GLOBAL_CONFIG = {
       "max_mints_per_wallet": 1,
       "fee_master_public_key": "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV",
       "reserved_price_reduce_key": "dbnggujMBvxEc8cVXDpGaiokANYvYCHW_DfBu567eqhi_V",
-      "nft_mint_start_date_time_utc": "2025-01-17T12:00:00Z"
+      "nft_mint_start_date_time_utc": "2025-01-17T12:00:00Z",
+      "is_zeko": true,
     },
     "zkgod": {
       "img_format": "png",

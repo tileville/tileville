@@ -476,3 +476,25 @@ export const organizeCompetitions = (competitions: any[]) => {
     { ongoing: [], upcoming: [], past: [] }
   );
 };
+
+export const extractIPFSHash = (url: string) => {
+  if (!url || typeof url !== "string") {
+    return null;
+  }
+
+  // This handles multiple gateway formats including:
+  // - https://gateway.pinata.cloud/ipfs/bafybeiaoz4...
+  // - https://ipfs.io/ipfs/bafybeiaoz4...
+  // - https://cloudflare-ipfs.com/ipfs/bafybeiaoz4...
+  // - ipfs://bafybeiaoz4...
+
+  // First pattern: URL with /ipfs/ path
+  let match = url.match(/\/ipfs\/([a-zA-Z0-9]+)/);
+
+  // Second pattern: ipfs:// protocol
+  if (!match) {
+    match = url.match(/^ipfs:\/\/([a-zA-Z0-9]+)/);
+  }
+
+  return match ? match[1] : null;
+};
