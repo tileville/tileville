@@ -18,6 +18,8 @@ export async function POST(request: NextRequest) {
       tableName = "minapunks_nfts";
     } else if (name.toLowerCase().includes("zkgod")) {
       tableName = "zkgod_nfts";
+    } else if (name.toLowerCase().includes("zeko")) {
+      tableName = "zeko_nfts";
     } else {
       tableName = "tileville_builder_nfts";
     }
