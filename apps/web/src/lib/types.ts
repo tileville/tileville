@@ -48,7 +48,8 @@ export type NFTTableNames =
   | "tileville_builder_nfts"
   | "minaty_nfts"
   | "minapunks_nfts"
-  | "zkgod_nfts";
+  | "zkgod_nfts"
+  | "zeko_nfts";
 
 export type CompetitionErrorType = {
   errorCode:

@@ -9,6 +9,196 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      aztec_discord_server_collections: {
+        Row: {
+          collection_id: string
+          created_at: string | null
+          discord_server_id: string
+          id: string
+          role_id: string
+        }
+        Insert: {
+          collection_id: string
+          created_at?: string | null
+          discord_server_id: string
+          id?: string
+          role_id: string
+        }
+        Update: {
+          collection_id?: string
+          created_at?: string | null
+          discord_server_id?: string
+          id?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aztec_discord_server_collections_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
+          },
+        ]
+      }
+      aztec_discord_verifications: {
+        Row: {
+          discord_user_id: string
+          id: string
+          verified_at: string
+          wallet_address: string
+        }
+        Insert: {
+          discord_user_id: string
+          id?: string
+          verified_at?: string
+          wallet_address: string
+        }
+        Update: {
+          discord_user_id?: string
+          id?: string
+          verified_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      aztec_nft_collections: {
+        Row: {
+          banner_url: string | null
+          collection_id: string
+          contract_address: string | null
+          created_at: string | null
+          creator_address: string
+          description: string | null
+          floor_price: number | null
+          id: string
+          image_url: string | null
+          mint_limit_per_wallet: number | null
+          mint_price: number
+          mint_start_date: string | null
+          name: string
+          owner_count: number | null
+          royalty_fee: number | null
+          symbol: string
+          total_supply: number
+          total_volume: number | null
+          trait_schema: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          banner_url?: string | null
+          collection_id?: string
+          contract_address?: string | null
+          created_at?: string | null
+          creator_address: string
+          description?: string | null
+          floor_price?: number | null
+          id?: string
+          image_url?: string | null
+          mint_limit_per_wallet?: number | null
+          mint_price: number
+          mint_start_date?: string | null
+          name: string
+          owner_count?: number | null
+          royalty_fee?: number | null
+          symbol: string
+          total_supply?: number
+          total_volume?: number | null
+          trait_schema?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          banner_url?: string | null
+          collection_id?: string
+          contract_address?: string | null
+          created_at?: string | null
+          creator_address?: string
+          description?: string | null
+          floor_price?: number | null
+          id?: string
+          image_url?: string | null
+          mint_limit_per_wallet?: number | null
+          mint_price?: number
+          mint_start_date?: string | null
+          name?: string
+          owner_count?: number | null
+          royalty_fee?: number | null
+          symbol?: string
+          total_supply?: number
+          total_volume?: number | null
+          trait_schema?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      aztec_nfts: {
+        Row: {
+          collection_id: string
+          created_at: string | null
+          current_price: number | null
+          description: string | null
+          id: string
+          image_url: string
+          is_listed: boolean | null
+          last_sale_date: string | null
+          last_sale_price: number | null
+          mint_date: string | null
+          name: string
+          owner_address: string | null
+          token_id: number
+          token_uri: string | null
+          traits: Json | null
+          txn_hash: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          collection_id: string
+          created_at?: string | null
+          current_price?: number | null
+          description?: string | null
+          id?: string
+          image_url: string
+          is_listed?: boolean | null
+          last_sale_date?: string | null
+          last_sale_price?: number | null
+          mint_date?: string | null
+          name: string
+          owner_address?: string | null
+          token_id: number
+          token_uri?: string | null
+          traits?: Json | null
+          txn_hash?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          collection_id?: string
+          created_at?: string | null
+          current_price?: number | null
+          description?: string | null
+          id?: string
+          image_url?: string
+          is_listed?: boolean | null
+          last_sale_date?: string | null
+          last_sale_price?: number | null
+          mint_date?: string | null
+          name?: string
+          owner_address?: string | null
+          token_id?: number
+          token_uri?: string | null
+          traits?: Json | null
+          txn_hash?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aztec_nfts_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "aztec_nft_collections"
+            referencedColumns: ["collection_id"]
+          },
+        ]
+      }
       fitrace_signup_emails: {
         Row: {
           created_at: string
@@ -371,6 +561,7 @@ export type Database = {
         Row: {
           created_at: string
           img_url: string
+          is_public_mint: boolean
           name: string
           nft_id: number
           owner_address: string | null
@@ -381,6 +572,7 @@ export type Database = {
         Insert: {
           created_at?: string
           img_url: string
+          is_public_mint?: boolean
           name: string
           nft_id?: number
           owner_address?: string | null
@@ -391,6 +583,7 @@ export type Database = {
         Update: {
           created_at?: string
           img_url?: string
+          is_public_mint?: boolean
           name?: string
           nft_id?: number
           owner_address?: string | null
@@ -553,6 +746,45 @@ export type Database = {
           is_redeemed?: boolean
           redeemed_at?: string | null
           redeemed_by?: string | null
+        }
+        Relationships: []
+      }
+      zeko_nfts: {
+        Row: {
+          created_at: string
+          id: number
+          img_url: string
+          is_public_mint: boolean
+          name: string
+          nft_id: number | null
+          owner_address: string | null
+          price: number
+          traits: Json | null
+          txn_hash: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          img_url: string
+          is_public_mint?: boolean
+          name: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price: number
+          traits?: Json | null
+          txn_hash?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          img_url?: string
+          is_public_mint?: boolean
+          name?: string
+          nft_id?: number | null
+          owner_address?: string | null
+          price?: number
+          traits?: Json | null
+          txn_hash?: string | null
         }
         Relationships: []
       }
