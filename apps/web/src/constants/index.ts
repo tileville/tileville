@@ -660,6 +660,7 @@ export const NFT_TABLE_NAMES = {
   MINATY: "minaty_nfts",
   MINAPUNKS: "minapunks_nfts",
   ZKGOD: "zkgod_nfts",
+  ZEKO: "zeko_nfts",
 } as const;
 
 export type NFTTableName =

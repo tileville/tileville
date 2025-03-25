@@ -54,6 +54,8 @@ export function useMintMINANFT() {
       collectionConfig.reserved_price_reduce_key ||
       RESERVED_PRICE_REDUCE_KEY_DEFAULT;
     const image_format = collectionConfig.img_format || "png";
+    const collectionTableName = collectionConfig.table_name;
+
     console.log("feeMasterPublicKey", feeMasterPublicKey);
     const contractAddress = MINANFT_CONTRACT_ADDRESS;
     const chain: blockchain = CHAIN_NAME;
@@ -365,6 +367,33 @@ export function useMintMINANFT() {
         success: false,
         message: sentTx.error || "Failed to send transaction",
       };
+    }
+
+    if (sentTx.isSent || sentTx.hash) {
+      try {
+        if (collection.toLowerCase() === "zeko") {
+          const response = await fetch("/api/nfts/update-nft-status", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Wallet-Address": owner,
+            },
+            body: JSON.stringify({
+              nft_id,
+              collection,
+              txn_hash: sentTx.hash,
+              collectionTableName,
+            }),
+          });
+
+          const result = await response.json();
+          if (!result.success) {
+            console.warn("Failed to update NFT minted status:", result.message);
+          }
+        }
+      } catch (error) {
+        console.error("Error updating NFT status:", error);
+      }
     }
 
     // Only set success state if we actually succeeded

@@ -59,6 +59,11 @@ export default function MarketplaceContent({
         (searchParams.get("collection") as NFTCollectionType) ||
         NFT_COLLECTIONS.TILEVILLE
     );
+
+  const [mintedFilter, setMintedFilter] = useState<string | null>(
+    searchParams.get("mintedFilter") || null
+  );
+
   const globalConfig = useAtomValue(globalConfigAtom);
   const collectionConfig =
     globalConfig?.nft_collections_config?.[selectedCollection] || {};
@@ -73,6 +78,8 @@ export default function MarketplaceContent({
     searchTerm,
     currentPage,
     collectionTableName,
+    mintedFilter:
+      selectedCollection === NFT_COLLECTIONS.ZEKO ? mintedFilter : null,
   });
 
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
@@ -80,7 +87,7 @@ export default function MarketplaceContent({
   });
 
   const updateSearchParams = useCallback(
-    (newParams: Record<string, string>) => {
+    (newParams: Record<string, string | null>) => {
       const params = new URLSearchParams(searchParams.toString());
       Object.entries(newParams).forEach(([key, value]) => {
         if (value) {
@@ -106,14 +113,35 @@ export default function MarketplaceContent({
   const handleSortChange = useCallback(
     (selectedOption: string) => {
       setSelectedItem(selectedOption);
-      const newSortOrder =
-        selectedOption === "Price: Low to High" ? "asc" : "desc";
-      setSortOrder(newSortOrder);
-      updateSearchParams({
-        sort: selectedOption,
-        sortOrder: newSortOrder,
-        page: "1",
-      });
+
+      if (selectedOption === "Show Minted NFTs") {
+        setMintedFilter("true");
+        updateSearchParams({
+          sort: selectedOption,
+          mintedFilter: "true",
+          page: "1",
+        });
+        return;
+      } else if (selectedOption === "Show Non-Minted NFTs") {
+        setMintedFilter("false");
+        updateSearchParams({
+          sort: selectedOption,
+          mintedFilter: "false",
+          page: "1",
+        });
+        return;
+      } else {
+        const newSortOrder =
+          selectedOption === "Price: Low to High" ? "asc" : "desc";
+        setSortOrder(newSortOrder);
+        setMintedFilter(null);
+        updateSearchParams({
+          sort: selectedOption,
+          sortOrder: newSortOrder,
+          mintedFilter: null,
+          page: "1",
+        });
+      }
     },
     [updateSearchParams]
   );
@@ -123,7 +151,18 @@ export default function MarketplaceContent({
       if (!collection) {
         // Only allow changing collection if no collection prop is provided
         setSelectedCollection(newCollection);
-        updateSearchParams({ collection: newCollection, page: "1" });
+
+        if (newCollection !== NFT_COLLECTIONS.ZEKO) {
+          setMintedFilter(null);
+          updateSearchParams({
+            collection: newCollection,
+            page: "1",
+            mintedFilter: null,
+            sort: "Price: High to Low",
+          });
+        } else {
+          updateSearchParams({ collection: newCollection, page: "1" });
+        }
       }
     },
     [updateSearchParams, collection]
@@ -162,6 +201,7 @@ export default function MarketplaceContent({
     setRenderStyle(
       TOGGLE_GROUP_OPTIONS[Number(searchParams.get("view")) || 0].gridApplyClass
     );
+    setMintedFilter(searchParams.get("mintedFilter"));
   }, [searchParams, collection]);
 
   if (nftError) {
@@ -173,6 +213,17 @@ export default function MarketplaceContent({
       </div>
     );
   }
+
+  const getSortOptions = () => {
+    if (selectedCollection === NFT_COLLECTIONS.ZEKO) {
+      return [
+        ...SORT_OPTIONS,
+        { text: "Show Minted NFTs", id: 2 },
+        { text: "Show Non-Minted NFTs", id: 3 },
+      ];
+    }
+    return SORT_OPTIONS;
+  };
 
   return (
     <div
@@ -245,7 +296,7 @@ export default function MarketplaceContent({
               </button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content className="min-w-[190px] !bg-transparent backdrop-blur-2xl">
-              {SORT_OPTIONS.map((option) => (
+              {getSortOptions().map((option) => (
                 <DropdownMenu.Item
                   key={option.id}
                   onClick={() => handleSortChange(option.text)}
