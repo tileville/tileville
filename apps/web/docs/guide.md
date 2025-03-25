@@ -1,141 +1,194 @@
-# TileVille Game Guide
+# TileVille Complete Game Guide
 
-Welcome to TileVille, the strategic tile-placing game on the Mina blockchain! This guide will help you understand the game mechanics, strategies, and how to get the most out of your TileVille experience.
+## Introduction to TileVille
 
-## Table of Contents
-- [Game Basics](#game-basics)
-- [How to Play](#how-to-play)
-- [Scoring System](#scoring-system)
-- [Advanced Strategies](#advanced-strategies)
-- [Competitions](#competitions)
-- [PvP Challenges](#pvp-challenges)
-- [NFTs and Rewards](#nfts-and-rewards)
+Welcome to TileVille, the strategic city-building game built on the Mina Protocol! TileVille combines the creativity of city planning with the transparency and security of blockchain technology. As a mayor, your goal is to build and develop a thriving city by strategically placing different types of tiles to create the most efficient and harmonious urban environment.
 
-## Game Basics
+## Getting Started
 
-TileVille is inspired by Six Sided Streets, where you strategically place hexagonal tiles to create roads, neighborhoods, and special buildings. Each placement affects your overall city development and score. The game combines planning, strategy, and a bit of luck.
+### Connecting Your Wallet
 
-![TileVille Game Board](/img/guide/game-board.png)
+1. To begin playing TileVille, you'll need to connect your Mina wallet. We currently support:
+
+   - Auro Wallet (recommended)
+   - Other Mina-compatible wallets
+
+2. Click on the "Connect Wallet" button in the top-right corner of the screen.
+
+3. If you don't have Auro Wallet installed, you'll be prompted to install it from the [Chrome Web Store](https://chromewebstore.google.com/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae).
 
 ### Game Modes
-- **Practice Mode**: Play freely without stakes to perfect your strategy
-- **Competitions**: Join time-limited competitions with MINA token prizes
-- **PvP Challenges**: Challenge other players directly to see who can build the better city
 
-## How to Play
+TileVille offers multiple ways to play:
 
-### Getting Started
-1. **Connect your wallet**: Use Auro wallet to connect to the TileVille platform
-2. **Select a game mode**: Choose between practice, competitions, or PvP
-3. **Place your first tile**: The game starts with a single tile in the center
+#### Competitions
 
-### Basic Controls
-- **Rotate tile**: Click the rotation buttons or use R key
-- **Place tile**: Click on a valid position on the board
-- **View next tiles**: See the upcoming tiles in the queue
-- **End game**: Submit your final city when you're satisfied or can't place more tiles
+- Join ongoing competitions with fixed time periods
+- Pay an entry fee (usually in MINA tokens)
+- Compete against other players for prizes
+- Your highest score is recorded on the leaderboard
+
+#### Player vs Player (PVP)
+
+- Challenge specific players to a direct competition
+- Set your own terms including entry fee and time limit
+- Winner takes the prize pool
+
+#### Practice Mode
+
+- Play for free to learn the mechanics
+- No entry fee required
+- Scores aren't recorded on the official leaderboard
+
+## Basic Game Mechanics
+
+### The Game Board
+
+The game board consists of a grid where you'll place various tiles. Each game starts with a few pre-placed tiles which serve as your starting point.
 
 ### Tile Types
-- **Residential (Green)**: Creates neighborhoods when connected
-- **Commercial (Blue)**: Generates value when placed near residential areas
-- **Industrial (Yellow)**: Provides jobs but should be kept away from residential
-- **Roads (Gray)**: Connect different city sections for better flow
-- **Special Buildings (Purple)**: Unique structures with special bonuses
 
-## Scoring System
+TileVille features various types of tiles, each serving different purposes:
 
-Your final score depends on multiple factors:
+1. **Residential Tiles** (Houses) - Provide housing for your city's population.
+2. **Commercial Tiles** (Shops) - Generate income for your city.
+3. **Road Tiles** - Connect different parts of your city, enabling transportation.
+4. **Park Tiles** - Improve the happiness of nearby residents.
+5. **Windmill Tiles** - Generate power for your city's buildings.
+6. **Water Tiles** - Essential resource tiles that support your city's needs.
+7. **Farm Tiles** - Produce food for your city's population.
 
-### Base Points
-- **Connected roads**: +5 points per connected segment
-- **Complete neighborhoods**: +10 points per house in a complete neighborhood
-- **Commercial zones**: +8 points per commercial building connected to a neighborhood
-- **Industrial efficiency**: +12 points per industrial building with road access
+### Resource Management
 
-### Multipliers
-- **City coherence**: Up to 1.5x multiplier for a well-connected city
-- **Diversity bonus**: Up to 1.2x for having a balanced mix of all tile types
-- **Speed completion**: Finishing quickly in speed challenges gives up to 1.3x bonus
+Successful city planning requires balancing various resources:
 
-### Penalties
-- **Incomplete roads**: -2 points per disconnected road segment
-- **Pollution effects**: -5 points for each industrial tile adjacent to residential
+- **Population**: Increases with residential tiles
+- **Happiness**: Affected by parks, services, and city layout
+- **Power**: Generated by windmills
+- **Food**: Produced by farms
+- **Money**: Generated by commercial activities
+
+### Tile Placement Rules
+
+- Tiles must be placed adjacent to existing tiles
+- Some tiles have specific placement requirements (e.g., windmills need open space)
+- Roads need to connect to existing road networks
+- Residential areas benefit from proximity to parks and services
+- Commercial tiles thrive near residential areas
 
 ## Advanced Strategies
 
-### The "Ring Road" Strategy
-Create a circular road structure around your central neighborhood for maximum connectivity.
+### City Layout Planning
 
-### The "District" Approach
-Develop specialized districts (residential, commercial, industrial) and connect them strategically.
+The most successful mayors plan their cities with a clear strategy in mind:
 
-### The "Rivers and Bridges" Technique
-Use natural boundaries to separate incompatible zones while providing limited connectivity.
+1. **Grid System**: Create an organized road network in a grid pattern for efficient connectivity.
+2. **Zoning Areas**: Designate specific areas for residential, commercial, and recreational purposes.
+3. **Resource Clustering**: Group similar buildings together to maximize efficiency bonuses.
+4. **Green Corridors**: Create paths of parks that wind through your city to maximize happiness.
 
-### Speed Challenge Tips
-In speed mode, focus on creating smaller complete structures rather than ambitious layouts.
+### Efficiency Optimization
 
-## Competitions
+To achieve the highest scores:
 
-TileVille features regular competitions with MINA token prizes. Here's how they work:
+1. **Balance Growth**: Don't focus solely on one type of development.
+2. **Anticipate Needs**: Plan spaces for future expansion.
+3. **Maximize Adjacency Bonuses**: Place tiles strategically to get bonuses from neighboring tiles.
+4. **Create Specialized Districts**: Industrial, commercial, and residential zones with supporting infrastructure.
 
-### Competition Types
-- **Weekly Challenges**: New theme each week with moderate prizes
-- **Monthly Championships**: Larger prize pools and more challenging objectives
-- **Special Events**: Themed around holidays or game updates
+## TileVille NFTs
 
-### How to Enter
-1. Navigate to the "Competitions" tab
-2. Pay the entry fee (varies by competition)
-3. Play your best game within the competition timeframe
-4. Your highest score is automatically submitted
+### Builder NFTs
+
+TileVille offers special Builder NFTs that provide unique advantages in gameplay:
+
+- **Special Abilities**: Each Builder has unique talents that boost specific aspects of city development.
+- **Efficiency Levels**: From Novice to Legendary, affecting overall productivity.
+- **Sustainability Ratings**: From Bronze to Diamond, reflecting eco-friendly development capabilities.
+- **Environmental Affinity**: Special connection to particular environmental elements.
+- **Urban Planning Expertise**: Specialized knowledge in certain aspects of city development.
+
+### Collecting and Using NFTs
+
+1. **Marketplace**: Browse and purchase Builder NFTs from our marketplace.
+2. **Integration**: Select your Builder before starting a game to utilize their abilities.
+3. **Strategy**: Choose Builders whose abilities align with your playing style.
+
+## Competitions and Rewards
+
+### Joining Competitions
+
+1. Navigate to the "Competitions" section.
+2. Browse available competitions and review entry requirements.
+3. Pay the entry fee to participate.
+4. Compete within the specified timeframe.
 
 ### Leaderboards
-Competitions have live leaderboards so you can see how you rank against other players. Final standings are confirmed after the competition ends and all transactions are verified on the blockchain.
 
-## PvP Challenges
+- Competitions feature real-time leaderboards.
+- Your highest score is recorded and ranked against other players.
+- Historical performance is tracked in your profile.
 
-Challenge your friends or other TileVille players to direct competitions!
+### Rewards
 
-### Creating a Challenge
-1. Go to the PvP section
-2. Set your entry fee, time limit, and maximum participants
-3. Choose whether to enable "Speed Mode"
-4. Share your challenge link with friends
+- Competition prizes are typically paid in MINA tokens.
+- PVP challenges distribute the collective entry fees to the winner.
+- Special competitions may offer unique NFT rewards.
 
-### Accepting Challenges
-1. Use the challenge link or browse public challenges
-2. Pay the entry fee to join
-3. Play your best game
-4. The highest score wins the prize pool
+## Community Features
 
-### Prize Distribution
-- Winner takes all (minus 1 MINA platform fee)
-- In case of a tie, the player who completed the game earlier wins
+### Social Connections
 
-## NFTs and Rewards
+- Follow other players to track their achievements.
+- Share your scores on social media platforms.
+- Join the TileVille community on Telegram and Twitter.
 
-TileVille features unique NFTs that can enhance your gameplay experience.
+### Telegram Integration
 
-### TileVille Builder NFTs
-These collectible NFTs represent special buildings and can provide gameplay bonuses:
+- Verify your Telegram account to receive notifications.
+- Join group challenges through the TileVille Telegram bot.
+- Report bugs and get support through dedicated channels.
 
-- **Landmark Tower**: +10% to final score when placed in your city
-- **Community Center**: Increases neighborhood value by 15%
-- **Transport Hub**: Doubles the value of connected road networks
-- **Innovation Lab**: Provides a second chance to reroll unwanted tiles
+## Tips for Beginners
 
-### How to Get NFTs
-- Win competitions to earn exclusive NFTs
-- Purchase from the TileVille marketplace
-- Trade with other players on platforms like minanft.io
+1. **Start Small**: Focus on creating a balanced small city before expanding.
+2. **Watch Tutorials**: Check out the [tutorial video](https://youtu.be/rUd880VHHT0) for visual guidance.
+3. **Practice Mode**: Use the free practice mode to test strategies without spending tokens.
+4. **Study Leaderboards**: Look at top players' cities for inspiration.
+5. **Balance Resources**: Always ensure you have enough power, water, and food for your population.
 
-## Connecting with the Community
+## Frequently Encountered Issues
 
-Join our vibrant community to share strategies, make friends, and stay updated:
+### Wallet Connection
 
-- **Telegram Channel**: Get announcements and chat with other players
-- **Twitter**: Follow us for game updates and competitions
-- **Discord**: Discuss strategies and find challenge opponents
+If you're having trouble connecting your wallet:
 
-Happy building, and may your city flourish!
+- Ensure your wallet extension is up to date
+- Check that you're on the Mina mainnet
+- Try refreshing the page and reconnecting
+
+### Transaction Failures
+
+If your competition entry transaction fails:
+
+- Check your wallet balance to ensure sufficient funds
+- Verify network congestion and try again later
+- Contact support if persistent issues occur
+
+### Game Performance
+
+For optimal performance:
+
+- Use Google Chrome or Firefox
+- Close unnecessary browser tabs
+- Ensure your device meets minimum requirements
+
+## Support and Community
+
+If you encounter any issues or have questions:
+
+- Submit a bug report using the "Report Bug" button in the header
+- Join our [Telegram group](https://t.me/tilevillebugs) for community support
+- Follow us on Twitter [@TileVilleSocial](https://twitter.com/TileVilleSocial) for updates
+
+Happy building, Mayor! May your city flourish and prosper.
