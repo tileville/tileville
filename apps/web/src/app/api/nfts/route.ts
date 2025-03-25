@@ -1,6 +1,6 @@
 import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { NextRequest } from "next/server";
-import { NFT_PAGE_SIZE } from "@/constants";
+import { NFT_PAGE_SIZE, NFT_TABLE_NAMES } from "@/constants";
 import { NFTTableNames } from "@/lib/types";
 
 export async function GET(request: NextRequest) {
@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   const searchTerm = searchParams.get("searchTerm") || "";
   const page = parseInt(searchParams.get("page") || "1");
   const collectionTableName = searchParams.get("collectionTableName") || "";
+  const mintedFilter = searchParams.get("mintedFilter");
 
   const start = (page - 1) * NFT_PAGE_SIZE;
   const end = start + NFT_PAGE_SIZE - 1;
@@ -18,6 +19,10 @@ export async function GET(request: NextRequest) {
       .from(collectionTableName as NFTTableNames)
       .select("*", { count: "exact" })
       .range(start, end);
+
+    if (collectionTableName === NFT_TABLE_NAMES.ZEKO && mintedFilter !== null) {
+      query = query.eq("is_minted", mintedFilter === "true");
+    }
 
     query = query
       .order("price", {

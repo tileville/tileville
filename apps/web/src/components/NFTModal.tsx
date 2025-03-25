@@ -89,6 +89,7 @@ export const NFTModal = ({
   const collectionBucketName = collectionConfig.bucket_name;
   const collectionDescription = collectionConfig.description;
   const imageFormat = collectionConfig.img_format || "png";
+  const isZeko = collectionConfig.is_zeko || false;
 
   useEffect(() => {
     if (nftMintResponse.state === "active") {
@@ -167,6 +168,7 @@ export const NFTModal = ({
         collectionBucketName,
         collectionDescription,
         imageFormat,
+        isZeko,
       });
 
       console.log("186 response", response);

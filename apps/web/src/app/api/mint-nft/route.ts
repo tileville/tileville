@@ -8,6 +8,7 @@ import { supabaseServiceClient as supabase } from "@/db/config/server";
 import { CHAIN_NAME, MINANFT_CONTRACT_ADDRESS, ProofOfNFT } from "./constants";
 import { pinFile } from "./server-utils";
 import { createFileFromImageUrl } from "./common-utils";
+import { extractIPFSHash } from "@/lib/helpers";
 
 const postHandler = async (request: NextRequest) => {
   const payload = await request.json();
@@ -19,7 +20,8 @@ const postHandler = async (request: NextRequest) => {
     collectionTableName,
     collectionBucketName,
     collectionDescription,
-    imageFormat
+    imageFormat,
+    isZeko,
   } = payload;
 
   // const authSignature = request.headers.get("Auth-Signature");
@@ -40,7 +42,19 @@ const postHandler = async (request: NextRequest) => {
       );
     }
 
-    const image_url = await fetchNFTImageUrl(nft_id, collectionBucketName , imageFormat);
+    let image_url;
+    console.log("is zeko in api", isZeko);
+
+    if (isZeko) {
+      image_url = nftData.img_url;
+    } else {
+      image_url = await fetchNFTImageUrl(
+        nft_id,
+        collectionBucketName,
+        imageFormat
+      );
+    }
+
     if (!image_url) {
       return Response.json(
         {
@@ -50,6 +64,7 @@ const postHandler = async (request: NextRequest) => {
         { status: 400 }
       );
     }
+
     const {
       name,
       traits = [],
@@ -57,11 +72,20 @@ const postHandler = async (request: NextRequest) => {
       name: string;
       traits: any;
     } = nftData;
-    const nft_image: any = await createFileFromImageUrl({
-      image_url,
-      name: `${nft_id}.${imageFormat}`,
-    });
+
+    let nft_image: any;
+    let ipfs;
+
+    if (isZeko) {
+    } else {
+      nft_image = await createFileFromImageUrl({
+        image_url,
+        name: `${nft_id}.${imageFormat}`,
+      });
+    }
+
     console.log({ image_url, traits });
+
     const modified_traits: ProofOfNFT[] = traits.map(
       ({ key, value }: { key: string; value: string }) => ({
         key,
@@ -69,17 +93,22 @@ const postHandler = async (request: NextRequest) => {
         isPublic: true,
       })
     );
-    const ipfs = await pinFile({
-      file: nft_image,
-      keyvalues: {
-        name,
-        owner: wallet_address,
-        contractAddress: MINANFT_CONTRACT_ADDRESS,
-        chain: CHAIN_NAME,
-        developer: "Tileville",
-        repo: "tileville",
-      },
-    });
+
+    if (isZeko) {
+      ipfs = extractIPFSHash(image_url);
+    } else {
+      ipfs = await pinFile({
+        file: nft_image,
+        keyvalues: {
+          name,
+          owner: wallet_address,
+          contractAddress: MINANFT_CONTRACT_ADDRESS,
+          chain: CHAIN_NAME,
+          developer: "Tileville",
+          repo: "tileville",
+        },
+      });
+    }
 
     return Response.json(
       {

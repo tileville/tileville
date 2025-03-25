@@ -1207,25 +1207,37 @@ export const useNFTsWithPagination = ({
   searchTerm,
   currentPage,
   collectionTableName,
+  mintedFilter = null,
   enabled = true,
 }: {
   sortOrder: "asc" | "desc";
   searchTerm: string;
   currentPage: number;
   collectionTableName: string;
+  mintedFilter?: string | null;
   enabled?: boolean;
 }) => {
   return useQuery<NFTResponse, NFTError>({
-    queryKey: [sortOrder, searchTerm, currentPage, collectionTableName],
+    queryKey: [
+      sortOrder,
+      searchTerm,
+      currentPage,
+      collectionTableName,
+      mintedFilter,
+    ],
     queryFn: async () => {
       const params = [
         `sortOrder=${sortOrder}`,
         `searchTerm=${encodeURIComponent(searchTerm)}`,
         `page=${currentPage}`,
         `collectionTableName=${collectionTableName}`,
-      ].join("&");
+      ];
 
-      const response = await fetch(`/api/nfts?${params}`);
+      if (mintedFilter !== null) {
+        params.push(`mintedFilter=${mintedFilter}`);
+      }
+
+      const response = await fetch(`/api/nfts?${params.join("&")}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw {

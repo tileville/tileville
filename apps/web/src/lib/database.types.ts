@@ -366,6 +366,45 @@ export type Database = {
         }
         Relationships: []
       }
+      places: {
+        Row: {
+          address: string
+          category: string
+          created_at: string | null
+          description: string
+          id: string
+          image_url: string | null
+          latitude: number
+          longitude: number
+          name: string
+          place_id: string
+        }
+        Insert: {
+          address: string
+          category: string
+          created_at?: string | null
+          description: string
+          id?: string
+          image_url?: string | null
+          latitude: number
+          longitude: number
+          name: string
+          place_id: string
+        }
+        Update: {
+          address?: string
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          image_url?: string | null
+          latitude?: number
+          longitude?: number
+          name?: string
+          place_id?: string
+        }
+        Relationships: []
+      }
       player_profile: {
         Row: {
           avatar_url: string | null
@@ -511,6 +550,50 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      reviews: {
+        Row: {
+          created_at: string | null
+          downvotes: number | null
+          id: string
+          location_proof: string
+          place_id: string
+          rating: number
+          review_text: string
+          upvotes: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          downvotes?: number | null
+          id?: string
+          location_proof: string
+          place_id: string
+          rating: number
+          review_text: string
+          upvotes?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          downvotes?: number | null
+          id?: string
+          location_proof?: string
+          place_id?: string
+          rating?: number
+          review_text?: string
+          upvotes?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["place_id"]
+          },
+        ]
       }
       signup_emails: {
         Row: {
@@ -754,6 +837,7 @@ export type Database = {
           created_at: string
           id: number
           img_url: string
+          is_minted: boolean
           is_public_mint: boolean
           name: string
           nft_id: number | null
@@ -766,6 +850,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url: string
+          is_minted?: boolean
           is_public_mint?: boolean
           name: string
           nft_id?: number | null
@@ -778,6 +863,7 @@ export type Database = {
           created_at?: string
           id?: number
           img_url?: string
+          is_minted?: boolean
           is_public_mint?: boolean
           name?: string
           nft_id?: number | null
