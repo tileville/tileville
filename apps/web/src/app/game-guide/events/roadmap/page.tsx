@@ -1,98 +1,6 @@
 import React from "react";
 import Link from "next/link";
-
-export const ROADMAP_QUARTERS = [
-  {
-    id: "q1-2024",
-    title: "Q1 2024",
-    status: "completed",
-    milestones: [
-      { text: "Launch TileVille beta on MINA blockchain", completed: true },
-      { text: "Release first builder NFT collection", completed: true },
-      { text: "Implement basic PVP challenge system", completed: true },
-      {
-        text: "Add social features including player profiles",
-        completed: true,
-      },
-    ],
-  },
-  {
-    id: "q2-2024",
-    title: "Q2 2024",
-    status: "current",
-    milestones: [
-      {
-        text: "Launch expanded marketplace with multiple NFT collections",
-        completed: true,
-      },
-      { text: "Telegram integration and notifications", completed: true },
-      { text: "Enhanced PVP challenges with time limits", completed: true },
-      { text: "Tournament system with prize pools", completed: false },
-    ],
-  },
-  {
-    id: "q3-2024",
-    title: "Q3 2024",
-    status: "upcoming",
-    milestones: [
-      { text: "Mobile-optimized gameplay experience", completed: false },
-      { text: "NFT staking and passive rewards", completed: false },
-      {
-        text: "Guild/team system for collaborative competitions",
-        completed: false,
-      },
-      {
-        text: "Enhanced city visualization with 3D elements",
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: "q4-2024",
-    title: "Q4 2024",
-    status: "upcoming",
-    milestones: [
-      { text: "Governance token launch", completed: false },
-      { text: "Community-driven competition creation", completed: false },
-      {
-        text: "Advanced achievement system with on-chain badges",
-        completed: false,
-      },
-      {
-        text: "Partnership integrations with other MINA ecosystem projects",
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: "q1-2025",
-    title: "Q1 2025",
-    status: "planning",
-    milestones: [
-      { text: "TileVille DAO establishment", completed: false },
-      { text: "Procedurally generated city challenges", completed: false },
-      { text: "Cross-chain NFT compatibility", completed: false },
-      { text: "Virtual reality city exploration mode", completed: false },
-    ],
-  },
-  {
-    id: "beyond",
-    title: "Beyond",
-    status: "vision",
-    milestones: [
-      { text: "Real-world urban planning partnerships", completed: false },
-      { text: "AI-driven city optimization assistant", completed: false },
-      {
-        text: "Multi-city regions with interconnected economies",
-        completed: false,
-      },
-      {
-        text: "Educational platform for sustainability concepts",
-        completed: false,
-      },
-    ],
-  },
-];
+import { ROADMAP_QUARTERS } from "../../community/roadmap/page";
 
 export default function Roadmap() {
   return (
@@ -112,7 +20,7 @@ export default function Roadmap() {
 
         {/* Timeline sections */}
         <div className="relative space-y-16 md:ml-8">
-          {ROADMAP_QUARTERS.map((quarter, index) => (
+          {ROADMAP_QUARTERS.map((quarter) => (
             <div key={quarter.id} className="relative">
               {/* Timeline dot */}
               <div
