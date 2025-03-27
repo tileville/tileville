@@ -1,64 +1,214 @@
-import { Metadata } from "next";
+import React from "react";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "TileVille | Game Guide",
-  description:
-    "Learn how to play TileVille, the strategic city-building game on Mina Protocol",
-};
-
-export default function GuidePage() {
+export default function GameGuide() {
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-12">
-      <h1 className="mb-8 text-center text-4xl font-bold text-primary">
-        TileVille Game Guide
-      </h1>
-
-      <div className="mb-8 rounded-lg bg-black/20 p-6">
-        <h2 className="mb-4 text-2xl font-semibold">Welcome to TileVille!</h2>
-        <p className="mb-4">
-          TileVille is a strategic city-building game built on Mina Protocol
-          where youll plan, build, and grow your own thriving metropolis. This
-          guide will help you understand the game mechanics, strategies, and how
-          to make the most of your TileVille experience.
+    <div className="mx-auto max-w-[1200px] p-4 pb-20 pt-20">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-primary md:text-5xl">
+          TileVille Game Guide
+        </h1>
+        <p className="mt-4 text-lg">
+          Master the art of city building with these tips and strategies
         </p>
-        <div className="my-8 grid place-items-center"></div>
       </div>
 
-      <div className="mt-12 rounded-lg bg-black/20 p-6">
-        <h2 className="mb-4 text-2xl font-semibold">Video Tutorials</h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div>
-            <h3 className="mb-2 text-xl font-medium text-primary">
-              Beginners Guide to TileVille
-            </h3>
-            <div className="flex aspect-video items-center justify-center rounded-lg bg-black/40">
-              <div className="p-4 text-center">
-                <p className="mb-2">Tutorial Video Thumbnail</p>
-                <a
-                  href="https://youtu.be/rUd880VHHT0"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block rounded-md bg-primary px-4 py-2 text-white"
-                >
-                  Watch Tutorial
-                </a>
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {/* Basic Concepts */}
+        <div className="rounded-lg border border-primary bg-white/10 p-6 backdrop-blur-sm">
+          <h2 className="mb-4 text-2xl font-bold text-primary">
+            Basic Concepts
+          </h2>
+          <ul className="space-y-2">
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Build a sustainable city by balancing resources and expansion
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Place tiles strategically to maximize efficiency and citizen
+                happiness
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Manage energy production and consumption through thoughtful
+                infrastructure planning
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Game Mechanics */}
+        <div className="rounded-lg border border-primary bg-white/10 p-6 backdrop-blur-sm">
+          <h2 className="mb-4 text-2xl font-bold text-primary">
+            Game Mechanics
+          </h2>
+          <ul className="space-y-2">
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                <strong>Tile Selection:</strong> Choose wisely based on your
+                citys current needs
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                <strong>Resource Management:</strong> Balance energy,
+                population, and environmental scores
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                <strong>Scoring System:</strong> Points awarded for sustainable
+                growth and citizen happiness
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Tiles Explained */}
+        <div className="rounded-lg border border-primary bg-white/10 p-6 backdrop-blur-sm">
+          <h2 className="mb-4 text-2xl font-bold text-primary">
+            Tiles Explained
+          </h2>
+          <ul className="space-y-2">
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                <strong>Residential:</strong> Increases population but requires
+                more resources
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                <strong>Energy:</strong> Wind farms and solar panels for
+                sustainable power
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                <strong>Green Spaces:</strong> Improve environmental scores and
+                citizen happiness
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="rounded-lg border border-primary bg-white/10 p-6 backdrop-blur-sm">
+          <h2 className="mb-4 text-2xl font-bold text-primary">
+            Beginner Strategy
+          </h2>
+          <ul className="space-y-2">
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Start with a balanced approach - dont overexpand too quickly
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Focus on energy infrastructure before growing population
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Include green spaces early to maintain environmental balance
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Advanced Tactics */}
+        <div className="rounded-lg border border-primary bg-white/10 p-6 backdrop-blur-sm">
+          <h2 className="mb-4 text-2xl font-bold text-primary">
+            Advanced Tactics
+          </h2>
+          <ul className="space-y-2">
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>Create specialized districts for maximum efficiency</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Use the adjacency bonus by placing complementary tiles next to
+                each other
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Plan expansion paths to optimize for late-game scoring
+                opportunities
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Competitive Play */}
+        <div className="rounded-lg border border-primary bg-white/10 p-6 backdrop-blur-sm">
+          <h2 className="mb-4 text-2xl font-bold text-primary">
+            Competitive Play
+          </h2>
+          <ul className="space-y-2">
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Participate in PVP challenges to test your skills against other
+                players
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Study leaderboards to understand current meta strategies
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-xl">•</span>
+              <span>
+                Time your development for maximum scoring potential in speed
+                challenges
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-12 rounded-lg border border-primary bg-primary/20 p-6">
+        <h2 className="mb-4 text-2xl font-bold text-primary">
+          Video Tutorials
+        </h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="overflow-hidden rounded-lg border border-primary">
+            <div className="relative aspect-video bg-black/20">
+              {/* Replace with actual video or thumbnail */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-center text-lg font-medium">
+                  Getting Started with TileVille
+                </p>
               </div>
             </div>
           </div>
-          <div>
-            <h3 className="mb-2 text-xl font-medium text-primary">
-              Advanced Strategy Tips
-            </h3>
-            <div className="flex aspect-video items-center justify-center rounded-lg bg-black/40">
-              <div className="p-4 text-center">
-                <p className="mb-2">Strategy Video Thumbnail</p>
-                <a
-                  href="#"
-                  className="inline-block rounded-md bg-primary px-4 py-2 text-white"
-                >
-                  Coming Soon
-                </a>
+
+          <div className="overflow-hidden rounded-lg border border-primary">
+            <div className="relative aspect-video bg-black/20">
+              {/* Replace with actual video or thumbnail */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-center text-lg font-medium">
+                  Advanced City Planning Tips
+                </p>
               </div>
             </div>
           </div>
@@ -68,9 +218,9 @@ export default function GuidePage() {
       <div className="mt-12 text-center">
         <Link
           href="/competitions"
-          className="rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-primary/80"
+          className="inline-block rounded-md bg-primary px-6 py-3 text-lg font-bold text-white hover:bg-primary/90"
         >
-          Ready to Play? Join a Competition!
+          Ready to Play? Join a Competition Now!
         </Link>
       </div>
     </div>
