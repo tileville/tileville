@@ -150,7 +150,6 @@ export default function NFTGallery() {
           {featuredNFTs.map((nft) => (
             <GalleryItem
               key={nft.id}
-              imageUrl={nft.imageUrl}
               name={nft.name}
               artist={nft.artist}
               collection={nft.collection}
