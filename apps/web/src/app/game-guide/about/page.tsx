@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const teamMembers = [
+export const teamMembers = [
   {
     name: "Satyam Bansal",
     role: "Founder & ZK Developer",
