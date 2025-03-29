@@ -1,4 +1,23 @@
-import { teamMembers } from "../page";
+export const teamMembers = [
+  {
+    name: "Satyam Bansal",
+    role: "Founder & ZK Developer",
+    bio: "Blockchain enthusiast with a passion for development.",
+    image: "/img/avatars/1.jpeg",
+  },
+  {
+    name: "Yash Mittal",
+    role: "Lead Developer",
+    bio: "Full-stack developer specialized in web3 technologies. Passionate about creating seamless user experiences in decentralized applications.",
+    image: "/img/avatars/2.jpeg",
+  },
+  {
+    name: "Ankita Dixit",
+    role: "Designer and social media manager",
+    bio: "Expert in designing and community building",
+    image: "/img/avatars/3.jpeg",
+  },
+];
 
 export default function TeamPage() {
   return (
@@ -13,7 +32,7 @@ export default function TeamPage() {
       </div>
 
       <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {teamMembers.map((member) => (
+        {teamMembers.map((member: any) => (
           <div
             key={member.name}
             className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
