@@ -1,201 +1,312 @@
-import { CheckIcon, ClockIcon } from "@radix-ui/react-icons";
+import { Metadata } from "next";
+import Link from "next/link";
 
-export default function Roadmap() {
+const quarters = [
+  {
+    id: "q2-2025",
+    title: "Q2 2025",
+    subtitle: "Foundation & Growth",
+    status: "in-progress",
+    items: [
+      {
+        title: "Enhanced PvP Challenges",
+        description: "Improved matchmaking and expanded challenge options",
+        status: "in-progress",
+      },
+      {
+        title: "New Builder NFT Collection",
+        description: "Release of the summer collection with new abilities",
+        status: "planned",
+      },
+      {
+        title: "Seasonal Tournaments",
+        description:
+          "Introduction of seasonal competitive tournaments with unique rewards",
+        status: "planned",
+      },
+      {
+        title: "Mobile Optimization",
+        description: "Improved experience for mobile users",
+        status: "planned",
+      },
+    ],
+  },
+  {
+    id: "q3-2025",
+    title: "Q3 2025",
+    subtitle: "Expansion & Community",
+    status: "planned",
+    items: [
+      {
+        title: "City Evolution System",
+        description:
+          "New mechanic allowing cities to evolve over time with persistent state",
+        status: "planned",
+      },
+      {
+        title: "Community Challenge Creator",
+        description: "Tools for players to create and share custom challenges",
+        status: "planned",
+      },
+      {
+        title: "Enhanced Social Features",
+        description:
+          "Improved social interaction between players with messaging and groups",
+        status: "planned",
+      },
+      {
+        title: "Achievements System",
+        description: "Comprehensive achievements with on-chain recognition",
+        status: "planned",
+      },
+    ],
+  },
+  {
+    id: "q4-2025",
+    title: "Q4 2025",
+    subtitle: "Innovation & Advancement",
+    status: "planned",
+    items: [
+      {
+        title: "TileVille DAO",
+        description:
+          "Decentralized governance system for community decision-making",
+        status: "planned",
+      },
+      {
+        title: "Advanced Tile System",
+        description:
+          "Interactive and dynamic tiles with advanced simulation mechanics",
+        status: "planned",
+      },
+      {
+        title: "Cross-Chain Integration",
+        description: "Support for additional blockchain networks",
+        status: "planned",
+      },
+      {
+        title: "3D Visualization Mode",
+        description: "Optional 3D view mode for city visualization",
+        status: "planned",
+      },
+    ],
+  },
+  {
+    id: "q1-2026",
+    title: "Q1 2026",
+    subtitle: "Next Generation",
+    status: "planned",
+    items: [
+      {
+        title: "TileVille 2.0 Launch",
+        description: "Major platform upgrade with new engine and capabilities",
+        status: "planned",
+      },
+      {
+        title: "Metaverse Integration",
+        description:
+          "Connect TileVille cities to the broader metaverse ecosystem",
+        status: "planned",
+      },
+      {
+        title: "AI Assistant Builder",
+        description:
+          "AI-powered assistant to help with city planning and optimization",
+        status: "planned",
+      },
+      {
+        title: "Global Championship",
+        description: "First annual global championship with major prizes",
+        status: "planned",
+      },
+    ],
+  },
+];
+
+const completedMilestones = [
+  {
+    date: "January 2025",
+    title: "TileVille Beta Launch",
+    description: "Initial release of TileVille with core gameplay features",
+  },
+  {
+    date: "February 2025",
+    title: "Builder NFT Collection",
+    description: "First collection of Builder NFTs with unique abilities",
+  },
+  {
+    date: "March 2025",
+    title: "PvP Challenge System",
+    description: "Introduction of player vs player challenges",
+  },
+  {
+    date: "April 2025",
+    title: "Marketplace Integration",
+    description: "Full-featured NFT marketplace with multiple collections",
+  },
+];
+
+export const metadata: Metadata = {
+  title: "TileVille Development Roadmap",
+  description: "Explore the future plans and upcoming features for TileVille",
+};
+
+export default function RoadmapPage() {
   return (
-    <div className="mx-auto max-w-[1280px] p-4 pb-20 pt-16">
-      <div className="mb-12 text-center">
-        <h1 className="mb-4 text-3xl font-bold text-primary md:text-5xl">
-          TileVille Roadmap
+    <div className="mx-auto max-w-4xl p-6">
+      <div className="mb-8 text-center">
+        <h1 className="mb-2 text-3xl font-bold text-primary">
+          TileVille Development Roadmap
         </h1>
-        <p className="mx-auto max-w-2xl text-lg">
-          Our vision for the future of TileVille - exploring new frontiers in
-          blockchain gaming and community building
+        <p className="text-gray-600">
+          Our vision for the future of TileVille and upcoming features
         </p>
       </div>
 
-      <div className="relative mb-20">
-        <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 bg-primary/30 md:left-[80px] md:translate-x-0"></div>
+      <div className="mb-12 rounded-lg bg-primary/10 p-6">
+        <h2 className="mb-4 text-xl font-semibold">Our Vision</h2>
+        <p className="mb-4">
+          TileVille aims to be the leading strategy city-builder game on the
+          Mina Protocol, combining engaging gameplay with blockchain innovation.
+          Our roadmap reflects our commitment to:
+        </p>
+        <ul className="ml-6 list-disc space-y-2">
+          <li>Continuously improving the core gameplay experience</li>
+          <li>Expanding community features and player interaction</li>
+          <li>Building innovative NFT functionality and utility</li>
+          <li>Creating a sustainable and player-driven ecosystem</li>
+        </ul>
+      </div>
 
-        {ROADMAP_ITEMS.map((phase, index) => (
-          <div key={phase.title} className="relative mb-16">
-            <div className="flex flex-col md:flex-row">
-              <div className="mb-4 flex items-center justify-center md:w-[160px] md:flex-shrink-0 md:justify-start">
-                <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full border-4 border-primary/30 bg-white text-primary">
-                  {phase.completed ? (
-                    <CheckIcon width={24} height={24} />
-                  ) : (
-                    <ClockIcon width={24} height={24} />
-                  )}
+      <div className="mb-12">
+        <h2 className="mb-6 text-2xl font-bold">Completed Milestones</h2>
+        <div className="relative">
+          <div className="absolute bottom-0 left-8 top-0 w-px bg-gray-200"></div>
+          <div className="space-y-8">
+            {completedMilestones.map((milestone, index) => (
+              <div key={index} className="relative pl-16">
+                <div className="absolute left-[29px] top-0 h-4 w-4 rounded-full border-4 border-primary bg-white"></div>
+                <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+                  <span className="mb-2 inline-block rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                    {milestone.date}
+                  </span>
+                  <h3 className="text-lg font-semibold">{milestone.title}</h3>
+                  <p className="text-gray-600">{milestone.description}</p>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-              <div className="relative rounded-lg border border-primary/20 bg-white p-6 shadow-sm before:absolute before:left-1/2 before:top-0 before:h-4 before:w-4 before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-45 before:border-l before:border-t before:border-primary/20 before:bg-white md:before:left-0">
-                <div className="mb-2 flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-primary md:text-2xl">
-                    {phase.title}
-                  </h2>
-                  <span
-                    className={`rounded-full px-3 py-1 text-sm font-medium ${
-                      phase.completed
-                        ? "bg-green-100 text-green-800"
-                        : phase.inProgress
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {phase.completed
-                      ? "Completed"
-                      : phase.inProgress
-                      ? "In Progress"
-                      : "Planned"}
-                  </span>
+      <div className="mb-12">
+        <h2 className="mb-6 text-2xl font-bold">Upcoming Development</h2>
+        <div className="grid grid-cols-1 gap-8">
+          {quarters.map((quarter) => (
+            <div
+              key={quarter.id}
+              className={`rounded-lg border p-6 shadow-sm ${
+                quarter.status === "in-progress"
+                  ? "border-primary bg-primary/5"
+                  : "border-gray-200 bg-white"
+              }`}
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold">{quarter.title}</h3>
+                  <p className="text-gray-600">{quarter.subtitle}</p>
                 </div>
+                <span
+                  className={`rounded-md border px-3 py-1 text-xs font-medium ${getStatusColor(
+                    quarter.status
+                  )}`}
+                >
+                  {quarter.status === "in-progress" ? "In Progress" : "Planned"}
+                </span>
+              </div>
 
-                <p className="mb-4 text-gray-600">{phase.timeframe}</p>
-
-                <ul className="mb-2 space-y-2">
-                  {phase.features.map((feature) => (
-                    <li key={feature} className="flex items-start">
-                      <span className="mr-2 mt-1 flex-shrink-0 text-primary">
-                        •
+              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                {quarter.items.map((item, index) => (
+                  <div
+                    key={index}
+                    className="rounded-md border border-gray-100 bg-white p-4 shadow-sm"
+                  >
+                    <div className="mb-2 flex items-start justify-between gap-2">
+                      <h4 className="font-medium">{item.title}</h4>
+                      <span
+                        className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${getStatusColor(
+                          item.status
+                        )}`}
+                      >
+                        {item.status === "in-progress"
+                          ? "In Progress"
+                          : item.status.charAt(0).toUpperCase() +
+                            item.status.slice(1)}
                       </span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {phase.description && (
-                  <p className="mt-4 text-sm text-gray-600">
-                    {phase.description}
-                  </p>
-                )}
+                    </div>
+                    <p className="text-sm text-gray-600">{item.description}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      <div className="rounded-lg bg-primary/10 p-8 text-center">
-        <h2 className="mb-4 text-2xl font-bold text-primary">
-          Help Shape Our Roadmap
+      <div className="mb-12">
+        <h2 className="mb-6 text-2xl font-bold">Beyond the Roadmap</h2>
+        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <p className="mb-4">
+            While our roadmap outlines our current development plans, were
+            constantly exploring new ideas and opportunities. Some future
+            concepts were considering include:
+          </p>
+          <ul className="ml-6 list-disc space-y-2">
+            <li>Collaborative city building with multiple players</li>
+            <li>Advanced economic simulation systems</li>
+            <li>Natural disasters and city resilience challenges</li>
+            <li>Historical era progression mechanics</li>
+            <li>City specialization paths with unique advantages</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-primary/10 p-6 text-center">
+        <h2 className="mb-4 text-xl font-semibold">
+          Have Feature Suggestions?
         </h2>
-        <p className="mx-auto mb-6 max-w-2xl">
-          The TileVille roadmap is constantly evolving based on community
-          feedback and industry trends. Join our community to suggest features
-          and help prioritize our development efforts.
+        <p className="mb-4">
+          We value community input in shaping the future of TileVille. Share
+          your ideas and feedback!
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <a
-            href="https://t.me/tilevilleBugs"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md bg-primary px-6 py-2 text-white hover:bg-primary/80"
+          <Link
+            href="/community"
+            className="rounded-md bg-primary px-6 py-2 font-semibold text-white hover:bg-primary/90"
           >
-            Join Telegram
-          </a>
-          <a
-            href="https://x.com/intent/user?screen_name=TilevilleSocial"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-primary bg-white px-6 py-2 text-primary hover:bg-primary/10"
+            Join Our Community
+          </Link>
+          <Link
+            href="/feedback"
+            className="rounded-md border border-primary px-6 py-2 font-semibold text-primary hover:bg-primary/10"
           >
-            Follow on X
-          </a>
+            Submit Feedback
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-const ROADMAP_ITEMS = [
-  {
-    title: "Genesis Launch",
-    timeframe: "Q1 2025",
-    completed: true,
-    inProgress: false,
-    features: [
-      "Core gameplay mechanics",
-      "Basic city building features",
-      "Mina blockchain integration",
-      "TileVille Builder NFT collection",
-      "Player profiles and leaderboards",
-    ],
-    description:
-      "Our initial launch established the foundation of TileVille with essential gameplay features and blockchain integration.",
-  },
-  {
-    title: "Community Growth",
-    timeframe: "Q2 2025",
-    completed: true,
-    inProgress: false,
-    features: [
-      "PVP challenge system",
-      "User following system",
-      "Telegram integration for notifications",
-      "Enhanced marketplace with multiple collections",
-      "Community events and competitions",
-    ],
-    description:
-      "We focused on building community features and social aspects to enhance player engagement and interaction.",
-  },
-  {
-    title: "Gameplay Expansion",
-    timeframe: "Q3 2025",
-    completed: false,
-    inProgress: true,
-    features: [
-      "Advanced city planning tools",
-      "Specialized buildings with unique effects",
-      "Environmental challenges and natural disasters",
-      "Achievement system with on-chain verification",
-      "Enhanced visual feedback and animations",
-    ],
-    description:
-      "Currently expanding the core gameplay with new mechanics and features to provide deeper strategic options.",
-  },
-  {
-    title: "Economic Evolution",
-    timeframe: "Q4 2025",
-    completed: false,
-    inProgress: false,
-    features: [
-      "In-game economy with tradable resources",
-      "Player-to-player marketplace",
-      "Resource sharing and alliances",
-      "NFT staking for passive benefits",
-      "Community governance for game parameters",
-    ],
-    description:
-      "Planned development of advanced economic features to create a sustainable in-game economy with player-driven markets.",
-  },
-  {
-    title: "Multiplayer Experience",
-    timeframe: "Q1 2026",
-    completed: false,
-    inProgress: false,
-    features: [
-      "Collaborative city building with multiple players",
-      "Real-time interaction between players",
-      "Regional competitions and territorial control",
-      "Guild system with shared benefits",
-      "Cross-city trade routes and dependencies",
-    ],
-    description:
-      "Future expansion into deeper multiplayer experiences allowing players to collaborate and compete in new ways.",
-  },
-  {
-    title: "Metaverse Integration",
-    timeframe: "Q2-Q3 2026",
-    completed: false,
-    inProgress: false,
-    features: [
-      "3D visualization of player cities",
-      "Virtual reality exploration mode",
-      "Interoperability with other Mina Protocol projects",
-      "Cross-chain asset compatibility",
-      "Advanced privacy features using zero-knowledge proofs",
-    ],
-    description:
-      "Long-term vision to evolve TileVille into a comprehensive metaverse experience while maintaining our privacy-first principles.",
-  },
-];
+function getStatusColor(status: string) {
+  switch (status) {
+    case "completed":
+      return "bg-green-100 text-green-800 border-green-200";
+    case "in-progress":
+      return "bg-blue-100 text-blue-800 border-blue-200";
+    case "planned":
+      return "bg-gray-100 text-gray-800 border-gray-200";
+    default:
+      return "bg-gray-100 text-gray-800 border-gray-200";
+  }
+}
