@@ -31,7 +31,7 @@ export type MintNFTParams = {
   nft_id: number;
 };
 
-const client = new Client({ network: "testnet" });
+const client = new Client({ network: "mainnet" });
 
 export function useMintMINANFT() {
   const setMintProgress = useSetAtom(mintProgressAtom);
@@ -134,7 +134,7 @@ export function useMintMINANFT() {
 
     const reservedPromise = minanft.reserveName({
       name,
-      publicKey: ownerPk,
+      publicKey: owner,
       chain: CHAIN_NAME,
       contract: contractAddress,
       version: "v2",
@@ -225,6 +225,8 @@ export function useMintMINANFT() {
     const fee = Number((await MinaNFT.fee()).toBigInt());
     const memo = ("mint@" + name).substring(0, 30);
     await fetchMinaAccount({ publicKey: sender });
+    // await fetchMinaAccount({ publicKey: ownerPk });
+
     await fetchMinaAccount({ publicKey: zkAppAddress });
     console.time("prepared commit data");
     await commitPromise;
@@ -263,7 +265,7 @@ export function useMintMINANFT() {
       name: MinaNFT.stringToField(nft.name!),
       address,
       // owner: sender,
-      owner: PublicKey.fromBase58(owner),
+      owner: ownerPk,
       price: UInt64.from(BigInt(price * 1e9)),
       fee: UInt64.from(BigInt((reserved.price as any)?.price * 1_000_000_000)),
       feeMaster: feeMaster,
@@ -279,9 +281,14 @@ export function useMintMINANFT() {
     let tx: any;
     try {
       //how we send transaction using sender private key
-      tx = await Mina.transaction({ sender, fee, memo }, async () => {
-        await zkApp.mint(mintParams);
-      });
+      tx = await Mina.transaction(
+        { sender, fee, memo, nonce: nonce.nonce },
+        // { sender: ownerPk, fee, memo },
+        async () => {
+          await zkApp.mint(mintParams);
+        }
+      );
+      console.log("JSON transaction", tx.to);
       // Mina.setActiveInstance(
       //   Mina.Network("https://api.minascan.io/node/devnet/v1/graphql")
       // );
@@ -300,14 +307,17 @@ export function useMintMINANFT() {
         message: "An unexpected error occurred",
       };
     }
-    console.log("mint transaction", tx);
-    // tx.sign([nftPrivateKey]);
-    tx.sign([nftPrivateKey, PrivateKey.fromBase58(SENDER_PRIVATE_KEY)]);
+    tx.sign([nftPrivateKey]);
+    // tx.sign([nftPrivateKey, PrivateKey.fromBase58(SENDER_PRIVATE_KEY)]);
     // const newTx = client.signTransaction(tx, SENDER_PRIVATE_KEY);
     // const result = client.verifyTransaction(tx);
 
     // console.log("Is txn getting verified", result);
     const serializedTransaction = serializeTransaction(tx);
+    console.log("============== SERIALIZED TRANSACTION ==========");
+    console.log(serializedTransaction);
+    console.log("============== SERIALIZED TRANSACTION END==========");
+
     // const pendingTx = await tx.send();
     // console.log("Got pending tx with hash", pendingTx?.hash);
     // const b = await pendingTx?.wait();
@@ -316,11 +326,12 @@ export function useMintMINANFT() {
     const transaction = tx.toJSON();
     console.log("Transaction", tx.toPretty());
     const payload = {
-      transaction,
-      onlySign: true,
+      zkappCommand: transaction,
       feePayer: {
+        feePayer: sender,
         fee: fee,
         memo: memo,
+        nonce: nonce.nonce,
       },
     };
     console.timeEnd("prepared tx");
@@ -332,13 +343,13 @@ export function useMintMINANFT() {
 
     const nftPrice =
       Number(
-        JSON.parse(payload.transaction).accountUpdates[1].body.balanceChange
+        JSON.parse(payload.zkappCommand).accountUpdates[1].body.balanceChange
           .magnitude
       ) / 1e9;
 
     console.log("NFT PRICE", nftPrice);
     try {
-      txResult = await (window as any).mina?.sendTransaction(payload);
+      // txResult = await (window as any).mina?.sendTransaction(payload);
       // txResult = { signedData: "abc123" };
     } catch (error: unknown) {
       if (isErrorWithCode(error) && error.code === 1002) {
@@ -363,11 +374,16 @@ export function useMintMINANFT() {
         message: "Waiting for Transaction Confirmation...",
       },
     });
-    const signedData = txResult?.signedData;
-    if (signedData === undefined) {
-      console.log("No signed data");
-      return undefined;
-    }
+    let signedData = client.signTransaction(
+      JSON.stringify({ signedData: payload }),
+      SENDER_PRIVATE_KEY
+    ).data;
+    console.log("Signed data", signedData);
+    signedData = JSON.stringify(signedData);
+    // if (signedData === undefined) {
+    //   console.log("No signed data");
+    //   return undefined;
+    // }
 
     const sentTx = await sendTransaction({
       serializedTransaction,
