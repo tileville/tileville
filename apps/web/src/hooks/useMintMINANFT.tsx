@@ -332,6 +332,7 @@ export function useMintMINANFT() {
         fee: fee,
         memo: memo,
         nonce: nonce.nonce,
+        validUntil: null,
       },
     };
     console.timeEnd("prepared tx");
