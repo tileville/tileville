@@ -1,5 +1,4 @@
 "use client";
-
 import type { blockchain, MintParams } from "minanft";
 import {
   serializeTransaction,
@@ -17,6 +16,8 @@ import { createFileFromImageUrl } from "@/app/api/mint-nft/common-utils";
 import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { requestAccounts } from "@/lib/helpers";
+import { SENDER_PUBLIC_KEY, SENDER_PRIVATE_KEY } from "@/constants";
+import { Client } from "mina-signer";
 
 export type MintNFTParams = {
   name: string;
@@ -29,6 +30,8 @@ export type MintNFTParams = {
   ipfs: string;
   nft_id: number;
 };
+
+const client = new Client({ network: "testnet" });
 
 export function useMintMINANFT() {
   const setMintProgress = useSetAtom(mintProgressAtom);
@@ -65,6 +68,7 @@ export function useMintMINANFT() {
       name: `${nft_id}.${image_format}`,
     });
 
+    // this is auro wallet address
     const owner = await getAccount();
     if (!owner) {
       return { success: false, message: "No account found" };
@@ -107,12 +111,20 @@ export function useMintMINANFT() {
     const nftPrivateKey = PrivateKey.random();
     const address = nftPrivateKey.toPublicKey();
     const net = await initBlockchain(chain);
-    const sender = PublicKey.fromBase58(owner);
+    const ownerPk = PublicKey.fromBase58(owner);
+    const sender = PublicKey.fromBase58(SENDER_PUBLIC_KEY);
+    console.log("sender public key", sender.toBase58());
+    console.log("owner public key", ownerPk);
     const pinataJWT = process.env.NEXT_PUBLIC_PINATA_JWT!;
     const jwt = process.env.NEXT_PUBLIC_MINANFT_JWT!;
     const minanft = new api(jwt);
 
-    const nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
+    // const nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
+
+    const nonceResponse = await fetch(
+      `/api/nonce?wallet_address=${SENDER_PUBLIC_KEY}`
+    );
+
     const nonce = await nonceResponse.json();
     console.log("NONCE", nonce);
     if (!nonce.success) {
@@ -122,7 +134,7 @@ export function useMintMINANFT() {
 
     const reservedPromise = minanft.reserveName({
       name,
-      publicKey: owner,
+      publicKey: ownerPk,
       chain: CHAIN_NAME,
       contract: contractAddress,
       version: "v2",
@@ -250,7 +262,8 @@ export function useMintMINANFT() {
     const mintParams: MintParams = {
       name: MinaNFT.stringToField(nft.name!),
       address,
-      owner: sender,
+      // owner: sender,
+      owner: PublicKey.fromBase58(owner),
       price: UInt64.from(BigInt(price * 1e9)),
       fee: UInt64.from(BigInt((reserved.price as any)?.price * 1_000_000_000)),
       feeMaster: feeMaster,
@@ -265,9 +278,13 @@ export function useMintMINANFT() {
     console.log("============= mint params ===============", mintParams);
     let tx: any;
     try {
+      //how we send transaction using sender private key
       tx = await Mina.transaction({ sender, fee, memo }, async () => {
         await zkApp.mint(mintParams);
       });
+      // Mina.setActiveInstance(
+      //   Mina.Network("https://api.minascan.io/node/devnet/v1/graphql")
+      // );
       console.log("MINT Transaction done");
     } catch (error: any) {
       if (error) {
@@ -284,8 +301,18 @@ export function useMintMINANFT() {
       };
     }
     console.log("mint transaction", tx);
-    tx.sign([nftPrivateKey]);
+    // tx.sign([nftPrivateKey]);
+    tx.sign([nftPrivateKey, PrivateKey.fromBase58(SENDER_PRIVATE_KEY)]);
+    // const newTx = client.signTransaction(tx, SENDER_PRIVATE_KEY);
+    // const result = client.verifyTransaction(tx);
+
+    // console.log("Is txn getting verified", result);
     const serializedTransaction = serializeTransaction(tx);
+    // const pendingTx = await tx.send();
+    // console.log("Got pending tx with hash", pendingTx?.hash);
+    // const b = await pendingTx?.wait();
+    // console.log("PENDING TX", pendingTx);
+    // console.log("B", b);
     const transaction = tx.toJSON();
     console.log("Transaction", tx.toPretty());
     const payload = {
@@ -312,6 +339,7 @@ export function useMintMINANFT() {
     console.log("NFT PRICE", nftPrice);
     try {
       txResult = await (window as any).mina?.sendTransaction(payload);
+      // txResult = { signedData: "abc123" };
     } catch (error: unknown) {
       if (isErrorWithCode(error) && error.code === 1002) {
         console.log("transaction error 273", error);
@@ -348,6 +376,7 @@ export function useMintMINANFT() {
       contractAddress,
       name,
       nonce,
+      // nonce: { success: true, nonce: 22 },
     });
 
     if (
