@@ -1,8 +1,3 @@
 # TileVille Frontend
 
-
-
-
-
 # Database setup
-
