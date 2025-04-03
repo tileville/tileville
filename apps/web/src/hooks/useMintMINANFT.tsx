@@ -225,7 +225,6 @@ export function useMintMINANFT() {
     const fee = Number((await MinaNFT.fee()).toBigInt());
     const memo = ("mint@" + name).substring(0, 30);
     await fetchMinaAccount({ publicKey: sender });
-    // await fetchMinaAccount({ publicKey: ownerPk });
 
     await fetchMinaAccount({ publicKey: zkAppAddress });
     console.time("prepared commit data");
@@ -264,7 +263,6 @@ export function useMintMINANFT() {
     const mintParams: MintParams = {
       name: MinaNFT.stringToField(nft.name!),
       address,
-      // owner: sender,
       owner: ownerPk,
       price: UInt64.from(BigInt(price * 1e9)),
       fee: UInt64.from(BigInt((reserved.price as any)?.price * 1_000_000_000)),
@@ -281,13 +279,9 @@ export function useMintMINANFT() {
     let tx: any;
     try {
       //how we send transaction using sender private key
-      tx = await Mina.transaction(
-        { sender, fee, memo },
-        // { sender: ownerPk, fee, memo },
-        async () => {
-          await zkApp.mint(mintParams);
-        }
-      );
+      tx = await Mina.transaction({ sender, fee, memo }, async () => {
+        await zkApp.mint(mintParams);
+      });
       console.log("JSON transaction", tx.to);
       // Mina.setActiveInstance(
       //   Mina.Network("https://api.minascan.io/node/devnet/v1/graphql")
