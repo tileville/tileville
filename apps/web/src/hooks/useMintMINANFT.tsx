@@ -18,6 +18,7 @@ import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { requestAccounts } from "@/lib/helpers";
 import { SENDER_PUBLIC_KEY, SENDER_PRIVATE_KEY } from "@/constants";
 import { Client } from "mina-signer";
+import bs58check from "bs58check";
 
 export type MintNFTParams = {
   name: string;
@@ -282,7 +283,7 @@ export function useMintMINANFT() {
     try {
       //how we send transaction using sender private key
       tx = await Mina.transaction(
-        { sender, fee, memo, nonce: nonce.nonce },
+        { sender, fee, memo },
         // { sender: ownerPk, fee, memo },
         async () => {
           await zkApp.mint(mintParams);
@@ -324,15 +325,24 @@ export function useMintMINANFT() {
     // console.log("PENDING TX", pendingTx);
     // console.log("B", b);
     const transaction = tx.toJSON();
-    console.log("Transaction", tx.toPretty());
+
+    console.log("Transaction", transaction);
+    console.log("account updates", JSON.parse(transaction).accountUpdates);
+
+    // const payloadObj = JSON.stringify({
+    //   memo: tx.transaction.memo,
+    //   accountUpdates: tx.transaction.accountUpdates,
+    // });
+
+    // console.log("payloadObj", payloadObj);
+
     const payload = {
-      zkappCommand: transaction,
+      zkappCommand: JSON.parse(transaction),
       feePayer: {
-        feePayer: sender,
-        fee: fee,
-        memo: memo,
-        nonce: nonce.nonce,
-        validUntil: null,
+        feePayer: SENDER_PUBLIC_KEY,
+        fee: "100000000",
+        memo: "memo text",
+        nonce: "7",
       },
     };
     console.timeEnd("prepared tx");
@@ -342,11 +352,13 @@ export function useMintMINANFT() {
       return typeof error === "object" && error !== null && "code" in error;
     }
 
-    const nftPrice =
-      Number(
-        JSON.parse(payload.zkappCommand).accountUpdates[1].body.balanceChange
-          .magnitude
-      ) / 1e9;
+    // const nftPrice =
+    //   Number(
+    //     JSON.parse(payload.zkappCommand).accountUpdates[1].body.balanceChange
+    //       .magnitude
+    //   ) / 1e9;
+
+    const nftPrice = Number("1000000000") / 1e9;
 
     console.log("NFT PRICE", nftPrice);
     try {
@@ -375,20 +387,22 @@ export function useMintMINANFT() {
         message: "Waiting for Transaction Confirmation...",
       },
     });
-    let signedData = client.signTransaction(
-      JSON.stringify({ signedData: payload }),
-      SENDER_PRIVATE_KEY
-    ).data;
+    console.log("passed payload json=========", payload);
+    console.log("passed payload json string", JSON.stringify(payload));
+    const signedData = client.signTransaction(payload, SENDER_PRIVATE_KEY);
     console.log("Signed data", signedData);
-    signedData = JSON.stringify(signedData);
+    // signedData = JSON.stringify(signedData);
     // if (signedData === undefined) {
     //   console.log("No signed data");
     //   return undefined;
     // }
 
+    const signedDatastr = JSON.stringify(signedData.data);
+    console.log("Signed data string", signedDatastr);
+
     const sentTx = await sendTransaction({
       serializedTransaction,
-      signedData,
+      signedData: signedDatastr,
       mintParams: serializeFields(MintParams.toFields(mintParams)),
       contractAddress,
       name,
@@ -503,5 +517,15 @@ export async function calculateSHA512(file: File): Promise<string> {
   } catch (error) {
     console.error("Error calculating SHA-512 hash:", error);
     throw error;
+  }
+}
+
+export function decodeMemo(encode: string) {
+  try {
+    const encoded = bs58check.decode(encode);
+    const res = encoded.slice(3, 3 + encoded[2]).toString("utf-8");
+    return res;
+  } catch (error) {
+    return encode;
   }
 }
