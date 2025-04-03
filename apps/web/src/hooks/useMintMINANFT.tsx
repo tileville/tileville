@@ -16,8 +16,9 @@ import { createFileFromImageUrl } from "@/app/api/mint-nft/common-utils";
 import { useAtomValue, useSetAtom } from "jotai";
 import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { requestAccounts } from "@/lib/helpers";
-import { SENDER_PUBLIC_KEY, SENDER_PRIVATE_KEY } from "@/constants";
-import { Client } from "mina-signer";
+import { SENDER_PUBLIC_KEY, SENDER_PRIVATE_KEY, isMockEnv } from "@/constants";
+import { Client, NetworkId } from "mina-signer";
+import { NETWORKS } from "@/constants/network";
 
 export type MintNFTParams = {
   name: string;
@@ -31,7 +32,9 @@ export type MintNFTParams = {
   nft_id: number;
 };
 
-const client = new Client({ network: "mainnet" });
+const client = new Client({
+  network: NETWORKS[0].chainId as NetworkId,
+});
 
 export function useMintMINANFT() {
   const setMintProgress = useSetAtom(mintProgressAtom);
@@ -58,6 +61,9 @@ export function useMintMINANFT() {
       RESERVED_PRICE_REDUCE_KEY_DEFAULT;
     const image_format = collectionConfig.img_format || "png";
     const collectionTableName = collectionConfig.table_name;
+    const isZeko = collectionConfig.is_zeko;
+
+    console.log("isZeko", isZeko);
 
     console.log("feeMasterPublicKey", feeMasterPublicKey);
     const contractAddress = MINANFT_CONTRACT_ADDRESS;
@@ -112,18 +118,16 @@ export function useMintMINANFT() {
     const address = nftPrivateKey.toPublicKey();
     const net = await initBlockchain(chain);
     const ownerPk = PublicKey.fromBase58(owner);
-    const sender = PublicKey.fromBase58(SENDER_PUBLIC_KEY);
+    const senderPK = isZeko ? SENDER_PUBLIC_KEY : owner;
+    const sender = PublicKey.fromBase58(senderPK);
     console.log("sender public key", sender.toBase58());
-    console.log("owner public key", ownerPk);
     const pinataJWT = process.env.NEXT_PUBLIC_PINATA_JWT!;
     const jwt = process.env.NEXT_PUBLIC_MINANFT_JWT!;
     const minanft = new api(jwt);
 
     // const nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
 
-    const nonceResponse = await fetch(
-      `/api/nonce?wallet_address=${SENDER_PUBLIC_KEY}`
-    );
+    const nonceResponse = await fetch(`/api/nonce?wallet_address=${senderPK}`);
 
     const nonce = await nonceResponse.json();
     console.log("NONCE", nonce);
@@ -278,7 +282,6 @@ export function useMintMINANFT() {
     console.log("============= mint params ===============", mintParams);
     let tx: any;
     try {
-      //how we send transaction using sender private key
       tx = await Mina.transaction({ sender, fee, memo }, async () => {
         await zkApp.mint(mintParams);
       });
@@ -302,36 +305,30 @@ export function useMintMINANFT() {
       };
     }
     tx.sign([nftPrivateKey]);
-    // tx.sign([nftPrivateKey, PrivateKey.fromBase58(SENDER_PRIVATE_KEY)]);
-    // const newTx = client.signTransaction(tx, SENDER_PRIVATE_KEY);
-    // const result = client.verifyTransaction(tx);
 
-    // console.log("Is txn getting verified", result);
     const serializedTransaction = serializeTransaction(tx);
 
-    // const pendingTx = await tx.send();
-    // console.log("Got pending tx with hash", pendingTx?.hash);
-    // const b = await pendingTx?.wait();
-    // console.log("PENDING TX", pendingTx);
-    // console.log("B", b);
     const transaction = tx.toJSON();
 
-    // const payloadObj = JSON.stringify({
-    //   memo: tx.transaction.memo,
-    //   accountUpdates: tx.transaction.accountUpdates,
-    // });
+    const payload = isZeko
+      ? {
+          zkappCommand: JSON.parse(transaction),
+          feePayer: {
+            feePayer: SENDER_PUBLIC_KEY,
+            fee: fee,
+            memo: memo,
+            nonce: String(nonce.nonce),
+          },
+        }
+      : {
+          transaction,
+          onlySign: true,
+          feePayer: {
+            fee: fee,
+            memo: memo,
+          },
+        };
 
-    // console.log("payloadObj", payloadObj);
-
-    const payload = {
-      zkappCommand: JSON.parse(transaction),
-      feePayer: {
-        feePayer: SENDER_PUBLIC_KEY,
-        fee: fee,
-        memo: memo,
-        nonce: String(nonce.nonce),
-      },
-    };
     console.timeEnd("prepared tx");
     console.timeEnd("ready to sign");
     let txResult;
@@ -340,7 +337,8 @@ export function useMintMINANFT() {
     }
 
     try {
-      // txResult = await (window as any).mina?.sendTransaction(payload);
+      txResult =
+        !isZeko && (await (window as any).mina?.sendTransaction(payload));
       // txResult = { signedData: "abc123" };
     } catch (error: unknown) {
       if (isErrorWithCode(error) && error.code === 1002) {
@@ -357,7 +355,7 @@ export function useMintMINANFT() {
         message: "An unexpected error occurred",
       };
     }
-    console.log("Transaction result", txResult);
+    // console.log("Transaction result", txResult);
     console.time("sent transaction");
     setMintProgress({
       [nft_id]: {
@@ -365,18 +363,25 @@ export function useMintMINANFT() {
         message: "Waiting for Transaction Confirmation...",
       },
     });
-    console.log("passed payload json=========", payload);
-    console.log("passed payload json string", JSON.stringify(payload));
-    const signedData = client.signTransaction(payload, SENDER_PRIVATE_KEY);
+
+    const signedData = isZeko
+      ? client.signTransaction(payload as any, SENDER_PRIVATE_KEY)
+      : txResult?.signedData;
+
     console.log("Signed data", signedData);
+
+    if (signedData === undefined) {
+      console.log("No signed data");
+      return undefined;
+    }
+
     // signedData = JSON.stringify(signedData);
     // if (signedData === undefined) {
     //   console.log("No signed data");
     //   return undefined;
     // }
 
-    const signedDatastr = JSON.stringify(signedData.data);
-    console.log("Signed data string", signedDatastr);
+    const signedDatastr = isZeko ? JSON.stringify(signedData.data) : signedData;
 
     const sentTx = await sendTransaction({
       serializedTransaction,
