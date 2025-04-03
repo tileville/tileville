@@ -39,7 +39,6 @@
     "@types/uuid": "^10.0.0",
     "algoliasearch": "^4.24.0",
     "axios": "^1.7.3",
-    "bs58check": "^4.0.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
     "embla-carousel-autoplay": "^8.5.2",

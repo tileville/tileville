@@ -18,7 +18,6 @@ import { globalConfigAtom, mintProgressAtom } from "@/contexts/atoms";
 import { requestAccounts } from "@/lib/helpers";
 import { SENDER_PUBLIC_KEY, SENDER_PRIVATE_KEY } from "@/constants";
 import { Client } from "mina-signer";
-import bs58check from "bs58check";
 
 export type MintNFTParams = {
   name: string;
@@ -315,9 +314,6 @@ export function useMintMINANFT() {
 
     // console.log("Is txn getting verified", result);
     const serializedTransaction = serializeTransaction(tx);
-    console.log("============== SERIALIZED TRANSACTION ==========");
-    console.log(serializedTransaction);
-    console.log("============== SERIALIZED TRANSACTION END==========");
 
     // const pendingTx = await tx.send();
     // console.log("Got pending tx with hash", pendingTx?.hash);
@@ -325,9 +321,6 @@ export function useMintMINANFT() {
     // console.log("PENDING TX", pendingTx);
     // console.log("B", b);
     const transaction = tx.toJSON();
-
-    console.log("Transaction", transaction);
-    console.log("account updates", JSON.parse(transaction).accountUpdates);
 
     // const payloadObj = JSON.stringify({
     //   memo: tx.transaction.memo,
@@ -340,9 +333,9 @@ export function useMintMINANFT() {
       zkappCommand: JSON.parse(transaction),
       feePayer: {
         feePayer: SENDER_PUBLIC_KEY,
-        fee: "100000000",
-        memo: "memo text",
-        nonce: "7",
+        fee: fee,
+        memo: memo,
+        nonce: String(nonce.nonce),
       },
     };
     console.timeEnd("prepared tx");
@@ -352,15 +345,6 @@ export function useMintMINANFT() {
       return typeof error === "object" && error !== null && "code" in error;
     }
 
-    // const nftPrice =
-    //   Number(
-    //     JSON.parse(payload.zkappCommand).accountUpdates[1].body.balanceChange
-    //       .magnitude
-    //   ) / 1e9;
-
-    const nftPrice = Number("1000000000") / 1e9;
-
-    console.log("NFT PRICE", nftPrice);
     try {
       // txResult = await (window as any).mina?.sendTransaction(payload);
       // txResult = { signedData: "abc123" };
@@ -517,15 +501,5 @@ export async function calculateSHA512(file: File): Promise<string> {
   } catch (error) {
     console.error("Error calculating SHA-512 hash:", error);
     throw error;
-  }
-}
-
-export function decodeMemo(encode: string) {
-  try {
-    const encoded = bs58check.decode(encode);
-    const res = encoded.slice(3, 3 + encoded[2]).toString("utf-8");
-    return res;
-  } catch (error) {
-    return encode;
   }
 }
