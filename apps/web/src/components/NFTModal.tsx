@@ -236,6 +236,8 @@ export const NFTModal = ({
       return "Connect Wallet";
     } else if (!!algoliaHitData) {
       return "ALREADY MINTED";
+    } else if (!isSufficientBalance(price) && !isZeko) {
+      return "Insufficient Balance";
     } else {
       return "MINT NFT";
     }
@@ -299,7 +301,10 @@ export const NFTModal = ({
                 <MintBtn
                   isMintingDisabled={isMintingDisabled}
                   isMintingStyledDisabled={
-                    isMintingDisabled || mintLoading || !!algoliaHitData
+                    isMintingDisabled ||
+                    mintLoading ||
+                    !!algoliaHitData ||
+                    (!isSufficientBalance(Number(price)) && !isZeko)
                   }
                   mintLoading={mintLoading}
                   btnText={getMINTText(Number(price))}
