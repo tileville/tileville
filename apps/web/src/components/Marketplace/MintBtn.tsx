@@ -40,6 +40,7 @@ export const MintBtn = ({
 }: MintBtnType) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
+    queryText: collection
   });
 
   console.log("mintNFTHitsResponse", mintNFTHitsResponse);

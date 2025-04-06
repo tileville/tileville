@@ -50,16 +50,24 @@ export default function DigitalCollection({
       queryText: "ZKGOD",
     });
 
+  const { mintNFTHitsResponse: zekoNfts = [], isLoading: isZekoLoading } =
+    useFetchNFTSAlgolia({
+      owner: walletAddress,
+      queryText: "ZEKO",
+    });
+
   const isLoading =
     isMinatyLoading ||
     isTilevilleLoading ||
     isMinaPunksLoading ||
+    isZekoLoading ||
     isZkGodLoading;
   const totalNfts = [
     ...minatyNfts,
     ...tilevilleNfts,
     ...minaPunksNfts,
     ...zkGodNfts,
+    ...zekoNfts,
   ];
 
   if (isLoading) {
