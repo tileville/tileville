@@ -360,6 +360,13 @@ export const NFTModal = ({
                 {collection === NFT_COLLECTIONS.ZKGOD && (
                   <ZkGodCollectionDescription />
                 )}
+
+                {collection === NFT_COLLECTIONS.ZEKO && (
+                  <div className="mt-6 rounded-lg bg-[#1E2321]/95 p-6 text-[#E4FFB6] shadow-xl backdrop-blur-lg">
+                    Zeko is a decentralized zero-knowledge scaling protocol
+                    powering the future of the Internet, AI, Gaming, & Finance.
+                  </div>
+                )}
               </div>
               {traits &&
                 typeof traits === "object" &&
