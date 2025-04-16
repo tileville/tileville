@@ -390,7 +390,7 @@ export function useMintMINANFT() {
       contractAddress,
       name,
       nonce,
-      // nonce: { success: true, nonce: 22 },
+      wallet_address: senderPK,
     });
 
     if (

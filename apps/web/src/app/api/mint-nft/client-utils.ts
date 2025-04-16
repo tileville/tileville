@@ -34,7 +34,8 @@ export async function sendTransaction(params: {
   mintParams: string;
   contractAddress: string;
   name: string;
-  nonce: { success: boolean; nonce: number };
+  nonce: number;
+  wallet_address: string;
 }): Promise<{ isSent: boolean; hash: string; error?: string }> {
   const {
     serializedTransaction,
@@ -42,7 +43,10 @@ export async function sendTransaction(params: {
     contractAddress,
     mintParams,
     name,
+    wallet_address,
   } = params;
+
+  console.log("wallet address in send txn", wallet_address);
 
   const args = JSON.stringify({
     contractAddress,
@@ -59,6 +63,22 @@ export async function sendTransaction(params: {
   );
 
   try {
+    try {
+      await fetch("/api/nonce", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          wallet_address,
+          action: "increment",
+        }),
+      });
+      console.log(`Incremented pending count for wallet ${wallet_address}`);
+    } catch (error: any) {
+      console.warn(`Failed to increment pending count: ${error}`);
+    }
+
     let answer = await zkCloudWorkerRequest({
       command: "execute",
       transactions: [transaction],
@@ -71,6 +91,9 @@ export async function sendTransaction(params: {
     // console.log(`zkCloudWorker answer:`, answer);
     const jobId = answer.jobId;
     if (!jobId) {
+      // Transaction failed to start, decrement pending count
+      await decrementPendingCount(wallet_address);
+
       return {
         isSent: false,
         hash: "",
@@ -82,7 +105,8 @@ export async function sendTransaction(params: {
     let retryCount = 0;
     const MAX_RETRIES = 24;
 
-    while (retryCount < MAX_RETRIES) {
+    while (true) {
+      console.log("retry count", retryCount);
       await sleep(5000);
 
       try {
@@ -95,6 +119,9 @@ export async function sendTransaction(params: {
         // Check for various error conditions
         if (answer.jobStatus === "failed" || answer.error) {
           console.error("Transaction failed:", answer.error || "Unknown error");
+
+          await decrementPendingCount(wallet_address);
+
           return {
             isSent: false,
             hash: "",
@@ -110,12 +137,17 @@ export async function sendTransaction(params: {
             typeof result !== "string" ||
             result.toLowerCase().includes("error")
           ) {
+            await decrementPendingCount(wallet_address);
+
             return {
               isSent: false,
               hash: "",
               error: "Invalid transaction result",
             };
           }
+
+          await decrementPendingCount(wallet_address);
+
           // If we have a valid result, return success
           return {
             isSent: true,
@@ -131,17 +163,39 @@ export async function sendTransaction(params: {
     }
 
     // If we exit the loop due to max retries
+    await decrementPendingCount(wallet_address);
+
     return {
       isSent: false,
       hash: "",
       error: "Timeout waiting for zkCloud worker response",
     };
   } catch (error: any) {
+    await decrementPendingCount(wallet_address);
+
     return {
       isSent: false,
       hash: "",
       error: `Transaction failed: ${error.message}`,
     };
+  }
+}
+
+async function decrementPendingCount(wallet_address: string): Promise<void> {
+  try {
+    await fetch("/api/nonce", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        wallet_address,
+        action: "decrement",
+      }),
+    });
+    console.log(`Decremented pending count for wallet ${wallet_address}`);
+  } catch (error: any) {
+    console.warn(`Failed to decrement pending count: ${error}`);
   }
 }
 
