@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     );
 
     // Calculate final nonce (base + pending)
-    const finalNonce = baseNonce + pendingValue;
+    const finalNonce = baseNonce;
 
     // If pending count is not set, initialize it to 0
     if (pendingCount === null) {
@@ -51,7 +51,8 @@ export async function GET(request: NextRequest) {
       {
         success: true,
         nonce: finalNonce,
-        base_nonce: baseNonce,
+        // TODO: fix this
+        base_nonce: finalNonce,
         pending_count: pendingValue,
       },
       { status: 200 }
