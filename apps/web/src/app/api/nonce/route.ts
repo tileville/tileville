@@ -1,5 +1,7 @@
-import { NonceService } from "@/lib/services/nonce-service";
 import { NextRequest } from "next/server";
+import { redis } from "@/lib/redis";
+
+const NONCE_TTL = 60 * 60; // 1 hour in seconds
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -13,32 +15,47 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    console.log("Fetching nonce for wallet:", wallet_address);
+    console.log({ wallet_address });
 
-    // Try to get nonce from Redis first
-    let nonce = await NonceService.getNonce(wallet_address);
+    const baseNonce = await getNonceFromMinatokens(wallet_address);
 
-    // If nonce doesn't exist in Redis, fetch from Minatokens API
-    if (nonce === null) {
-      nonce = await getNonceFromMinatokens(wallet_address);
-
-      // If successful, save to Redis for future use
-      if (nonce !== null) {
-        await NonceService.saveNonce(wallet_address, nonce);
-        console.log(
-          `Initialized nonce for ${wallet_address} to ${nonce} from Minatokens API`
-        );
-      } else {
-        // If Minatokens API fails, set a default starting nonce
-        nonce = 1; // Default starting nonce
-        await NonceService.saveNonce(wallet_address, nonce);
-        console.log(
-          `Failed to get nonce from API. Initialized ${wallet_address} with default nonce: ${nonce}`
-        );
-      }
+    if (baseNonce === null) {
+      return Response.json(
+        {
+          success: false,
+          message: "Failed to get nonce from Minatokens API",
+        },
+        { status: 500 }
+      );
     }
 
-    return Response.json({ success: true, nonce }, { status: 200 });
+    const pendingKey = `nonce_pending:${wallet_address}`;
+    const pendingCount = await redis.get(pendingKey);
+    const pendingValue = pendingCount
+      ? parseInt(pendingCount as string, 10)
+      : 0;
+
+    console.log(
+      `Base nonce from Minatokens: ${baseNonce}, Pending count: ${pendingValue}`
+    );
+
+    // Calculate final nonce (base + pending)
+    const finalNonce = baseNonce + pendingValue;
+
+    // If pending count is not set, initialize it to 0
+    if (pendingCount === null) {
+      await redis.set(pendingKey, 0, { ex: NONCE_TTL });
+    }
+
+    return Response.json(
+      {
+        success: true,
+        nonce: finalNonce,
+        base_nonce: baseNonce,
+        pending_count: pendingValue,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
     console.error("Error fetching nonce:", error);
     return Response.json(
@@ -80,10 +97,9 @@ async function getNonceFromMinatokens(
   }
 }
 
-// Add a POST endpoint to increment nonce (useful after transaction confirmation)
 export async function POST(request: NextRequest) {
   try {
-    const { wallet_address } = await request.json();
+    const { wallet_address, action = "increment" } = await request.json();
 
     if (!wallet_address) {
       return Response.json(
@@ -92,18 +108,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newNonce = await NonceService.incrementNonce(wallet_address);
+    const pendingKey = `nonce_pending:${wallet_address}`;
 
-    if (newNonce === null) {
-      return Response.json(
-        { success: false, message: "Failed to increment nonce" },
-        { status: 500 }
+    // Get current pending count
+    const pendingCount = await redis.get(pendingKey);
+    const currentValue = pendingCount
+      ? parseInt(pendingCount as string, 10)
+      : 0;
+    let newValue = currentValue;
+
+    if (action === "increment") {
+      // Increment pending count
+      newValue = currentValue + 1;
+      await redis.set(pendingKey, newValue, { ex: NONCE_TTL });
+      console.log(
+        `Incremented pending count for ${wallet_address} from ${currentValue} to ${newValue}`
       );
+    } else if (action === "decrement") {
+      // Decrement pending count, but never below 0
+      newValue = Math.max(0, currentValue - 1);
+      await redis.set(pendingKey, newValue, { ex: NONCE_TTL });
+      console.log(
+        `Decremented pending count for ${wallet_address} from ${currentValue} to ${newValue}`
+      );
+    } else if (action === "reset") {
+      // Reset pending count to 0
+      newValue = 0;
+      await redis.set(pendingKey, 0, { ex: NONCE_TTL });
+      console.log(`Reset pending count for ${wallet_address} to 0`);
     }
 
-    return Response.json({ success: true, nonce: newNonce }, { status: 200 });
+    return Response.json(
+      {
+        success: true,
+        wallet_address,
+        previous_count: currentValue,
+        new_count: newValue,
+        action,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
-    console.error("Error incrementing nonce:", error);
+    console.error("Error managing pending count:", error);
     return Response.json(
       { success: false, message: error.toString() },
       { status: 500 }
