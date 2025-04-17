@@ -25,14 +25,17 @@ export async function GET(request: NextRequest) {
 
     const { data: userRequest, error: userError } = await supabase
       .from("zeko_mint_requests")
-      .select("id")
+      .select("id, status")
       .eq("wallet_address", wallet_address)
       .maybeSingle();
+
+    const hasCompletedRequest = userRequest?.status === "completed";
 
     return Response.json({
       success: true,
       isNftRequested: !!nftRequest,
       hasUserRequest: !!userRequest,
+      hasCompletedRequest: hasCompletedRequest,
     });
   } catch (error: any) {
     console.error("Error checking Zeko mint status:", error);

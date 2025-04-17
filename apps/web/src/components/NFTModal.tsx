@@ -83,6 +83,7 @@ export const NFTModal = ({
   const {
     isNftRequested,
     hasUserRequest,
+    hasCompletedRequest,
     isLoading: mintStatusLoading,
   } = useZekoMintStatus(nftID, wallet_address, collection);
 
@@ -327,6 +328,7 @@ export const NFTModal = ({
                   nftName={name}
                   isNftRequested={isNftRequested}
                   hasUserRequest={hasUserRequest}
+                  hasCompletedRequest={hasCompletedRequest}
                   mintStatusLoading={mintStatusLoading}
                 />
 

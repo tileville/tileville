@@ -67,7 +67,6 @@ export function useZekoMint() {
   };
 }
 
-// Hook to check if a Zeko NFT is already requested or if the user already has a request
 export function useZekoMintStatus(
   nftId: number,
   walletAddress: string,
@@ -75,6 +74,7 @@ export function useZekoMintStatus(
 ) {
   const [isNftRequested, setIsNftRequested] = useState(false);
   const [hasUserRequest, setHasUserRequest] = useState(false);
+  const [hasCompletedRequest, setHasCompletedRequest] = useState(false);
   const [isLoading, setIsLoading] = useState(
     collection === NFT_COLLECTIONS.ZEKO
   );
@@ -97,6 +97,7 @@ export function useZekoMintStatus(
         if (response.ok && data.success) {
           setIsNftRequested(data.isNftRequested);
           setHasUserRequest(data.hasUserRequest);
+          setHasCompletedRequest(data.hasCompletedRequest || false);
         }
       } catch (error) {
         console.error("Error checking Zeko mint status:", error);
@@ -108,5 +109,5 @@ export function useZekoMintStatus(
     checkMintStatus();
   }, [nftId, walletAddress, collection]);
 
-  return { isNftRequested, hasUserRequest, isLoading };
+  return { isNftRequested, hasUserRequest, hasCompletedRequest, isLoading };
 }
