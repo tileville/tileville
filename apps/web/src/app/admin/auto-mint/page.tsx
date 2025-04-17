@@ -178,40 +178,45 @@ export default function AutoMint() {
             }));
 
             // If successful, increment nonce
+            console.log("RESPONSE", response);
+            console.log("RESPONSE result", response?.success);
             if (response?.success) {
+              console.log("SUCCESS RUNNING");
               nonceRef.current = (nonceRef.current || 0) + 1;
               setCurrentNonce(nonceRef.current);
 
               // Update DB status
-              await fetch("/api/nfts/update-nft-status", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  nft_id: request.nft_id,
-                  collection: "Zeko",
-                  txn_hash: response.txHash,
-                  collectionTableName: "zeko_nfts",
-                }),
-              });
+              // We are doing it already in use mint MINA NFT hook
+              // await fetch("/api/nfts/update-nft-status", {
+              //   method: "POST",
+              //   headers: {
+              //     "Content-Type": "application/json",
+              //   },
+              //   body: JSON.stringify({
+              //     nft_id: request.nft_id,
+              //     collection: "Zeko",
+              //     txn_hash: response.txHash,
+              //     collectionTableName: "zeko_nfts",
+              //   }),
+              // });
 
               setStatusMessage(
                 `Successfully minted ${request.nft_name}. Current nonce: ${nonceRef.current}`
               );
             } else {
+              console.log("NOT SUCCESS RUNNING");
               // If failed due to nonce, sleep and get fresh nonce
-              if (
-                response?.message?.includes("nonce") ||
-                response?.reason?.includes("nonce")
-              ) {
-                setStatusMessage(
-                  "Nonce error detected. Sleeping for 10 minutes then retrying with fresh nonce."
-                );
-                await sleep(10);
-                await fetchNonce();
-                break; // Exit the for loop to restart with fresh requests and nonce
-              }
+              // if (
+              //   response?.message?.includes("nonce") ||
+              //   response?.reason?.includes("nonce")
+              // ) {
+              setStatusMessage(
+                "Nonce error detected. Sleeping for 10 minutes then retrying with fresh nonce."
+              );
+              await sleep(10);
+              await fetchNonce();
+              break; // Exit the for loop to restart with fresh requests and nonce
+              // }
             }
 
             // Remove processed request from list
