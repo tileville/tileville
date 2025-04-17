@@ -21,6 +21,7 @@ type MintBtnType = {
   nftName?: string;
   isNftRequested?: boolean;
   hasUserRequest?: boolean;
+  hasCompletedRequest?: boolean;
   mintStatusLoading?: boolean;
 };
 
@@ -45,6 +46,7 @@ export const MintBtn = ({
   nftName,
   isNftRequested,
   hasUserRequest,
+  hasCompletedRequest,
   mintStatusLoading,
 }: MintBtnType) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
@@ -53,7 +55,7 @@ export const MintBtn = ({
   const { requestZekoMint, isLoading: zekoMintLoading } = useZekoMint();
 
   const isZeko = collection === NFT_COLLECTIONS.ZEKO;
-  console.log("IS ZEKO IN MINT BUTTON", isZeko);
+  // console.log("IS ZEKO IN MINT BUTTON", isZeko);
 
   // Check if user is collection owner
   const isOwner = currentUserAddress === collectionOwner;
@@ -78,9 +80,7 @@ export const MintBtn = ({
   const hasReachedMintLimit = checkMintLimit();
 
   const handleZekoMint = async () => {
-    console.log("ZEKO MINT START 1", currentUserAddress, nftName);
     if (!currentUserAddress || !nftName) return;
-    console.log("ZEKO MINT START 2");
 
     await requestZekoMint({
       nft_id: nftID,
@@ -89,7 +89,8 @@ export const MintBtn = ({
     });
   };
 
-  const isZekoMintDisabled = isZeko && (isNftRequested || hasUserRequest);
+  const isZekoMintDisabled =
+    isZeko && (isNftRequested || hasUserRequest || hasCompletedRequest);
 
   const isButtonDisabled =
     isMintingStyledDisabled ||
@@ -102,6 +103,7 @@ export const MintBtn = ({
   const getDisplayText = () => {
     if (isZeko) {
       if (isNftRequested) return "Already Requested";
+      if (hasCompletedRequest) return "You Already Own an NFT";
       if (hasUserRequest) return "You Have Pending Request";
       return "Request Mint";
     }
@@ -152,6 +154,11 @@ export const MintBtn = ({
                     <p className="mb-2 font-bold">
                       This NFT has already been requested for minting by another
                       user.
+                    </p>
+                  ) : hasCompletedRequest ? (
+                    <p className="mb-2 font-bold">
+                      You already own a Zeko NFT. Only one Zeko NFT is allowed
+                      per wallet.
                     </p>
                   ) : (
                     <p className="mb-2 font-bold">
