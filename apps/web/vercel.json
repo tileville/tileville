@@ -6,7 +6,7 @@
     }
   ],
   "functions": {
-    "api/nonce/route": {
+    "app/api/nonce/route.ts": {
       "maxDuration": 60
     }
   }
