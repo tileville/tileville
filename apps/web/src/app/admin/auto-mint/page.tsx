@@ -1,16 +1,16 @@
 "use client";
-
 import { Spinner } from "@/components/common/Spinner";
+import { SENDER_PUBLIC_KEY } from "@/constants";
 import { useMintMINANFT } from "@/hooks/useMintMINANFT";
 import { Button } from "@radix-ui/themes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-type Response = {
-  success: boolean;
-  message?: string | undefined;
-  reason?: string | undefined;
-  txHash?: string | undefined;
-};
+interface Response {
+  success?: boolean;
+  message?: string;
+  reason?: string;
+  txHash?: string;
+}
 
 type ZekoMintRequest = {
   id: string;
@@ -24,6 +24,7 @@ type ZekoMintRequest = {
 export default function AutoMint() {
   const { mintMINANFTHelper } = useMintMINANFT();
   const [isLoading, setIsLoading] = useState(false);
+  const [isWorkerRunning, setIsWorkerRunning] = useState(false);
   const [pendingRequests, setPendingRequests] = useState<ZekoMintRequest[]>([]);
   const [currentRequest, setCurrentRequest] = useState<ZekoMintRequest | null>(
     null
@@ -32,6 +33,17 @@ export default function AutoMint() {
     [key: string]: Response;
   }>({});
   const [isFetching, setIsFetching] = useState(false);
+  const [workerStatus, setWorkerStatus] = useState<
+    "idle" | "running" | "sleeping"
+  >("idle");
+  const [statusMessage, setStatusMessage] = useState("Worker is idle");
+  const [currentNonce, setCurrentNonce] = useState<number | null>(null);
+  const [sleepEndTime, setSleepEndTime] = useState<Date | null>(null);
+
+  // Use refs for values that we need to persist between renders but don't need to trigger re-renders
+  const workerRunningRef = useRef(false);
+  const nonceRef = useRef<number | null>(null);
+  const sleepTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchPendingRequests = async () => {
     setIsFetching(true);
@@ -53,61 +65,212 @@ export default function AutoMint() {
 
   useEffect(() => {
     fetchPendingRequests();
+
+    // Cleanup function to ensure worker is stopped if component unmounts
+    return () => {
+      workerRunningRef.current = false;
+      if (sleepTimeoutRef.current) {
+        clearTimeout(sleepTimeoutRef.current);
+      }
+    };
   }, []);
 
-  const mintNextNFT = async () => {
-    if (isLoading || pendingRequests.length === 0) return;
-
-    // Get the next request to process
-    const nextRequest = pendingRequests[0];
-    setCurrentRequest(nextRequest);
-    setIsLoading(true);
-
+  // Function to fetch the latest nonce for a wallet
+  const fetchNonce = async () => {
     try {
-      const response = await mintMINANFTHelper({
-        name: nextRequest.nft_name,
-        signed_image_url:
-          "https://gateway.pinata.cloud/ipfs/bafybeiaoz4yizmwpxa7oiorwm6jf5pb3blls5ydkqx65x5fjncgh46uer4",
-        collection: "Zeko",
-        collectionDescription: "Unique Zeko Collection NFT",
-        price: 0,
-        keys: [],
-        owner_address: nextRequest.wallet_address,
-        ipfs: "bafybeiaoz4yizmwpxa7oiorwm6jf5pb3blls5ydkqx65x5fjncgh46uer4",
-        nft_id: nextRequest.nft_id,
-      });
+      const sender = SENDER_PUBLIC_KEY || "";
+      const response = await fetch(`/api/nonce?wallet_address=${sender}`);
+      const data = await response.json();
 
-      // Update the status in our local state
-      setMintingStatus((prev) => ({
-        ...prev,
-        [nextRequest.id]: response,
-      }));
+      if (!data.success) {
+        throw new Error("Failed to fetch nonce");
+      }
 
-      // Remove this request from the pending list
-      setPendingRequests((prev) =>
-        prev.filter((req) => req.id !== nextRequest.id)
-      );
-
-      console.log(`Minted NFT ${nextRequest.nft_name}:`, response);
-    } catch (err) {
-      console.error(`Error minting NFT ${nextRequest.nft_name}:`, err);
-
-      setMintingStatus((prev) => ({
-        ...prev,
-        [nextRequest.id]: {
-          success: false,
-          message: err instanceof Error ? err.message : "Unknown error",
-        },
-      }));
-    } finally {
-      setIsLoading(false);
-      setCurrentRequest(null);
+      console.log("Fetched nonce:", data.nonce);
+      setCurrentNonce(data.nonce);
+      nonceRef.current = data.nonce;
+      return data.nonce;
+    } catch (error) {
+      console.error("Error fetching nonce:", error);
+      throw error;
     }
   };
 
-  const refreshList = () => {
-    fetchPendingRequests();
-    setMintingStatus({});
+  // Sleep function that returns a promise that resolves after the given time
+  const sleep = (minutes: number) => {
+    const sleepMs = minutes * 60 * 1000;
+    setWorkerStatus("sleeping");
+    const wakeTime = new Date(Date.now() + sleepMs);
+    setSleepEndTime(wakeTime);
+    setStatusMessage(`Worker sleeping until ${wakeTime.toLocaleTimeString()}`);
+
+    return new Promise<void>((resolve) => {
+      sleepTimeoutRef.current = setTimeout(() => {
+        setSleepEndTime(null);
+        setStatusMessage("Worker resuming");
+        resolve();
+      }, sleepMs);
+    });
+  };
+
+  // Main worker function that processes the queue
+  const startWorker = async () => {
+    if (workerRunningRef.current) return;
+
+    workerRunningRef.current = true;
+    setIsWorkerRunning(true);
+    setWorkerStatus("running");
+    setStatusMessage("Worker starting...");
+
+    try {
+      // Initial fetch of nonce
+      await fetchNonce();
+      setStatusMessage(
+        `Worker running with initial nonce: ${nonceRef.current}`
+      );
+
+      // Main processing loop
+      while (workerRunningRef.current) {
+        // Fetch fresh list of pending requests
+        await fetchPendingRequests();
+
+        if (pendingRequests.length === 0) {
+          setStatusMessage("No pending requests, checking again in 1 minute");
+          await sleep(1);
+          continue;
+        }
+
+        // Process each request
+        for (let i = 0; i < pendingRequests.length; i++) {
+          if (!workerRunningRef.current) break;
+
+          const request = pendingRequests[i];
+          setCurrentRequest(request);
+          setStatusMessage(
+            `Processing request for ${request.nft_name} (ID: ${request.nft_id})`
+          );
+
+          try {
+            // Attempt to mint the NFT
+            const response = await mintMINANFTHelper({
+              name: request.nft_name,
+              signed_image_url:
+                "https://gateway.pinata.cloud/ipfs/bafybeiaoz4yizmwpxa7oiorwm6jf5pb3blls5ydkqx65x5fjncgh46uer4",
+              collection: "Zeko",
+              collectionDescription: "Unique Zeko Collection NFT",
+              price: 0,
+              keys: [],
+              owner_address: request.wallet_address,
+              ipfs: "bafybeiaoz4yizmwpxa7oiorwm6jf5pb3blls5ydkqx65x5fjncgh46uer4",
+              nft_id: request.nft_id,
+              nonceFromWorker: nonceRef.current,
+            });
+
+            // Update status
+            setMintingStatus((prev) => ({
+              ...prev,
+              [request.id]: {
+                success: response?.success,
+                message: response?.message,
+                reason: response?.reason,
+                txHash: response?.txHash,
+              },
+            }));
+
+            // If successful, increment nonce
+            if (response?.success) {
+              nonceRef.current = (nonceRef.current || 0) + 1;
+              setCurrentNonce(nonceRef.current);
+
+              // Update DB status
+              await fetch("/api/nfts/update-nft-status", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  nft_id: request.nft_id,
+                  collection: "Zeko",
+                  txn_hash: response.txHash,
+                  collectionTableName: "zeko_nfts",
+                }),
+              });
+
+              setStatusMessage(
+                `Successfully minted ${request.nft_name}. Current nonce: ${nonceRef.current}`
+              );
+            } else {
+              // If failed due to nonce, sleep and get fresh nonce
+              if (
+                response?.message?.includes("nonce") ||
+                response?.reason?.includes("nonce")
+              ) {
+                setStatusMessage(
+                  "Nonce error detected. Sleeping for 10 minutes then retrying with fresh nonce."
+                );
+                await sleep(10);
+                await fetchNonce();
+                break; // Exit the for loop to restart with fresh requests and nonce
+              }
+            }
+
+            // Remove processed request from list
+            setPendingRequests((prev) =>
+              prev.filter((r) => r.id !== request.id)
+            );
+
+            await new Promise((r) => setTimeout(r, 5000));
+          } catch (error) {
+            console.error(`Error processing request ${request.id}:`, error);
+            setStatusMessage(
+              `Error: ${
+                error instanceof Error ? error.message : "Unknown error"
+              }`
+            );
+
+            // Sleep on error and get fresh nonce
+            await sleep(10);
+            await fetchNonce();
+            break; // Exit the for loop to restart
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Worker error:", error);
+      setStatusMessage(
+        `Worker stopped due to error: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    } finally {
+      workerRunningRef.current = false;
+      setIsWorkerRunning(false);
+      setWorkerStatus("idle");
+      setStatusMessage("Worker stopped");
+    }
+  };
+
+  const stopWorker = () => {
+    workerRunningRef.current = false;
+    if (sleepTimeoutRef.current) {
+      clearTimeout(sleepTimeoutRef.current);
+      sleepTimeoutRef.current = null;
+    }
+    setStatusMessage("Worker stopping...");
+  };
+
+  const formatTimeRemaining = () => {
+    if (!sleepEndTime) return "";
+
+    const now = new Date();
+    const diff = sleepEndTime.getTime() - now.getTime();
+
+    if (diff <= 0) return "Waking up...";
+
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    return `${minutes}m ${seconds}s remaining`;
   };
 
   return (
@@ -115,29 +278,91 @@ export default function AutoMint() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Zeko NFT Auto Minter</h1>
         <div className="space-x-4">
-          <Button onClick={refreshList} disabled={isFetching || isLoading}>
+          <Button
+            onClick={fetchPendingRequests}
+            disabled={isFetching || isWorkerRunning}
+          >
             Refresh List
             {isFetching && <Spinner className="ml-2" />}
           </Button>
-          <Button
-            onClick={mintNextNFT}
-            disabled={isLoading || pendingRequests.length === 0}
-          >
-            Mint Next NFT
-            {isLoading && <Spinner className="ml-2" />}
-          </Button>
+
+          {!isWorkerRunning ? (
+            <Button
+              onClick={startWorker}
+              disabled={isWorkerRunning}
+              className="bg-green-600 text-white hover:bg-green-700"
+            >
+              Start Worker
+            </Button>
+          ) : (
+            <Button
+              onClick={stopWorker}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              Stop Worker
+            </Button>
+          )}
         </div>
       </div>
 
       <div className="mb-6 rounded-md bg-gray-100 p-4">
-        <h2 className="mb-2 text-lg font-semibold">Status</h2>
+        <h2 className="mb-2 text-lg font-semibold">Worker Status</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="font-semibold">Status:</p>
+            <p
+              className={`${
+                workerStatus === "running"
+                  ? "text-green-600"
+                  : workerStatus === "sleeping"
+                  ? "text-orange-500"
+                  : "text-gray-500"
+              }`}
+            >
+              {workerStatus === "running"
+                ? "Running"
+                : workerStatus === "sleeping"
+                ? "Sleeping"
+                : "Idle"}
+            </p>
+          </div>
+
+          <div>
+            <p className="font-semibold">Current Nonce:</p>
+            <p>{currentNonce !== null ? currentNonce : "Not set"}</p>
+          </div>
+
+          <div className="col-span-2">
+            <p className="font-semibold">Status Message:</p>
+            <p>{statusMessage}</p>
+          </div>
+
+          {workerStatus === "sleeping" && sleepEndTime && (
+            <div className="col-span-2">
+              <p className="font-semibold">Sleep Timer:</p>
+              <p>{formatTimeRemaining()}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-6 rounded-md bg-gray-100 p-4">
+        <h2 className="mb-2 text-lg font-semibold">Queue Status</h2>
         <p>
-          {isLoading
-            ? `Currently minting: ${currentRequest?.nft_name} (ID: ${currentRequest?.nft_id})`
-            : pendingRequests.length === 0
+          {pendingRequests.length === 0
             ? "No pending mint requests"
             : `${pendingRequests.length} pending mint requests`}
         </p>
+
+        {currentRequest && (
+          <div className="mt-2">
+            <p className="font-semibold">Currently Processing:</p>
+            <p>
+              {currentRequest.nft_name} (ID: {currentRequest.nft_id}) for{" "}
+              {currentRequest.wallet_address}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="space-y-6">
@@ -153,6 +378,7 @@ export default function AutoMint() {
                     <th className="p-2 text-left">NFT Name</th>
                     <th className="p-2 text-left">NFT ID</th>
                     <th className="p-2 text-left">Wallet Address</th>
+                    <th className="p-2 text-left">Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -161,6 +387,9 @@ export default function AutoMint() {
                       <td className="p-2">{request.nft_name}</td>
                       <td className="p-2">{request.nft_id}</td>
                       <td className="p-2">{request.wallet_address}</td>
+                      <td className="p-2">
+                        {new Date(request.created_at).toLocaleString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -197,7 +426,9 @@ export default function AutoMint() {
                           {result.success ? "Success" : "Failed"}
                         </span>
                       </td>
-                      <td className="p-2">{result.message || "No message"}</td>
+                      <td className="p-2">
+                        {result.message || result.reason || "No message"}
+                      </td>
                       <td className="p-2">
                         {result.txHash ? (
                           <a

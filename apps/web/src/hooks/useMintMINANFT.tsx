@@ -30,6 +30,7 @@ export type MintNFTParams = {
   owner_address: string;
   ipfs: string;
   nft_id: number;
+  nonceFromWorker: number | null;
 };
 
 const client = new Client({
@@ -52,6 +53,7 @@ export function useMintMINANFT() {
       signed_image_url,
       nft_id,
       owner_address,
+      nonceFromWorker,
     } = params;
     const collectionConfig =
       globalConfig?.nft_collections_config?.[collection] || {};
@@ -126,11 +128,23 @@ export function useMintMINANFT() {
     const jwt = process.env.NEXT_PUBLIC_MINANFT_JWT!;
     const minanft = new api(jwt);
 
-    // const nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
+    const nonceObjOfWorker = {
+      success: true,
+      nonce: nonceFromWorker,
+      base_nonce: nonceFromWorker,
+      pending_count: 0,
+    };
 
-    const nonceResponse = await fetch(`/api/nonce?wallet_address=${senderPK}`);
+    console.log("nonceFromWorker", nonceFromWorker);
+    let nonceResponse;
+    let nonce;
+    if (!nonceObjOfWorker) {
+      nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
+      nonce = await nonceResponse.json();
+    } else {
+      nonce = nonceObjOfWorker;
+    }
 
-    const nonce = await nonceResponse.json();
     // nonce = { success: true, nonce: 151, base_nonce: 151, pending_count: 0 };
     console.log("NONCE", nonce);
     if (!nonce.success) {
