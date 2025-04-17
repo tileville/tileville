@@ -17,41 +17,25 @@ export async function GET(request: NextRequest) {
   try {
     console.log({ wallet_address });
 
-    const baseNonce = await getNonceFromMinatokens(wallet_address);
+    const baseNonce = await getNonceFromGraphQL(wallet_address);
 
     if (baseNonce === null) {
       return Response.json(
         {
           success: false,
-          message: "Failed to get nonce from Minatokens API",
+          message: "Failed to get nonce from Minascan GraphQL API",
         },
         { status: 500 }
       );
     }
 
-    // const pendingKey = `nonce_pending:${wallet_address}`;
-    // const pendingCount = await redis.get(pendingKey);
-    // const pendingValue = pendingCount
-    //   ? parseInt(pendingCount as string, 10)
-    //   : 0;
-
-    // console.log(
-    //   `Base nonce from Minatokens: ${baseNonce}, Pending count: ${pendingValue}`
-    // );
-
-    // Calculate final nonce (base + pending)
+    // Calculate final nonce
     const finalNonce = baseNonce;
-
-    // If pending count is not set, initialize it to 0
-    // if (pendingCount === null) {
-    //   await redis.set(pendingKey, 0, { ex: NONCE_TTL });
-    // }
 
     return Response.json(
       {
         success: true,
         nonce: finalNonce,
-        // TODO: fix this
         base_nonce: finalNonce,
         pending_count: 0,
       },
@@ -63,6 +47,44 @@ export async function GET(request: NextRequest) {
       { success: false, message: error.toString() },
       { status: 500 }
     );
+  }
+}
+
+async function getNonceFromGraphQL(
+  walletAddress: string
+): Promise<number | null> {
+  try {
+    const query = `
+      {
+        account(publicKey: "${walletAddress}") {
+          nonce
+        }
+      }
+    `;
+
+    const response = await fetch(
+      "https://api.minascan.io/node/mainnet/v1/graphql",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
+
+    const result = await response.json();
+    console.log("GraphQL response:", result);
+
+    if (result.data?.account?.nonce) {
+      // GraphQL may return nonce as a string, convert to number
+      return parseInt(result.data.account.nonce, 10);
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error getting nonce from GraphQL:", error);
+    return null;
   }
 }
 
