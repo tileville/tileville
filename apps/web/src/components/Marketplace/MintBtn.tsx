@@ -4,6 +4,7 @@ import { Spinner } from "../common/Spinner";
 import { NFT_COLLECTIONS, NFTCollectionType } from "@/constants";
 import { useFetchNFTSAlgolia } from "@/hooks/useFetchNFTSAlgolia";
 import { PalladNotSupportedContent } from "./PalladNotSupportedContent";
+import { useZekoMint } from "@/hooks/useZekoMint";
 
 type MintBtnType = {
   isMintingDisabled: boolean;
@@ -17,6 +18,10 @@ type MintBtnType = {
   isPublicMint: boolean;
   collectionOwner: string;
   maxMintsPerWallet?: number;
+  nftName?: string;
+  isNftRequested?: boolean;
+  hasUserRequest?: boolean;
+  mintStatusLoading?: boolean;
 };
 
 const hasCollectionNFTs = (nfts: Array<any>, collectionName: string) => {
@@ -37,13 +42,19 @@ export const MintBtn = ({
   isPublicMint,
   collectionOwner,
   maxMintsPerWallet,
+  nftName,
+  isNftRequested,
+  hasUserRequest,
+  mintStatusLoading,
 }: MintBtnType) => {
   const { mintNFTHitsResponse } = useFetchNFTSAlgolia({
     owner: currentUserAddress || "none",
-    queryText: collection
   });
+  const { requestZekoMint, isLoading: zekoMintLoading } = useZekoMint();
 
-  console.log("mintNFTHitsResponse", mintNFTHitsResponse);
+  const isZeko = collection === NFT_COLLECTIONS.ZEKO;
+  console.log("IS ZEKO IN MINT BUTTON", isZeko);
+
   // Check if user is collection owner
   const isOwner = currentUserAddress === collectionOwner;
 
@@ -66,13 +77,35 @@ export const MintBtn = ({
 
   const hasReachedMintLimit = checkMintLimit();
 
+  const handleZekoMint = async () => {
+    console.log("ZEKO MINT START 1", currentUserAddress, nftName);
+    if (!currentUserAddress || !nftName) return;
+    console.log("ZEKO MINT START 2");
+
+    await requestZekoMint({
+      nft_id: nftID,
+      nft_name: nftName,
+      wallet_address: currentUserAddress,
+    });
+  };
+
+  const isZekoMintDisabled = isZeko && (isNftRequested || hasUserRequest);
+
   const isButtonDisabled =
     isMintingStyledDisabled ||
     isNotForSoldNFT ||
     isUnauthorizedMint ||
-    (!isOwner && hasReachedMintLimit);
+    (!isOwner && hasReachedMintLimit) ||
+    isZekoMintDisabled ||
+    mintStatusLoading;
 
   const getDisplayText = () => {
+    if (isZeko) {
+      if (isNftRequested) return "Already Requested";
+      if (hasUserRequest) return "You Have Pending Request";
+      return "Request Mint";
+    }
+
     if (isUnauthorizedMint) return "Only Owner Can Mint";
     if (hasReachedMintLimit) {
       return `Max ${maxMintsPerWallet} NFTs Per Wallet`;
@@ -93,10 +126,10 @@ export const MintBtn = ({
               "bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:hover:bg-primary/80":
                 !isMintingDisabled,
             })}
-            onClick={() => handleMint(nftID)}
-            disabled={isButtonDisabled}
+            onClick={isZeko ? handleZekoMint : () => handleMint(nftID)}
+            disabled={isButtonDisabled || (isZeko && zekoMintLoading)}
           >
-            {mintLoading && (
+            {(mintLoading || zekoMintLoading) && (
               <span className="absolute right-1/2 top-[5px] w-5 -translate-x-16">
                 <Spinner />
               </span>
@@ -107,12 +140,27 @@ export const MintBtn = ({
         <Tooltip.Portal>
           {(window.mina?.isPallad ||
             isUnauthorizedMint ||
-            hasReachedMintLimit) && (
+            hasReachedMintLimit ||
+            isZekoMintDisabled) && (
             <Tooltip.Content
               className="gradient-bg max-w-[350px] rounded-xl px-3 py-2 shadow-sm"
               sideOffset={5}
             >
-              {isUnauthorizedMint ? (
+              {isZekoMintDisabled ? (
+                <div className="max-w-md">
+                  {isNftRequested ? (
+                    <p className="mb-2 font-bold">
+                      This NFT has already been requested for minting by another
+                      user.
+                    </p>
+                  ) : (
+                    <p className="mb-2 font-bold">
+                      You already have a pending mint request for a Zeko NFT.
+                      You can only request one Zeko NFT at a time.
+                    </p>
+                  )}
+                </div>
+              ) : isUnauthorizedMint ? (
                 <div className="max-w-md">
                   <p className="mb-2 font-bold">
                     This NFT is currently only available for minting by the

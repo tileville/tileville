@@ -856,6 +856,33 @@ export type Database = {
         }
         Relationships: []
       }
+      zeko_mint_requests: {
+        Row: {
+          created_at: string | null
+          id: string
+          nft_id: number
+          nft_name: string
+          status: string | null
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          nft_id: number
+          nft_name: string
+          status?: string | null
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          nft_id?: number
+          nft_name?: string
+          status?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       zeko_nfts: {
         Row: {
           created_at: string
