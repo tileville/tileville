@@ -298,9 +298,12 @@ export function useMintMINANFT() {
     console.log("============= mint params ===============", mintParams);
     let tx: any;
     try {
-      tx = await Mina.transaction({ sender, fee, memo }, async () => {
-        await zkApp.mint(mintParams);
-      });
+      tx = await Mina.transaction(
+        { sender, fee, memo, nonce: nonce.nonce },
+        async () => {
+          await zkApp.mint(mintParams);
+        }
+      );
       console.log("JSON transaction", tx.to);
       // Mina.setActiveInstance(
       //   Mina.Network("https://api.minascan.io/node/devnet/v1/graphql")
