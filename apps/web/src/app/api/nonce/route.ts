@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   try {
     console.log({ wallet_address });
 
-    const baseNonce = await getNonceFromGraphQL(wallet_address);
+    const baseNonce = await getNonceFromMinatokens(wallet_address);
 
     if (baseNonce === null) {
       return Response.json(
