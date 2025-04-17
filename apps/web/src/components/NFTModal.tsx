@@ -33,6 +33,7 @@ import { AlreadyMintedContent } from "./Marketplace/AlreadyMintedContent";
 import { NFTModalTriggerContent } from "./Marketplace/NFTModalTriggerContent";
 import { CountdownTimer } from "./common/CountdownTimer";
 import { ZkGodCollectionDescription } from "./Marketplace/ZkGodCollectionDescription";
+import { useZekoMintStatus } from "@/hooks/useZekoMint";
 
 export const NFTModal = ({
   traits,
@@ -76,6 +77,14 @@ export const NFTModal = ({
   const [error, setError] = useState<string | null>(null);
   const { switchNetwork } = useSwitchNetwork();
   const [mintKey] = useLocalStorage("MINTING_ENABLE", "");
+
+  const wallet_address = networkStore.address || "";
+
+  const {
+    isNftRequested,
+    hasUserRequest,
+    isLoading: mintStatusLoading,
+  } = useZekoMintStatus(nftID, wallet_address, collection);
 
   const collectionConfig =
     globalConfig?.nft_collections_config?.[collection] || {};
@@ -315,6 +324,10 @@ export const NFTModal = ({
                   isPublicMint={isPublicMint}
                   collectionOwner={collectionOwner}
                   maxMintsPerWallet={maxMintsPerWallet}
+                  nftName={name}
+                  isNftRequested={isNftRequested}
+                  hasUserRequest={hasUserRequest}
+                  mintStatusLoading={mintStatusLoading}
                 />
 
                 {isAvailableToPurchase && (

@@ -19,6 +19,19 @@ const updateNFTStatusHandler = async (request: NextRequest) => {
 
     if (collection.toLowerCase() === "zeko") {
       updateData.is_minted = true;
+
+      // If this is a Zeko NFT, also update the zeko_mint_requests table
+      const { error: requestUpdateError } = await supabase
+        .from("zeko_mint_requests")
+        .update({ status: "completed" })
+        .eq("nft_id", nft_id);
+
+      if (requestUpdateError) {
+        console.error(
+          "Failed to update Zeko mint request:",
+          requestUpdateError
+        );
+      }
     }
 
     const { data, error } = await supabase
