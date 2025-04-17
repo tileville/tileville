@@ -1,7 +1,13 @@
 {
-    "crons": [{
+  "crons": [
+    {
       "path": "/api/pvp/claim-prize/cron",
-      "schedule": "0 */4 * * *" 
-    }]
+      "schedule": "0 */4 * * *"
+    }
+  ],
+  "functions": {
+    "api/nonce/route": {
+      "maxDuration": 60
+    }
   }
-  
+}

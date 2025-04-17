@@ -29,23 +29,23 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const pendingKey = `nonce_pending:${wallet_address}`;
-    const pendingCount = await redis.get(pendingKey);
-    const pendingValue = pendingCount
-      ? parseInt(pendingCount as string, 10)
-      : 0;
+    // const pendingKey = `nonce_pending:${wallet_address}`;
+    // const pendingCount = await redis.get(pendingKey);
+    // const pendingValue = pendingCount
+    //   ? parseInt(pendingCount as string, 10)
+    //   : 0;
 
-    console.log(
-      `Base nonce from Minatokens: ${baseNonce}, Pending count: ${pendingValue}`
-    );
+    // console.log(
+    //   `Base nonce from Minatokens: ${baseNonce}, Pending count: ${pendingValue}`
+    // );
 
     // Calculate final nonce (base + pending)
     const finalNonce = baseNonce;
 
     // If pending count is not set, initialize it to 0
-    if (pendingCount === null) {
-      await redis.set(pendingKey, 0, { ex: NONCE_TTL });
-    }
+    // if (pendingCount === null) {
+    //   await redis.set(pendingKey, 0, { ex: NONCE_TTL });
+    // }
 
     return Response.json(
       {
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
         nonce: finalNonce,
         // TODO: fix this
         base_nonce: finalNonce,
-        pending_count: pendingValue,
+        pending_count: 0,
       },
       { status: 200 }
     );
