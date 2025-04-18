@@ -39,11 +39,13 @@ export default function AutoMint() {
   const [statusMessage, setStatusMessage] = useState("Worker is idle");
   const [currentNonce, setCurrentNonce] = useState<number | null>(null);
   const [sleepEndTime, setSleepEndTime] = useState<Date | null>(null);
+  const [sleepTimer, setSleepTimer] = useState<string>("");
 
   // Use refs for values that we need to persist between renders but don't need to trigger re-renders
   const workerRunningRef = useRef(false);
   const nonceRef = useRef<number | null>(null);
   const sleepTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchPendingRequests = async () => {
     setIsFetching(true);
@@ -56,8 +58,10 @@ export default function AutoMint() {
       }
 
       setPendingRequests(data.requests || []);
+      return data.requests || [];
     } catch (err) {
       console.error("Error fetching pending mint requests:", err);
+      return [];
     } finally {
       setIsFetching(false);
     }
@@ -68,10 +72,7 @@ export default function AutoMint() {
 
     // Cleanup function to ensure worker is stopped if component unmounts
     return () => {
-      workerRunningRef.current = false;
-      if (sleepTimeoutRef.current) {
-        clearTimeout(sleepTimeoutRef.current);
-      }
+      stopWorker();
     };
   }, []);
 
@@ -98,17 +99,61 @@ export default function AutoMint() {
 
   // Sleep function that returns a promise that resolves after the given time
   const sleep = (minutes: number) => {
-    const sleepMs = minutes * 60 * 1000;
-    setWorkerStatus("sleeping");
-    const wakeTime = new Date(Date.now() + sleepMs);
-    setSleepEndTime(wakeTime);
-    setStatusMessage(`Worker sleeping until ${wakeTime.toLocaleTimeString()}`);
-
     return new Promise<void>((resolve) => {
+      const sleepMs = minutes * 60 * 1000;
+      setWorkerStatus("sleeping");
+
+      const wakeTime = new Date(Date.now() + sleepMs);
+      setSleepEndTime(wakeTime);
+      setStatusMessage(
+        `Worker sleeping until ${wakeTime.toLocaleTimeString()}`
+      );
+
+      // Clear any existing sleep timeout
+      if (sleepTimeoutRef.current) {
+        clearTimeout(sleepTimeoutRef.current);
+      }
+
+      // Clear any existing timer interval
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+
+      // Set up the countdown timer
+      timerIntervalRef.current = setInterval(() => {
+        const now = new Date();
+        const diff = wakeTime.getTime() - now.getTime();
+
+        if (diff <= 0) {
+          if (timerIntervalRef.current) {
+            clearInterval(timerIntervalRef.current);
+            timerIntervalRef.current = null;
+          }
+          setSleepTimer("Waking up...");
+        } else {
+          const minutes = Math.floor(diff / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+          setSleepTimer(`${minutes}m ${seconds}s remaining`);
+        }
+      }, 1000);
+
+      // Set the timeout to wake up
       sleepTimeoutRef.current = setTimeout(() => {
+        // Clean up
+        if (timerIntervalRef.current) {
+          clearInterval(timerIntervalRef.current);
+          timerIntervalRef.current = null;
+        }
+
         setSleepEndTime(null);
         setStatusMessage("Worker resuming");
-        resolve();
+        setSleepTimer("");
+
+        // Only resolve if the worker is still running
+        if (workerRunningRef.current) {
+          setWorkerStatus("running");
+          resolve();
+        }
       }, sleepMs);
     });
   };
@@ -132,20 +177,24 @@ export default function AutoMint() {
       // Main processing loop
       while (workerRunningRef.current) {
         // Fetch fresh list of pending requests
-        await fetchPendingRequests();
+        const freshRequests = await fetchPendingRequests();
 
-        if (pendingRequests.length === 0) {
+        if (freshRequests.length === 0) {
           setStatusMessage("No pending requests, checking again in 1 minute");
           await sleep(1);
+
+          // Check if worker was stopped during sleep
+          if (!workerRunningRef.current) break;
+
           continue;
         }
 
         // Process each request
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
-        for (let i = 0; i < pendingRequests.length; i++) {
+        for (let i = 0; i < freshRequests.length; i++) {
           if (!workerRunningRef.current) break;
 
-          const request = pendingRequests[i];
+          const request = freshRequests[i];
           setCurrentRequest(request);
           setStatusMessage(
             `Processing request for ${request.nft_name} (ID: ${request.nft_id})`
@@ -180,55 +229,37 @@ export default function AutoMint() {
 
             // If successful, increment nonce
             console.log("RESPONSE", response);
-            console.log("RESPONSE result", response?.success);
             if (response?.success) {
-              console.log("SUCCESS RUNNING");
               nonceRef.current = (nonceRef.current || 0) + 1;
               setCurrentNonce(nonceRef.current);
-
-              // Update DB status
-              // We are doing it already in use mint MINA NFT hook
-              // await fetch("/api/nfts/update-nft-status", {
-              //   method: "POST",
-              //   headers: {
-              //     "Content-Type": "application/json",
-              //   },
-              //   body: JSON.stringify({
-              //     nft_id: request.nft_id,
-              //     collection: "Zeko",
-              //     txn_hash: response.txHash,
-              //     collectionTableName: "zeko_nfts",
-              //   }),
-              // });
-
               setStatusMessage(
                 `Successfully minted ${request.nft_name}. Current nonce: ${nonceRef.current}`
               );
-            } else {
-              console.log("NOT SUCCESS RUNNING");
-              // If failed due to nonce, sleep and get fresh nonce
-              // if (
-              //   response?.message?.includes("nonce") ||
-              //   response?.reason?.includes("nonce")
-              // ) {
 
+              // Remove processed request from list
+              setPendingRequests((prev) =>
+                prev.filter((r) => r.id !== request.id)
+              );
+            } else {
+              // If failed due to nonce issue or other errors, sleep and get fresh nonce
               if (!(response?.message === "Name is not reserved")) {
                 setStatusMessage(
-                  "Nonce error detected. Sleeping for 10 minutes then retrying with fresh nonce."
+                  `Minting error: ${
+                    response?.message || response?.reason || "Unknown error"
+                  }. Sleeping for 10 minutes.`
                 );
                 await sleep(10);
                 await fetchNonce();
                 break; // Exit the for loop to restart with fresh requests and nonce
               }
 
-              // }
+              // If the name is not reserved, just mark it as processed
+              setPendingRequests((prev) =>
+                prev.filter((r) => r.id !== request.id)
+              );
             }
 
-            // Remove processed request from list
-            setPendingRequests((prev) =>
-              prev.filter((r) => r.id !== request.id)
-            );
-
+            // Small delay between requests
             await new Promise((r) => setTimeout(r, 5000));
           } catch (error) {
             console.error(`Error processing request ${request.id}:`, error);
@@ -238,10 +269,22 @@ export default function AutoMint() {
               }`
             );
 
+            // Add the error to minting status
+            setMintingStatus((prev) => ({
+              ...prev,
+              [request.id]: {
+                success: false,
+                message:
+                  error instanceof Error ? error.message : "Unknown error",
+              },
+            }));
+
             // Sleep on error and get fresh nonce
             await sleep(10);
             await fetchNonce();
             break; // Exit the for loop to restart
+          } finally {
+            setCurrentRequest(null);
           }
         }
       }
@@ -253,34 +296,34 @@ export default function AutoMint() {
         }`
       );
     } finally {
-      workerRunningRef.current = false;
-      setIsWorkerRunning(false);
-      setWorkerStatus("idle");
-      setStatusMessage("Worker stopped");
+      cleanupWorker();
     }
   };
 
   const stopWorker = () => {
     workerRunningRef.current = false;
+    cleanupWorker();
+    setStatusMessage("Worker stopped");
+  };
+
+  const cleanupWorker = () => {
+    // Clear timeouts and intervals
     if (sleepTimeoutRef.current) {
       clearTimeout(sleepTimeoutRef.current);
       sleepTimeoutRef.current = null;
     }
-    setStatusMessage("Worker stopping...");
-  };
 
-  const formatTimeRemaining = () => {
-    if (!sleepEndTime) return "";
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
 
-    const now = new Date();
-    const diff = sleepEndTime.getTime() - now.getTime();
-
-    if (diff <= 0) return "Waking up...";
-
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-
-    return `${minutes}m ${seconds}s remaining`;
+    // Reset states
+    setIsWorkerRunning(false);
+    setWorkerStatus("idle");
+    setSleepEndTime(null);
+    setSleepTimer("");
+    setCurrentRequest(null);
   };
 
   return (
@@ -347,10 +390,10 @@ export default function AutoMint() {
             <p>{statusMessage}</p>
           </div>
 
-          {workerStatus === "sleeping" && sleepEndTime && (
+          {workerStatus === "sleeping" && sleepTimer && (
             <div className="col-span-2">
               <p className="font-semibold">Sleep Timer:</p>
-              <p>{formatTimeRemaining()}</p>
+              <p>{sleepTimer}</p>
             </div>
           )}
         </div>
@@ -417,7 +460,6 @@ export default function AutoMint() {
               <table className="min-w-full border border-gray-300">
                 <thead className="bg-gray-100">
                   <tr>
-                    {/* <th className="p-2 text-left">Name</th> */}
                     <th className="p-2 text-left">Request ID</th>
                     <th className="p-2 text-left">Status</th>
                     <th className="p-2 text-left">Message</th>
