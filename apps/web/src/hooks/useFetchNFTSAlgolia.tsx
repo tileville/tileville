@@ -97,7 +97,7 @@ export const useFetchNFTSAlgolia = (options: FetchOptions) => {
     setIsLoading(true); // Set loading to true when starting the fetch
     searchJobs({
       query: options.queryText || "Tileville Builder",
-      hitsPerPage: 450,
+      hitsPerPage: 650,
       currentPage: 0,
       statuses: ["pending", "applied"],
       ...(options.owner ? { owner: options.owner } : {}),
