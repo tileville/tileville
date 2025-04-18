@@ -141,6 +141,7 @@ export default function AutoMint() {
         }
 
         // Process each request
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < pendingRequests.length; i++) {
           if (!workerRunningRef.current) break;
 
@@ -210,12 +211,16 @@ export default function AutoMint() {
               //   response?.message?.includes("nonce") ||
               //   response?.reason?.includes("nonce")
               // ) {
-              setStatusMessage(
-                "Nonce error detected. Sleeping for 10 minutes then retrying with fresh nonce."
-              );
-              await sleep(10);
-              await fetchNonce();
-              break; // Exit the for loop to restart with fresh requests and nonce
+
+              if (!(response?.message === "Name is not reserved")) {
+                setStatusMessage(
+                  "Nonce error detected. Sleeping for 10 minutes then retrying with fresh nonce."
+                );
+                await sleep(10);
+                await fetchNonce();
+                break; // Exit the for loop to restart with fresh requests and nonce
+              }
+
               // }
             }
 
@@ -412,6 +417,7 @@ export default function AutoMint() {
               <table className="min-w-full border border-gray-300">
                 <thead className="bg-gray-100">
                   <tr>
+                    {/* <th className="p-2 text-left">Name</th> */}
                     <th className="p-2 text-left">Request ID</th>
                     <th className="p-2 text-left">Status</th>
                     <th className="p-2 text-left">Message</th>
