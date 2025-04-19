@@ -114,7 +114,7 @@ export async function sendTransaction(params: {
           command: "jobResult",
           jobId,
         });
-        // console.log(`jobResult api call result:`, answer);
+        console.log(`jobResult api call result:`, answer);
 
         // Check for various error conditions
         if (answer.jobStatus === "failed" || answer.error) {
@@ -208,7 +208,7 @@ export async function prepareTransaction(params: SimpleMintNFT): Promise<{
   mintParams?: string;
 }> {
   const { contractAddress } = params;
-  // console.log("sendSimpleMintCommand", params);
+  console.log("sendSimpleMintCommand", params);
 
   const args = JSON.stringify({
     contractAddress,
@@ -227,7 +227,7 @@ export async function prepareTransaction(params: SimpleMintNFT): Promise<{
 
   console.log(`zkCloudWorker answer:`, answer);
   const jobId = answer.jobId;
-  // console.log(`jobId:`, jobId);
+  console.log(`jobId:`, jobId);
   let result;
   while (result === undefined && answer.jobStatus !== "failed") {
     await sleep(5000);
@@ -292,7 +292,7 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function serializeTransaction(tx: any): string {
+export function serializeTransaction(tx: any, nonce: number): string {
   const length = tx.transaction.accountUpdates.length;
   const blindingValues = [];
   for (let i = 0; i < length; i++) {
@@ -305,6 +305,12 @@ export function serializeTransaction(tx: any): string {
       blindingValues.push(la.blindingValue.toJSON());
     else blindingValues.push("");
   }
+  console.log(
+    "NONCE IN SERIALIZE TXN",
+    tx.transaction.feePayer.body.nonce.toBigint().toString()
+  );
+
+  console.log("NEW UPDATED NONCE", nonce.toString());
   const serializedTransaction = JSON.stringify(
     {
       tx: tx.toJSON(),
@@ -312,7 +318,7 @@ export function serializeTransaction(tx: any): string {
       length,
       fee: tx.transaction.feePayer.body.fee.toJSON(),
       sender: tx.transaction.feePayer.body.publicKey.toBase58(),
-      nonce: tx.transaction.feePayer.body.nonce.toBigint().toString(),
+      nonce: nonce.toString(),
     },
     null,
     2

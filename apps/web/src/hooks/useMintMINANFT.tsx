@@ -30,6 +30,7 @@ export type MintNFTParams = {
   owner_address: string;
   ipfs: string;
   nft_id: number;
+  nonceFromWorker: number | null;
 };
 
 const client = new Client({
@@ -51,6 +52,8 @@ export function useMintMINANFT() {
       ipfs,
       signed_image_url,
       nft_id,
+      owner_address,
+      nonceFromWorker,
     } = params;
     const collectionConfig =
       globalConfig?.nft_collections_config?.[collection] || {};
@@ -75,7 +78,7 @@ export function useMintMINANFT() {
     });
 
     // this is auro wallet address
-    const owner = await getAccount();
+    const owner = owner_address ? owner_address : await getAccount();
     if (!owner) {
       return { success: false, message: "No account found" };
     }
@@ -125,11 +128,24 @@ export function useMintMINANFT() {
     const jwt = process.env.NEXT_PUBLIC_MINANFT_JWT!;
     const minanft = new api(jwt);
 
-    // const nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
+    const nonceObjOfWorker = {
+      success: true,
+      nonce: nonceFromWorker,
+      base_nonce: nonceFromWorker,
+      pending_count: 0,
+    };
 
-    const nonceResponse = await fetch(`/api/nonce?wallet_address=${senderPK}`);
+    console.log("nonceFromWorker", nonceFromWorker);
+    let nonceResponse;
+    let nonce;
+    if (!nonceObjOfWorker) {
+      nonceResponse = await fetch(`/api/nonce?wallet_address=${owner}`);
+      nonce = await nonceResponse.json();
+    } else {
+      nonce = nonceObjOfWorker;
+    }
 
-    const nonce = await nonceResponse.json();
+    // nonce = { success: true, nonce: 151, base_nonce: 151, pending_count: 0 };
     console.log("NONCE", nonce);
     if (!nonce.success) {
       throw new Error("failed to fetch nonce");
@@ -282,9 +298,12 @@ export function useMintMINANFT() {
     console.log("============= mint params ===============", mintParams);
     let tx: any;
     try {
-      tx = await Mina.transaction({ sender, fee, memo }, async () => {
-        await zkApp.mint(mintParams);
-      });
+      tx = await Mina.transaction(
+        { sender, fee, memo, nonce: nonce.nonce },
+        async () => {
+          await zkApp.mint(mintParams);
+        }
+      );
       console.log("JSON transaction", tx.to);
       // Mina.setActiveInstance(
       //   Mina.Network("https://api.minascan.io/node/devnet/v1/graphql")
@@ -306,7 +325,7 @@ export function useMintMINANFT() {
     }
     tx.sign([nftPrivateKey]);
 
-    const serializedTransaction = serializeTransaction(tx);
+    const serializedTransaction = serializeTransaction(tx, nonce.nonce);
 
     const transaction = tx.toJSON();
 
@@ -382,14 +401,14 @@ export function useMintMINANFT() {
     // }
 
     const signedDatastr = isZeko ? JSON.stringify(signedData.data) : signedData;
-
+    const finalNonce = nonce.nonce;
     const sentTx = await sendTransaction({
       serializedTransaction,
       signedData: signedDatastr,
       mintParams: serializeFields(MintParams.toFields(mintParams)),
       contractAddress,
       name,
-      nonce,
+      nonce: finalNonce,
       wallet_address: senderPK,
     });
 
@@ -446,6 +465,8 @@ export function useMintMINANFT() {
         message: "Transaction confirmed and NFT Minted successfully.",
       },
     });
+
+    console.log("NFT MINTED SUCCESSFULLY");
 
     return {
       success: true,
