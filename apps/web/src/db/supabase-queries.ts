@@ -364,7 +364,7 @@ export const isGameAlreadyPlayed = async (
   if (error) {
     return false;
   }
-  console.log("is game already played reponse", data);
+  console.log("is game already played response", data);
   return !!data;
 };
 
