@@ -1003,7 +1003,7 @@ export class MainScene extends Scene {
     let partInSeconds: number | string = seconds % 60;
     // Adds left zeros to seconds
     partInSeconds = partInSeconds.toString().padStart(2, "0");
-    // Returns formated time
+    // Returns formatted time
     return `${minutes}:${partInSeconds}`;
   }
 
