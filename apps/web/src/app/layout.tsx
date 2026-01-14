@@ -11,7 +11,7 @@ import NextTopLoader from "nextjs-toploader";
 
 export const metadata = {
   title: "TileVille",
-  description: "On-chain city development arcade game built on MINA",
+  description: "On-chain city development arcade game built on XION",
   icons: {
     apple: [
       {

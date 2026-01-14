@@ -15,12 +15,12 @@ import { createAuroDeepLink } from "@/lib/helpers";
 let vConsole: any;
 
 const queryClient = new QueryClient();
-const StoreProtokitUpdater = dynamic(
-  () => import("@/components/StoreProtokitUpdater"),
-  {
-    ssr: false,
-  }
-);
+// const StoreProtokitUpdater = dynamic(
+//   () => import("@/components/StoreProtokitUpdater"),
+//   {
+//     ssr: false,
+//   }
+// );
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const [isClient, setIsClient] = useState(false);
@@ -73,7 +73,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <JotaiProvider>
-      <StoreProtokitUpdater />
+      {/* <StoreProtokitUpdater /> */}
       <QueryClientProvider client={queryClient}>
         {" "}
         {renderNavBar()}
@@ -81,12 +81,12 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
         <TelegramBanner />
         {children}
         {renderFooter()}
-        {isMobile && !hasClosedPrompt && isClient && !window.mina && (
+        {/* {isMobile && !hasClosedPrompt && isClient && !window.mina && (
           <MobileWalletPrompt
             onOpenAuro={handleOpenAuro}
             onClose={() => setHasClosedPrompt(true)}
           />
-        )}
+        )} */}
       </QueryClientProvider>
     </JotaiProvider>
   );
